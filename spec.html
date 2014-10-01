@@ -1,0 +1,253 @@
+<h1>The List &ndash; Functional Specification</h1>
+
+<p>(this is an HTML version of the spec, which is in Markdown and should go
+into git once any changes are made here.)</p>
+
+<p>Last Updated: September 30th 2014</p>
+
+<p>About this Specification</p>
+
+<p>This specification is simply a starting point for the design of The List
+1.0, not a final blueprint. As we start to build the product, we&rsquo;ll
+discover a lot of things that won&rsquo;t work exactly as planned. We&rsquo;ll
+invent new features, we&rsquo;ll change things, we&rsquo;ll refine the wording, etc.
+We&rsquo;ll try to keep the spec up to date as things change. By no means
+should you consider this spec to be some kind of holy, cast-in-stone
+law.</p>
+
+<p>Overview</p>
+
+<p>“The List” is the codename for a new product to be developed and tested
+at Creative Commons during the fall/winter of 2014. The actual name of
+the product may be different.</p>
+
+<p>The List allows people to contribute to the public commons by taking
+photographs of the world around them and sharing these images with the
+world.</p>
+
+<p>Here&rsquo;s a brief summary of how The List works:</p>
+
+<ol>
+<li>User visits The List website and installs the app on their phone.</li>
+<li>Opens the app and registers to get an account (CCID) and agrees to
+terms, sets attribution info, etc. This should default to their name
+from their Android device where we can get it.</li>
+<li>Starts taking photos of things from The List.</li>
+</ol>
+
+
+<p>Easy to get started:</p>
+
+<ul>
+<li>Mobile app available on typical app stores and also direct from
+website.</li>
+<li>Simple terms and conditions and registration is minimal.</li>
+</ul>
+
+
+<p>Version 1.0 is Android only and requires a mobile data connection.</p>
+
+<h2>Design Goals </h2>
+
+<p>All design and engineering decisions will be taken with the following
+principle in mind:</p>
+
+<p>Simple is better than complicated.</p>
+
+<p>We will always try to eliminate choices that the user must make. Every
+bump on the user experience must be relentlessly sanded down.</p>
+
+<p>No jargon will remain in the user experience, anywhere.</p>
+
+<h2>Major Components </h2>
+
+<p>The List system runs on servers which are hosted by Creative Commons.
+There are four major software components in The List.</p>
+
+<h3>The Website</h3>
+
+<p>A database-backed website used to register with The List, and where
+partners can add items to The List.</p>
+
+<h3>Mobile application</h3>
+
+<p>Software run by the user. This is a mobile app that has a simple user
+interface^<a href="#cmnt1">[a]</a>^^<a href="#cmnt2">[b]</a>^.</p>
+
+<h3>The Processor</h3>
+
+<p>Takes the images uploaded to The List and processes them and batch
+uploads them to The Internet Archive.</p>
+
+<h3>CC Search</h3>
+
+<p>A search interface to the public commons that&rsquo;ll include (and optionally
+only show) images on The List.</p>
+
+<h2>Licenses </h2>
+
+<p>All software, including CC Search and the mobile application will be
+released under the GNU Affero General Public License version 3.0 or
+later.</p>
+
+<p>All content uploaded by users of The List is licensed under Creative
+Commons Attribution 4.0.</p>
+
+<h2>About The Rollout </h2>
+
+<p>Our primary goal is to rollout a fully-functional version of The List in
+a few months. That means that the initial version will almost certainly
+not be optimal in every way and will not contain every feature.</p>
+
+<h2>Physical Architecture </h2>
+
+<p>The initial rollout will be hosted on CC&rsquo;s servers at Bytemark&rsquo;s data
+center in York, UK.</p>
+
+<h2>Software Architecture </h2>
+
+<p>The app will be written using either native technology or Apache
+Cordova.</p>
+
+<p>The web applications will be written using PHP and MySQL, hosted on
+Debian web servers and SSL, using the standard Creative Commons
+application structure.</p>
+
+<p>The processor will run as a cronjob, likely running a script written in
+Python.</p>
+
+<h2>The User Experience </h2>
+
+<p>The user hears about The List from the Creative Commons website or
+newsletter. They visit The List website,
+https://thelist.creativecommons.org which has a little text explaining
+the goals of The List and directs them to install the mobile
+application.</p>
+
+<p>Upon opening the application, the user is given an option to login,
+register or to learn more about The List.</p>
+
+<h3>Learn more</h3>
+
+<p>This text is largely the same as the website, but we should include it
+here as well.</p>
+
+<h3>Register</h3>
+
+<p>Registration is a simple form that has three fields:</p>
+
+<ul>
+<li>Name (however people want to be credited for their work) &ndash; this
+should be a single text field.</li>
+<li>Email address: A single text field.</li>
+<li>Password: A single password field.</li>
+</ul>
+
+
+<p>Upon completing this form, we should allow people to start taking photos
+immediately and not worry about their registration to stop them from
+doing anything. Completing the form sends them an email with a single
+link to click. Clicking that link activates their account.</p>
+
+<h3>Log in</h3>
+
+<ul>
+<li>Email address field.</li>
+<li>Password</li>
+</ul>
+
+
+<p>There&rsquo;s also a link for ‘I forgot my password' which is a link to the
+reset password form on https://id.creativecommons.org/forgot/</p>
+
+<h2>Once a user is logged in: </h2>
+
+<ul>
+<li>The app will contact the https://thelist.creativecommons.org/list
+and download a snapshot of The List. This will contain the details
+of a number of potential images that we&rsquo;re looking for (ie. Mountain
+Dew, Spiderman comic, Morrissey, Mount Rushmore) and encourage the
+user to take photographs of these things with their phone.</li>
+<li>The list will be displayed as a series of cards, each one listing a
+title and where possible some extra information (from Wikipedia?)</li>
+<li>The user can swipe away images they have no interest in taking
+(using a metaphor from Tinder) or swipe cards into a to-do list
+feature.</li>
+<li>Taking a picture would be as simple as clicking a camera icon on the
+card listing the item in The List that&rsquo;s of interest.</li>
+</ul>
+
+
+<h2>Future Features </h2>
+
+<p>In future releases of The List, we would expect to know where a user is
+in the world and be able to show them requests for images local to them,
+such as a building in their town, or perhaps Morrissey is on tour in
+their town.</p>
+
+<p>Here&rsquo;s the general flow of The List website:</p>
+
+<h2>The Home Page </h2>
+
+<p>Ideally this is a one-page site, with useful exciting copy at the top
+and a large download button. Other copy is further down the page,
+including teaser copy to get partners involved, and maybe some partner
+logos.</p>
+
+<p>On the home page you see:</p>
+
+<h3>Welcome to The List!</h3>
+
+<p>TODO: Copy goes here.</p>
+
+<h4>Download</h4>
+
+<ul>
+<li>Download from Google Play</li>
+<li>Download from Amazon Appstore</li>
+<li>Download from F-Droid</li>
+<li>Direct apk download</li>
+</ul>
+
+
+<h4>Privacy Policy and Terms of Service</h4>
+
+<ul>
+<li>These will likely be standard CC documents, but check with Diane on
+this.</li>
+<li>Will need custom ToS, I expect. Sarah volunteered to work on this
+with us.</li>
+</ul>
+
+
+<h4>Conflicts and Communications Problems</h4>
+
+<p>To insure a seamless experience this section will list possible things
+that can go wrong and explain how we recover from them gracefully.</p>
+
+<p>App can&rsquo;t connect to the The List because of a DNS problem.</p>
+
+<p>The app knows the absolute IP address of The List server it&rsquo;s supposed
+to use and never uses DNS.</p>
+
+<p>App can&rsquo;t connect because they no longer have Internet connectivity.</p>
+
+<p>The app should have a cache of at least some images we&rsquo;re looking for.
+Users who are offline can still take pictures, which are queued up in
+the app to be uploaded when there&rsquo;s a connection.</p>
+
+<p>Future versions could expand on this by having an offline-mode.</p>
+
+<h2>Security </h2>
+
+<p>The List website, the CC search website and the CCID site are SSL
+websites from top to bottom.</p>
+
+<p>The app communicates with The List website over HTTPS.</p>
+
+<p><a href="#cmnt_ref1">[a]</a>Worth noting here that the app invokes the user&rsquo;s
+preferred camera? That it is not, in itself, a camera app?</p>
+
+<p><a href="#cmnt_ref2">[b]</a>Android seems to have a mechanism to just invoke the
+camera directly. Not sure if that uses a preferred app or the default OS
+camera functionality.</p>
