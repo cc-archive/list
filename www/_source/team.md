@@ -20,7 +20,11 @@ Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU d
 
 ## Alexandra Bain
 
+## David Bartholomew
+
 ## Maciej Jasiobedzki
+
+Technical Director at Playground Inc. Human being.
 
 ## David Senior
 
