@@ -20,11 +20,7 @@ Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU d
 
 ## Alexandra Bain
 
-<<<<<<< HEAD
-## Dave Bartholomew
-=======
 ## David Bartholomew
->>>>>>> ebaba9c4b2df958f79249d0533159e5c0f303264
 
 ## Maciej Jasiobedzki
 
