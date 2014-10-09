@@ -20,6 +20,8 @@ Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU d
 
 ## Alexandra Bain
 
+## Dave Bartholomew
+
 ## Maciej Jasiobedzki
 
 ## David Senior
