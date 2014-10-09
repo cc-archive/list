@@ -4,8 +4,7 @@ title: Get Involved
 permalink: /get-involved/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+* Join our IRC developer community: #creativecommons-dev on Freenode.
+* Our code is on GitHub and other places: <https://github.com/creativecommons/list>
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+All our code is released under the [GNU Affero GPL](https://www.gnu.org/licenses/agpl-3.0-standalone.html). Join us.
