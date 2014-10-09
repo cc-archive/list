@@ -4,8 +4,8 @@ title: Download
 permalink: /download/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+The final version of The List application will (hopefully) be
+available in all the usual places Android applications are found:
+Google Play, Amazon Appstore and F-Droid.
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+We'll also provide the latest apk build direct from this page.
