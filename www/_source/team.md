@@ -22,6 +22,8 @@ Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU d
 
 ## David Bartholomew
 
+Software Engineer at Playground Inc.
+
 ## Maciej Jasiobedzki
 
 Technical Director at Playground Inc. Human being.
