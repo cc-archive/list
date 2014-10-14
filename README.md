@@ -1,5 +1,5 @@
-The List
-========
+The List by Creative Commons
+============================
 
 * See our [functional spec](spec.md)
 
