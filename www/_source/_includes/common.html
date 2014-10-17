@@ -4,13 +4,17 @@
 <h3>Listmakers</h3>
 
 <ul>
-<li>Creative Commons</li>
-<li>ACME, Corp.</li>
-<li>ACME, Corp.</li>
-<li>ACME, Corp.</li>
-<li>ACME, Corp.</li>
-<li>ACME, Corp.</li>
-<li>ACME, Corp.</li>
+	{% for listmaker in site.data.listmakers %}
+		<li>
+		{% if listmaker.url %}
+			<a href="{{ listmaker.url }}">
+		{% endif %}
+		{{ listmaker.name }}
+		{% if listmaker.url %}
+			</a>
+		{% endif %}
+		</li>
+	{% endfor %}
 </ul>
 
 </div>
