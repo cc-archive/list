@@ -16,7 +16,9 @@ data, and 24-hour diners.
 
 ## Matt Lee
 
-Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU developer and Short Circuit 2 fan.
+<img class="float-left" width="200" src="/img/mattl.jpg" />
+
+Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU developer and Short Circuit 2 fan. Ready to fire walk with you.
 
 ## Alexandra Bain
 

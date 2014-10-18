@@ -10,5 +10,5 @@ All of the photographs captured through The List will be licensed under the [Cre
 
 Whether it's a lighthouse, a lunar eclipse, or a political demonstration, you can be the person to take the perfect shot.
 
-The List is still in development. If you're a developer, [we'd love your help!](/get-involved] If your organization would like to sign up as a listmaker, [drop us a line](https://creativecommons.org/contact).
+The List is still in development. If you're a developer, [we'd love your help!](/get-involved) If your organization would like to sign up as a listmaker, [drop us a line](https://creativecommons.org/contact).
 
