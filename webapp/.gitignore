@@ -29,3 +29,6 @@ tramp
 /auto/
 config.php
 themes/*/templates_c/
+composer.phar
+composer.lock
+vendor/
