@@ -1,5 +1,17 @@
-The List by Creative Commons
-============================
+The List powered by Creative Commons
+====================================
+
+No one can be everywhere at once. But *everyone* can.
+
+NGOs, journalists, government agencies, and cultural institutions all
+need photographs to tell their story and educate others. But there's
+no way for those organizations to be in the right place at the right
+time, every time. That's where we come in.
+
+Through The List, organizations will provide lists of locations,
+people, and events that they need photographs of. And when users are
+in the right place at the right time, they can claim an item from the
+list and publish a photograph of it.
 
 * See our [functional spec](spec.md)
 
