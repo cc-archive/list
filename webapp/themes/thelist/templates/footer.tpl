@@ -1,19 +1,5 @@
-<div class="well">
 
-<div class="container">
-
-  <div class="row">
-
-    <div class="col-md-6">
-      <ul class="nav nav-pills">
-	<li><a href="https://creativecommons.org/policies">Policies</a></li>
-	<li><a href="https://creativecommons.org/privacy">Privacy</a></li>
-	<li><a href="https://creativecommons.org/terms">Terms of Use</a></li>	    <li><a href="https://creativecommons.org/contact">Contact CC</a></li>
-      </ul>
-    </div>
-
-    <div class="col-md-6">
-      <p>
+      <p class="text-center">
 	<a rel="license"
 	   href="https://creativecommons.org/licenses/by/4.0/"
 	   title="Creative Commons Attribution 4.0 International license"
@@ -21,23 +7,18 @@
 		 alt="License"/></a>
       </p>
 
-      <p>
-	<small>
-	  Except where otherwise
-	  <a class="subfoot" href="//creativecommons.org/policies#license">noted</a>,
-	  content on
-	  <span 
-	     href="http://creativecommons.org" 
-	     property="cc:attributionName" 
-	     rel="cc:attributionURL">this site</span> 
-	  is licensed under a 
-	  <a rel="license" 
-	     href="//creativecommons.org/licenses/by/4.0/"
-	     class="subfoot">
-	    Creative Commons Attribution 4.0 International license</a>.
+      <p class="text-center"> <small> Images in <a
+	href="https://thelist.creativecommons.org/">The List powered
+	by Creative Commons</a> are licensed under a <a rel="license"
+	href="//creativecommons.org/licenses/by/4.0/" class="subfoot">
+	Creative Commons Attribution 4.0 International license</a>.
+	</small> </p>
+
+      <p class="text-center"><small>
+	<a href="https://creativecommons.org/policies">Policies</a>
+	<a href="https://creativecommons.org/privacy">Privacy</a>
+	<a href="https://creativecommons.org/terms">Terms of Use</a>
+	<a href="https://creativecommons.org/contact">Contact CC</a> 
 	</small>
       </p>
-    </div>
-  </div>
-</div>
-</div>
+

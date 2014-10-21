@@ -1,6 +1,6 @@
 <?php
 
-/* The List
+/* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
 
@@ -86,9 +86,17 @@ $smarty->setCacheDir($install_path . '/cache/');
 $smarty->setConfigDir(array($install_path . '/themes/' . $theme . '/config/', $install_path . '/themes/thelist/config/'));
 
 $current_lang = preg_replace('/.UTF-8/', '', $current_lang);
+
+$smarty->assign('casauth', $auth);
+
+if ($auth) {
+    $casuid = phpCAS::getUser();
+    $smarty->assign('userid',phpCAS::getUser());
+}
+
+
 $smarty->assign('lang_selector_array', array(($current_lang) => 1));
 $smarty->assign('base_url', $base_url);
-$smarty->assign('thelist_key', $thelist_key);
 $smarty->assign('default_theme', $default_theme);
 $smarty->assign('site_name', $site_name);
 $smarty->assign('img_url', $base_url . '/themes/' . $theme . '/img/');
@@ -98,7 +106,6 @@ $smarty->assign('this_page_absolute',
 	. (empty($_SERVER['HOST']) ? $_SERVER['SERVER_NAME'] : $_SERVER['HOST'])
 	. (($_SERVER['SERVER_PORT'] == 80) ? '' : (':' . $_SERVER['SERVER_PORT']))
 	. $_SERVER['REQUEST_URI']);
-$smarty->assign('registration_disabled', $registration_disabled);
 
 if (isset($logged_in) && $logged_in) {
 	$smarty->assign('logged_in', true);

@@ -1,0 +1,9 @@
+drop table Users;
+
+CREATE TABLE Users (
+email VARCHAR(255),
+id int(11) NOT NULL auto_increment,
+primary KEY (id)
+);
+
+alter table Users add unique (email);

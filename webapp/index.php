@@ -1,6 +1,6 @@
 <?php
 
-/* The List
+/* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
 
@@ -26,22 +26,27 @@
 */
 
 require_once('database.php');
+require 'data/User.php';
 
-if (isset($_REQUEST['hs']) && isset($_REQUEST['p'])) {
-	if (substr($_REQUEST['p'], 0, 3) == '1.2') {
-		require_once('1.x/submissions/1.2/handshake.php');
-	} else if (substr($_REQUEST['p'], 0, 3) == '1.1') {
-		require_once('1.x/submissions/1.1/handshake.php');
-	}
+if (isset($_REQUEST['hs'])) {
+
+    // foo
+
 } else {
-	//If we're not handshaking we display the nixtape start page
+	//If we're not handshaking we display the start page
 	require_once('templating.php');
 
+        if ($auth) {
 
-	$smarty->assign('headerfile', 'welcome-header.tpl');
-	$smarty->assign('welcome', true);
-	$smarty->display('welcome.tpl');
+            $userid = new User($casuid);
 
+            error_log($userid);
 
+            $smarty->assign('welcome', true);
+            $smarty->display('welcome.tpl');
+        }
+        else {
+            $smarty->display('noauth.tpl');
+        }
 
 }
