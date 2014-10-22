@@ -1,9 +1,47 @@
 drop table Users;
+drop table Makers;
+drop table Meta;
+drop table List;
 
 CREATE TABLE Users (
 email VARCHAR(255),
+makerid int(11),
 id int(11) NOT NULL auto_increment,
 primary KEY (id)
 );
 
+CREATE TABLE Makers (
+id int(11) NOT NULL auto_increment,
+name VARCHAR(255),
+uri VARCHAR(255),
+primary KEY (id)
+);
+
+CREATE TABLE Meta (
+id int(11) NOT NULL auto_increment,
+makerid int(11),
+primary KEY (id)
+);
+
+CREATE TABLE List (
+id int(11) NOT NULL auto_increment,
+makerid int(11),
+title VARCHAR(255),
+description TEXT,
+uri VARCHAR(255),
+primary KEY (id)
+);
+
+CREATE TABLE UserList (
+id int(11) NOT NULL auto_increment,
+userid int(11),
+listid int(11),
+primary KEY(id)
+);
+
 alter table Users add unique (email);
+alter table Makers add unique (name);
+alter table Makers add unique (uri);
+alter table List add unique (uri);
+
+

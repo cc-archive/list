@@ -37,18 +37,18 @@ if (isset($_REQUEST['hs'])) {
 	//If we're not handshaking we display the start page
 	require_once('templating.php');
 
-        if ($auth) {
+        if ($makerid) {
 
             // error_log($userid);
 
             $list = new UserList();
             
-            $listitems = $list->getUserTopList(20, $userid);
+            $listitems = $list->getMakerList(500, $makerid);
 
             $smarty->assign('list',$listitems);
 
             $smarty->assign('welcome', true);
-            $smarty->display('welcome.tpl');
+            $smarty->display('add.tpl');
         }
         else {
             $smarty->display('noauth.tpl');

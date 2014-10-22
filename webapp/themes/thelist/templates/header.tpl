@@ -20,13 +20,13 @@
 	    <span class="icon-bar"></span>
 	    <span class="icon-bar"></span>
 	  </button>
-	  <a id="title" class="navbar-brand" href="/">The List powered by Creative Commons</a>
+	  <a id="title" class="navbar-brand" href="/">The List{if $makerid} (for makers){/if}</a>
 	</div>
 	<nav class="collapse navbar-collapse gfm-navbar-collapse" role="navigation">
 	  <ul class="nav navbar-nav">
 	{if (!$casauth)} 
 	<li>
-	  <a href="?login">
+	  <a href="/?login">
 	    <span class="glyphicon glyphicon-log-in">
 	    </span>
 	    Log in
@@ -34,9 +34,35 @@
 	</li>
         {/if}
         {if ($userid)}
-	<li><a href="?logout">
+
+	<li><a href="/upload.php">
+	    <span class="glyphicon glyphicon-upload"></span>
+	    Upload
+	    </a></li>
+
+	{if $makerid}
+	<li><a href="/add.php">
+	    <span class="glyphicon glyphicon-plus"></span>
+	    &nbsp;Add to The List
+	    </a></li>
+        {/if}
+
+	<li><a href="/my-images.php">
+	    <span class="glyphicon glyphicon-folder-open"></span>
+	    &nbsp;My images
+	    </a></li>
+
+	<li><a href="/my-list.php">
+	    <span class="glyphicon glyphicon-tasks"></span>
+	    &nbsp;My list
+	    </a></li>
+
+	 
+
+
+	<li><a href="/?logout">
 	<span class="glyphicon glyphicon-log-out"></span>
-	     {$userid}
+	     Logout
 	     </a></li>
         {/if}
 	</li>

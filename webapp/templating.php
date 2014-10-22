@@ -29,6 +29,7 @@ define('SMARTY_DIR', '/usr/share/php/smarty3/');
 require_once('config.php');
 require_once('auth.php');
 require_once(SMARTY_DIR . 'Smarty.class.php');
+require_once "data/User.php";
 
 function displayError($error_title, $error_message) {
 	global $smarty;
@@ -92,6 +93,21 @@ $smarty->assign('casauth', $auth);
 if ($auth) {
     $casuid = phpCAS::getUser();
     $smarty->assign('userid',phpCAS::getUser());
+
+    $attr = phpCAS::getAttributes();
+
+    $nickname = $attr['nickname'];
+
+    $smarty->assign('handle', $nickname);
+    
+    $user = new User($casuid);
+
+    $userid = $user->id;
+    $makerid = $user->makerid;
+
+    $smarty->assign('makerid', $makerid);
+
+
 }
 
 

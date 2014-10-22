@@ -35,7 +35,7 @@ require_once($install_path . '/database.php');
  */
 class User {
 
-    public $email, $id;
+    public $email, $id, $makerid;
 
 	/**
 	 * User constructor
@@ -70,8 +70,10 @@ class User {
             }
 
             if (is_array($row)) {
+
                 $this->email            = $row['email'];
                 $this->id               = $row['id'];
+                $this->makerid          = $row['makerid'];
             }
         }
 }

@@ -39,16 +39,21 @@ if (isset($_REQUEST['hs'])) {
 
         if ($auth) {
 
+            $user = new User($casuid);
+
+            $userid = $user->id;
+
             // error_log($userid);
 
             $list = new UserList();
             
             $listitems = $list->getUserTopList(20, $userid);
 
+            $selection = $list->getNewList(20);
+
             $smarty->assign('list',$listitems);
 
-            $smarty->assign('welcome', true);
-            $smarty->display('welcome.tpl');
+            $smarty->display('my-list.tpl');
         }
         else {
             $smarty->display('noauth.tpl');
