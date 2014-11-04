@@ -27,3 +27,6 @@ tramp
 
 # AUCTeX auto folder
 /auto/
+
+# apitest
+/apitest/node_modules
