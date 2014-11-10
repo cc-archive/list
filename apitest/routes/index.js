@@ -8,15 +8,13 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'The List Test API' });
 });
 
-
 //GET All List Items
 router.get('/api/item', function(req, res) {
 	var response = {
 		status: "ok",
 		content: db.item
 	};
-	res.status(200);
-	res.send(response);
+	res.status(200).send(response);
 });
 
 //GET List Items by ID
@@ -38,6 +36,33 @@ router.get('/api/item/:id', function(req,res) {
 		}
 		res.status(404).send(response);
 	}
+});
+
+
+//GET ListMaker for Single Item
+//TODO: Add Listmaker Name to regular list item entry instead
+router.get('/api/item/:id/maker', function(req,res) {
+	var makerItem = {};
+	//Store Item Id
+	var id = req.params.id;
+
+	//Get item that matches that Id
+	var item = _.find(db.item, function(it){ return id == it.id; });
+	//Store Item name in makerItem object
+	makerItem.item = item.name;
+	console.log(item.userId);
+	//Get Maker Name
+	var maker = _.find(db.user, function(us){ 
+			return item.userId == us.id; 
+	});
+
+	makerItem.maker = maker.name;
+
+	var response = {
+		status: "ok",
+		content: makerItem
+	}
+	res.status(200).send(response);
 });
 
 //POST Add User
@@ -153,6 +178,7 @@ router.put('/api/user/:id', function(req,res) {
 	var user = _.find(db.user, function(it){ return id == it.id; });
 	var reqEmail = req.body.email;
 	var reqName = req.body.name;
+	var reqCategory = req.body.categories;
 
 	function validateEmail(testedEmail) { 
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -176,7 +202,7 @@ router.put('/api/user/:id', function(req,res) {
 	}
 
 	var errors = [];
-	//TODO: fix error “cant send headers after they are sent
+	//TODO: error:cant send headers after they are sent
 	if(user == undefined) {
 		var response = {
 			status: "error",
@@ -211,6 +237,8 @@ router.put('/api/user/:id', function(req,res) {
 			user.name = reqName;
 		}
 	}
+
+	//TODO: add categories
 
 	if(!errors.length) {
 		var response = {
@@ -254,7 +282,6 @@ router.get('/api/user/:id/list', function(req,res) {
 	var id = req.params.id;
 	var user = _.find(db.user, function(us){ return id == us.id; });
 	var userItemIds = user.items;
-
 	var userItems = _.filter(db.item, function(item) { 
 		return _.contains(userItemIds, item.id); 
 	});
@@ -325,14 +352,19 @@ router.get('/api/photo/:id', function(req,res) {
 	}
 });
 
-
+//GET All categories
 router.get('/api/category', function(req, res) {
-	res.send(db.categories);
+		var response = {
+			status: "ok",
+			content: db.category
+		}
+	res.status(200).send(response);
 });
 
+//GET Category by ID
 router.get('/api/category/:id', function(req, res) {
 	var id = req.params.id;
-	var category = db.categories[id];
+	var category = db.category[id];
 
 	if (category) {
 		var response = {

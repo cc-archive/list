@@ -5,7 +5,8 @@
 			email:"jane.smith@gmail.com",
 			password:"",
 			dateCreated:"01/03/14",
-			items: [2,3]
+			items: [2,3],
+			categories: [1,3]
 		},
 		{
 			id: 2,
@@ -13,7 +14,8 @@
 			email:"jim.smith@gmail.com",
 			password:"",
 			dateCreated:"12/04/14",
-			items: [1,2,3]
+			items: [1,2,3],
+			categories: [3,4,5]
 		},
 		{
 			id:3,
@@ -29,7 +31,8 @@
 			email:"hi@fooddudes.com",
 			password:"",
 			dateCreated:"12/04/14",
-			items:[]
+			items:[],
+			maker: true
 		},
 		{
 			id:5,
@@ -37,7 +40,8 @@
 			email:"info@khanacademy.com",
 			password:"",
 			dateCreated:"12/04/14",
-			items:[]
+			items:[],
+			maker: true
 		}
 	];
 
@@ -77,6 +81,14 @@
 		{
 			id: 3,
 			name: "Food"
+		},
+		{
+			id:4,
+			name:"People"		
+		},
+		{
+			id:5,
+			name:"Fandom"
 		}
 	];
 
@@ -85,7 +97,8 @@
 			id: 1,
 			name: "Turkey Dinner",
 			category: 3,
-			userId: 4,
+			userId: 3,
+			user: "BBC",
 			exampleUrl: ""	
 		},
 		{
@@ -93,6 +106,7 @@
 			name: "Rusted Pipes",
 			category: 2,
 			userId: 5,
+			user: "Khan Academy",
 			exampleUrl: ""
 		},
 		{
@@ -100,6 +114,7 @@
 			name: "Sailor Uniform",
 			category: 2,
 			userId: 4,
+			user: "Food Dudes",
 			exampleUrl: ""
 		},
 		{
@@ -107,16 +122,24 @@
 			name: "A Valley",
 			category: 1,
 			userId: 3,
+			user: "BBC",
 			exampleUrl:""
+		},
+		{
+			id: 5,
+			name: "Lasagna",
+			category: 2,
+			userId: 4,
+			user: "Food Dudes",
+			exampleUrl:""	
 		}
-
 	];
 
 	module.exports = {
 		user: user,
 		photo: photo,
 		category: category,
-		item: item
+		item: item,
 	};
 
 
