@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Activity Titles -->
+    <string name="app_name">The List</string>
+    <string name="title_activity_main">Your List</string>
+    <string name="title_activity_category_list">Pick Categories</string>
+    <string name="title_activity_random">Hit Me</string>
+
+    <!-- Fragment Section Labels -->
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <!-- Labels -->
+    <string name="next_button_label">Next</string>
+    <string name="action_randomItem_label">Hit Me</string>
+    <string name="action_random_label">Hit Me</string>
+
+    <!-- Menu Strings -->
+    <string name="action_settings">Settings</string>
+
+    <!-- Error Messages -->
+    <string name="error_external_storage">There was a problem accessing your device\’s external storage</string>
+    <string name="error_title">Error</string>
+    <string name="error_message">There was an error getting data</string>
+
+    <!-- Empty Labels -->
+    <string name="empty_feed_label">No items in your picks.</string>
+
+    <!-- List Item Dialog -->
+    <string-array name="listItem_choices">
+        <item>Take Picture</item>
+        <item>Choose Picture</item>
+        <item>Save Item to Your List</item>
+    </string-array>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="empty_list">No Items To Display</string>
+
+
+</resources>
