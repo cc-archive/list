@@ -50,7 +50,6 @@ router.get('/api/item/:id/maker', function(req,res) {
 	var item = _.find(db.item, function(it){ return id == it.id; });
 	//Store Item name in makerItem object
 	makerItem.item = item.name;
-	console.log(item.userId);
 	//Get Maker Name
 	var maker = _.find(db.user, function(us){ 
 			return item.userId == us.id; 
