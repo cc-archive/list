@@ -1,11 +1,11 @@
-package com.pcurio.thelistapp.utils;
+package org.creativecommons.thelist.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.pcurio.thelistapp.R;
+import org.creativecommons.thelist.R;
 
 /**
  * Created by damaris on 2014-11-07.

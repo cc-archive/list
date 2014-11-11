@@ -1,4 +1,4 @@
-package com.pcurio.thelistapp.utils;
+package org.creativecommons.thelist.utils;
 
 /**
  * Created by damaris on 2014-11-06.

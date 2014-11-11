@@ -1,4 +1,4 @@
-package com.pcurio.thelistapp.TabbedActivity;
+package org.creativecommons.thelist.TabbedActivity;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pcurio.thelistapp.R;
+import org.creativecommons.thelist.R;
 
 /**
  * Created by damaris on 2014-11-06.

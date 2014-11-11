@@ -1,4 +1,4 @@
-package com.pcurio.thelistapp;
+package org.creativecommons.thelist;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.pcurio.thelistapp.utils.RequestMethods;
 
+import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +50,6 @@ public class CategoryListActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
-
 
         //Load UI Elements
         mListView = getListView();

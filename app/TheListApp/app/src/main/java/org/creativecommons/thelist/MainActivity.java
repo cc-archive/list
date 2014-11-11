@@ -1,19 +1,22 @@
-package com.pcurio.thelistapp;
+package org.creativecommons.thelist;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.HeaderViewListAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -24,8 +27,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.pcurio.thelistapp.utils.PhotoConstants;
-import com.pcurio.thelistapp.utils.RequestMethods;
+import org.creativecommons.thelist.utils.PhotoConstants;
+import org.creativecommons.thelist.utils.RequestMethods;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +40,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
 
     //Request Methods
@@ -55,6 +58,26 @@ public class MainActivity extends ListActivity {
     protected ProgressBar mProgressBar;
     protected ListView mListView;
 
+    protected ListView getListView() {
+        if (mListView == null) {
+            mListView = (ListView) findViewById(android.R.id.list);
+        }
+        return mListView;
+    }
+
+    protected void setListAdapter(ListAdapter adapter) {
+        getListView().setAdapter(adapter);
+    }
+
+    protected ListAdapter getListAdapter() {
+        ListAdapter adapter = getListView().getAdapter();
+        if (adapter instanceof HeaderViewListAdapter) {
+            return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
+        } else {
+            return adapter;
+        }
+    }
+
     //Uri for Photos
     protected Uri mMediaUri;
 
@@ -64,7 +87,7 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         //Load UI Elements
-        mListView = getListView();
+
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
 
         //If Network Connection is available, Execute getDataTask
@@ -106,8 +129,9 @@ public class MainActivity extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     //MAKE CALL TO API AND UPDATE LIST
@@ -217,19 +241,26 @@ public class MainActivity extends ListActivity {
                 }
             };
 
-    //TODO: Custom List Adapter
+    //TODO: Custom List Adapter (May fix onListItemClick Problem
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+
+    protected void onListItemClick(ListView lv, View v, int position, long id) {
+        getListView().getOnItemClickListener().onItemClick(lv, v, position, id);
 
         //TODO: Start Upload Options + Save to List
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(R.array.listItem_choices, mDialogListener);
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
+
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//        super.onListItemClick(l, v, position, id);
+//
+//
+//
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -247,7 +278,6 @@ public class MainActivity extends ListActivity {
             Intent intent = new Intent(MainActivity.this, RandomActivity.class);
             startActivity(intent);
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

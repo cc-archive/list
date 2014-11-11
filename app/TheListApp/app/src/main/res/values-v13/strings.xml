@@ -44,6 +44,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="empty_list">No Items To Display</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_feed">FeedActivity</string>
 
 </resources>

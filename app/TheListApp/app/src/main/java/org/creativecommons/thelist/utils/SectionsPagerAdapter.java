@@ -1,13 +1,13 @@
-package com.pcurio.thelistapp.utils;
+package org.creativecommons.thelist.utils;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.content.Context;
 
-import com.pcurio.thelistapp.TabbedActivity.BrowseFragment;
-import com.pcurio.thelistapp.TabbedActivity.FeedFragment;
-import com.pcurio.thelistapp.R;
+import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.TabbedActivity.BrowseFragment;
+import org.creativecommons.thelist.TabbedActivity.FeedFragment;
 
 import java.util.Locale;
 

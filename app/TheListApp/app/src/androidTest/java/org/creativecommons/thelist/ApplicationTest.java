@@ -1,4 +1,4 @@
-package com.pcurio.thelistapp;
+package org.creativecommons.thelist;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

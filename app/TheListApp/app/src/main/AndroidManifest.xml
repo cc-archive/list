@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pcurio.thelistapp" >
+    package="org.creativecommons.thelist" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,18 +12,18 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.pcurio.thelistapp.MainActivity"
+            android:name="org.creativecommons.thelist.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.pcurio.thelistapp.TabbedActivity.TabActivity"
+            android:name=".TabbedActivity.TabActivity"
             android:label="@string/title_activity_main" >
         </activity>
         <activity
-            android:name="com.pcurio.thelistapp.CategoryListActivity"
+            android:name="org.creativecommons.thelist.CategoryListActivity"
             android:label="@string/title_activity_category_list"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
@@ -31,8 +31,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.pcurio.thelistapp.RandomActivity"
+            android:name="org.creativecommons.thelist.RandomActivity"
             android:label="@string/title_activity_random" >
+        </activity>
+        <activity
+            android:name="org.creativecommons.thelist.LoginActivity"
+            android:label="@string/title_activity_login">
+        </activity>
+        <activity
+            android:name="org.creativecommons.thelist.FeedActivity"
+            android:label="@string/title_activity_feed" >
         </activity>
     </application>
 
