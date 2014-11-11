@@ -14,9 +14,6 @@
         <activity
             android:name="org.creativecommons.thelist.MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name="org.creativecommons.thelist.TabbedActivity.TabActivity"
@@ -27,6 +24,7 @@
             android:label="@string/title_activity_category_list"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

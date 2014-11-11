@@ -62,14 +62,15 @@ public class LoginActivity extends Activity {
                 else {
                     //userLogin
                     //If is user == true login, else create new user
+                    // existingUser = requestMethods.isUser() ? userLogin() : createNewUser();
+
+
 
 
                 }
 
             }
         });
-
-
 
     } //OnCreate
 
@@ -95,7 +96,7 @@ public class LoginActivity extends Activity {
 
         //Data to be sent
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("token", "AbCdEfGh123456");
+        //params.put(username, password);
 
 //        JsonObjectRequest newUserRequest = new JsonObjectRequest(Request.Method.POST, url, null,
 //                new Response.Listener<JSONObject>() {
