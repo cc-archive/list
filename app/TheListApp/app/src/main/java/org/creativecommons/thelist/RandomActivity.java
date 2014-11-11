@@ -112,7 +112,14 @@ public class RandomActivity extends Activity {
         String randomNumber = String.valueOf(n);
 
         //TODO: Filter results by User Picked Categories
-        String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
+
+        //Genymotion Emulator
+        //String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
+
+        //Android Default Emulator
+        String url = "http://10.0.2.2:3000/api/item" + randomNumber + "/maker";
+
+
         Log.v(TAG, url);
 
         JsonObjectRequest randomItemRequest = new JsonObjectRequest(Request.Method.GET, url, null,

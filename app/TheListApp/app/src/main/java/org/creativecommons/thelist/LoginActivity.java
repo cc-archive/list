@@ -21,6 +21,9 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
     }
 
+    //TODO: Login existing user
+
+    //TODO: Post new user data
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

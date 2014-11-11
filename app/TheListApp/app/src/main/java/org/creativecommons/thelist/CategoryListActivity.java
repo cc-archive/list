@@ -86,7 +86,11 @@ public class CategoryListActivity extends ListActivity {
     private void getCategoriesRequest() {
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.3.2:3000/api/category";
+        //Genymotion Emulator
+        //String url = "http://10.0.3.2:3000/api/category";
+
+        //Android Default Emulator
+        String url = "http://10.0.2.2:3000/api/category";
 
         JsonObjectRequest getCategoriesRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {

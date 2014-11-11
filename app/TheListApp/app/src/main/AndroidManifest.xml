@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TabbedActivity.TabActivity"
+            android:name="org.creativecommons.thelist.TabbedActivity.TabActivity"
             android:label="@string/title_activity_main" >
         </activity>
         <activity

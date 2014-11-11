@@ -137,7 +137,12 @@ public class MainActivity extends ActionBarActivity {
     //MAKE CALL TO API AND UPDATE LIST
     private void makeJsonDataRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://10.0.3.2:3000/api/item";
+
+        //Genymotion Emulator
+        //String url ="http://10.0.3.2:3000/api/item";
+
+        //Android Default Emulator
+        String url = "http://10.0.2.2:3000/api/item";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -241,7 +246,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             };
 
-    //TODO: Custom List Adapter (May fix onListItemClick Problem
+    //TODO: Custom List Adapter (May fix onListItemClick Problem)
 
 
     protected void onListItemClick(ListView lv, View v, int position, long id) {
