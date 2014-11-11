@@ -117,7 +117,7 @@ public class RandomActivity extends Activity {
         //String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
 
         //Android Default Emulator
-        String url = "http://10.0.2.2:3000/api/item" + randomNumber + "/maker";
+        String url = "http://10.0.2.2:3000/api/item/" + randomNumber + "/maker";
 
 
         Log.v(TAG, url);

@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
 
     //Request Methods
-    RequestMethods mRequestMethods = new RequestMethods(this);
+    RequestMethods requestMethods = new RequestMethods(this);
 
     //For API Requests
     protected JSONObject mItemData;
@@ -91,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
 
         //If Network Connection is available, Execute getDataTask
-        if(mRequestMethods.isNetworkAvailable()) {
+        if(requestMethods.isNetworkAvailable()) {
             mProgressBar.setVisibility(View.VISIBLE);
             makeJsonDataRequest();
         }
@@ -104,7 +104,7 @@ public class MainActivity extends ActionBarActivity {
     private void updateList() {
         mProgressBar.setVisibility(View.INVISIBLE);
         if (mItemData == null) {
-            mRequestMethods.updateDisplayForError();
+            requestMethods.updateDisplayForError();
         }
         else {
             JSONArray jsonItems = null;
@@ -154,7 +154,7 @@ public class MainActivity extends ActionBarActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                mRequestMethods.updateDisplayForError();
+                requestMethods.updateDisplayForError();
             }
         });
         queue.add(jsonObjectRequest);

@@ -20,7 +20,7 @@ public class RequestMethods {
 
     public boolean isUser() {
         //TODO: Check if User exists
-        return true;
+        return false;
     }
 
     public boolean isLoggedIn() {
@@ -51,6 +51,14 @@ public class RequestMethods {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    //Update For Login Error
+//    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//    builder.setMessage(e.getMessage())
+//            .setTitle(R.string.login_error_title)
+//    .setPositiveButton(android.R.string.ok, null);
+//    AlertDialog dialog = builder.create();
+//    dialog.show();
 
 
 }
