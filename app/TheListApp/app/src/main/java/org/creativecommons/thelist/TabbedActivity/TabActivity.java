@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.SectionsPagerAdapter;
 
 public class TabActivity extends ActionBarActivity implements ActionBar.TabListener {
 

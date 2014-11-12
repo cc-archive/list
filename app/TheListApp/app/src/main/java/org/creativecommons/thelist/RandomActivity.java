@@ -163,35 +163,34 @@ public class RandomActivity extends Activity {
 //        if(requestMethods.isUser()) {
 //            //TODO: POST saved items to database
 //
-////            JsonObjectRequest storeItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, null,
-////                    new Response.Listener<JSONObject>() {
-////
-////                        @Override
-////                        public void onResponse(JSONObject response) {
-////                            try {
-////                                //mProgressBar.setVisibility(View.INVISIBLE);
-////
-////                                //User Feedback
-////                                //Show Toast that item has been added
-////
-////                            } catch (JSONException e) {
-////                                Log.e(TAG, e.getMessage());
-////                            }
-////                        }
-////                    }, new Response.ErrorListener() {
-////                @Override
-////                public void onErrorResponse (VolleyError error){
-////                    requestMethods.updateDisplayForError();
-////                }
-////            });
-////            queue.add(storeItemsRequest);
-////        }
+//            JsonObjectRequest storeItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, null,
+//                    new Response.Listener<JSONObject>() {
+//
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            try {
+//                                //mProgressBar.setVisibility(View.INVISIBLE);
+//
+//                                //User Feedback
+//                                //Show Toast that item has been added
+//
+//                            } catch (JSONException e) {
+//                                Log.e(TAG, e.getMessage());
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse (VolleyError error){
+//                    requestMethods.updateDisplayForError();
+//                }
+//            });
+//            queue.add(storeItemsRequest);
+//        }
 //        //If User is new, add items to local object to later be added to his/her User Object
 //        else {
 //         //TODO: Store in local object
 //
 //        }
-
 
     } //putRandomItemsRequest
 

@@ -29,10 +29,10 @@
     <string name="empty_feed_label">No items in your picks.</string>
 
     <!-- Login/SignUp Shared Strings -->
-    <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="login_button_label">Login</string>
-    <string name="signup_text">Sign Up!</string>
+    <string name="login_error_title">Oops!</string>
+    <string name="login_error_message">Please make sure you enter a valid name and password</string>
 
     <!-- List Item Dialog -->
     <string-array name="listItem_choices">
@@ -45,5 +45,8 @@
     <string name="empty_list">No Items To Display</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_feed">FeedActivity</string>
+    <string name="email_hint">Email</string>
+    <string name="full_name_hint">Full Name</string>
+    <string name="title_activity_account">AccountActivity</string>
 
 </resources>

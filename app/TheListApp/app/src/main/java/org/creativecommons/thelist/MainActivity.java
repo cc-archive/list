@@ -1,6 +1,5 @@
 package org.creativecommons.thelist;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,15 +7,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,56 +22,42 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.CustomListAdapter;
+import org.creativecommons.thelist.utils.ListItem;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
-
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
 
-    //For API Requests
+    //For API Requests + Response
     protected JSONObject mItemData;
-    protected String[] mItemTitles;
-    //protected String[] mListMakers;
-
+    protected JSONArray mJsonItems;
     //TODO: Limit returned results to most recent
     //public static final int NUMBER_OF_POSTS = 5;
+
+    //Handle Data
+    private List<ListItem> mItemList = new ArrayList<ListItem>();
+    protected CustomListAdapter adapter;
 
     //UI Elements
     protected ProgressBar mProgressBar;
     protected ListView mListView;
-
-    protected ListView getListView() {
-        if (mListView == null) {
-            mListView = (ListView) findViewById(android.R.id.list);
-        }
-        return mListView;
-    }
-
-    protected void setListAdapter(ListAdapter adapter) {
-        getListView().setAdapter(adapter);
-    }
-
-    protected ListAdapter getListAdapter() {
-        ListAdapter adapter = getListView().getAdapter();
-        if (adapter instanceof HeaderViewListAdapter) {
-            return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
-        } else {
-            return adapter;
-        }
-    }
 
     //Uri for Photos
     protected Uri mMediaUri;
@@ -87,8 +68,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         //Load UI Elements
-
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
+        mListView = (ListView)findViewById(R.id.list);
+        adapter = new CustomListAdapter(this, mItemList);
+        mListView.setAdapter(adapter);
+
+        //TODO: Fix on Click
 
         //If Network Connection is available, Execute getDataTask
         if(requestMethods.isNetworkAvailable()) {
@@ -107,31 +92,24 @@ public class MainActivity extends ActionBarActivity {
             requestMethods.updateDisplayForError();
         }
         else {
-            JSONArray jsonItems = null;
             try {
-                jsonItems = mItemData.getJSONArray("content");
-                mItemTitles = new String[jsonItems.length()];
+                mJsonItems = mItemData.getJSONArray("content");
 
-                for(int i = 0; i<jsonItems.length(); i++) {
-                    JSONObject jsonCategory = jsonItems.getJSONObject(i);
-                    String ItemName = jsonCategory.getString("name");
-                    ItemName = Html.fromHtml(ItemName).toString();
-                    mItemTitles[i] = ItemName;
+                for(int i = 0; i < mJsonItems.length(); i++) {
+                    JSONObject jsonSingleItem = mJsonItems.getJSONObject(i);
+                    ListItem listItem = new ListItem();
+                    listItem.setItemName(jsonSingleItem.getString(ApiConstants.ITEM_NAME));
+                    listItem.setMakerName(jsonSingleItem.getString(ApiConstants.MAKER_NAME));
+
+                    //Adding to array of List Items
+                    mItemList.add(listItem);
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Exception Caught: ", e);
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, mItemTitles);
-            setListAdapter(adapter);
+            //TODO: Add list adapter
+            adapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     //MAKE CALL TO API AND UPDATE LIST
@@ -139,10 +117,10 @@ public class MainActivity extends ActionBarActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         //Genymotion Emulator
-        //String url ="http://10.0.3.2:3000/api/item";
+        String url ="http://10.0.3.2:3000/api/item";
 
         //Android Default Emulator
-        String url = "http://10.0.2.2:3000/api/item";
+        //String url = "http://10.0.2.2:3000/api/item";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -246,26 +224,33 @@ public class MainActivity extends ActionBarActivity {
                 }
             };
 
-    //TODO: Custom List Adapter (May fix onListItemClick Problem)
 
 
-    protected void onListItemClick(ListView lv, View v, int position, long id) {
-        getListView().getOnItemClickListener().onItemClick(lv, v, position, id);
-
-        //TODO: Start Upload Options + Save to List
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(R.array.listItem_choices, mDialogListener);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+//    protected void onListItemClick(ListView lv, View v, int position, long id) {
+//        mListView.getOnItemClickListener().onItemClick(lv, v, position, id);
+//
+//
+//    }
 
 //    @Override
 //    protected void onListItemClick(ListView l, View v, int position, long id) {
 //        super.onListItemClick(l, v, position, id);
 //
-//
-//
+//        //TODO: Start Upload Options + Save to List
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setItems(R.array.listItem_choices, mDialogListener);
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
 //    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

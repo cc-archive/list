@@ -29,7 +29,6 @@ public class RequestMethods {
     }
 
 
-
     //CHECK AVAILABILITY OF NETWORK
     public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -52,13 +51,16 @@ public class RequestMethods {
         dialog.show();
     }
 
-    //Update For Login Error
-//    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//    builder.setMessage(e.getMessage())
-//            .setTitle(R.string.login_error_title)
-//    .setPositiveButton(android.R.string.ok, null);
-//    AlertDialog dialog = builder.create();
-//    dialog.show();
+    //TODO: Update For Login Error
+    public void updateDisplayForLoginError() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//        builder.setMessage(e.getMessage())
+//                .setTitle(R.string.login_error_title)
+//                .setPositiveButton(android.R.string.ok, null);
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+    }
+
 
 
 }

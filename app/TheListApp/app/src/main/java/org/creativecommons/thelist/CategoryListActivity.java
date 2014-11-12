@@ -27,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 
 public class CategoryListActivity extends ListActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
@@ -37,6 +39,7 @@ public class CategoryListActivity extends ListActivity {
     //For API Request
     protected JSONObject mCategoryData;
     protected String[] mCategoryTitles;
+    protected JSONObject mPutResponse;
 
     //UI Elements
     protected ProgressBar mProgressBar;
@@ -84,13 +87,12 @@ public class CategoryListActivity extends ListActivity {
 
 
     private void getCategoriesRequest() {
-
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        //String url = "http://10.0.3.2:3000/api/category";
+        String url = "http://10.0.3.2:3000/api/category";
 
         //Android Default Emulator
-        String url = "http://10.0.2.2:3000/api/category";
+        //String url = "http://10.0.2.2:3000/api/category";
 
         JsonObjectRequest getCategoriesRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -127,40 +129,42 @@ public class CategoryListActivity extends ListActivity {
             }
         });
         queue.add(getCategoriesRequest);
-
     } //getCategoriesRequest
 
 
-    //Store categories for later use (could reuse this for future item selections//crete conditional like RandomActivity)
+    //Store categories for later use
     private void storeCategoriesRequest() {
         //TODO: Create Object with Category choices
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.3.2:3000/api/user";
+        //Genymotion Emulator
+        String url = "http://10.0.3.2:3000/api/category";
 
-        JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+        //Android Default Emulator
+        //String url = "http://10.0.2.2:3000/api/category";
+
+        //Data to be sent
+        HashMap<String, String> params = new HashMap<String, String>();
+//        params.put(ApiConstants.CATEGORY_ID, array of category ids)
+        Log.v(TAG,params.toString());
+
+        JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         JSONArray jsonCategories = null;
                         try {
-                            //Handle Data
-                            mCategoryData = response;
-                            jsonCategories = mCategoryData.getJSONArray("content");
-                            mCategoryTitles = new String[jsonCategories.length()];
+                            //TODO: Check response code
 
-                            for(int i = 0; i<jsonCategories.length(); i++) {
-                                JSONObject jsonCategory = jsonCategories.getJSONObject(i);
-                                String categoryName = jsonCategory.getString("name");
-                                categoryName = Html.fromHtml(categoryName).toString();
-                                mCategoryTitles[i] = categoryName;
-                            }
+//                            if(responseCode != 200), get response data + show error
+
+                            //Handle Data
+                            mPutResponse = response.getJSONObject("content");
+                            Log.v(TAG, mPutResponse.toString());
 
                             mProgressBar.setVisibility(View.INVISIBLE);
                             //Update UI
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_checked,mCategoryTitles);
-                            setListAdapter(adapter);
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -173,7 +177,6 @@ public class CategoryListActivity extends ListActivity {
             }
         });
         queue.add(postCategoriesRequest);
-
     } //storeCategoriesRequest
 
 
@@ -181,6 +184,8 @@ public class CategoryListActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+
+        //TODO: Store checked item names array then get IDs for those names from
 
         //Count how many items are checked: if at least 3, show Next Button
         SparseBooleanArray positions = mListView.getCheckedItemPositions();

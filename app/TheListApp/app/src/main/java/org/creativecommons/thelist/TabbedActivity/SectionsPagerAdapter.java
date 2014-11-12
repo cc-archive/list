@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.TabbedActivity;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.TabbedActivity.BrowseFragment;
-import org.creativecommons.thelist.TabbedActivity.FeedFragment;
 
 import java.util.Locale;
 

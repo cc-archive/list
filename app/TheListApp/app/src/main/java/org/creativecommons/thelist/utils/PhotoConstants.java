@@ -9,4 +9,5 @@ public class PhotoConstants {
     public static final int MEDIA_TYPE_IMAGE = 2;
 
     public static final int FILE_SIZE_LIMIT = 1024*1024*10; //10 MB
+
 }
