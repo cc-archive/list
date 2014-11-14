@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * Created by damaris on 2014-11-12.
  */
-public class CustomListAdapter extends BaseAdapter {
+public class MainListAdapter extends BaseAdapter {
     private Activity activity;
     private LayoutInflater inflater;
-    private List<ListItem> listItems;
+    private List<MainListItem> listItems;
 
-    public CustomListAdapter(Activity activity, List<ListItem> listItems) {
+    public MainListAdapter(Activity activity, List<MainListItem> listItems) {
         this.activity = activity;
         this.listItems = listItems;
     }
@@ -49,14 +49,14 @@ public class CustomListAdapter extends BaseAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item, null);
+            convertView = inflater.inflate(R.layout.main_list_item, null);
             holder = new ViewHolder();
             holder.iconImageView = (ImageView)convertView.findViewById(R.id.camera_icon);
             holder.nameLabel = (TextView)convertView.findViewById(R.id.list_item_name);
             holder.makerLabel = (TextView)convertView.findViewById(R.id.list_item_maker);
 
             //getting Data for the row
-            ListItem l = listItems.get(position);
+            MainListItem l = listItems.get(position);
 
             //Item Name
             holder.nameLabel.setText(l.getItemName());

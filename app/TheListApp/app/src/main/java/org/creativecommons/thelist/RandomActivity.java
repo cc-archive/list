@@ -108,16 +108,17 @@ public class RandomActivity extends Activity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         Random random = new Random();
+        //TODO: Change max to length of response?
         int n = random.nextInt(5) + 1;
         String randomNumber = String.valueOf(n);
 
         //TODO: Filter results by User Picked Categories
 
         //Genymotion Emulator
-        //String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
+        String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
 
         //Android Default Emulator
-        String url = "http://10.0.2.2:3000/api/item/" + randomNumber + "/maker";
+        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber + "/maker";
 
 
         Log.v(TAG, url);

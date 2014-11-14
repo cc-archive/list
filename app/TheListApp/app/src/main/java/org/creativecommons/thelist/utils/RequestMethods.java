@@ -25,7 +25,7 @@ public class RequestMethods {
 
     public boolean isLoggedIn() {
         //TODO: Check if User is logged in
-        return true;
+        return false;
     }
 
 

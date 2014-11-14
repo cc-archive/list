@@ -37,6 +37,15 @@
             android:name="org.creativecommons.thelist.AccountActivity"
             android:label="@string/title_activity_account" >
         </activity>
+        <activity
+            android:name="org.creativecommons.thelist.StartActivity"
+            android:label="@string/title_activity_start" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

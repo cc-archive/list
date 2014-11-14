@@ -22,7 +22,7 @@ public class ListFeedAdapter extends ArrayAdapter<JSONArray> {
     protected List<JSONArray> mListItems;
 
     public ListFeedAdapter(Context context, List<JSONArray> listItems) {
-        super(context, R.layout.list_item, listItems);
+        super(context, R.layout.main_list_item, listItems);
         mContext = context;
         mListItems = listItems;
     }
@@ -32,7 +32,7 @@ public class ListFeedAdapter extends ArrayAdapter<JSONArray> {
         ViewHolder holder;
 
         if(convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.main_list_item, null);
             holder = new ViewHolder();
             holder.iconImageView = (ImageView)convertView.findViewById(R.id.camera_icon);
             holder.nameLabel = (TextView)convertView.findViewById(R.id.list_item_name);

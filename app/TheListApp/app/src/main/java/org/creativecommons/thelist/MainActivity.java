@@ -23,9 +23,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.creativecommons.thelist.adapters.MainListAdapter;
+import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.CustomListAdapter;
-import org.creativecommons.thelist.utils.ListItem;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
@@ -52,8 +52,8 @@ public class MainActivity extends ActionBarActivity {
     //public static final int NUMBER_OF_POSTS = 5;
 
     //Handle Data
-    private List<ListItem> mItemList = new ArrayList<ListItem>();
-    protected CustomListAdapter adapter;
+    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
+    protected MainListAdapter adapter;
 
     //UI Elements
     protected ProgressBar mProgressBar;
@@ -70,7 +70,7 @@ public class MainActivity extends ActionBarActivity {
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mListView = (ListView)findViewById(R.id.list);
-        adapter = new CustomListAdapter(this, mItemList);
+        adapter = new MainListAdapter(this, mItemList);
         mListView.setAdapter(adapter);
 
         //TODO: Fix on Click
@@ -97,7 +97,7 @@ public class MainActivity extends ActionBarActivity {
 
                 for(int i = 0; i < mJsonItems.length(); i++) {
                     JSONObject jsonSingleItem = mJsonItems.getJSONObject(i);
-                    ListItem listItem = new ListItem();
+                    MainListItem listItem = new MainListItem();
                     listItem.setItemName(jsonSingleItem.getString(ApiConstants.ITEM_NAME));
                     listItem.setMakerName(jsonSingleItem.getString(ApiConstants.MAKER_NAME));
 

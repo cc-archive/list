@@ -1,15 +1,15 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.adapters;
 
 /**
  * Created by damaris on 2014-11-12.
  */
-public class ListItem {
+public class MainListItem {
     private String itemName, makerName;
 
-    public ListItem() {
+    public MainListItem() {
     }
 
-    public ListItem(String name, String maker) {
+    public MainListItem(String name, String maker) {
         this.itemName = name;
         this.makerName = maker;
     }

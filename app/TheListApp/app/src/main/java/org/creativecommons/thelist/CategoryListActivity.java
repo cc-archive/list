@@ -22,24 +22,32 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.creativecommons.thelist.adapters.CategoryListAdapter;
+import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class CategoryListActivity extends ListActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
-
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
 
-    //For API Request
+    //GET Request
     protected JSONObject mCategoryData;
-    protected String[] mCategoryTitles;
+
+    //PUT request (if user is logged in)
     protected JSONObject mPutResponse;
+
+    //Handle Data
+    private List<CategoryListItem> mCategoryList = new ArrayList<CategoryListItem>();
+    protected CategoryListAdapter adapter;
 
     //UI Elements
     protected ProgressBar mProgressBar;
@@ -55,19 +63,26 @@ public class CategoryListActivity extends ListActivity {
         setContentView(R.layout.activity_category_list);
 
         //Load UI Elements
-        mListView = getListView();
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mNextButton = (Button) findViewById(R.id.nextButton);
         mNextButton.setVisibility(View.INVISIBLE);
 
-        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        //Set List Adapter
+        mListView = (ListView)findViewById(R.id.list);
+        adapter = new CategoryListAdapter(this,mCategoryList);
+        mListView.setAdapter(adapter);
 
         //TODO: mNextButton POST Category selection to Database
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //POST selection to Database [array of category ids]
-                storeCategoriesRequest();
+                if(requestMethods.isLoggedIn()) {
+                    storeCategoriesRequest();
+                } else {
+                    //TODO: store in sharedPreferences
+                }
+
 
                 //Navigate to Next Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
