@@ -9,7 +9,6 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -119,19 +118,19 @@ public class CategoryListActivity extends ListActivity {
                             //Handle Data
                             mCategoryData = response;
                             jsonCategories = mCategoryData.getJSONArray("content");
-                            mCategoryTitles = new String[jsonCategories.length()];
+                            //mCategoryTitles = new String[jsonCategories.length()];
 
                             for(int i = 0; i<jsonCategories.length(); i++) {
                                 JSONObject jsonCategory = jsonCategories.getJSONObject(i);
                                 String categoryName = jsonCategory.getString("name");
                                 categoryName = Html.fromHtml(categoryName).toString();
-                                mCategoryTitles[i] = categoryName;
+                              //  mCategoryTitles[i] = categoryName;
                             }
 
                             mProgressBar.setVisibility(View.INVISIBLE);
                             //Update UI
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_checked,mCategoryTitles);
-                            setListAdapter(adapter);
+                            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_checked,mCategoryTitles);
+                            ///setListAdapter(adapter);
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());

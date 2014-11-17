@@ -56,6 +56,7 @@
     <string name="explainer2">Photos you share with The List will be available for any person or organization to use, as long as they give you credit</string>
     <string name="explainer3">Youll be helping creators tell their stories – on Wikipedia, social media, in the news, or in campaigns.</string>
     <string name="explainer4"> Together were building a commons of creativity and knowledge for everyone</string>
+    <string name="start_button_label">Start</string>
 
 
 </resources>

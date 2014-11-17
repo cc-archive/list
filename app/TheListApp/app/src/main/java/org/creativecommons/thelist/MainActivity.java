@@ -1,5 +1,6 @@
 package org.creativecommons.thelist;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -72,6 +74,16 @@ public class MainActivity extends ActionBarActivity {
         mListView = (ListView)findViewById(R.id.list);
         adapter = new MainListAdapter(this, mItemList);
         mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setItems(R.array.listItem_choices, mDialogListener);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
 
         //TODO: Fix on Click
 
@@ -223,7 +235,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
             };
-
 
 
 //    protected void onListItemClick(ListView lv, View v, int position, long id) {

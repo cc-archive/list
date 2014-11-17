@@ -1,19 +1,37 @@
 package org.creativecommons.thelist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class StartActivity extends Activity {
 
+    protected Button mStartButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        //UI Elements
+        mStartButton = (Button) findViewById(R.id.startButton);
+
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Navigate to Next Activity
+                Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
 
