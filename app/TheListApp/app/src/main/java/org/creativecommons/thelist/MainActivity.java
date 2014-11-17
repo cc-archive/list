@@ -75,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
         adapter = new MainListAdapter(this, mItemList);
         mListView.setAdapter(adapter);
 
+        //Show Dialog on List Item Click
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -84,8 +85,6 @@ public class MainActivity extends ActionBarActivity {
                 dialog.show();
             }
         });
-
-        //TODO: Fix on Click
 
         //If Network Connection is available, Execute getDataTask
         if(requestMethods.isNetworkAvailable()) {
@@ -235,25 +234,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
             };
-
-
-//    protected void onListItemClick(ListView lv, View v, int position, long id) {
-//        mListView.getOnItemClickListener().onItemClick(lv, v, position, id);
-//
-//
-//    }
-
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//        super.onListItemClick(l, v, position, id);
-//
-//        //TODO: Start Upload Options + Save to List
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setItems(R.array.listItem_choices, mDialogListener);
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

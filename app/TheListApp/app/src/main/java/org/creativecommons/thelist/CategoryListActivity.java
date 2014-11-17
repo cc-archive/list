@@ -1,14 +1,14 @@
 package org.creativecommons.thelist;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
+import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,13 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class CategoryListActivity extends ListActivity {
+public class CategoryListActivity extends Activity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
 
     //GET Request
     protected JSONObject mCategoryData;
+    protected JSONArray mJsonCategories;
 
     //PUT request (if user is logged in)
     protected JSONObject mPutResponse;
@@ -66,26 +68,33 @@ public class CategoryListActivity extends ListActivity {
         mNextButton = (Button) findViewById(R.id.nextButton);
         mNextButton.setVisibility(View.INVISIBLE);
 
-        //Set List Adapter
         mListView = (ListView)findViewById(R.id.list);
         adapter = new CategoryListAdapter(this,mCategoryList);
         mListView.setAdapter(adapter);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        //TODO: mNextButton POST Category selection to Database
-        mNextButton.setOnClickListener(new View.OnClickListener() {
+        //Show Next Button once minimum 3 have been selected
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                //POST selection to Database [array of category ids]
-                if(requestMethods.isLoggedIn()) {
-                    storeCategoriesRequest();
-                } else {
-                    //TODO: store in sharedPreferences
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //Count how many items are checked: if at least 3, show Next Button
+                SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                int ItemsChecked = 0;
+                if (positions != null) {
+                    int length = positions.size();
+                    for (int i = 0; i < length; i++) {
+                        if (positions.get(positions.keyAt(i))) {
+                            ItemsChecked++;
+                        }
+                    }
                 }
-
-
-                //Navigate to Next Activity
-                Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-                startActivity(intent);
+                if (ItemsChecked >= 3) {
+                    mNextButton.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mNextButton.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -97,7 +106,70 @@ public class CategoryListActivity extends ListActivity {
         else {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
         }
+
+        //TODO: mNextButton POST Category selection to Database
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO:POST selection to Database [array of category ids]
+                if(requestMethods.isLoggedIn()) {
+                    storeCategoriesRequest();
+                } else {
+                    //TODO:Find Items Checked, iterate through and get tag for each
+                    SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                    int length = positions.size();
+                    List<Integer> userCategories = new ArrayList<Integer>();
+
+                    for(int i = 0; i < length; i++) {
+                        int itemPosition = positions.keyAt(i);
+                        Log.v(TAG,String.valueOf(itemPosition));
+                        //Object selectedItem = mListView.getItemAtPosition(itemPosition);
+                        CategoryListItem item = (CategoryListItem) mListView.getItemAtPosition(itemPosition);
+                        int id = item.getCategoryID();
+
+                        //push id to array
+                        userCategories.add(id);
+                    }
+
+                    //TODO: store in sharedPreferences
+                    //add that array to shared preferences/create HashMap(?)
+
+
+                }
+                //Navigate to Next Activity
+                Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+                startActivity(intent);
+            }
+        });
+
     } //onCreate
+
+    //UPDATE LIST WITH CONTENT
+    private void updateList() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        if (mCategoryData == null) {
+            requestMethods.updateDisplayForError();
+        }
+        else {
+            try {
+                mJsonCategories = mCategoryData.getJSONArray("content");
+
+                for(int i = 0; i<mJsonCategories.length(); i++) {
+                    JSONObject jsonSingleCategory = mJsonCategories.getJSONObject(i);
+                    CategoryListItem categoryListItem = new CategoryListItem();
+                    categoryListItem.setCategoryName(jsonSingleCategory.getString(ApiConstants.CATEGORY_NAME));
+                    categoryListItem.setCategoryID(jsonSingleCategory.getInt(ApiConstants.CATEGORY_ID));
+
+                    //Adding to array of List Items
+                    mCategoryList.add(categoryListItem);
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Exception Caught: ", e);
+            }
+            //TODO: Add list adapter
+            adapter.notifyDataSetChanged();
+        }
+    }
 
 
     private void getCategoriesRequest() {
@@ -110,31 +182,11 @@ public class CategoryListActivity extends ListActivity {
 
         JsonObjectRequest getCategoriesRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
-                        JSONArray jsonCategories = null;
-                        try {
-                            //Handle Data
-                            mCategoryData = response;
-                            jsonCategories = mCategoryData.getJSONArray("content");
-                            //mCategoryTitles = new String[jsonCategories.length()];
-
-                            for(int i = 0; i<jsonCategories.length(); i++) {
-                                JSONObject jsonCategory = jsonCategories.getJSONObject(i);
-                                String categoryName = jsonCategory.getString("name");
-                                categoryName = Html.fromHtml(categoryName).toString();
-                              //  mCategoryTitles[i] = categoryName;
-                            }
-
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            //Update UI
-                            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_checked,mCategoryTitles);
-                            ///setListAdapter(adapter);
-
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
+                        //Handle Data
+                        mCategoryData = response;
+                        updateList();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -195,31 +247,31 @@ public class CategoryListActivity extends ListActivity {
 
 
     //When Category Name is selected
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        //TODO: Store checked item names array then get IDs for those names from
-
-        //Count how many items are checked: if at least 3, show Next Button
-        SparseBooleanArray positions = mListView.getCheckedItemPositions();
-        int ItemsChecked = 0;
-        if (positions != null) {
-            int length = positions.size();
-            for (int i = 0; i < length; i++) {
-                if (positions.get(positions.keyAt(i))) {
-                    ItemsChecked++;
-                }
-            }
-        }
-
-        if (ItemsChecked >= 3) {
-            mNextButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            mNextButton.setVisibility(View.INVISIBLE);
-        }
-    }
+//    @Override
+//    protected void onListItemClick(ListView l, View v, int position, long id) {
+//        super.onListItemClick(l, v, position, id);
+//
+//        //TODO: Store checked item names array then get IDs for those names from
+//
+//        //Count how many items are checked: if at least 3, show Next Button
+//        SparseBooleanArray positions = mListView.getCheckedItemPositions();
+//        int ItemsChecked = 0;
+//        if (positions != null) {
+//            int length = positions.size();
+//            for (int i = 0; i < length; i++) {
+//                if (positions.get(positions.keyAt(i))) {
+//                    ItemsChecked++;
+//                }
+//            }
+//        }
+//
+//        if (ItemsChecked >= 3) {
+//            mNextButton.setVisibility(View.VISIBLE);
+//        }
+//        else {
+//            mNextButton.setVisibility(View.INVISIBLE);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -22,7 +22,7 @@
         <activity
             android:name="org.creativecommons.thelist.CategoryListActivity"
             android:label="@string/title_activity_category_list"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
