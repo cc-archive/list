@@ -25,9 +25,8 @@ public class RequestMethods {
 
     public boolean isLoggedIn() {
         //TODO: Check if User is logged in
-        return true;
+        return false;
     }
-
 
 
     //CHECK AVAILABILITY OF NETWORK
@@ -52,13 +51,16 @@ public class RequestMethods {
         dialog.show();
     }
 
-    //Update For Login Error
-//    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//    builder.setMessage(e.getMessage())
-//            .setTitle(R.string.login_error_title)
-//    .setPositiveButton(android.R.string.ok, null);
-//    AlertDialog dialog = builder.create();
-//    dialog.show();
+    //TODO: Update For Login Error
+    public void updateDisplayForLoginError() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//        builder.setMessage(e.getMessage())
+//                .setTitle(R.string.login_error_title)
+//                .setPositiveButton(android.R.string.ok, null);
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+    }
+
 
 
 }

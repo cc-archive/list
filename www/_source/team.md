@@ -22,11 +22,20 @@ Technology Lead at Creative Commons. Free software hacker (ie. beard) plus GNU d
 
 ## Alexandra Bain
 
+<img class="float-left" width="200" src="/img/alex.jpg" />
+
+Software Development Intern at Playground Inc. Designer turned developer. Also in love with service design.
+
+
 ## David Bartholomew
+
+<img class="float-left" width="200" src="/img/david.jpg" />
 
 Software Engineer at Playground Inc.
 
 ## Maciej Jasiobedzki
+
+<img class="float-left" width="200" src="/img/maciej.jpg" />
 
 Technical Director at Playground Inc. Human being.
 

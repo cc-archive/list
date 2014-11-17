@@ -29,7 +29,7 @@
     <string name="empty_feed_label">No items in your picks.</string>
 
     <!-- Login/SignUp Shared Strings -->
-    <string name="username_hint">Username</string>
+    <string name="name_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="login_button_label">Login</string>
     <string name="signup_text">Sign Up!</string>

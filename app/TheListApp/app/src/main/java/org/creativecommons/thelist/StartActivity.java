@@ -1,24 +1,44 @@
 package org.creativecommons.thelist;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
-public class FeedActivity extends ActionBarActivity {
+public class StartActivity extends Activity {
+
+    protected Button mStartButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
+        setContentView(R.layout.activity_start);
+
+        //UI Elements
+        mStartButton = (Button) findViewById(R.id.startButton);
+
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Navigate to Next Activity
+                Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_feed, menu);
+        getMenuInflater().inflate(R.menu.menu_start, menu);
         return true;
     }
 
