@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
@@ -51,18 +52,31 @@ public class CategoryListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.category_list_item, null);
             holder = new ViewHolder();
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
+            holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
+            convertView.setTag(holder);
 
-            //getting Data for the row
+            //Getting Data for the row
             CategoryListItem c = categoryListItems.get(position);
-
             //Item Name
             holder.categoryNameLabel.setText(c.getCategoryName());
-            convertView.setTag(c.getCategoryID());
+
+        } else {
+            holder = (ViewHolder)convertView.getTag();
         }
+
+//        If items have been previously checked in DB
+//        ListView listview = (ListView)parent;
+//        if(listview.isItemChecked(position)) {
+//            holder.checkmarkView.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.checkmarkView.setVisibility(View.INVISIBLE);
+//        }
+
         return convertView;
     }
 
     private static class ViewHolder {
         TextView categoryNameLabel;
+        ImageView checkmarkView;
     }
 }

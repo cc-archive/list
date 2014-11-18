@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -78,11 +79,21 @@ public class CategoryListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
+
+                if(mListView.isItemChecked(position)) {
+                    checkmarkView.setVisibility(View.VISIBLE);
+                } else {
+                    checkmarkView.setVisibility(View.INVISIBLE);
+                }
+
                 //Count how many items are checked: if at least 3, show Next Button
                 SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                int length = positions.size();
+
                 int ItemsChecked = 0;
                 if (positions != null) {
-                    int length = positions.size();
+
                     for (int i = 0; i < length; i++) {
                         if (positions.get(positions.keyAt(i))) {
                             ItemsChecked++;
@@ -107,23 +118,22 @@ public class CategoryListActivity extends Activity {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
         }
 
-        //TODO: mNextButton POST Category selection to Database
+        //Next Button functionality
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO:POST selection to Database [array of category ids]
+
                 if(requestMethods.isLoggedIn()) {
+                    //TODO:POST selection to Database [array of category ids]
                     storeCategoriesRequest();
                 } else {
-                    //TODO:Find Items Checked, iterate through and get tag for each
                     SparseBooleanArray positions = mListView.getCheckedItemPositions();
                     int length = positions.size();
+                    //Array of user selected categories
                     List<Integer> userCategories = new ArrayList<Integer>();
 
                     for(int i = 0; i < length; i++) {
                         int itemPosition = positions.keyAt(i);
-                        Log.v(TAG,String.valueOf(itemPosition));
-                        //Object selectedItem = mListView.getItemAtPosition(itemPosition);
                         CategoryListItem item = (CategoryListItem) mListView.getItemAtPosition(itemPosition);
                         int id = item.getCategoryID();
 

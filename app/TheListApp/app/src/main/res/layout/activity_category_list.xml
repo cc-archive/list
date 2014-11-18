@@ -11,14 +11,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@android:id/empty"
-        android:text="@string/empty_list"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:id="@android:id/empty"-->
+        <!--android:text="@string/empty_list"/>-->
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
