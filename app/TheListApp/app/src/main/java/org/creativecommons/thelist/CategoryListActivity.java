@@ -21,11 +21,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ public class CategoryListActivity extends Activity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
+    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
 
     //GET Request
     protected JSONObject mCategoryData;
@@ -139,11 +142,17 @@ public class CategoryListActivity extends Activity {
 
                         //push id to array
                         userCategories.add(id);
+
                     }
 
-                    //TODO: store in sharedPreferences
-                    //add that array to shared preferences/create HashMap(?)
+                    String categories = userCategories.toString();
+                    sharedPreferencesMethods.SaveSharedPreference
+                            (sharedPreferencesMethods.CATEGORY_PREFERENCE,
+                             sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, categories);
 
+                    JsonArray categoryArray = sharedPreferencesMethods.RetrieveSharedPreference
+                            (sharedPreferencesMethods.CATEGORY_PREFERENCE,
+                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY);
 
                 }
                 //Navigate to Next Activity
@@ -153,6 +162,8 @@ public class CategoryListActivity extends Activity {
         });
 
     } //onCreate
+
+    //ADD TO SHARED PREFERENCES
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {
@@ -255,33 +266,6 @@ public class CategoryListActivity extends Activity {
         queue.add(postCategoriesRequest);
     } //storeCategoriesRequest
 
-
-    //When Category Name is selected
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//        super.onListItemClick(l, v, position, id);
-//
-//        //TODO: Store checked item names array then get IDs for those names from
-//
-//        //Count how many items are checked: if at least 3, show Next Button
-//        SparseBooleanArray positions = mListView.getCheckedItemPositions();
-//        int ItemsChecked = 0;
-//        if (positions != null) {
-//            int length = positions.size();
-//            for (int i = 0; i < length; i++) {
-//                if (positions.get(positions.keyAt(i))) {
-//                    ItemsChecked++;
-//                }
-//            }
-//        }
-//
-//        if (ItemsChecked >= 3) {
-//            mNextButton.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            mNextButton.setVisibility(View.INVISIBLE);
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

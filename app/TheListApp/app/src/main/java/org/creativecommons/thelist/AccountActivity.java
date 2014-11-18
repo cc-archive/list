@@ -89,7 +89,6 @@ public class AccountActivity extends ActionBarActivity {
     //TODO: Login existing user
     private void loginUser() {
         //Verify user identity
-
     }
 
     private void createNewUser() {
@@ -105,7 +104,6 @@ public class AccountActivity extends ActionBarActivity {
         params.put(ApiConstants.USER_NAME, mUsername);
         params.put(ApiConstants.USER_EMAIL,mEmail);
         params.put(ApiConstants.USER_PASSWORD,mPassword);
-        Log.v(TAG,params.toString());
 
         JsonObjectRequest newUserRequest = new JsonObjectRequest(url, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
