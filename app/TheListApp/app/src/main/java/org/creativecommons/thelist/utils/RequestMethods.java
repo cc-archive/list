@@ -28,6 +28,10 @@ public class RequestMethods {
         return false;
     }
 
+    public String getUserID() {
+        //TODO: Get Current UserID
+        return String.valueOf(1);
+    }
 
     //CHECK AVAILABILITY OF NETWORK
     public boolean isNetworkAvailable() {

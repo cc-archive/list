@@ -21,7 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
 
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
@@ -33,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -59,8 +57,7 @@ public class CategoryListActivity extends Activity {
     protected Button mNextButton;
     protected ListView mListView;
 
-    //TODO: Limit returned results
-    //public static final int NUMBER_OF_POSTS = 20;
+    // --------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +68,14 @@ public class CategoryListActivity extends Activity {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mNextButton = (Button) findViewById(R.id.nextButton);
         mNextButton.setVisibility(View.INVISIBLE);
-
         mListView = (ListView)findViewById(R.id.list);
+
+        //Set List Adapter
         adapter = new CategoryListAdapter(this,mCategoryList);
         mListView.setAdapter(adapter);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-        //Show Next Button once minimum 3 have been selected
+        //Category Selection
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -93,7 +91,6 @@ public class CategoryListActivity extends Activity {
                 //Count how many items are checked: if at least 3, show Next Button
                 SparseBooleanArray positions = mListView.getCheckedItemPositions();
                 int length = positions.size();
-
                 int ItemsChecked = 0;
                 if (positions != null) {
 
@@ -121,13 +118,13 @@ public class CategoryListActivity extends Activity {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
         }
 
-        //Next Button functionality
+        //Next Button: handle User’s Category Preferences
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //If logged in, put to user profile, else create sharedPreference
                 if(requestMethods.isLoggedIn()) {
-                    //TODO:POST selection to Database [array of category ids]
                     storeCategoriesRequest();
                 } else {
                     SparseBooleanArray positions = mListView.getCheckedItemPositions();
@@ -135,35 +132,28 @@ public class CategoryListActivity extends Activity {
                     //Array of user selected categories
                     List<Integer> userCategories = new ArrayList<Integer>();
 
+                    // [1, 5, 7]
                     for(int i = 0; i < length; i++) {
                         int itemPosition = positions.keyAt(i);
                         CategoryListItem item = (CategoryListItem) mListView.getItemAtPosition(itemPosition);
                         int id = item.getCategoryID();
-
-                        //push id to array
                         userCategories.add(id);
 
+                        //Save user categories to shared preferences
+                        String userPreferences = userCategories.toString();
+                        Log.v(TAG, userPreferences);
+                        sharedPreferencesMethods.SaveSharedPreference
+                                (sharedPreferencesMethods.CATEGORY_PREFERENCE,
+                                 sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userPreferences);
                     }
-
-                    String categories = userCategories.toString();
-                    sharedPreferencesMethods.SaveSharedPreference
-                            (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                             sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, categories);
-
-                    JsonArray categoryArray = sharedPreferencesMethods.RetrieveSharedPreference
-                            (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY);
-
                 }
-                //Navigate to Next Activity
+                //Navigate to Random Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
                 startActivity(intent);
             }
         });
 
     } //onCreate
-
-    //ADD TO SHARED PREFERENCES
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {
@@ -187,17 +177,15 @@ public class CategoryListActivity extends Activity {
             } catch (JSONException e) {
                 Log.e(TAG, "Exception Caught: ", e);
             }
-            //TODO: Add list adapter
             adapter.notifyDataSetChanged();
         }
-    }
+    } //updateList
 
-
+    //GET Categories from API
     private void getCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
         String url = "http://10.0.3.2:3000/api/category";
-
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/category";
 
@@ -219,31 +207,37 @@ public class CategoryListActivity extends Activity {
     } //getCategoriesRequest
 
 
-    //Store categories for later use
+    //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {
-        //TODO: Create Object with Category choices
 
         RequestQueue queue = Volley.newRequestQueue(this);
+        String userID = requestMethods.getUserID();
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/category";
-
+        String url = "http://10.0.3.2:3000/api/user/" + userID;
         //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/category";
+        //String url = "http://10.0.2.2:3000/api/user";
 
-        //Data to be sent
-        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put(ApiConstants.CATEGORY_ID, array of category ids)
-        Log.v(TAG,params.toString());
+        //Retrieve User category preferences
+        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
+                (sharedPreferencesMethods.CATEGORY_PREFERENCE,
+                        sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY);
 
-        JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(url, new JSONObject(params),
+        //Create Object to send
+        JSONObject jso = new JSONObject();
+        try {
+            jso.put(ApiConstants.USER_CATEGORIES, userPreferences);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        //Volley Request
+        JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        JSONArray jsonCategories = null;
                         try {
-                            //TODO: Check response code
-
+                            //TODO: Check response code + display error
 //                            if(responseCode != 200), get response data + show error
 
                             //Handle Data

@@ -5,6 +5,8 @@ package org.creativecommons.thelist.utils;
  */
 public final class ApiConstants {
 
+    //TODO: Limit returned results
+
     //User Object
     public static final String USER_ID = "id";
     public static final String USER_NAME = "name";

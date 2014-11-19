@@ -69,6 +69,8 @@ router.post('/api/user', function(req,res) {
 	name = req.body.name;
 	email = req.body.email;
 	password = req.body.password;
+	//category = req.body.category;
+	//listItems = req.body.listItems;
 
 	function validateEmail(testedEmail) { 
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -179,6 +181,10 @@ router.put('/api/user/:id', function(req,res) {
 	var reqName = req.body.name;
 	var reqCategory = req.body.categories;
 
+	 console.log(req);
+	console.log(req.body);
+	console.log(req.body.categories);
+
 	function validateEmail(testedEmail) { 
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (re.test(testedEmail)){
@@ -238,6 +244,25 @@ router.put('/api/user/:id', function(req,res) {
 	}
 
 	//TODO: add categories
+	if(reqCategory) {
+		// console.log("===");
+		// console.log(reqCategory);
+		// console.log(reqCategory.length);
+		// console.log(reqCategory instanceof Array);
+		if(!(reqCategory.constructor === Array)) {
+			var response = {
+				status: "error",
+				content: "Incorrect data type. Array required."
+			}
+			errors.push(response);
+		}
+		else {
+			user.categories = reqCategory;
+			console.log(user.categories);
+		}
+	} else {
+		//IM NULL OR UNDEFINED OR FALSE OR A LIST OF NO LENGTH
+	}
 
 	if(!errors.length) {
 		var response = {
@@ -251,9 +276,11 @@ router.put('/api/user/:id', function(req,res) {
 			status: "error",
 			content: errors
 		}
+		console.log(errors);
 		res.status(500).send(response);
 	}
 });
+
 
 //GET all photos by one user
 router.get('/api/user/:id/photo', function(req,res) {
