@@ -410,7 +410,7 @@ router.post('/api/photo', function(req,res) {
 	var photo = { 
 		id: randomId,
 		itemID: itemID,
-		userID = userID,
+		userID: userID,
 		photoUrl: "http://http://cdn2.gamefront.com/wp-content/uploads/2014/06/Assassins-Creed-Unity.jpg",
 		dateCreated: dateCreated
 	};

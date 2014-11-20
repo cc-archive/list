@@ -24,4 +24,5 @@ dependencies {
     compile files('libs/volley.jar')
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile files('libs/gson-2.3.jar')
+    compile files('libs/commons-io-2.4.jar')
 }

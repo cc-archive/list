@@ -68,8 +68,10 @@ public class MainActivity extends ActionBarActivity {
     protected ListView mListView;
     protected ListView mUserListView;
 
-    //Uri for Photos
+    //Photo Variables
     protected Uri mMediaUri;
+    protected JSONObject mPhotoObject;
+    protected MainListItem mCurrentItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +90,16 @@ public class MainActivity extends ActionBarActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Show Dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setItems(R.array.listItem_choices, mDialogListener);
                 AlertDialog dialog = builder.create();
                 dialog.show();
+
+                //Store ListItem in variable
+                //TODO: Can I move this?
+                mCurrentItem = (MainListItem) mListView.getItemAtPosition(position);
+                Log.v(TAG, mCurrentItem.toString());
             }
         });
 
@@ -105,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         else {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
         }
-    }
+    } //onCreate
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {
@@ -122,6 +130,7 @@ public class MainActivity extends ActionBarActivity {
                     MainListItem listItem = new MainListItem();
                     listItem.setItemName(jsonSingleItem.getString(ApiConstants.ITEM_NAME));
                     listItem.setMakerName(jsonSingleItem.getString(ApiConstants.MAKER_NAME));
+                    listItem.setItemID(jsonSingleItem.getInt(ApiConstants.ITEM_ID));
 
                     //Adding to array of List Items
                     mItemList.add(listItem);
@@ -131,7 +140,7 @@ public class MainActivity extends ActionBarActivity {
             }
             feedAdapter.notifyDataSetChanged();
         }
-    }
+    } //updateList
 
     //GET All ListItems
     private void getAllListItems() {
@@ -194,7 +203,7 @@ public class MainActivity extends ActionBarActivity {
 //            }
 //        });
 //        queue.add(getUserItemsRequest);
-//    }
+//    } //Get All User List Items
 
 
     //DIALOG FOR LIST ITEM ACTION
@@ -259,7 +268,6 @@ public class MainActivity extends ActionBarActivity {
                         else {
                             return null;
                         }
-
                         Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
 
                         // 5. Return the file's URI
@@ -284,24 +292,45 @@ public class MainActivity extends ActionBarActivity {
 
     //Upload Photo to DB
     protected void uploadPhoto() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        //Genymotion Emulator
+        String url = "http://10.0.3.2:3000/api/photo";
+        //Android Default Emulator
+        //String url = "http://10.0.2.2:3000/api/photo";
 
-        //convert to byte[]
-
-        //Create Object to send
-        JSONObject jso = new JSONObject();
-//        try {
-//            //1.Image file
-//            //2. Item ID
-//            //3. User ID
-//
-//        }
-//        catch (JSONException e) {
-//            Log.e(TAG, e.getMessage());
-//        }
+        //Get Photo Object
+        JSONObject photoObject = requestMethods.createUploadPhotoObject(mCurrentItem, mMediaUri);
+        Log.v(TAG,photoObject.toString());
 
         //Volley Request
+        JsonObjectRequest postPhotoRequest = new JsonObjectRequest(Request.Method.POST, url, photoObject,
+                new Response.Listener<JSONObject>() {
 
-    }
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //TODO: Check response code + display error
+//                            if(responseCode != 200), get response data + show error
+
+                            //Handle Data
+                            //TODO: Handle Response
+                            JSONObject postResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
+                            Log.v(TAG, postResponse.toString());
+
+                            mProgressBar.setVisibility(View.INVISIBLE);
+
+                        } catch (JSONException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse (VolleyError error){
+                requestMethods.updateDisplayForError();
+            }
+        });
+        queue.add(postPhotoRequest);
+    } //storeCategoriesRequest
 
     //Once photo taken or selected then do this:
     @Override
@@ -309,18 +338,19 @@ public class MainActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK) {
-            //TODO: Convert + Upload to DB (if logged in)
-
             if(requestMethods.isLoggedIn()) {
-                //Probably send image as bytes + list item ID
-                //uploadPhoto();
+                //Create and send photo object
+                //TODO: Note on server side create relationship between user and photoID
+                uploadPhoto();
             } else {
 
+                Log.v(TAG, "User is not logged in and we should start Login Activity");
                 //startActivityForResult
                 //start Login Activity + return user object (get userID)
 
                 //onActivityResult
                 //Once logged in:
+                //update userloggedin and userID
                 //uploadPhoto();
             }
 

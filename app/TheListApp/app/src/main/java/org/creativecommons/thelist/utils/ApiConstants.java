@@ -31,6 +31,9 @@ public final class ApiConstants {
     public static final String EXAMPLE_URL = "exampleUrl";
 
     //Photo
-
+    public static final String PHOTO_ID = "id";
+    public static final String PHOTO_ITEM_ID = "itemID";
+    public static final String PHOTO_USER_ID = "userID";
+    public static final String PHOTO_BYTE_ARRAY = "photoFile";
 
 }
