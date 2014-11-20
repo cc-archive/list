@@ -37,7 +37,7 @@ import java.util.List;
 
 public class CategoryListActivity extends Activity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
-    //Request Methods
+    //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
 
@@ -132,27 +132,22 @@ public class CategoryListActivity extends Activity {
                     //Array of user selected categories
                     List<Integer> userCategories = new ArrayList<Integer>();
 
-                    // [1, 5, 7]
                     for(int i = 0; i < length; i++) {
                         int itemPosition = positions.keyAt(i);
                         CategoryListItem item = (CategoryListItem) mListView.getItemAtPosition(itemPosition);
                         int id = item.getCategoryID();
                         userCategories.add(id);
-
-                        //Save user categories to shared preferences
-                        String userPreferences = userCategories.toString();
-                        Log.v(TAG, userPreferences);
-                        sharedPreferencesMethods.SaveSharedPreference
-                                (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                 sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userPreferences);
                     }
+                    //Save user categories to shared preferences
+                    sharedPreferencesMethods.SaveSharedPreference
+                            (sharedPreferencesMethods.CATEGORY_PREFERENCE,
+                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
                 }
                 //Navigate to Random Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
                 startActivity(intent);
             }
         });
-
     } //onCreate
 
     //UPDATE LIST WITH CONTENT
@@ -163,7 +158,7 @@ public class CategoryListActivity extends Activity {
         }
         else {
             try {
-                mJsonCategories = mCategoryData.getJSONArray("content");
+                mJsonCategories = mCategoryData.getJSONArray(ApiConstants.RESPONSE_CONTENT);
 
                 for(int i = 0; i<mJsonCategories.length(); i++) {
                     JSONObject jsonSingleCategory = mJsonCategories.getJSONObject(i);
@@ -209,7 +204,6 @@ public class CategoryListActivity extends Activity {
 
     //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {
-
         RequestQueue queue = Volley.newRequestQueue(this);
         String userID = requestMethods.getUserID();
         //Genymotion Emulator
@@ -241,11 +235,10 @@ public class CategoryListActivity extends Activity {
 //                            if(responseCode != 200), get response data + show error
 
                             //Handle Data
-                            mPutResponse = response.getJSONObject("content");
+                            mPutResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             Log.v(TAG, mPutResponse.toString());
 
                             mProgressBar.setVisibility(View.INVISIBLE);
-                            //Update UI
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());

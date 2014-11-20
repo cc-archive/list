@@ -38,6 +38,40 @@ router.get('/api/item/:id', function(req,res) {
 	}
 });
 
+//GET Multiple List Items at once
+router.get('api/items', function(req,res) {
+	var itemIDs = req.body.items;
+	// var itemsArray = [];
+
+	if(items.constructor === Array) {
+		var itemsArray = _.filter(db.item, function(item) {
+			return _.contains(itemIDs, item.id);
+		});
+
+		if(!(itemsArray == null)) {
+			var response = {
+				status: "ok",
+				content: itemsArray
+			}
+			res.status(200).send(response);
+		} else {
+			var response = {
+				status: "error",
+				content: "No items found"
+			}
+			res.status(404).send(response);
+		}
+	}
+	else {
+		var response = {
+			status: "error",
+			content: "Incorrect data type. Array required."
+		}
+		res.status(500).send(response);
+	}
+
+});
+
 
 //GET ListMaker for Single Item
 //TODO: Add Listmaker Name to regular list item entry instead
@@ -48,14 +82,14 @@ router.get('/api/item/:id/maker', function(req,res) {
 
 	//Get item that matches that Id
 	var item = _.find(db.item, function(it){ return id == it.id; });
-	//Store Item name in makerItem object
-	makerItem.item = item.name;
+	//Store Item name and id in makerItem object
+	makerItem.name = item.name;
+	makerItem.id = item.id;
 	//Get Maker Name
 	var maker = _.find(db.user, function(us){ 
 			return item.userId == us.id; 
 	});
-
-	makerItem.maker = maker.name;
+	makerItem.user = maker.name;
 
 	var response = {
 		status: "ok",
@@ -119,7 +153,7 @@ router.post('/api/user', function(req,res) {
 
 	//no errors
 	if(!errors.length) {
-		//Simulate new user Id with random number
+		//Simulate new user ID with random number
 		var randomId = _.random(0, 100);
 
 		var user = { 
@@ -180,10 +214,7 @@ router.put('/api/user/:id', function(req,res) {
 	var reqEmail = req.body.email;
 	var reqName = req.body.name;
 	var reqCategory = req.body.categories;
-
-	 console.log(req);
-	console.log(req.body);
-	console.log(req.body.categories);
+	var reqItems = req.body.items;
 
 	function validateEmail(testedEmail) { 
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -206,6 +237,7 @@ router.put('/api/user/:id', function(req,res) {
 		}
 	}
 
+	//Array to hold all error objects
 	var errors = [];
 	//TODO: error:cant send headers after they are sent
 	if(user == undefined) {
@@ -216,6 +248,7 @@ router.put('/api/user/:id', function(req,res) {
 		res.status(500).send(response);
 	}
 
+	//If Email parameter exists
 	if(reqEmail) {
 		if((validateEmail(reqEmail) == false))  {
 			var response = {
@@ -230,6 +263,7 @@ router.put('/api/user/:id', function(req,res) {
 		}
 	}
 
+	//If Name parameter exists
 	if(reqName) {
 		if(validateName(reqName) == false) {
 			var response = {
@@ -243,12 +277,8 @@ router.put('/api/user/:id', function(req,res) {
 		}
 	}
 
-	//TODO: add categories
+	//If Category parameter exists
 	if(reqCategory) {
-		// console.log("===");
-		// console.log(reqCategory);
-		// console.log(reqCategory.length);
-		// console.log(reqCategory instanceof Array);
 		if(!(reqCategory.constructor === Array)) {
 			var response = {
 				status: "error",
@@ -262,8 +292,33 @@ router.put('/api/user/:id', function(req,res) {
 		}
 	} else {
 		//IM NULL OR UNDEFINED OR FALSE OR A LIST OF NO LENGTH
+		// var response = {
+		// 	status: "error",
+		// 	content: "Category array has no content"
+		// }
+		// errors.push(response);
 	}
 
+	//If Items parameter exists
+	if(reqItems) {
+		if(!reqItems.constructor === Array) {
+			var response = {
+				status: "error",
+				content: "Incorrect data type. Array required."
+			}
+			errors.push(response);
+		}
+		else {
+			//TODO: push each item to the user items array TERNARY! …nope.
+			_.each(reqItems, function(it){
+				user.items.push(it);
+			});
+			console.log(user.items);
+		}
+	}
+
+
+	//If there are no errors send updated user object
 	if(!errors.length) {
 		var response = {
 			status: "ok",
@@ -331,11 +386,33 @@ router.get('/api/user/:id/list', function(req,res) {
 //POST photo
 router.post('/api/photo', function(req,res) {
 
+	userID = req.body.userID;
+	itemID = req.body.itemID;
+
+	//create new photo object
+
+	//set current date
+	var dateCreated = new Date();
+	var dd = dateCreated.getDate();
+	var mm = dateCreated.getMonth()+1; //January is 0!
+	var yyyy = dateCreated.getFullYear();
+	if(dd<10) {
+	    dd='0'+dd
+	} 
+	if(mm<10) {
+	    mm='0'+mm
+	} 
+	dateCreated = mm+'/'+dd+'/'+yyyy;
+
+	//generate random photo ID
 	var randomId = _.random(0, 100);
 
 	var photo = { 
 		id: randomId,
-		photoUrl: "http://http://cdn2.gamefront.com/wp-content/uploads/2014/06/Assassins-Creed-Unity.jpg"
+		itemID: itemID,
+		userID = userID,
+		photoUrl: "http://http://cdn2.gamefront.com/wp-content/uploads/2014/06/Assassins-Creed-Unity.jpg",
+		dateCreated: dateCreated
 	};
 
 	var response = {
@@ -343,8 +420,6 @@ router.post('/api/photo', function(req,res) {
 		content: photo
 	};
 	res.status(200).send(response);
-
-//Other properties (category,name) for photo will come from: list item it is responding to
 
 });
 

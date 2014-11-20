@@ -30,6 +30,7 @@ import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,9 +44,10 @@ import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
-    public static final String TAG = CategoryListActivity.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
+    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
 
     //For API Requests + Response
     protected JSONObject mItemData;
@@ -53,13 +55,18 @@ public class MainActivity extends ActionBarActivity {
     //TODO: Limit returned results to most recent
     //public static final int NUMBER_OF_POSTS = 5;
 
-    //Handle Data
+    //Lists to be adapted
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    protected MainListAdapter adapter;
+    private List<MainListItem> mUserItemList = new ArrayList<MainListItem>();
+
+    //Adapters
+    protected MainListAdapter feedAdapter;
+    protected MainListAdapter userListAdapter;
 
     //UI Elements
     protected ProgressBar mProgressBar;
     protected ListView mListView;
+    protected ListView mUserListView;
 
     //Uri for Photos
     protected Uri mMediaUri;
@@ -72,8 +79,10 @@ public class MainActivity extends ActionBarActivity {
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mListView = (ListView)findViewById(R.id.list);
-        adapter = new MainListAdapter(this, mItemList);
-        mListView.setAdapter(adapter);
+        //mUserListView = (ListView)
+
+        feedAdapter = new MainListAdapter(this, mItemList);
+        mListView.setAdapter(feedAdapter);
 
         //Show Dialog on List Item Click
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,7 +98,9 @@ public class MainActivity extends ActionBarActivity {
         //If Network Connection is available, Execute getDataTask
         if(requestMethods.isNetworkAvailable()) {
             mProgressBar.setVisibility(View.VISIBLE);
-            makeJsonDataRequest();
+            //getUserListItems();
+            //getCategoriesList();
+            getAllListItems();
         }
         else {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
@@ -104,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
         }
         else {
             try {
-                mJsonItems = mItemData.getJSONArray("content");
+                mJsonItems = mItemData.getJSONArray(ApiConstants.RESPONSE_CONTENT);
 
                 for(int i = 0; i < mJsonItems.length(); i++) {
                     JSONObject jsonSingleItem = mJsonItems.getJSONObject(i);
@@ -118,18 +129,16 @@ public class MainActivity extends ActionBarActivity {
             } catch (JSONException e) {
                 Log.e(TAG, "Exception Caught: ", e);
             }
-            //TODO: Add list adapter
-            adapter.notifyDataSetChanged();
+            feedAdapter.notifyDataSetChanged();
         }
     }
 
-    //MAKE CALL TO API AND UPDATE LIST
-    private void makeJsonDataRequest() {
+    //GET All ListItems
+    private void getAllListItems() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         //Genymotion Emulator
         String url ="http://10.0.3.2:3000/api/item";
-
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/item";
 
@@ -148,6 +157,44 @@ public class MainActivity extends ActionBarActivity {
         });
         queue.add(jsonObjectRequest);
     }
+
+    //GET All user list items
+//    private void getUserListItems() {
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//
+//        //Genymotion Emulator
+//        String url ="http://10.0.3.2:3000/api/items";
+//        //Android Default Emulator
+//        //String url = "http://10.0.2.2:3000/api/items";
+//
+//        //Retrieve User category preferences
+//        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
+//                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+//                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY);
+//
+//        //Create Object to send
+//        JSONObject jso = new JSONObject();
+//        try {
+//            jso.put(ApiConstants.USER_CATEGORIES, userPreferences);
+//        } catch (JSONException e) {
+//            Log.e(TAG, e.getMessage());
+//        }
+//
+//        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        mItemData = response;
+//                        updateList();
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse (VolleyError error){
+//                requestMethods.updateDisplayForError();
+//            }
+//        });
+//        queue.add(getUserItemsRequest);
+//    }
 
 
     //DIALOG FOR LIST ITEM ACTION
@@ -234,6 +281,63 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
             };
+
+    //Upload Photo to DB
+    protected void uploadPhoto() {
+
+        //convert to byte[]
+
+        //Create Object to send
+        JSONObject jso = new JSONObject();
+//        try {
+//            //1.Image file
+//            //2. Item ID
+//            //3. User ID
+//
+//        }
+//        catch (JSONException e) {
+//            Log.e(TAG, e.getMessage());
+//        }
+
+        //Volley Request
+
+    }
+
+    //Once photo taken or selected then do this:
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK) {
+            //TODO: Convert + Upload to DB (if logged in)
+
+            if(requestMethods.isLoggedIn()) {
+                //Probably send image as bytes + list item ID
+                //uploadPhoto();
+            } else {
+
+                //startActivityForResult
+                //start Login Activity + return user object (get userID)
+
+                //onActivityResult
+                //Once logged in:
+                //uploadPhoto();
+            }
+
+
+
+            //Add photo to the Gallery (listen for broadcast and let gallery take action)
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(mMediaUri);
+            sendBroadcast(mediaScanIntent);
+
+            //TODO: Go to Login Activity (or Fragment?)
+        }
+        else if(resultCode != RESULT_CANCELED) {
+            Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

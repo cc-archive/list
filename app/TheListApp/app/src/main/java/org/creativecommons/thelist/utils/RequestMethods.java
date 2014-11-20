@@ -6,6 +6,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.adapters.MainListItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by damaris on 2014-11-07.
@@ -30,7 +34,7 @@ public class RequestMethods {
 
     public String getUserID() {
         //TODO: Get Current UserID
-        return String.valueOf(1);
+        return String.valueOf(2);
     }
 
     //CHECK AVAILABILITY OF NETWORK
@@ -65,6 +69,15 @@ public class RequestMethods {
 //        dialog.show();
     }
 
+    //TODO: ask WHYY
+    public List<Integer> getItemIds(List<MainListItem> list){
+        List<Integer>arrayList = new ArrayList<Integer>();
+        for (int i = 0; i < list.size(); i++) {
+            int singleID = list.get(i).getItemID();
+            arrayList.add(singleID);
+        }
+        return arrayList;
+    }
 
 
 }

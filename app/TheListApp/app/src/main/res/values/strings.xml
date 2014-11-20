@@ -57,6 +57,7 @@
     <string name="explainer3">Youll be helping creators tell their stories – on Wikipedia, social media, in the news, or in campaigns.</string>
     <string name="explainer4"> Together were building a commons of creativity and knowledge for everyone</string>
     <string name="start_button_label">Start</string>
+    <string name="general_error">Sorry there was an error!</string>
 
 
 </resources>

@@ -17,24 +17,40 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import org.creativecommons.thelist.utils.RequestMethods;
 
+import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
 
-    //Request Methods
+    //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
+    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
 
-    //For API Request
+    //GET Request
     protected JSONObject mRandomItemData;
+    protected JSONObject mListItemData;
     String mMakerName;
     String mItemName;
+    int mItemID;
+
+    //PUT request (if user is logged in)
+    protected JSONObject mPutResponse;
+
+    //Handle Data
+    protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
+    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
 
     //UI Elements
     TextView mTextView;
@@ -58,43 +74,64 @@ public class RandomActivity extends Activity {
         Button CameraButton = (Button) findViewById(R.id.CameraButton);
 
         if(requestMethods.isNetworkAvailable()) {
-            //mProgressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
             count = 1;
-//            countString = String.valueOf(count);
-//
-//            Log.v(TAG, countString);
             getRandomItemRequest();
-
             //Yes Button Listener
             YesButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    //TODO: Post Item to the User’s List
+                    //TODO: Store Item object in local JSONArray
+                    MainListItem listItem = new MainListItem();
+                    listItem.setItemID(mItemID);
+                    listItem.setItemName(mItemName);
+                    listItem.setMakerName(mMakerName);
+                    mItemList.add(listItem);
+
+
 
                     //Once yes has been hit 3 times, forward to
                     if(count < 3) {
                         count ++;
                         getRandomItemRequest();
                     } else {
-                        //Direct to main feed
+
+                        //Pass mItemList to next activity
+
+                        //If user is logged in, send chosen list items to DB
+                        if(requestMethods.isLoggedIn()) {
+                            putRandomItemsRequest();
+                        }
+                        else {
+                            //Get array of selected item ids
+                            List<Integer> userItemList = requestMethods.getItemIds(mItemList);
+                            Log.v(TAG,mItemList.toString());
+
+                            //Save Array as String to sharedPreferences
+                            sharedPreferencesMethods.SaveSharedPreference
+                                    (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                            sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, userItemList.toString());
+                        }
+
+                        //Start MainActivity
                         Intent intent = new Intent(RandomActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
                 }
             });
-
+            //No Button Functionality
             NoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getRandomItemRequest();
                 }
             });
-
+            //Camera Button Functionality
             CameraButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: Camera Intent
+                    //TODO: Camera Intent, (possibly remove if user is not logged in)
                 }
             });
         } else {
@@ -103,44 +140,50 @@ public class RandomActivity extends Activity {
 
     } //onCreate
 
-    private void getRandomItemRequest() {
+    private void updateList() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        if(mRandomItemData == null) {
+            //TODO: better error message
+            requestMethods.updateDisplayForError();
+        }
+        else {
+            try {
+                //Store values from response JSON Object
+                mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
+                mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+                mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+                mItemID = mListItemData.getInt(ApiConstants.ITEM_ID);
 
+                //Update UI
+                mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+            } catch (JSONException e) {
+                Log.e(TAG,e.getMessage());
+            }
+        }
+    } //updateList
+
+    private void getRandomItemRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
+        //Generate number to request random item by ID
+        //TODO: Select item from random position in item array
         Random random = new Random();
         //TODO: Change max to length of response?
         int n = random.nextInt(5) + 1;
         String randomNumber = String.valueOf(n);
 
-        //TODO: Filter results by User Picked Categories
-
         //Genymotion Emulator
         String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
-
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/item/" + randomNumber + "/maker";
 
-
-        Log.v(TAG, url);
-
         JsonObjectRequest randomItemRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            mRandomItemData = response.getJSONObject("content");
-                            mItemName = mRandomItemData.getString("item");
-                            mMakerName = mRandomItemData.getString("maker");
-
-                            //mProgressBar.setVisibility(View.INVISIBLE);
-
-                            //Update UI
-                            mTextView.setText(mMakerName + " needs a picture of " + mItemName);
-
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
+                            //Log.v(TAG,response.toString());
+                            mRandomItemData = response;
+                            updateList();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -151,48 +194,47 @@ public class RandomActivity extends Activity {
         queue.add(randomItemRequest);
     } //GetRandomItemRequest
 
-    private void putRandomItemsRequest() {
 
+    private void putRandomItemsRequest() {
         //TODO: POST Selected Items to User’s List
         RequestQueue queue = Volley.newRequestQueue(this);
+        String userID = requestMethods.getUserID();
+        //Genymotion Emulator
+        String url = "http://10.0.3.2:3000/api/user/" + userID;
+        //Android Default Emulator
+        //String url = "http://10.0.2.2:3000/api/user";
 
-        //TODO: Filter results by User Picked Categories
-        String url ="http://10.0.3.2:3000/api/user";
-        Log.v(TAG, url);
+        //Retrieve User list item preferences
+        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
+                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY);
 
-        //If the user exists in the database, add items to his/her list
-//        if(requestMethods.isUser()) {
-//            //TODO: POST saved items to database
-//
-//            JsonObjectRequest storeItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, null,
-//                    new Response.Listener<JSONObject>() {
-//
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            try {
-//                                //mProgressBar.setVisibility(View.INVISIBLE);
-//
-//                                //User Feedback
-//                                //Show Toast that item has been added
-//
-//                            } catch (JSONException e) {
-//                                Log.e(TAG, e.getMessage());
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse (VolleyError error){
-//                    requestMethods.updateDisplayForError();
-//                }
-//            });
-//            queue.add(storeItemsRequest);
-//        }
-//        //If User is new, add items to local object to later be added to his/her User Object
-//        else {
-//         //TODO: Store in local object
-//
-//        }
+        //Create Object to send
+        JSONObject jso = new JSONObject();
+        try {
+            jso.put(ApiConstants.USER_ITEMS, userPreferences);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        Log.v(TAG,jso.toString());
 
+        //Add items to user list
+        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //get Response
+                        //Log.v(TAG,response.toString());
+                        mPutResponse = response;
+                        //TODO: do something with response?
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse (VolleyError error){
+                requestMethods.updateDisplayForError();
+            }
+        });
+        queue.add(putItemsRequest);
     } //putRandomItemsRequest
 
     @Override

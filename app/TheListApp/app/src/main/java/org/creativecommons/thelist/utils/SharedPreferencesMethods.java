@@ -2,7 +2,6 @@ package org.creativecommons.thelist.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -46,18 +45,15 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         String value = sharedPref.getString(preferenceKey, null);
 
-        //Convert to Json Array
+        //Convert from String to Array
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(value);
-        JsonArray categoryArray = element.getAsJsonArray();
-
-        Log.v(TAG, "This is important to resolve");
-        Log.v(TAG, categoryArray.toString());
+        JsonArray array = element.getAsJsonArray();
 
         //Make usable as JSONArray
         List<Integer> catIds = new ArrayList<Integer>();
-        for (int i = 0; i < categoryArray.size(); i++) {
-            catIds.add(categoryArray.get(i).getAsInt());
+        for (int i = 0; i < array.size(); i++) {
+            catIds.add(array.get(i).getAsInt());
         }
 
         return new JSONArray(catIds);

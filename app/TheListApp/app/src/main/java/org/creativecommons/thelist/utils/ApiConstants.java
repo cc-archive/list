@@ -7,6 +7,9 @@ public final class ApiConstants {
 
     //TODO: Limit returned results
 
+    //Response Object
+    public static final String RESPONSE_CONTENT = "content";
+
     //User Object
     public static final String USER_ID = "id";
     public static final String USER_NAME = "name";
