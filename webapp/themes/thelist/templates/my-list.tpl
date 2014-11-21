@@ -8,11 +8,9 @@
 <h1>My List</h1>
 
 {if $list}
-you have a list
-
 <ul>
 {foreach from=$list item=foo}
-    <li>{$foo}</li>
+    <li><a href="/upload.php?id={$foo.id}">{$foo.title}</a></li>
 {/foreach}
 </ul>
 
@@ -21,9 +19,21 @@ you have a list
 
 <p>It looks like your list is empty.<br /> Add subjects to your list and start adding to the public commons.</p>
 
-<p><a class="btn btn-success" href="/my-list.php">Add to my list</a></p>
+{/if}
+
+{if $newlist}
+
+<h2>Add to your list from approved lists</h2>
+
+{foreach from=$newlist item=foo}
+<form action="add-to-my-list.php" method="post">
+    <input type="hidden" name="list-item" value="{$foo.id}" />
+    <button type="submit" class="btn btn-success">{$foo.title}</button>
+</form>
+{/foreach}
 
 {/if}
+
 
 
 </div>

@@ -43,10 +43,17 @@ if ($makerid) {
             $adodb->qstr($desc),
             $adodb->qstr($url)
             ));
+
+	    $adodb->CacheFlush();
+
+	    header('Location: /add.php');
+
             
         } catch (Exception $e) {
             
-            echo $e;
+            //echo $e;
+
+	  echo "There was an error";
             
             return null;
         }

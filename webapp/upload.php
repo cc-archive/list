@@ -39,17 +39,21 @@ if (isset($_REQUEST['hs'])) {
 
         if ($makerid) {
 
-            // error_log($userid);
+	if (isset($_GET['id'])) {
 
-            $list = new UserList();
-            
-            $listitems = $list->getMakerList(50, $makerid);
-
-            $smarty->assign('list',$listitems);
-
+	    $smarty->assign('id', $_GET['id']);
             $smarty->assign('welcome', true);
-            $smarty->display('add.tpl');
+            $smarty->display('upload.tpl');
         }
+
+	else {
+
+	  $smarty->display('nolist.tpl');	
+					
+	}					
+
+	}
+
         else {
             $smarty->display('noauth.tpl');
         }

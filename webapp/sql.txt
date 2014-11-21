@@ -39,6 +39,22 @@ listid int(11),
 primary KEY(id)
 );
 
+CREATE TABLE Photos (
+id int(11) NOT NULL auto_increment,
+userid int(11),
+listitem int(11),
+url int(11),
+primary KEY(id)
+);
+
+CREATE TABLE PhotosTBA (
+id int(11) NOT NULL auto_increment,
+userid int(11),
+filename varchar(255),
+listitem int(11),
+primary KEY (id)
+);
+
 alter table Users add unique (email);
 alter table Makers add unique (name);
 alter table Makers add unique (uri);
