@@ -106,9 +106,10 @@ public class MainActivity extends ActionBarActivity {
         //If Network Connection is available, Execute getDataTask
         if(requestMethods.isNetworkAvailable()) {
             mProgressBar.setVisibility(View.VISIBLE);
-            //getUserListItems();
+            getUserListItems();
             //getCategoriesList();
-            getAllListItems();
+           // getAllListItems();
+
         }
         else {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
@@ -142,59 +143,22 @@ public class MainActivity extends ActionBarActivity {
         }
     } //updateList
 
+
     //GET All ListItems
-    private void getAllListItems() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        //Genymotion Emulator
-        String url ="http://10.0.3.2:3000/api/item";
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/item";
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                            mItemData = response;
-                            updateList();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
-            }
-        });
-        queue.add(jsonObjectRequest);
-    }
-
-    //GET All user list items
-//    private void getUserListItems() {
+//    private void getAllListItems() {
 //        RequestQueue queue = Volley.newRequestQueue(this);
 //
 //        //Genymotion Emulator
-//        String url ="http://10.0.3.2:3000/api/items";
+//        String url ="http://10.0.3.2:3000/api/item";
 //        //Android Default Emulator
-//        //String url = "http://10.0.2.2:3000/api/items";
+//        //String url = "http://10.0.2.2:3000/api/item";
 //
-//        //Retrieve User category preferences
-//        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
-//                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-//                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY);
-//
-//        //Create Object to send
-//        JSONObject jso = new JSONObject();
-//        try {
-//            jso.put(ApiConstants.USER_CATEGORIES, userPreferences);
-//        } catch (JSONException e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//
-//        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
 //                new Response.Listener<JSONObject>() {
 //                    @Override
 //                    public void onResponse(JSONObject response) {
-//                        mItemData = response;
-//                        updateList();
+//                            mItemData = response;
+//                            updateList();
 //                    }
 //                }, new Response.ErrorListener() {
 //            @Override
@@ -202,12 +166,47 @@ public class MainActivity extends ActionBarActivity {
 //                requestMethods.updateDisplayForError();
 //            }
 //        });
-//        queue.add(getUserItemsRequest);
-//    } //Get All User List Items
+//        queue.add(jsonObjectRequest);
+//    }
+
+    //GET All USER LIST ITEMS (eventually a limited number)
+    private void getUserListItems() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        //Genymotion Emulator
+        String url = ApiConstants.GET_MULTIPLE_ITEMS;
+        //Android Default Emulator
+        //String url = "http://10.0.2.2:3000/api/items";
+
+        //Retrieve User List Item preferences
+//        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
+//                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+//                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY);
+
+        //Create Object of List Item IDs to send
+        JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS);
+        Log.v(TAG,UserItemObject.toString());
+
+        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.GET, url, UserItemObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mItemData = response;
+                        Log.v(TAG,response.toString());
+                        //updateList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse (VolleyError error){
+                requestMethods.updateDisplayForError();
+            }
+        });
+        queue.add(getUserItemsRequest);
+    } //Get All User List Items
 
 
     //DIALOG FOR LIST ITEM ACTION
-    protected DialogInterface.OnClickListener mDialogListener =
+    public DialogInterface.OnClickListener mDialogListener =
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -296,7 +295,7 @@ public class MainActivity extends ActionBarActivity {
     protected void uploadPhoto() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/photo";
+        String url = ApiConstants.POST_PHOTO;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/photo";
 
@@ -352,9 +351,9 @@ public class MainActivity extends ActionBarActivity {
                 //TODO: find out how Fragment passes data to MainActivity
                 //startActivityForResult
                 //start Login Activity + return user object (get userID)
-
-//                getSupportFragmentManager().beginTransaction()
-//                        .add(R.id.overlay_fragment_container,LoginFragment).commit();
+                LoginFragment loginFragment = new LoginFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.overlay_fragment_container,loginFragment).commit();
 
                 //onActivityResult
                 //Once logged in:
@@ -393,7 +392,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+        //Start Random Item Activity
         if (id == R.id.action_random) {
             Intent intent = new Intent(MainActivity.this, RandomActivity.class);
             startActivity(intent);

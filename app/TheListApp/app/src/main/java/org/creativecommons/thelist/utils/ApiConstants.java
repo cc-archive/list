@@ -6,6 +6,8 @@ package org.creativecommons.thelist.utils;
 public final class ApiConstants {
 
     //TODO: Limit returned results
+    //LIMIT for category request
+    //LIMIT for list item requests
 
     //Response Object
     public static final String RESPONSE_CONTENT = "content";
@@ -35,5 +37,20 @@ public final class ApiConstants {
     public static final String PHOTO_ITEM_ID = "itemID";
     public static final String PHOTO_USER_ID = "userID";
     public static final String PHOTO_BYTE_ARRAY = "photoFile";
+
+    //URL
+    //TODO: Add all Endpoints
+
+    //Must use POST
+    public static final String CREATE_NEW_USER = "http://10.0.3.2:3000/api/user";
+    //Must Add ID + use PUT
+    public static final String UPDATE_USER = "http://10.0.3.2:3000/api/user";
+    //Must send array of items
+    public static final String GET_MULTIPLE_ITEMS = "http://10.0.3.2:3000/api/items";
+    //GET Method
+    public static final String GET_ALL_ITEMS = "http://10.0.3.2:3000/api/item/";
+    //POST, GET Photo
+    public static final String POST_PHOTO = "http://10.0.3.2:3000/api/photo";
+
 
 }

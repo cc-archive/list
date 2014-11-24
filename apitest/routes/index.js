@@ -40,13 +40,16 @@ router.get('/api/item/:id', function(req,res) {
 
 //GET Multiple List Items at once
 router.get('api/items', function(req,res) {
+	console.log(req);
 	var itemIDs = req.body.items;
+	console.log(itemIDs);
 	// var itemsArray = [];
 
 	if(items.constructor === Array) {
 		var itemsArray = _.filter(db.item, function(item) {
 			return _.contains(itemIDs, item.id);
 		});
+		console.log(itemsArray);
 
 		if(!(itemsArray == null)) {
 			var response = {

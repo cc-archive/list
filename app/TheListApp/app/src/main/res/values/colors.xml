@@ -5,4 +5,8 @@
     <color name="accent">#ffc400</color>
     <color name="text_primary">#D9FFFFFF</color>
     <color name="text_secondary">#D9000000</color>
+
+    <color name="text_light">#d3d3d3</color>
+    <color name="translucent_background">#D9000000</color>
+
 </resources>

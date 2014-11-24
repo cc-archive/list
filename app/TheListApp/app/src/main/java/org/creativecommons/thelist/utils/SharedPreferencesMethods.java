@@ -2,12 +2,15 @@ package org.creativecommons.thelist.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,7 @@ public class SharedPreferencesMethods {
 
     public SharedPreferencesMethods(Context mContext) {
         this.mContext = mContext;
+
     }
 
     //SharedPreferences Constants
@@ -29,7 +33,6 @@ public class SharedPreferencesMethods {
     public static final String CATEGORY_PREFERENCE_KEY = "org.creativecommons.thelist.445329";
     public static final String LIST_ITEM_PREFERENCE = "item";
     public static final String LIST_ITEM_PREFERENCE_KEY = "org.creativecommons.thelist.348914";
-
 
     //TODO:Methods for adding extracting array
 
@@ -57,6 +60,36 @@ public class SharedPreferencesMethods {
         }
 
         return new JSONArray(catIds);
+    }
+
+    //Create object to send in Category Volley Request
+    public JSONObject createCategoryListObject(String key) {
+        //Create JSON Object
+        JSONObject categoryListObject = new JSONObject();
+        JSONArray userPreferences = RetrieveSharedPreference
+                (CATEGORY_PREFERENCE,CATEGORY_PREFERENCE_KEY);
+
+        try {
+            categoryListObject.put(key, userPreferences);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return categoryListObject;
+    }
+
+    //Create object to send in User’s List Items Volley Request
+    public JSONObject createUserItemsObject (String key) {
+        //Create JSON Object
+        JSONObject categoryListObject = new JSONObject();
+        JSONArray userPreferences = RetrieveSharedPreference
+                (LIST_ITEM_PREFERENCE,LIST_ITEM_PREFERENCE_KEY);
+
+        try {
+            categoryListObject.put(key, userPreferences);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return categoryListObject;
     }
 
 }

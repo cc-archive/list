@@ -20,9 +20,7 @@ import java.util.List;
  */
 public class RequestMethods {
     public static final String TAG = RequestMethods.class.getSimpleName();
-
     protected Context mContext;
-
     public RequestMethods(Context mContext) {
         this.mContext = mContext;
     }
@@ -36,7 +34,7 @@ public class RequestMethods {
     //Maybe not need this: if you can get USERID, that means user is logged in?
     public boolean isLoggedIn() {
         //TODO: Check if User is logged in
-        return true;
+        return false;
     }
 
     public String getUserID() {
@@ -77,6 +75,7 @@ public class RequestMethods {
     }
 
     //TODO: ask WHYY
+    //Parse List Objects of List Items and return list of Item IDS
     public List<Integer> getItemIds(List<MainListItem> list){
         List<Integer>arrayList = new ArrayList<Integer>();
         for (int i = 0; i < list.size(); i++) {
@@ -86,6 +85,7 @@ public class RequestMethods {
         return arrayList;
     }
 
+    //Create Upload Photo Object (in bytes) + return object with ID and userID
     public JSONObject createUploadPhotoObject(MainListItem mCurrentItem, Uri uri) {
         //Get Data from mCurrentItem to build JSONObject
         JSONObject photoObject = new JSONObject();
@@ -111,6 +111,7 @@ public class RequestMethods {
             return photoObject;
         }
     }
+
 
 
 }
