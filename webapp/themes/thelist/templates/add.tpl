@@ -14,7 +14,7 @@ you have a list
 
 <ul>
 {foreach from=$list item=foo}
-    <li>{$foo}</li>
+    <li>{$foo.title} <a href="del.php?id={$foo.id}&maker={$foo.makerid}"><span class="glyphicon glyphicon-trash">&nbsp;</span></a></li>
 {/foreach}
 </ul>
 
@@ -35,7 +35,7 @@ you have a list
 
   <div class="form-group">
     <label for="list-title">Subject</label>
-    <input type="text" class="form-control" id="list-title" name="list-title" placeholder="Morrissey">
+    <input type="text" class="form-control" id="list-title" name="list-title" placeholder="Morrissey" required>
   </div>
   <div class="form-group">
     <label for="list-url">URL to subject</label>

@@ -4,12 +4,6 @@
 
    Copyright (C) 2014 Creative Commons
 
-   based on:
-
-   GNU FM -- a free network service for sharing your music listening habits
-
-   Copyright (C) 2009 Free Software Foundation, Inc
-
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
@@ -25,33 +19,45 @@
 
 */
 
-require_once('database.php');
-require 'data/User.php';
-require 'data/List.php';
+// This needs a lot of work to make it not horribly unsafe.
 
-if (isset($_REQUEST['hs'])) {
+require "templating.php";
 
-    // foo
 
-} else {
-	//If we're not handshaking we display the start page
-	require_once('templating.php');
+if ($userid) {
 
-        if ($makerid) {
+    if ($auth) {
 
-            // error_log($userid);
+        global $adodb;
+        
+        $item = $_POST['list-item'];
 
-            $list = new UserList();
+        $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $userid,
+            $adodb->qstr($item)
+            ));
+
+    	    $adodb->CacheFlush();	
+
+	    header('Location: /my-list.php');
+
             
-            $listitems = $list->getMakerList(50, $makerid);
+        } catch (Exception $e) {
+            
+            //echo $e;
 
-            $smarty->assign('list',$listitems);
+	  echo "There was an error";
+            
+            return null;
+        }
 
-            $smarty->assign('welcome', true);
-            $smarty->display('add.tpl');
-        }
-        else {
-            $smarty->display('noauth.tpl');
-        }
+
+    }
 
 }
+
+
+?>

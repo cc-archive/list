@@ -35,11 +35,6 @@
         {/if}
         {if ($userid)}
 
-	<li><a href="/upload.php">
-	    <span class="glyphicon glyphicon-upload"></span>
-	    Upload
-	    </a></li>
-
 	{if $makerid}
 	<li><a href="/add.php">
 	    <span class="glyphicon glyphicon-plus"></span>

@@ -53,6 +53,8 @@ if (isset($_REQUEST['hs'])) {
 
             $smarty->assign('list',$listitems);
 
+            $smarty->assign('newlist',$selection);
+
             $smarty->display('my-list.tpl');
         }
         else {

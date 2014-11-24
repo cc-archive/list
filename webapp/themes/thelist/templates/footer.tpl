@@ -3,7 +3,7 @@
 	<a rel="license"
 	   href="https://creativecommons.org/licenses/by/4.0/"
 	   title="Creative Commons Attribution 4.0 International license"
-	   ><img src="https://i.creativecommons.org/l/by/4.0/88x31.png"
+	   ><img src="https://licensebuttons.net/l/by/4.0/88x31.png"
 		 alt="License"/></a>
       </p>
 
