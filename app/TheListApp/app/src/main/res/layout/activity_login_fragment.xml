@@ -7,51 +7,82 @@
     android:background="@color/translucent_background"
     tools:context="org.creativecommons.thelist.LoginFragment">
 
-    <EditText
-        android:layout_width="match_parent"
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/nameField"
-        android:layout_marginTop="119dp"
-        android:hint="@string/full_name_hint"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:id="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp" />
 
-    <EditText
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/emailField"
-        android:inputType="textEmailAddress"
-        android:hint="@string/email_hint"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:layout_below="@+id/nameField"
+        android:layout_below="@+id/progressBar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameField"
+            android:layout_marginTop="119dp"
+            android:hint="@string/full_name_hint"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/passwordField"
-        android:inputType="textPassword"
-        android:hint="@string/password_hint"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        android:layout_below="@+id/emailField"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emailField"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_hint"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_below="@+id/nameField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login_button_label"
-        android:textColor="@android:color/white"
-        android:id="@+id/loginButton"
-        android:layout_below="@+id/passwordField"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/passwordField"
+            android:inputType="textPassword"
+            android:hint="@string/password_hint"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_below="@+id/emailField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create new account"
+            android:textColor="@android:color/white"
+            android:background="@color/primary_dark_material_light"
+            android:id="@+id/loginButton"
+            android:layout_below="@+id/passwordField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:paddingTop="10dp"
+            android:textColor="@android:color/darker_gray"
+            android:text="I already have an account"
+            android:id="@+id/existingAccount"
+            android:clickable="true"
+            android:layout_below="@+id/loginButton"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

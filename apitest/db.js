@@ -135,11 +135,15 @@
 		}
 	];
 
+	var items = [
+	];
+
 	module.exports = {
 		user: user,
 		photo: photo,
 		category: category,
 		item: item,
+		items: items
 	};
 
 

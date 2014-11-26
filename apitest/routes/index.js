@@ -38,20 +38,18 @@ router.get('/api/item/:id', function(req,res) {
 	}
 });
 
-//GET Multiple List Items at once
-router.get('api/items', function(req,res) {
-	console.log(req);
-	var itemIDs = req.body.items;
-	console.log(itemIDs);
-	// var itemsArray = [];
 
-	if(items.constructor === Array) {
+//GET Multiple List Items at once
+router.get('/api/items', function(req, res) {
+	var itemIDs = req.body.items;
+	var itemsArray = [];
+
+	if(itemIDs.constructor === Array) {
 		var itemsArray = _.filter(db.item, function(item) {
 			return _.contains(itemIDs, item.id);
 		});
-		console.log(itemsArray);
 
-		if(!(itemsArray == null)) {
+		if(itemsArray.length) {
 			var response = {
 				status: "ok",
 				content: itemsArray
@@ -72,7 +70,6 @@ router.get('api/items', function(req,res) {
 		}
 		res.status(500).send(response);
 	}
-
 });
 
 

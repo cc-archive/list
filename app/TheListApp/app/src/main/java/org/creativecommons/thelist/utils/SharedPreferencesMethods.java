@@ -37,15 +37,15 @@ public class SharedPreferencesMethods {
     //TODO:Methods for adding extracting array
 
     //Add Array to SharedPreferences
-    public void SaveSharedPreference (String preferenceName, String key, String value){
-        SharedPreferences sharedPref = mContext.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+    public void SaveSharedPreference (String preferenceName, String key, String value, Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.commit();
     }
 
-    public JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey){
-        SharedPreferences sharedPref = mContext.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+    public JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey, Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         String value = sharedPref.getString(preferenceKey, null);
 
         //Convert from String to Array
@@ -63,11 +63,11 @@ public class SharedPreferencesMethods {
     }
 
     //Create object to send in Category Volley Request
-    public JSONObject createCategoryListObject(String key) {
+    public JSONObject createCategoryListObject(String key, Context context) {
         //Create JSON Object
         JSONObject categoryListObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
-                (CATEGORY_PREFERENCE,CATEGORY_PREFERENCE_KEY);
+                (CATEGORY_PREFERENCE,CATEGORY_PREFERENCE_KEY, context);
 
         try {
             categoryListObject.put(key, userPreferences);
@@ -78,18 +78,18 @@ public class SharedPreferencesMethods {
     }
 
     //Create object to send in User’s List Items Volley Request
-    public JSONObject createUserItemsObject (String key) {
+    public JSONObject createUserItemsObject (String key, Context context) {
         //Create JSON Object
-        JSONObject categoryListObject = new JSONObject();
+        JSONObject userItemObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
-                (LIST_ITEM_PREFERENCE,LIST_ITEM_PREFERENCE_KEY);
+                (LIST_ITEM_PREFERENCE,LIST_ITEM_PREFERENCE_KEY, context);
 
         try {
-            categoryListObject.put(key, userPreferences);
+            userItemObject.put(key, userPreferences);
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
-        return categoryListObject;
+        return userItemObject;
     }
 
 }

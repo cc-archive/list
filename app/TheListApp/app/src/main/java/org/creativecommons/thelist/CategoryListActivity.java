@@ -27,6 +27,7 @@ import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
+import org.creativecommons.thelist.utils.UserMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +41,7 @@ public class CategoryListActivity extends Activity {
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    UserMethods userMethods = new UserMethods(this);
 
     //GET Request
     protected JSONObject mCategoryData;
@@ -141,7 +143,7 @@ public class CategoryListActivity extends Activity {
                     //Save user categories to shared preferences
                     sharedPreferencesMethods.SaveSharedPreference
                             (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
+                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString(), CategoryListActivity.this);
                 }
                 //Navigate to Random Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
@@ -180,7 +182,7 @@ public class CategoryListActivity extends Activity {
     private void getCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/category";
+        String url = ApiConstants.GET_CATEGORIES;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/category";
 
@@ -205,7 +207,7 @@ public class CategoryListActivity extends Activity {
     //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = requestMethods.getUserID();
+        String userID = userMethods.getUserID();
         //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
         //Android Default Emulator
@@ -213,7 +215,8 @@ public class CategoryListActivity extends Activity {
 
         //Create Object to send
         JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject
-                (ApiConstants.USER_CATEGORIES);
+                (ApiConstants.USER_CATEGORIES, this);
+        Log.v(TAG, UserCategoriesObject.toString());
 
         //Volley Request
         JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,

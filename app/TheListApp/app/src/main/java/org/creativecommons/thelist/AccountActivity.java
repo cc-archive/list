@@ -73,12 +73,12 @@ public class AccountActivity extends ActionBarActivity {
                 }
                 else {
                     //Login user or Create account
-                    createNewUser();
-                    if(requestMethods.isUser()) {
-                        loginUser();
-                    } else {
-                        createNewUser();
-                    }
+//                    createNewUser();
+//                    if(requestMethods.isUser()) {
+//                        loginUser();
+//                    } else {
+//                        createNewUser();
+//                    }
                 }
             }
         });

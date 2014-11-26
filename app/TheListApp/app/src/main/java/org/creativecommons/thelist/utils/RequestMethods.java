@@ -25,7 +25,8 @@ public class RequestMethods {
         this.mContext = mContext;
     }
 
-    //May not need this
+    //TODO: Switch 3 below over to UserMethods!
+    //Check if user before logging in OR creating new account
     public boolean isUser() {
         //TODO: Check if User exists
         return false;
@@ -39,7 +40,7 @@ public class RequestMethods {
 
     public String getUserID() {
         //TODO: Get Current UserID
-        return String.valueOf(2);
+        return String.valueOf(1);
     }
 
     //CHECK AVAILABILITY OF NETWORK
@@ -63,15 +64,15 @@ public class RequestMethods {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-    //TODO: Update For Login Error
-    public void updateDisplayForLoginError() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//        builder.setMessage(e.getMessage())
-//                .setTitle(R.string.login_error_title)
-//                .setPositiveButton(android.R.string.ok, null);
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
+    //TODO: Replace above with showErrorDialog
+    //Generic Error Dialog Builder
+    public void showErrorDialog(Context context, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title)
+               .setMessage(message)
+               .setPositiveButton(android.R.string.ok,null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     //TODO: ask WHYY
@@ -111,7 +112,4 @@ public class RequestMethods {
             return photoObject;
         }
     }
-
-
-
 }

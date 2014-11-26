@@ -42,15 +42,19 @@ public final class ApiConstants {
     //TODO: Add all Endpoints
 
     //Must use POST
-    public static final String CREATE_NEW_USER = "http://10.0.3.2:3000/api/user";
+    public static final String CREATE_NEW_USER = "http://10.0.3.2:3000/api/user/";
     //Must Add ID + use PUT
-    public static final String UPDATE_USER = "http://10.0.3.2:3000/api/user";
+    public static final String UPDATE_USER = "http://10.0.3.2:3000/api/user/";
     //Must send array of items
-    public static final String GET_MULTIPLE_ITEMS = "http://10.0.3.2:3000/api/items";
+    public static final String GET_MULTIPLE_ITEMS = "http://10.0.3.2:3000/api/items/";
     //GET Method
     public static final String GET_ALL_ITEMS = "http://10.0.3.2:3000/api/item/";
     //POST, GET Photo
-    public static final String POST_PHOTO = "http://10.0.3.2:3000/api/photo";
+    public static final String POST_PHOTO = "http://10.0.3.2:3000/api/photo/";
+    //GET Categories
+    public static final String GET_CATEGORIES = "http://10.0.3.2:3000/api/category/";
+
+
 
 
 }

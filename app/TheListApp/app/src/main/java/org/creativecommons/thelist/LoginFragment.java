@@ -1,5 +1,6 @@
 package org.creativecommons.thelist;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,7 +31,6 @@ public class LoginFragment extends Fragment {
     RequestMethods requestMethods = new RequestMethods(getActivity());
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
 
-
     //For Request
     protected JSONObject mUserData;
 
@@ -38,11 +39,46 @@ public class LoginFragment extends Fragment {
     protected EditText mEmailField;
     protected EditText mPasswordField;
     protected Button mLoginButton;
+    protected TextView mExistingAccount;
     //protected ProgressBar mProgressBar;
 
     String mUsername;
     String mPassword;
     String mEmail;
+
+    //Interface with Activity
+    OnLoginListener mCallback;
+
+    //LISTENER
+    public interface OnLoginListener {
+        public void onLoginClicked(String userData);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnLoginListener) activity;
+        } catch(ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement LoginFragment.OnLoginListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
+//    public void setOnLoginListener(OnLoginListener listener) {
+//        this.listener = listener;
+//    }
+//
+//    public void updateDetail() {
+//        long newTime = System.currentTimeMillis();
+//        listener.onLoginClicked(newTime);
+//    }
 
     //@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +100,8 @@ public class LoginFragment extends Fragment {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                  //TODO: Do stuff
+                //Try to create new user
                 mUsername = mUsernameField.getText().toString().trim();
                 mPassword = mPasswordField.getText().toString().trim();
                 mEmail = mEmailField.getText().toString().trim();
@@ -84,12 +122,13 @@ public class LoginFragment extends Fragment {
                         loginUser();
                     } else {
                         createNewUser();
+                        //mCallback.onLoginClicked(mUserData.toString());
+
                     }
                 }
             }
         });
     }
-
 
     //TODO: Login existing user
     private void loginUser() {
@@ -104,26 +143,27 @@ public class LoginFragment extends Fragment {
         //String url = "http://10.0.2.2:3000/api/user";
 
         //Create Object to send
-        JSONObject jso = sharedPreferencesMethods.createCategoryListObject
-                (ApiConstants.USER_CATEGORIES);
-        try {
-            jso.put(ApiConstants.USER_NAME, mUsername);
-            jso.put(ApiConstants.USER_EMAIL,mEmail);
-            jso.put(ApiConstants.USER_PASSWORD,mPassword);
+        JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject
+                (ApiConstants.USER_CATEGORIES, getActivity());
+        Log.v(TAG,categoryListObject.toString());
+        JSONObject userItemObject = sharedPreferencesMethods.createUserItemsObject
+                (ApiConstants.USER_ITEMS, getActivity());
+        Log.v(TAG,userItemObject.toString());
 
+        //TODO: Add categories + user items to object?
+        JSONObject userObject = new JSONObject();
+        try {
+            userObject.put(ApiConstants.USER_EMAIL,mEmail);
+            userObject.put(ApiConstants.USER_PASSWORD,mPassword);
+            userObject.put(ApiConstants.USER_NAME, mUsername);
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }
-
+        Log.v(TAG, userObject.toString());
         //Data to be sent
 
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put(ApiConstants.USER_NAME, mUsername);
-//        params.put(ApiConstants.USER_EMAIL,mEmail);
-//        params.put(ApiConstants.USER_PASSWORD,mPassword);
         //TODO: send user preferences
-
-        JsonObjectRequest newUserRequest = new JsonObjectRequest(Request.Method.POST, url, jso,
+        JsonObjectRequest newUserRequest = new JsonObjectRequest(Request.Method.POST, url, userObject,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -133,6 +173,7 @@ public class LoginFragment extends Fragment {
                             Log.v(TAG,mUserData.toString());
                             //mProgressBar.setVisibility(View.INVISIBLE);
                             //TODO: Update UI
+                            mCallback.onLoginClicked(mUserData.toString());
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -142,10 +183,15 @@ public class LoginFragment extends Fragment {
             @Override
             public void onErrorResponse (VolleyError error){
                 requestMethods.updateDisplayForError();
-                //TODO: Where does this take you?
+                //TODO: Where will a login error take you?
             }
         });
         queue.add(newUserRequest);
     }
-
 }
+
+
+
+
+
+

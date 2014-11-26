@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LoginFragment.OnLoginListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
@@ -52,26 +52,27 @@ public class MainActivity extends ActionBarActivity {
     //For API Requests + Response
     protected JSONObject mItemData;
     protected JSONArray mJsonItems;
-    //TODO: Limit returned results to most recent
-    //public static final int NUMBER_OF_POSTS = 5;
 
     //Lists to be adapted
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    private List<MainListItem> mUserItemList = new ArrayList<MainListItem>();
+    //private List<MainListItem> mUserItemList = new ArrayList<MainListItem>();
 
     //Adapters
     protected MainListAdapter feedAdapter;
-    protected MainListAdapter userListAdapter;
+    //TODO: figure out adapter for other lists in the feed
 
     //UI Elements
     protected ProgressBar mProgressBar;
     protected ListView mListView;
-    protected ListView mUserListView;
 
     //Photo Variables
     protected Uri mMediaUri;
-    protected JSONObject mPhotoObject;
     protected MainListItem mCurrentItem;
+
+    //Fragments
+    LoginFragment loginFragment = new LoginFragment();
+    //TermsFragment termsFragment = new TermsFragment();
+    //ConfirmFragment confirmFragment = new ConfirmFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,6 @@ public class MainActivity extends ActionBarActivity {
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mListView = (ListView)findViewById(R.id.list);
-        //mUserListView = (ListView)
 
         feedAdapter = new MainListAdapter(this, mItemList);
         mListView.setAdapter(feedAdapter);
@@ -99,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
                 //Store ListItem in variable
                 //TODO: Can I move this?
                 mCurrentItem = (MainListItem) mListView.getItemAtPosition(position);
-                Log.v(TAG, mCurrentItem.toString());
+                //Log.v(TAG, mCurrentItem.toString());
             }
         });
 
@@ -109,7 +109,6 @@ public class MainActivity extends ActionBarActivity {
             getUserListItems();
             //getCategoriesList();
            // getAllListItems();
-
         }
         else {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
@@ -120,12 +119,12 @@ public class MainActivity extends ActionBarActivity {
     private void updateList() {
         mProgressBar.setVisibility(View.INVISIBLE);
         if (mItemData == null) {
+            //TODO: User Error Message in dialog (updateDisplay for Error: update so you can pass in JSON response + parse)
             requestMethods.updateDisplayForError();
         }
         else {
             try {
                 mJsonItems = mItemData.getJSONArray(ApiConstants.RESPONSE_CONTENT);
-
                 for(int i = 0; i < mJsonItems.length(); i++) {
                     JSONObject jsonSingleItem = mJsonItems.getJSONObject(i);
                     MainListItem listItem = new MainListItem();
@@ -178,13 +177,8 @@ public class MainActivity extends ActionBarActivity {
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/items";
 
-        //Retrieve User List Item preferences
-//        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
-//                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-//                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY);
-
         //Create Object of List Item IDs to send
-        JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS);
+        JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS, this);
         Log.v(TAG,UserItemObject.toString());
 
         JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.GET, url, UserItemObject,
@@ -193,7 +187,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onResponse(JSONObject response) {
                         mItemData = response;
                         Log.v(TAG,response.toString());
-                        //updateList();
+                        updateList();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -316,9 +310,9 @@ public class MainActivity extends ActionBarActivity {
                             //Handle Data
                             //TODO: Handle Response
                             JSONObject postResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            Log.v(TAG, postResponse.toString());
-
+                            //Log.v(TAG, postResponse.toString());
                             mProgressBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(MainActivity.this, "Upload successful!", Toast.LENGTH_LONG).show();
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -333,6 +327,7 @@ public class MainActivity extends ActionBarActivity {
         queue.add(postPhotoRequest);
     } //uploadPhoto
 
+
     //Once photo taken or selected then do this:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -345,20 +340,9 @@ public class MainActivity extends ActionBarActivity {
                 uploadPhoto();
             } else {
                 Log.v(TAG, "User is not logged in and we should start Login Activity");
-                //TODO: Load Login Fragment
-
-
-                //TODO: find out how Fragment passes data to MainActivity
-                //startActivityForResult
-                //start Login Activity + return user object (get userID)
-                LoginFragment loginFragment = new LoginFragment();
+                //Load Login Fragment
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.overlay_fragment_container,loginFragment).commit();
-
-                //onActivityResult
-                //Once logged in:
-                //update userloggedin and userID
-                //uploadPhoto();
             }
 
             //Add photo to the Gallery (listen for broadcast and let gallery take action)
@@ -370,7 +354,15 @@ public class MainActivity extends ActionBarActivity {
         else if(resultCode != RESULT_CANCELED) {
             Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
         }
+    }
 
+    //Upload photo once account has been created (+ move fragment)
+    @Override
+    public void onLoginClicked(String userData) {
+        getSupportFragmentManager().beginTransaction()
+                .remove(loginFragment)
+                .commit();
+        uploadPhoto();
     }
 
     @Override
