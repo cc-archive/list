@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login_button_label"
-        android:id="@+id/loginButton"
+        android:id="@+id/nextButton"
         android:layout_below="@+id/passwordField"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

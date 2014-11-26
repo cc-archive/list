@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import org.creativecommons.thelist.adapters.MainListAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -48,6 +49,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    ListUser mCurrentUser = new ListUser(this);
 
     //For API Requests + Response
     protected JSONObject mItemData;
@@ -334,7 +336,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK) {
-            if(requestMethods.isLoggedIn()) {
+            if(mCurrentUser.isLoggedIn()) {
                 //Create and send photo object
                 //Note on server side create relationship between user (creator) and photo
                 uploadPhoto();

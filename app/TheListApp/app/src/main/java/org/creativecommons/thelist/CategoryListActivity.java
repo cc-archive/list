@@ -25,9 +25,9 @@ import com.android.volley.toolbox.Volley;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
-import org.creativecommons.thelist.utils.UserMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,7 @@ public class CategoryListActivity extends Activity {
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
-    UserMethods userMethods = new UserMethods(this);
+    ListUser listUser = new ListUser(this);
 
     //GET Request
     protected JSONObject mCategoryData;
@@ -207,7 +207,7 @@ public class CategoryListActivity extends Activity {
     //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = userMethods.getUserID();
+        String userID = listUser.getUserID();
         //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
         //Android Default Emulator

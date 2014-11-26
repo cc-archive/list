@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONException;
@@ -30,6 +31,7 @@ public class LoginFragment extends Fragment {
     public static final String TAG = LoginFragment.class.getSimpleName();
     RequestMethods requestMethods = new RequestMethods(getActivity());
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+    ListUser mCurrentUser = new ListUser();
 
     //For Request
     protected JSONObject mUserData;
@@ -84,7 +86,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_login_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class LoginFragment extends Fragment {
         mUsernameField = (EditText)getView().findViewById(R.id.nameField);
         mEmailField = (EditText)getView().findViewById(R.id.emailField);
         mPasswordField = (EditText)getView().findViewById(R.id.passwordField);
-        mLoginButton = (Button)getView().findViewById(R.id.loginButton);
+        mLoginButton = (Button)getView().findViewById(R.id.nextButton);
         mUsernameField.requestFocus();
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -118,8 +120,8 @@ public class LoginFragment extends Fragment {
                     //Login user or Create account
                     Log.v(TAG, "Login user or create account here");
                     //If user exists login, else create new user
-                    if(requestMethods.isUser()) {
-                        loginUser();
+                    if(mCurrentUser.isUser()) {
+                        mCurrentUser.logIn();
                     } else {
                         createNewUser();
                         //mCallback.onLoginClicked(mUserData.toString());
@@ -130,10 +132,6 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    //TODO: Login existing user
-    private void loginUser() {
-        //Verify user identity
-    }
 
     private void createNewUser() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());

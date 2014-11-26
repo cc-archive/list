@@ -16,7 +16,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="org.creativecommons.thelist.TabbedActivity.TabActivity"
+            android:name="org.creativecommons.thelist.misc.TabActivity"
             android:label="@string/title_activity_main" >
         </activity>
         <activity

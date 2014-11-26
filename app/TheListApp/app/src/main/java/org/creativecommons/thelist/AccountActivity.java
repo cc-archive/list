@@ -54,7 +54,7 @@ public class AccountActivity extends ActionBarActivity {
         mUsernameField = (EditText)findViewById(R.id.nameField);
         mEmailField = (EditText)findViewById(R.id.emailField);
         mPasswordField = (EditText)findViewById(R.id.passwordField);
-        mLoginButton = (Button)findViewById(R.id.loginButton);
+        mLoginButton = (Button)findViewById(R.id.nextButton);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override

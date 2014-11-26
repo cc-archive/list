@@ -21,26 +21,10 @@ import java.util.List;
 public class RequestMethods {
     public static final String TAG = RequestMethods.class.getSimpleName();
     protected Context mContext;
+
+    //Set Context
     public RequestMethods(Context mContext) {
         this.mContext = mContext;
-    }
-
-    //TODO: Switch 3 below over to UserMethods!
-    //Check if user before logging in OR creating new account
-    public boolean isUser() {
-        //TODO: Check if User exists
-        return false;
-    }
-
-    //Maybe not need this: if you can get USERID, that means user is logged in?
-    public boolean isLoggedIn() {
-        //TODO: Check if User is logged in
-        return false;
-    }
-
-    public String getUserID() {
-        //TODO: Get Current UserID
-        return String.valueOf(1);
     }
 
     //CHECK AVAILABILITY OF NETWORK
@@ -70,7 +54,7 @@ public class RequestMethods {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                .setMessage(message)
-               .setPositiveButton(android.R.string.ok,null);
+               .setPositiveButton(android.R.string.ok, null);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -87,8 +71,10 @@ public class RequestMethods {
     }
 
     //Create Upload Photo Object (in bytes) + return object with ID and userID
-    public JSONObject createUploadPhotoObject(MainListItem mCurrentItem, Uri uri) {
-        //Get Data from mCurrentItem to build JSONObject
+    public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
+        ListUser listUser = new ListUser();
+
+        //Get Data from currentItem to build JSONObject
         JSONObject photoObject = new JSONObject();
 
         //Convert photo file to byte[]
@@ -102,8 +88,8 @@ public class RequestMethods {
             //String fileName = FileHelper.getFileName(this, mMediaUri, fileType);
             try {
                 //TODO: Check mCurrentItem is what you think it is -_-
-                photoObject.put(ApiConstants.PHOTO_ITEM_ID, mCurrentItem.getItemID());
-                photoObject.put(ApiConstants.PHOTO_USER_ID, getUserID());
+                photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
+                photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
                 photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileBytes);
             }
             catch (JSONException e) {

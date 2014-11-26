@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.TabbedActivity;
+package org.creativecommons.thelist.misc;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ public class ListFeedAdapter extends ArrayAdapter<JSONArray> {
     protected List<JSONArray> mListItems;
 
     public ListFeedAdapter(Context context, List<JSONArray> listItems) {
-        super(context, R.layout.main_list_item, listItems);
+        super(context, R.layout.list_item_main, listItems);
         mContext = context;
         mListItems = listItems;
     }
@@ -32,7 +32,7 @@ public class ListFeedAdapter extends ArrayAdapter<JSONArray> {
         ViewHolder holder;
 
         if(convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.main_list_item, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_main, null);
             holder = new ViewHolder();
             holder.iconImageView = (ImageView)convertView.findViewById(R.id.camera_icon);
             holder.nameLabel = (TextView)convertView.findViewById(R.id.list_item_name);

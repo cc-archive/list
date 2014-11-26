@@ -7,26 +7,93 @@
     android:background="@color/translucent_background"
     tools:context="org.creativecommons.thelist.LoginFragment">
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/cancel_button_label"
+        android:id="@+id/cancelButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:clickable="true"
+        android:textColor="#ffffffff" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar"
+        android:id="@+id/section_loading"
+        android:layout_above="@+id/section_text"
+        android:layout_alignLeft="@+id/section_text"
+        android:layout_alignStart="@+id/section_text">
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/loading_label"
+            android:id="@+id/progressBar_label"
+            android:gravity="center"
+            android:textColor="#ffffffff"
+            android:layout_below="@+id/progressBar"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/section_text"
+        android:paddingTop="50dp"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:layout_above="@+id/section_fields"
+        android:layout_alignLeft="@+id/section_fields"
+        android:layout_alignStart="@+id/section_fields">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="@string/login_fragment_title"
+        android:id="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/abc_primary_text_material_dark" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/login_fragment_text"
+        android:id="@+id/text"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/title"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:textColor="#ffffffff" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/section_fields"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/relativeLayout">
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/nameField"
-            android:layout_marginTop="119dp"
             android:hint="@string/full_name_hint"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
@@ -62,7 +129,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create new account"
+            android:text="@string/loginButton_label"
             android:textColor="@android:color/white"
             android:background="@color/primary_dark_material_light"
             android:id="@+id/loginButton"
@@ -74,15 +141,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:textColor="@android:color/darker_gray"
             android:text="I already have an account"
             android:id="@+id/existingAccount"
             android:clickable="true"
-            android:layout_below="@+id/loginButton"
+            android:layout_below="@+id/nextButton"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
-
-
 
 </RelativeLayout>
