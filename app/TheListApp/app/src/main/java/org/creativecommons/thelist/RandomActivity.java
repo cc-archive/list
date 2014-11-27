@@ -41,7 +41,7 @@ public class RandomActivity extends Activity {
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
-    ListUser listUser = new ListUser(this);
+    ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
     protected JSONObject mRandomItemData;
@@ -79,7 +79,7 @@ public class RandomActivity extends Activity {
         Button NoButton = (Button) findViewById(R.id.NoButton);
         Button CameraButton = (Button) findViewById(R.id.CameraButton);
 
-        if(requestMethods.isNetworkAvailable()) {
+        if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             count = 1;
             getRandomItemRequest();
@@ -103,7 +103,7 @@ public class RandomActivity extends Activity {
                     } else {
 
                         //If user is logged in, send chosen list items to DB
-                        if(listUser.isLoggedIn()) {
+                        if(mCurrentUser.isLoggedIn()) {
                             putRandomItemsRequest();
                         }
                         else {
@@ -200,9 +200,8 @@ public class RandomActivity extends Activity {
 
 
     private void putRandomItemsRequest() {
-        //TODO: POST Selected Items to User’s List
         RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = listUser.getUserID();
+        String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
         String url = "http://10.0.3.2:3000/api/user/" + userID;
         //Android Default Emulator

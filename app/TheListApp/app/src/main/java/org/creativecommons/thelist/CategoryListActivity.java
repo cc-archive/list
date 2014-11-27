@@ -1,6 +1,7 @@
 package org.creativecommons.thelist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +44,8 @@ public class CategoryListActivity extends Activity {
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
+    protected Context mContext;
+
     //GET Request
     protected JSONObject mCategoryData;
     protected JSONArray mJsonCategories;
@@ -65,6 +68,8 @@ public class CategoryListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
+
+        mContext = this;
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -112,7 +117,7 @@ public class CategoryListActivity extends Activity {
         });
 
         //If Network Connection is available, Execute getDataTask
-        if(requestMethods.isNetworkAvailable()) {
+        if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             getCategoriesRequest();
         }
@@ -215,11 +220,11 @@ public class CategoryListActivity extends Activity {
 
         //Create Object to send
         JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject
-                (ApiConstants.USER_CATEGORIES, this);
+                (ApiConstants.USER_CATEGORIES,mContext);
         Log.v(TAG, UserCategoriesObject.toString());
 
         //Volley Request
-        JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
+        JsonObjectRequest putCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
                 UserCategoriesObject,
                 new Response.Listener<JSONObject>() {
 
@@ -241,11 +246,12 @@ public class CategoryListActivity extends Activity {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
+            public void onErrorResponse(VolleyError error) {
                 requestMethods.updateDisplayForError();
             }
         });
-        queue.add(postCategoriesRequest);
+            queue.add(putCategoriesRequest);
+
     } //storeCategoriesRequest
 
 

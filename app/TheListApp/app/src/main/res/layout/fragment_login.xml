@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/section_loading"
         android:layout_above="@+id/section_text"
-        android:layout_alignLeft="@+id/section_text"
-        android:layout_alignStart="@+id/section_text">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
@@ -54,9 +54,10 @@
         android:id="@+id/section_text"
         android:paddingTop="50dp"
         android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="40dp"
         android:layout_above="@+id/section_fields"
-        android:layout_alignLeft="@+id/section_fields"
-        android:layout_alignStart="@+id/section_fields">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,7 +79,6 @@
         android:gravity="center"
         android:layout_margin="5dp"
         android:textColor="#ffffffff" />
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -88,8 +88,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="0dp">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -137,17 +137,18 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:paddingTop="15dp"
-            android:textColor="@android:color/darker_gray"
-            android:text="I already have an account"
-            android:id="@+id/existingAccount"
-            android:clickable="true"
-            android:layout_below="@+id/nextButton"
-            android:layout_centerHorizontal="true" />
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingTop="5dp"
+        android:textColor="@android:color/darker_gray"
+        android:text="I already have an account"
+        android:id="@+id/existingAccount"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

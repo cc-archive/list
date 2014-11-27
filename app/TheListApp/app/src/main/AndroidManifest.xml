@@ -16,10 +16,6 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="org.creativecommons.thelist.misc.TabActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
-        <activity
             android:name="org.creativecommons.thelist.CategoryListActivity"
             android:label="@string/title_activity_category_list"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >

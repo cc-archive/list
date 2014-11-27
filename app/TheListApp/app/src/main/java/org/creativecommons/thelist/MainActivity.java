@@ -1,6 +1,7 @@
 package org.creativecommons.thelist;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -49,6 +51,9 @@ import java.util.Locale;
 public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
         TermsFragment.TermsClickListener, ConfirmFragment.ConfirmListener {
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    protected Context mContext;
+
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
@@ -88,6 +93,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mContext = this;
+
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mListView = (ListView)findViewById(R.id.list);
@@ -114,7 +121,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         });
 
         //If Network Connection is available, Execute getDataTask
-        if(requestMethods.isNetworkAvailable()) {
+        if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             getUserListItems();
             //getCategoriesList();
@@ -295,8 +302,17 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                             //TODO: Handle Response
                             JSONObject postResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             //Log.v(TAG, postResponse.toString());
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(MainActivity.this, "Upload successful!", Toast.LENGTH_LONG).show();
+
+                            //TODO: if status is NOT ok, Change TextView in confirmFragment
+                            //Start photo confirmation fragment
+                            getSupportFragmentManager().beginTransaction()
+                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                    .replace(R.id.overlay_fragment_container, confirmFragment)
+                                    .commit();
+
+                            //send request to API
+                            //TODO: Find out why this does this twice (is it because the view is re-inflated?)
+                            //getUserListItems();
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -341,58 +357,70 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         }
     }
 
-    //User Sign/Up or Login Data Received
+    //When New User has been Signed Up
     // Upload photo once account has been created (+ move fragment)
     @Override
-    public void onLoginClicked(String userData) {
-        //Log.v(TAG + "this is the user‘s data", userData);
+    public void UserCreated(String userData) {
 
         try {
             mCurrentUserObject = new JSONObject(userData);
-//            Log.v(TAG, mCurrentUserObject.toString());
-//            Log.v(TAG, mCurrentUserObject.get("password").toString());
+            mCurrentUser.setUserID(mCurrentUserObject.getInt(ApiConstants.USER_ID));
+            mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
+//            Log.v(TAG, mCurrentUser.getUserName());
+//            Log.v(TAG,mCurrentUser.getUserID());
+
+        } catch (JSONException e) {
+            Log.v(TAG,e.getMessage());
+        }
+
+        //Start terms fragment
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.overlay_fragment_container, termsFragment)
+                .commit();
+    }
+
+    //When User has been logged in
+    @Override
+    public void UserLoggedIn(String userData) {
+        try {
+            mCurrentUserObject = new JSONObject(userData);
+            mCurrentUser.setUserID(mCurrentUserObject.getInt(ApiConstants.USER_ID));
+            mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.overlay_fragment_container,termsFragment)
-                .addToBackStack(null)
-                .commit();
-//        uploadPhoto();
-//        mFrameLayout.setClickable(false);
-//        getSupportActionBar().show();
+        //TODO: deal with what happens once photo is uploaded (for pre-existing user)
+        // (in upload photo, create if statement to if user logged in: close Fragment, set clickable, show Actionbar + display message; else: start next fragment in flow)
+        uploadPhoto();
     }
 
-    //Account Confirmation Received
+    //When account Confirmation Received
     @Override
     public void onTermsClicked() {
+        //Upload + take user to success screen
         uploadPhoto();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.overlay_fragment_container, confirmFragment)
-                .addToBackStack(null)
-                .commit();
-
     }
 
-    //Upload Success view has been inflated
+    //When ConfirmFragment has been inflated
     @Override
     public void onConfirmFinish() {
-
+        //Show upload success for limited time
         new Handler().postDelayed(new Runnable() {
         @Override
         public void run() {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.overlay_fragment_container, confirmFragment)
-                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .remove(confirmFragment)
                     .commit();
-            finish();
         }
-    }, 4000);
+    }, 2000);
+
+    mFrameLayout.setClickable(false);
+    getSupportActionBar().show();
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

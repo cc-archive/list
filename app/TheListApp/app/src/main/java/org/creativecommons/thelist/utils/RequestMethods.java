@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by damaris on 2014-11-07.
  */
-public class RequestMethods {
+public final class RequestMethods {
     public static final String TAG = RequestMethods.class.getSimpleName();
     protected Context mContext;
 
@@ -27,9 +27,8 @@ public class RequestMethods {
         this.mContext = mContext;
     }
 
-    //CHECK AVAILABILITY OF NETWORK
-    public static boolean isNetworkAvailable() {
-        ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
         boolean isAvailable = false;
@@ -38,6 +37,18 @@ public class RequestMethods {
         }
         return isAvailable;
     }
+
+    //CHECK AVAILABILITY OF NETWORK
+//    public static boolean isNetworkAvailable() {
+//        ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+//
+//        boolean isAvailable = false;
+//        if(networkInfo != null && networkInfo.isConnected()) {
+//            isAvailable = true;
+//        }
+//        return isAvailable;
+//    }
 
     //UPDATE DISPLAY FOR ERROR METHOD
     public void updateDisplayForError() {

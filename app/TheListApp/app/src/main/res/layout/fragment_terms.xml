@@ -108,7 +108,6 @@
             android:text="@string/checkbox_label"
             android:id="@+id/checkBox"
             android:gravity="center"
-            android:onClick="onCheckboxClicked"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:textColor="@color/text_light" />
@@ -126,6 +125,6 @@
     </RelativeLayout>
 
 
-
+    <!--android:onClick="onCheckboxClicked"-->
 
 </RelativeLayout>

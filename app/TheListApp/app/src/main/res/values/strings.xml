@@ -72,5 +72,6 @@
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
     <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
+    <string name="upload_success_label">Upload Success!</string>
 
 </resources>

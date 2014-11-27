@@ -28,6 +28,21 @@ public class ConfirmFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_confirm, container, false);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCallback.onConfirmFinish();
+    }
+
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -43,30 +58,4 @@ public class ConfirmFragment extends Fragment {
         super.onDetach();
         mCallback = null;
     }
-
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_confirm, container, false);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        mCallback.onConfirmFinish();
-    }
-
-//    new Handler().postDelayed(new Runnable() {
-//        @Override
-//        public void run() {
-//            mCallback.onConfirmFinish();
-//            .finish();
-//        }
-//    }, TIME_OUT);
-
 }

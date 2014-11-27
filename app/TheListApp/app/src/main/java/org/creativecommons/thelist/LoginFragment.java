@@ -22,7 +22,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +29,7 @@ import org.json.JSONObject;
 
 public class LoginFragment extends Fragment {
     public static final String TAG = LoginFragment.class.getSimpleName();
-    RequestMethods requestMethods = new RequestMethods(getActivity());
+    //RequestMethods requestMethods = new RequestMethods(getActivity());
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
     ListUser mCurrentUser = new ListUser();
 
@@ -51,28 +50,25 @@ public class LoginFragment extends Fragment {
 
     //Interface with Activity
     LoginClickListener mCallback;
+//    LogInListener mLogInCallback;
+//    SignUpListener mSignUpCallback;
+    
 
-    //LISTENER
+    //LISTENERS
     public interface LoginClickListener {
-        public void onLoginClicked(String userData);
+        public void UserLoggedIn(String userData);
+        public void UserCreated(String userData);
+
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallback = (LoginClickListener) activity;
-        } catch(ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + activity.getString(R.string.login_callback_exception_message));
-        }
-    }
+//    public void onLoginClicked(String userData);
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallback = null;
-    }
+//    public interface LogInListener {
+//        public void UserLoggedIn(String userData);
+//    }
+//    public void interface SignUpListener {
+//        public void UserCreated(String userData);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,19 +110,20 @@ public class LoginFragment extends Fragment {
                     //Login user or Create account
                     Log.v(TAG, "Login user or create account here");
                     //If user exists login, else create new user
+
+                    //TODO: use different check (e.g.: is I have an account button clicked?)
                     if(mCurrentUser.isUser()) {
-                        mCurrentUser.logIn(mUsername, mPassword, mEmail);
+                        mCallback.UserLoggedIn(mUserData.toString());
+                        mCurrentUser.logIn(mEmail, mPassword);
                     } else {
                         createNewUser();
-                        //mCallback.onLoginClicked(mUserData.toString());
-
+                        //mCallback.UserCreated(mUserData.toString());
                     }
                 }
             }
         });
     }
 
-    //TODO: move to ListUser class
     private void createNewUser() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         //Genymotion Emulator
@@ -137,25 +134,26 @@ public class LoginFragment extends Fragment {
         //Combine login data with user preferences
         JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject
                 (ApiConstants.USER_CATEGORIES, getActivity());
-        Log.v(TAG,categoryListObject.toString());
+        //Log.v(TAG,categoryListObject.toString());
         JSONObject userItemObject = sharedPreferencesMethods.createUserItemsObject
                 (ApiConstants.USER_ITEMS, getActivity());
-        Log.v(TAG,userItemObject.toString());
+        //Log.v(TAG,userItemObject.toString());
 
         final JSONObject userObject = new JSONObject();
+
         try {
             userObject.put(ApiConstants.USER_EMAIL,mEmail);
             userObject.put(ApiConstants.USER_PASSWORD,mPassword);
             userObject.put(ApiConstants.USER_NAME, mUsername);
-            //userObject.put(ApiConstants.USER_CATEGORIES,categoryListObject.getJSONArray(ApiConstants.USER_CATEGORIES));
-            //userObject.put(ApiConstants.USER_ITEMS,userItemObject.getJSONArray(ApiConstants.USER_ITEMS));
+            userObject.put(ApiConstants.USER_CATEGORIES,categoryListObject.getJSONArray(ApiConstants.USER_CATEGORIES));
+            userObject.put(ApiConstants.USER_ITEMS,userItemObject.getJSONArray(ApiConstants.USER_ITEMS));
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }
         Log.v(TAG, userObject.toString());
         //Data to be sent
 
-        //TODO: send user preferences
+        //Send new user object
         JsonObjectRequest newUserRequest = new JsonObjectRequest(Request.Method.POST, url, userObject,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -163,11 +161,12 @@ public class LoginFragment extends Fragment {
                         try {
                             //Handle Data
                             mUserData = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
+                            Log.v("this is the API response", mUserData.toString());
                             JSONObject data = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            Log.v(TAG,response.toString());
+                            //Log.v(TAG,response.toString());
 
                             //TODO: Handle Errors
-                            mCallback.onLoginClicked(mUserData.toString());
+                            mCallback.UserCreated(mUserData.toString());
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -181,6 +180,23 @@ public class LoginFragment extends Fragment {
             }
         });
         queue.add(newUserRequest);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (LoginClickListener) activity;
+        } catch(ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + activity.getString(R.string.login_callback_exception_message));
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
     }
 }
 

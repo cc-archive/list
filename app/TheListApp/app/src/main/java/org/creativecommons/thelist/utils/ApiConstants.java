@@ -45,6 +45,8 @@ public final class ApiConstants {
     public static final String CREATE_NEW_USER = "http://10.0.3.2:3000/api/user/";
     //Must Add ID + use PUT
     public static final String UPDATE_USER = "http://10.0.3.2:3000/api/user/";
+    //User Login
+    public static final String LOGIN_USER = "http://10.0.3.2:3000/api/user/";
     //Must send array of items
     public static final String GET_MULTIPLE_ITEMS = "http://10.0.3.2:3000/api/items/";
     //GET Method

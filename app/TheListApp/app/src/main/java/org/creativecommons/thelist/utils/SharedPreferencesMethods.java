@@ -37,14 +37,14 @@ public class SharedPreferencesMethods {
     //TODO:Methods for adding extracting array
 
     //Add Array to SharedPreferences
-    public void SaveSharedPreference (String preferenceName, String key, String value, Context context){
+    public static void SaveSharedPreference (String preferenceName, String key, String value, Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.commit();
     }
 
-    public JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey, Context context){
+    public static JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey, Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         String value = sharedPref.getString(preferenceKey, null);
 
