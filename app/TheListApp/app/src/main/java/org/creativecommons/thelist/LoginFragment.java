@@ -2,6 +2,7 @@ package org.creativecommons.thelist;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,10 +50,10 @@ public class LoginFragment extends Fragment {
     String mEmail;
 
     //Interface with Activity
-    OnLoginListener mCallback;
+    LoginClickListener mCallback;
 
     //LISTENER
-    public interface OnLoginListener {
+    public interface LoginClickListener {
         public void onLoginClicked(String userData);
     }
 
@@ -60,10 +61,10 @@ public class LoginFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallback = (OnLoginListener) activity;
+            mCallback = (LoginClickListener) activity;
         } catch(ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement LoginFragment.OnLoginListener");
+                    + activity.getString(R.string.login_callback_exception_message));
         }
     }
 
@@ -73,20 +74,12 @@ public class LoginFragment extends Fragment {
         mCallback = null;
     }
 
-//    public void setOnLoginListener(OnLoginListener listener) {
-//        this.listener = listener;
-//    }
-//
-//    public void updateDetail() {
-//        long newTime = System.currentTimeMillis();
-//        listener.onLoginClicked(newTime);
-//    }
-
-    //@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
+
     }
 
     @Override
@@ -96,7 +89,8 @@ public class LoginFragment extends Fragment {
         mUsernameField = (EditText)getView().findViewById(R.id.nameField);
         mEmailField = (EditText)getView().findViewById(R.id.emailField);
         mPasswordField = (EditText)getView().findViewById(R.id.passwordField);
-        mLoginButton = (Button)getView().findViewById(R.id.nextButton);
+        mPasswordField.setTypeface(Typeface.DEFAULT);
+        mLoginButton = (Button)getView().findViewById(R.id.loginButton);
         mUsernameField.requestFocus();
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +115,7 @@ public class LoginFragment extends Fragment {
                     Log.v(TAG, "Login user or create account here");
                     //If user exists login, else create new user
                     if(mCurrentUser.isUser()) {
-                        mCurrentUser.logIn();
+                        mCurrentUser.logIn(mUsername, mPassword, mEmail);
                     } else {
                         createNewUser();
                         //mCallback.onLoginClicked(mUserData.toString());
@@ -132,7 +126,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-
+    //TODO: move to ListUser class
     private void createNewUser() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         //Genymotion Emulator
@@ -140,7 +134,7 @@ public class LoginFragment extends Fragment {
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/user";
 
-        //Create Object to send
+        //Combine login data with user preferences
         JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject
                 (ApiConstants.USER_CATEGORIES, getActivity());
         Log.v(TAG,categoryListObject.toString());
@@ -148,12 +142,13 @@ public class LoginFragment extends Fragment {
                 (ApiConstants.USER_ITEMS, getActivity());
         Log.v(TAG,userItemObject.toString());
 
-        //TODO: Add categories + user items to object?
-        JSONObject userObject = new JSONObject();
+        final JSONObject userObject = new JSONObject();
         try {
             userObject.put(ApiConstants.USER_EMAIL,mEmail);
             userObject.put(ApiConstants.USER_PASSWORD,mPassword);
             userObject.put(ApiConstants.USER_NAME, mUsername);
+            //userObject.put(ApiConstants.USER_CATEGORIES,categoryListObject.getJSONArray(ApiConstants.USER_CATEGORIES));
+            //userObject.put(ApiConstants.USER_ITEMS,userItemObject.getJSONArray(ApiConstants.USER_ITEMS));
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }
@@ -168,9 +163,10 @@ public class LoginFragment extends Fragment {
                         try {
                             //Handle Data
                             mUserData = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            Log.v(TAG,mUserData.toString());
-                            //mProgressBar.setVisibility(View.INVISIBLE);
-                            //TODO: Update UI
+                            JSONObject data = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
+                            Log.v(TAG,response.toString());
+
+                            //TODO: Handle Errors
                             mCallback.onLoginClicked(mUserData.toString());
 
                         } catch (JSONException e) {
@@ -180,7 +176,7 @@ public class LoginFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                //requestMethods.updateDisplayForError();
                 //TODO: Where will a login error take you?
             }
         });

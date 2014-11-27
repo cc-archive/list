@@ -41,7 +41,7 @@ public class CategoryListActivity extends Activity {
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
-    ListUser listUser = new ListUser(this);
+    ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
     protected JSONObject mCategoryData;
@@ -126,7 +126,7 @@ public class CategoryListActivity extends Activity {
             public void onClick(View v) {
 
                 //If logged in, put to user profile, else create sharedPreference
-                if(requestMethods.isLoggedIn()) {
+                if(mCurrentUser.isLoggedIn()) {
                     storeCategoriesRequest();
                 } else {
                     SparseBooleanArray positions = mListView.getCheckedItemPositions();
@@ -207,7 +207,7 @@ public class CategoryListActivity extends Activity {
     //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = listUser.getUserID();
+        String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
         //Android Default Emulator

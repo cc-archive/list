@@ -48,6 +48,7 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         String value = sharedPref.getString(preferenceKey, null);
 
+        //TODO: Switch to json library (JSONNNN)
         //Convert from String to Array
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(value);

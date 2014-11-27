@@ -25,9 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/section_loading"
-        android:layout_below="@+id/cancelButton"
-        android:layout_alignRight="@+id/cancelButton"
-        android:layout_alignEnd="@+id/cancelButton">
+        android:layout_above="@+id/section_text"
+        android:layout_centerHorizontal="true">
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
@@ -78,7 +77,7 @@
             android:layout_below="@+id/title"
             android:gravity="center"
             android:layout_margin="5dp"
-            android:textColor="#ffffffff" />
+            android:textColor="@color/text_light" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,10 +90,8 @@
             android:textStyle="bold"
             android:textAllCaps="true"
             android:gravity="center"
-            android:textColor="#ffffffff"
+            android:textColor="@color/text_light"
             android:layout_marginTop="10dp" />
-
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -108,25 +105,27 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I agree to the terms and conditions"
+            android:text="@string/checkbox_label"
             android:id="@+id/checkBox"
             android:gravity="center"
+            android:onClick="onCheckboxClicked"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/text_light" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            android:textColor="@android:color/white"
+            android:background="@color/primary_dark_material_light"
+            android:visibility="invisible"
+            android:id="@+id/nextButton"
+            android:layout_marginTop="50dp" />
 
     </RelativeLayout>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Continue"
-        android:textColor="@android:color/white"
-        android:background="@color/primary_dark_material_light"
-        android:id="@+id/nextButton"
-        android:layout_below="@+id/section_fields"
-        android:layout_alignLeft="@+id/section_fields"
-        android:layout_alignStart="@+id/section_fields"
-        android:layout_marginTop="30dp" />
+
 
 
 </RelativeLayout>

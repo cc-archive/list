@@ -68,5 +68,9 @@
     <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
     <string name="terms_fragment_text">Anyone who uses your images must give you credit and indicate if any changes have been made.</string>
     <string name="learn_more_button_label">Learn More</string>
+    <string name="checkbox_label">I agree to the terms and conditions</string>
+    <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
+    <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
+    <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
 
 </resources>

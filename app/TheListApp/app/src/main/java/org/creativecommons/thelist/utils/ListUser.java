@@ -73,9 +73,20 @@ public class ListUser {
 
     }
 
-    public void logIn() {
+    public void logIn(String name, String email, String password) {
         //Also Set login state to true?
         this.logInState = true;
+
+        //Get User Preferences for List Items + Category Items
+
+        if(name == null) {
+            //PUT + add category Items
+            //else, just login User?
+        } else {
+            //Use POST method + createNewUser
+
+        }
+
 
     }
 

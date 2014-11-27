@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -44,16 +46,20 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity implements LoginFragment.OnLoginListener {
+public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
+        TermsFragment.TermsClickListener, ConfirmFragment.ConfirmListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
+    protected JSONObject mCurrentUserObject;
+
     //For API Requests + Response
     protected JSONObject mItemData;
     protected JSONArray mJsonItems;
+
 
     //Lists to be adapted
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
@@ -66,6 +72,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
     //UI Elements
     protected ProgressBar mProgressBar;
     protected ListView mListView;
+    protected FrameLayout mFrameLayout;
 
     //Photo Variables
     protected Uri mMediaUri;
@@ -73,8 +80,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
 
     //Fragments
     LoginFragment loginFragment = new LoginFragment();
-    //TermsFragment termsFragment = new TermsFragment();
-    //ConfirmFragment confirmFragment = new ConfirmFragment();
+    TermsFragment termsFragment = new TermsFragment();
+    ConfirmFragment confirmFragment = new ConfirmFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +91,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mListView = (ListView)findViewById(R.id.list);
+        mFrameLayout = (FrameLayout) findViewById(R.id.overlay_fragment_container);
 
         feedAdapter = new MainListAdapter(this, mItemList);
         mListView.setAdapter(feedAdapter);
@@ -127,6 +135,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
         else {
             try {
                 mJsonItems = mItemData.getJSONArray(ApiConstants.RESPONSE_CONTENT);
+
                 for(int i = 0; i < mJsonItems.length(); i++) {
                     JSONObject jsonSingleItem = mJsonItems.getJSONObject(i);
                     MainListItem listItem = new MainListItem();
@@ -144,33 +153,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
         }
     } //updateList
 
-
-    //GET All ListItems
-//    private void getAllListItems() {
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//
-//        //Genymotion Emulator
-//        String url ="http://10.0.3.2:3000/api/item";
-//        //Android Default Emulator
-//        //String url = "http://10.0.2.2:3000/api/item";
-//
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                            mItemData = response;
-//                            updateList();
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse (VolleyError error){
-//                requestMethods.updateDisplayForError();
-//            }
-//        });
-//        queue.add(jsonObjectRequest);
-//    }
-
-    //GET All USER LIST ITEMS (eventually a limited number)
+    //GET ALL of USER‘S LIST ITEMS (limit eventually)
     private void getUserListItems() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
@@ -181,21 +164,20 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
 
         //Create Object of List Item IDs to send
         JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS, this);
-        Log.v(TAG,UserItemObject.toString());
 
-        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.GET, url, UserItemObject,
+        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, UserItemObject,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         mItemData = response;
-                        Log.v(TAG,response.toString());
+                        //Log.v(TAG,response.toString());
                         updateList();
                     }
                 }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
-            }
+                @Override
+                public void onErrorResponse (VolleyError error){
+                    requestMethods.updateDisplayForError();
+                }
         });
         queue.add(getUserItemsRequest);
     } //Get All User List Items
@@ -297,7 +279,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
 
         //Get Photo Object
         JSONObject photoObject = requestMethods.createUploadPhotoObject(mCurrentItem, mMediaUri);
-        Log.v(TAG,photoObject.toString());
+        //Log.v(TAG,photoObject.toString());
 
         //Volley Request
         JsonObjectRequest postPhotoRequest = new JsonObjectRequest(Request.Method.POST, url, photoObject,
@@ -341,10 +323,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
                 //Note on server side create relationship between user (creator) and photo
                 uploadPhoto();
             } else {
-                Log.v(TAG, "User is not logged in and we should start Login Activity");
                 //Load Login Fragment
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.overlay_fragment_container,loginFragment).commit();
+                mFrameLayout.setClickable(true);
+                getSupportActionBar().hide();
             }
 
             //Add photo to the Gallery (listen for broadcast and let gallery take action)
@@ -354,18 +337,62 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.OnL
 
         }
         else if(resultCode != RESULT_CANCELED) {
-            Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
         }
     }
 
-    //Upload photo once account has been created (+ move fragment)
+    //User Sign/Up or Login Data Received
+    // Upload photo once account has been created (+ move fragment)
     @Override
     public void onLoginClicked(String userData) {
+        //Log.v(TAG + "this is the user‘s data", userData);
+
+        try {
+            mCurrentUserObject = new JSONObject(userData);
+//            Log.v(TAG, mCurrentUserObject.toString());
+//            Log.v(TAG, mCurrentUserObject.get("password").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         getSupportFragmentManager().beginTransaction()
-                .remove(loginFragment)
+                .replace(R.id.overlay_fragment_container,termsFragment)
+                .addToBackStack(null)
                 .commit();
-        uploadPhoto();
+//        uploadPhoto();
+//        mFrameLayout.setClickable(false);
+//        getSupportActionBar().show();
     }
+
+    //Account Confirmation Received
+    @Override
+    public void onTermsClicked() {
+        uploadPhoto();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.overlay_fragment_container, confirmFragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    //Upload Success view has been inflated
+    @Override
+    public void onConfirmFinish() {
+
+        new Handler().postDelayed(new Runnable() {
+        @Override
+        public void run() {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.overlay_fragment_container, confirmFragment)
+                    .addToBackStack(null)
+                    .commit();
+            finish();
+        }
+    }, 4000);
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

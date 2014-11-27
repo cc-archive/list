@@ -28,7 +28,7 @@ public class RequestMethods {
     }
 
     //CHECK AVAILABILITY OF NETWORK
-    public boolean isNetworkAvailable() {
+    public static boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
@@ -69,6 +69,26 @@ public class RequestMethods {
         }
         return arrayList;
     }
+
+    //Create Upload User Object + return object with name, email, password
+    public JSONObject createLoginUserObject(String jsonAsString) {
+        //JSONObject loginUserObject;
+
+        //Convert from String to JSONObject
+//        JsonParser parser = new JsonParser();
+//        JsonElement element = parser.parse(jsonAsString);
+//        JsonObject object = element.getAsJsonObject();
+//
+//        Log.v(TAG, object.toString());
+//        try {
+//
+//            return loginUserObject;
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        return null;
+    }
+
 
     //Create Upload Photo Object (in bytes) + return object with ID and userID
     public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
