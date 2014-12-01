@@ -37,7 +37,7 @@ if (isset($_REQUEST['hs'])) {
 	//If we're not handshaking we display the start page
 	require_once('templating.php');
 
-        if ($makerid) {
+        if ($auth) {
 
 	if (isset($_GET['id'])) {
 

@@ -43,7 +43,7 @@ if (isset($_REQUEST['hs'])) {
 
             $list = new UserList();
             
-            $listitems = $list->getMakerList(50, $makerid);
+            //$listitems = $list->getMakerList(500, $makerid);
 
             $smarty->assign('list',$listitems);
 

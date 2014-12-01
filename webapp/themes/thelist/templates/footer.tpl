@@ -1,4 +1,6 @@
 
+<footer class="well" style="margin-top: 2em;">
+
       <p class="text-center">
 	<a rel="license"
 	   href="https://creativecommons.org/licenses/by/4.0/"
@@ -15,16 +17,14 @@
 	</small> </p>
 
       <p class="text-center"><small>
-	<a href="https://creativecommons.org/policies">Policies</a>
-	<a href="https://creativecommons.org/privacy">Privacy</a>
-	<a href="https://creativecommons.org/terms">Terms of Use</a>
+	<a href="https://creativecommons.org/policies">Policies</a> &middot;
+	<a href="https://creativecommons.org/privacy">Privacy</a> &middot;
+	<a href="https://creativecommons.org/terms">Terms of Use</a> &middot;
 	<a href="https://creativecommons.org/contact">Contact CC</a> 
 	</small>
       </p>
 
-      </div>
-</div>
-
+</footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

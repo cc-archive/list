@@ -53,7 +53,14 @@ if (isset($_REQUEST['hs'])) {
 
             $smarty->assign('list',$listitems);
 
+            if ($_GET['msg'] !="") {
+
+                $msg = "Your image will be processed shortly, and the item will be hidden from your list.";
+
+            }
+
             $smarty->assign('newlist',$selection);
+            $smarty->assign('msg',$msg);
 
             $smarty->display('my-list.tpl');
         }

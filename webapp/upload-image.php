@@ -45,18 +45,20 @@ if ($auth) {
         global $adodb;
         
         $filename = $tmp;
+	$id = $_POST['id'];
 
-        $query = "INSERT INTO PhotosTBA (userid, filename) VALUES (%s,%s)";
+        $query = "INSERT INTO Photos (userid, filename, listitem) VALUES (%s,%s, %s)";
 
         try {
 	  $res = $adodb->Execute(sprintf($query,
 					 $userid,
-					 $adodb->qstr($filename)
+					 $adodb->qstr($filename),
+					 $adodb->qstr($id)
 					 ));
 
 	  $adodb->CacheFlush();
 
-	  header('Location: /my-list.php');
+	  header('Location: /my-list.php?msg=1');
 
             
         } catch (Exception $e) {
@@ -71,7 +73,11 @@ if ($auth) {
          }
        else
          {
-           echo $_FILES["list-image"]["error"];
+           echo "<h1>Error: " . $_FILES["list-image"]["error"] . "</h1>";
+	   
+	   echo "Make sure your server can support a file this large as a PHP upload.";
+
+
          }
       }
   

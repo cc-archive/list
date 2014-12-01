@@ -33,56 +33,98 @@ require_once('database.php');
 
 global $adodb;
 
-$query = "SELECT * FROM PhotosTBA LIMIT 1";
+$query = "SELECT * FROM Photos WHERE url IS NULL LIMIT 1";
 
-try {
-  
-  $res = $adodb->CacheGetAll(15, $query);
+  $res = $adodb->GetAll($query);
 
   $res = $res[0]; // just the first item in the array
 
   print_r($res);
 
-  $foo = exec("file " . $res[filename]);
+  if ($res) {
 
-  if (strpos($foo, "JPEG")) {
+    $foo = exec("file " . $res[filename]);   
 
-    echo "This file is a JPEG!";
+    if (strpos($foo, "JPEG")) {
 
-    $query = "UPDATE Photos SET (userid, url) VALUES (%s, %s)";
+      $filename = $res['filename'];
+      $url = "live/" . basename($filename) . ".jpg";
+      
+      rename($filename, $url);
 
-    try {
-      $res = $adodb->Execute(sprintf($query,
-				     $makerid,
-				     $adodb->qstr($subject),
-				     $adodb->qstr($desc),
-				     $adodb->qstr($url)
-				     ));
+      $id = $res['id'];
+      $listid = $res['listitem'];
 
-      $adodb->CacheFlush();
+      echo "This file is a JPEG! " . $url . "\n";
 
-      header('Location: /add.php');
+      // Need to fix the URLs better
+
+      //$url = basename($url);
+
+      $query = "UPDATE Photos SET url = %s WHERE id=(%s)";
+
+      try {
+     
+	$res = $adodb->Execute(sprintf($query,$adodb->qstr($url), $adodb->qstr($id)));
+
+	echo $query;
+
+	try {
+
+	  $query = "UPDATE UserList SET complete = 1 WHERE listid=(%s)";
+
+	  $res = $adodb->Execute(sprintf($query,$adodb->qstr($listid)));
+
+	  $adodb->CacheFlush();
+
+	echo $query;
+	
+
+	}
+
+	catch (Exception $e) {
+
+	  echo "Error";
+	}
 
             
-    } catch (Exception $e) {
+      } catch (Exception $e) {
             
-      //echo $e;
+	//echo $e;
 
-      echo "There was an error";
+	echo "There was an error";
             
-      return null;
+	return null;
+      }
+
+    }
+
+    else {
+
+      // Image is not a JPEG
+
+      $id=$res['id'];
+
+      $query = "DELETE from Photos WHERE id=%s";
+
+      try {
+
+	$q = sprintf($query,
+		     $adodb->qstr($id)
+		     );
+
+	$res = $adodb->Execute($q);
+
+      } catch (Exception $e) {
+            
+	//echo $e;
+
+	echo "There was an error";
+            
+	return null;
+      }
+
     }
 
   }
-           
-} catch (Exception $e) {
-            
-  //echo $e;
-
-  echo "There was an error";
-            
-  return null;
-  }
-
-
 ?>

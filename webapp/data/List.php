@@ -44,7 +44,7 @@ class UserList {
 	 */
 
     function getUserTopList($number, $userid, $offset = 0, $from = false, $to = false) {
-        $data = UserList::getListItems($number, $userid, $offset, $from, $to);
+        $data = UserList::getListItems($number, $userid, 0, $offset, $from, $to);
 
         if ($data == null) {
             return array();
@@ -55,18 +55,19 @@ class UserList {
 
 
     function getMakerList($number, $makerid, $offset = 0, $from = false, $to = false) {
-        $data = UserList::getListItems($number, $makerid, $offset, $from, $to);
+        $data = UserList::getListItems($number, 0, $makerid, $offset, $from, $to);
 
         if ($data == null) {
             return array();
+	    break;
         }
 
         return $data;
     }
 
 
-    function getNewList($number, $userid, $offset = 0, $from = false, $to = false) {
-        $data = UserList::getListItems($number, $userid, $offset, $from, $to);
+    function getNewList($number) {
+        $data = UserList::getListItems($number, 0, 0, $offset, $from, $to);
 
         if ($data == null) {
             return array();
@@ -82,21 +83,21 @@ class UserList {
 
         if ($userid) {
             $params = array();
-            $query = 'SELECT ul.*, l.* FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) WHERE ul.userid=?';
+            $query = 'SELECT ul.*, l.* FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) WHERE ul.complete IS NULL AND ul.userid=?';
             $params[] = $userid;
 
         }
 
         if ($makerid) {
             $params = array();
-            $query = 'SELECT l.*, m.* FROM List l LEFT JOIN m ON (l.makerid = m.makerid) WHERE l.makerid = ?';
+            $query = 'SELECT l.*, m.name, m.uri FROM List l LEFT JOIN Makers m ON (l.makerid = m.id) WHERE l.makerid = ?';
             $params[] = $makerid;
 
         }
 
         if ($query == "") {
             $params = array();
-            $query = "SELECT * from List WHERE APPROVED=1 ORDER BY RAND()";
+            $query = "SELECT DISTINCT * from List WHERE APPROVED=1 ORDER BY RAND()";
         }
         
 
@@ -105,7 +106,8 @@ class UserList {
         $params[] = (int) $offset;
 
         try {
-            $res = $adodb->CacheGetAll(60, $query, $params);
+            $res = $adodb->CacheGetAll(15, $query, $params);
+
         } catch (Exception $e) {
 
             echo "<h2>" . $query . "</h2>";
@@ -115,11 +117,31 @@ class UserList {
             return null;
         }
 
-        $result = array();
-
-        return $result;
+        return $res;
     }
 
+    static function getPhotosList($number = 10, $userid = false, $offset = 0) {
+        global $adodb;
 
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+            $query = 'SELECT p.*, l.* FROM Photos p LEFT JOIN List l ON (p.listitem=l.id) WHERE p.url IS NOT NULL AND p.userid=?';
+            $params[] = $userid;
+
+        try {
+            $res = $adodb->CacheGetAll(15, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+        
+    }
         
 }

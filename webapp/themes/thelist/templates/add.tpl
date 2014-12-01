@@ -7,27 +7,7 @@
 
 <h1>Welcome, {$handle}</h1>
 
-<div class="col-md-5">
-
-{if $list}
-you have a list
-
-<ul>
-{foreach from=$list item=foo}
-    <li>{$foo.title} <a href="del.php?id={$foo.id}&maker={$foo.makerid}"><span class="glyphicon glyphicon-trash">&nbsp;</span></a></li>
-{/foreach}
-</ul>
-
-
-{else}
-
-<p>It looks like your list is empty.</p>
-
-{/if}
-
-</div>
-
-<div class="col-md-6 well">
+<div class="well">
 
 <h3>Add subjects to your list and start adding to the public commons.</h3>
 
@@ -52,6 +32,25 @@ you have a list
 
 
 </div>
+
+
+<div class="col-md-5">
+
+{if $list}
+you have a list
+
+<ul>
+{foreach from=$list item=foo}
+    <li>{$foo.title} <a href="del.php?id={$foo.id}&maker={$foo.makerid}"><span class="glyphicon glyphicon-trash">&nbsp;</span></a></li>
+{/foreach}
+</ul>
+
+
+
+{/if}
+
+</div>
+
 </div>
 </div>
 </div>

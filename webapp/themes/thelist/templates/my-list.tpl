@@ -4,8 +4,11 @@
 
     <div class="container">
       <div class="row">
+      <div class="col-md-12">
 
 <h1>My List</h1>
+
+{if $msg}<div class="bg-info"><h6 style="padding: 1em" class="text-center">{$msg}</h6></div>{/if}
 
 {if $list}
 <ul>
@@ -14,6 +17,7 @@
 {/foreach}
 </ul>
 
+<a class="btn btn-info" href="/my-list.php">Add to my list</a>
 
 {else}
 
@@ -36,6 +40,7 @@
 
 
 
+</div>
 </div>
 </div>
 
