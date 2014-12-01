@@ -20,7 +20,7 @@
 	    <span class="icon-bar"></span>
 	    <span class="icon-bar"></span>
 	  </button>
-	  <a id="title" class="navbar-brand" href="/">The List{if $makerid} (for makers){/if}</a>
+	  <a id="title" class="navbar-brand" href="./">The List{if $makerid} (for makers){/if}</a>
 	</div>
 	<nav class="collapse navbar-collapse gfm-navbar-collapse" role="navigation">
 	  <ul class="nav navbar-nav">
