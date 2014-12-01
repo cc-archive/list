@@ -1,10 +1,9 @@
-drop table Users;
-drop table Makers;
-drop table Meta;
-drop table List;
-drop table UserList;
-drop table Photos;
-drop table PhotosTBA;
+drop table if exists Users;
+drop table if exists Makers;
+drop table if exists Meta;
+drop table if exists List;
+drop table if exists UserList;
+drop table if exists Photos;
 
 CREATE TABLE Users (
 email VARCHAR(255),
@@ -40,21 +39,15 @@ CREATE TABLE UserList (
 id int(11) NOT NULL auto_increment,
 userid int(11),
 listid int(11),
+complete int(11),
 primary KEY(id)
 );
 
 CREATE TABLE Photos (
 id int(11) NOT NULL auto_increment,
 userid int(11),
-listitem int(11),
-url int(11),
-primary KEY(id)
-);
-
-CREATE TABLE PhotosTBA (
-id int(11) NOT NULL auto_increment,
-userid int(11),
 filename varchar(255),
+url varchar(255),
 listitem int(11),
 primary KEY (id)
 );
