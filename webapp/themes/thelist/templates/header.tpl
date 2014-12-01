@@ -36,18 +36,18 @@
         {if ($userid)}
 
 	{if $makerid}
-	<li><a href="/add.php">
+	<li><a href="add.php">
 	    <span class="glyphicon glyphicon-plus"></span>
 	    &nbsp;Add to The List
 	    </a></li>
         {/if}
 
-	<li><a href="/my-images.php">
+	<li><a href="my-images.php">
 	    <span class="glyphicon glyphicon-folder-open"></span>
 	    &nbsp;My images
 	    </a></li>
 
-	<li><a href="/my-list.php">
+	<li><a href="my-list.php">
 	    <span class="glyphicon glyphicon-tasks"></span>
 	    &nbsp;My list
 	    </a></li>
@@ -55,7 +55,7 @@
 	 
 
 
-	<li><a href="/?logout">
+	<li><a href="?logout">
 	<span class="glyphicon glyphicon-log-out"></span>
 	     Logout
 	     </a></li>
