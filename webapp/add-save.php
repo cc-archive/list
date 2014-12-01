@@ -46,7 +46,7 @@ if ($makerid) {
 
 	    $adodb->CacheFlush();
 
-	    header('Location: /add.php');
+	    header('Location: add.php');
 
             
         } catch (Exception $e) {
