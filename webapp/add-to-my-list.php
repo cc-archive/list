@@ -42,7 +42,7 @@ if ($userid) {
 
     	    $adodb->CacheFlush();	
 
-	    header('Location: /my-list.php');
+	    header('Location: my-list.php');
 
             
         } catch (Exception $e) {

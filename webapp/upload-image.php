@@ -58,7 +58,7 @@ if ($auth) {
 
 	  $adodb->CacheFlush();
 
-	  header('Location: /my-list.php?msg=1');
+	  header('Location: my-list.php?msg=1');
 
             
         } catch (Exception $e) {
