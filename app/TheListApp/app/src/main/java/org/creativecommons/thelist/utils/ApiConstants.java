@@ -43,6 +43,10 @@ public final class ApiConstants {
 
     //Must use POST
     public static final String CREATE_NEW_USER = "http://10.0.3.2:3000/api/user/";
+
+    //Must have user ID
+    public static final String GET_ALL_USER_ITEMS = "http://10.0.3.2:3000/api/user/";
+
     //Must Add ID + use PUT
     public static final String UPDATE_USER = "http://10.0.3.2:3000/api/user/";
     //User Login
@@ -55,7 +59,6 @@ public final class ApiConstants {
     public static final String POST_PHOTO = "http://10.0.3.2:3000/api/photo/";
     //GET Categories
     public static final String GET_CATEGORIES = "http://10.0.3.2:3000/api/category/";
-
 
 
 

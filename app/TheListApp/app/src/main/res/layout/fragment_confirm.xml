@@ -17,8 +17,7 @@
         android:id="@+id/section_text"
         android:paddingTop="50dp"
         android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="163dp"
-        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
         <TextView
@@ -27,22 +26,21 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
             android:gravity="center"
-            android:text="@string/upload_success_label"
-            android:id="@+id/title"
+            android:text="@string/upload_success_title"
+            android:id="@+id/confirm_title"
             android:layout_centerHorizontal="true"
             android:textColor="@color/abc_primary_text_material_dark" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="(We‘ll email you confirmation for your account!)"
-            android:id="@+id/text"
+            android:text="@string/upload_success_text"
+            android:id="@+id/confirm_text"
             android:paddingLeft="10dp"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/confirm_title"
             android:gravity="center"
             android:layout_margin="5dp"
             android:textColor="@color/text_light" />
     </RelativeLayout>
-
 
 </RelativeLayout>

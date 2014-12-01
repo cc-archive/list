@@ -15,7 +15,7 @@
 			password:"",
 			dateCreated:"12/04/14",
 			items: [1,2,3],
-			categories: [3,4,5]
+			categories: [1,3,5]
 		},
 		{
 			id:3,

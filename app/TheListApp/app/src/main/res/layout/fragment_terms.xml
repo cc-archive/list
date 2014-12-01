@@ -63,7 +63,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:text="@string/terms_fragment_title"
-            android:id="@+id/title"
+            android:id="@+id/confirm_title"
             android:layout_centerHorizontal="true"
             android:textColor="@color/abc_primary_text_material_dark"
             android:maxLines="1" />
@@ -72,9 +72,9 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/terms_fragment_text"
-            android:id="@+id/text"
+            android:id="@+id/confirm_text"
             android:paddingLeft="10dp"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/confirm_title"
             android:gravity="center"
             android:layout_margin="5dp"
             android:textColor="@color/text_light" />
@@ -85,7 +85,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/learn_more_button_label"
             android:id="@+id/learnMoreButton"
-            android:layout_below="@+id/text"
+            android:layout_below="@+id/confirm_text"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"
             android:textAllCaps="true"
@@ -97,7 +97,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/section_fields"
+        android:id="@+id/signup_fields"
         android:layout_marginTop="45dp"
         android:layout_below="@+id/section_text"
         android:layout_centerHorizontal="true">

@@ -118,7 +118,6 @@ public final class RequestMethods {
             //String fileType = String.valueOf(PhotoConstants.MEDIA_TYPE_IMAGE);
             //String fileName = FileHelper.getFileName(this, mMediaUri, fileType);
             try {
-                //TODO: Check mCurrentItem is what you think it is -_-
                 photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
                 photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
                 photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileBytes);

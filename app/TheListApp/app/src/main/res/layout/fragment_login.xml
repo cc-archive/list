@@ -54,8 +54,7 @@
         android:id="@+id/section_text"
         android:paddingTop="50dp"
         android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="40dp"
-        android:layout_above="@+id/section_fields"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
     <TextView
@@ -65,7 +64,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:text="@string/login_fragment_title"
-        android:id="@+id/title"
+        android:id="@+id/confirm_title"
         android:layout_centerHorizontal="true"
         android:textColor="@color/abc_primary_text_material_dark" />
     <TextView
@@ -73,22 +72,21 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/login_fragment_text"
-        android:id="@+id/text"
+        android:id="@+id/confirm_text"
         android:paddingLeft="10dp"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/confirm_title"
         android:gravity="center"
         android:layout_margin="5dp"
-        android:textColor="#ffffffff" />
+        android:textColor="@android:color/white" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/section_fields"
+        android:id="@+id/signup_fields"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp">
         <EditText
             android:layout_width="match_parent"
@@ -129,26 +127,89 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/loginButton_label"
+            android:text="@string/signUpButton_label"
             android:textColor="@android:color/white"
             android:background="@color/primary_dark_material_light"
-            android:id="@+id/loginButton"
+            android:id="@+id/signUpButton"
             android:layout_below="@+id/passwordField"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:text="@string/existing_account_text"
+            android:paddingTop="10dp"
+            android:id="@+id/existingAccount"
+            android:clickable="true"
+            android:layout_below="@+id/signUpButton"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:paddingTop="5dp"
-        android:textColor="@android:color/darker_gray"
-        android:text="I already have an account"
-        android:id="@+id/existingAccount"
-        android:clickable="true"
+        android:id="@+id/login_fields"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="0dp">
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emailLoginField"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_hint"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/passwordLoginField"
+            android:inputType="textPassword"
+            android:hint="@string/password_hint"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_below="@+id/emailLoginField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button_label"
+            android:textColor="@android:color/white"
+            android:background="@color/primary_dark_material_light"
+            android:id="@+id/loginButton"
+            android:layout_below="@+id/passwordLoginField"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:text="@string/new_account_text"
+            android:paddingTop="15dp"
+            android:id="@+id/newAccount"
+            android:clickable="true"
+            android:layout_below="@+id/loginButton"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

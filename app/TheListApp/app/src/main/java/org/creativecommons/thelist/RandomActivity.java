@@ -71,7 +71,7 @@ public class RandomActivity extends Activity {
         setContentView(R.layout.activity_random);
         mContext = this;
 
-        mTextView = (TextView) findViewById(R.id.text);
+        mTextView = (TextView) findViewById(R.id.confirm_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Picker Buttons

@@ -34,8 +34,6 @@ public class SharedPreferencesMethods {
     public static final String LIST_ITEM_PREFERENCE = "item";
     public static final String LIST_ITEM_PREFERENCE_KEY = "org.creativecommons.thelist.348914";
 
-    //TODO:Methods for adding extracting array
-
     //Add Array to SharedPreferences
     public static void SaveSharedPreference (String preferenceName, String key, String value, Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);

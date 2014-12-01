@@ -25,7 +25,7 @@
             android:label="@string/title_activity_random" >
         </activity>
         <activity
-            android:name="org.creativecommons.thelist.AccountActivity"
+            android:name=".misc.AccountActivity"
             android:label="@string/title_activity_account" >
         </activity>
         <activity

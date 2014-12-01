@@ -19,6 +19,7 @@ public class TermsFragment extends Fragment {
 
     protected Button mNextButton;
     protected CheckBox mCheckBox;
+    protected Button mCancelButton;
 
     //Interface with Activity
     TermsClickListener mCallback;
@@ -26,6 +27,7 @@ public class TermsFragment extends Fragment {
     //LISTENER
     public interface TermsClickListener {
         public void onTermsClicked();
+        public void onTermsCancelled();
     }
 
     @Override
@@ -41,6 +43,7 @@ public class TermsFragment extends Fragment {
 
         mCheckBox = (CheckBox)getView().findViewById(R.id.checkBox);
         mNextButton = (Button)getView().findViewById(R.id.nextButton);
+        mCancelButton = (Button)getView().findViewById(R.id.cancelButton);
 
         mCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +60,13 @@ public class TermsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mCallback.onTermsClicked();
+            }
+        });
+
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onTermsCancelled();
             }
         });
     }
