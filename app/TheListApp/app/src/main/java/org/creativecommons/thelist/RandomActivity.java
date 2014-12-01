@@ -1,6 +1,7 @@
 package org.creativecommons.thelist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -33,10 +36,12 @@ import java.util.Random;
 
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
+    protected Context mContext;
 
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
     protected JSONObject mRandomItemData;
@@ -64,8 +69,9 @@ public class RandomActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random);
+        mContext = this;
 
-        mTextView = (TextView) findViewById(R.id.text);
+        mTextView = (TextView) findViewById(R.id.confirm_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Picker Buttons
@@ -73,23 +79,22 @@ public class RandomActivity extends Activity {
         Button NoButton = (Button) findViewById(R.id.NoButton);
         Button CameraButton = (Button) findViewById(R.id.CameraButton);
 
-        if(requestMethods.isNetworkAvailable()) {
+        if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             count = 1;
             getRandomItemRequest();
             //Yes Button Listener
             YesButton.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
-                    //TODO: Store Item object in local JSONArray
+                    //Visual Confirmation of add
+                    Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_LONG).show();
+
                     MainListItem listItem = new MainListItem();
                     listItem.setItemID(mItemID);
                     listItem.setItemName(mItemName);
                     listItem.setMakerName(mMakerName);
                     mItemList.add(listItem);
-
-
 
                     //Once yes has been hit 3 times, forward to
                     if(count < 3) {
@@ -97,25 +102,24 @@ public class RandomActivity extends Activity {
                         getRandomItemRequest();
                     } else {
 
-                        //Pass mItemList to next activity
-
                         //If user is logged in, send chosen list items to DB
-                        if(requestMethods.isLoggedIn()) {
+                        if(mCurrentUser.isLoggedIn()) {
                             putRandomItemsRequest();
                         }
                         else {
-                            //Get array of selected item ids
+                            //Get array of selected item IDS
                             List<Integer> userItemList = requestMethods.getItemIds(mItemList);
                             Log.v(TAG,mItemList.toString());
 
                             //Save Array as String to sharedPreferences
                             sharedPreferencesMethods.SaveSharedPreference
                                     (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                            sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, userItemList.toString());
+                                            sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
+                                            userItemList.toString(), mContext);
                         }
 
                         //Start MainActivity
-                        Intent intent = new Intent(RandomActivity.this, MainActivity.class);
+                        Intent intent = new Intent(mContext, MainActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -137,14 +141,14 @@ public class RandomActivity extends Activity {
         } else {
             requestMethods.updateDisplayForError();
         }
-
     } //onCreate
 
     private void updateList() {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
-            requestMethods.updateDisplayForError();
+            //requestMethods.updateDisplayForError();
+            requestMethods.showErrorDialog(mContext, "Oops", "No data found. Please try again.");
         }
         else {
             try {
@@ -196,9 +200,8 @@ public class RandomActivity extends Activity {
 
 
     private void putRandomItemsRequest() {
-        //TODO: POST Selected Items to User’s List
         RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = requestMethods.getUserID();
+        String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
         String url = "http://10.0.3.2:3000/api/user/" + userID;
         //Android Default Emulator
@@ -207,7 +210,7 @@ public class RandomActivity extends Activity {
         //Retrieve User list item preferences
         JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
                 (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY);
+                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
 
         //Create Object to send
         JSONObject jso = new JSONObject();

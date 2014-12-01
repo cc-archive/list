@@ -38,17 +38,19 @@ router.get('/api/item/:id', function(req,res) {
 	}
 });
 
-//GET Multiple List Items at once
-router.get('api/items', function(req,res) {
-	var itemIDs = req.body.items;
-	// var itemsArray = [];
 
-	if(items.constructor === Array) {
+//GET Multiple List Items at once
+router.put('/api/items', function(req, res) {
+	// TODO Empty request shouldnt explode
+	var itemIDs = req.body.items;
+	console.log(itemIDs);
+	var itemsArray = [];
+
+	if(itemIDs.constructor === Array) {
 		var itemsArray = _.filter(db.item, function(item) {
 			return _.contains(itemIDs, item.id);
 		});
-
-		if(!(itemsArray == null)) {
+		if(itemsArray.length) {
 			var response = {
 				status: "ok",
 				content: itemsArray
@@ -69,7 +71,6 @@ router.get('api/items', function(req,res) {
 		}
 		res.status(500).send(response);
 	}
-
 });
 
 
@@ -134,6 +135,7 @@ router.post('/api/user', function(req,res) {
 			status:"error",
 			content:"Name is invalid"
 		}
+		console.log(response);
 		errors.push(response);
 	}
 	if (validateEmail(email) == false) {
@@ -141,6 +143,7 @@ router.post('/api/user', function(req,res) {
 			status: "error",
 			content: "Email is invalid"
 		}
+		console.log(response);
 		errors.push(response);
 	}
 	if(!password || password.length < 7) {
@@ -148,6 +151,7 @@ router.post('/api/user', function(req,res) {
 			status: "error",
 			content: "Password is invalid"
 		}
+		console.log(response);
 		errors.push(response);
 	}
 
@@ -173,6 +177,7 @@ router.post('/api/user', function(req,res) {
 			status:"bad request",
 			content: errors
 		}
+		console.log(errors);
 		res.status(400).send(response);
 	}
 });
@@ -298,7 +303,6 @@ router.put('/api/user/:id', function(req,res) {
 		// }
 		// errors.push(response);
 	}
-
 	//If Items parameter exists
 	if(reqItems) {
 		if(!reqItems.constructor === Array) {

@@ -1,6 +1,7 @@
 package org.creativecommons.thelist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -40,6 +42,9 @@ public class CategoryListActivity extends Activity {
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    ListUser mCurrentUser = new ListUser(this);
+
+    protected Context mContext;
 
     //GET Request
     protected JSONObject mCategoryData;
@@ -63,6 +68,8 @@ public class CategoryListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
+
+        mContext = this;
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -110,7 +117,7 @@ public class CategoryListActivity extends Activity {
         });
 
         //If Network Connection is available, Execute getDataTask
-        if(requestMethods.isNetworkAvailable()) {
+        if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             getCategoriesRequest();
         }
@@ -124,7 +131,7 @@ public class CategoryListActivity extends Activity {
             public void onClick(View v) {
 
                 //If logged in, put to user profile, else create sharedPreference
-                if(requestMethods.isLoggedIn()) {
+                if(mCurrentUser.isLoggedIn()) {
                     storeCategoriesRequest();
                 } else {
                     SparseBooleanArray positions = mListView.getCheckedItemPositions();
@@ -141,7 +148,7 @@ public class CategoryListActivity extends Activity {
                     //Save user categories to shared preferences
                     sharedPreferencesMethods.SaveSharedPreference
                             (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
+                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString(), CategoryListActivity.this);
                 }
                 //Navigate to Random Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
@@ -180,7 +187,7 @@ public class CategoryListActivity extends Activity {
     private void getCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/category";
+        String url = ApiConstants.GET_CATEGORIES;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/category";
 
@@ -205,27 +212,20 @@ public class CategoryListActivity extends Activity {
     //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = requestMethods.getUserID();
+        String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/user/" + userID;
+        String url = ApiConstants.UPDATE_USER + userID;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/user";
 
-        //Retrieve User category preferences
-        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
-                (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                        sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY);
-
         //Create Object to send
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put(ApiConstants.USER_CATEGORIES, userPreferences);
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-        }
+        JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject
+                (ApiConstants.USER_CATEGORIES,mContext);
+        Log.v(TAG, UserCategoriesObject.toString());
 
         //Volley Request
-        JsonObjectRequest postCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
+        JsonObjectRequest putCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
+                UserCategoriesObject,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -246,11 +246,12 @@ public class CategoryListActivity extends Activity {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
+            public void onErrorResponse(VolleyError error) {
                 requestMethods.updateDisplayForError();
             }
         });
-        queue.add(postCategoriesRequest);
+            queue.add(putCategoriesRequest);
+
     } //storeCategoriesRequest
 
 
