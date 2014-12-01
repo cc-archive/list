@@ -232,6 +232,8 @@ public class MainActivity extends ActionBarActivity {
                             break;
                         case 2: // Save Item to My List
                             //TODO: POST Data to save list item
+                            //If logged in: add to array
+                            //If not logged in: add to sharedPreference array
                             break;
                     }
                 }
@@ -330,7 +332,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         queue.add(postPhotoRequest);
-    } //storeCategoriesRequest
+    } //uploadPhoto
 
     //Once photo taken or selected then do this:
     @Override
@@ -340,13 +342,19 @@ public class MainActivity extends ActionBarActivity {
         if(resultCode == RESULT_OK) {
             if(requestMethods.isLoggedIn()) {
                 //Create and send photo object
-                //TODO: Note on server side create relationship between user and photoID
+                //Note on server side create relationship between user (creator) and photo
                 uploadPhoto();
             } else {
-
                 Log.v(TAG, "User is not logged in and we should start Login Activity");
+                //TODO: Load Login Fragment
+
+
+                //TODO: find out how Fragment passes data to MainActivity
                 //startActivityForResult
                 //start Login Activity + return user object (get userID)
+
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.overlay_fragment_container,LoginFragment).commit();
 
                 //onActivityResult
                 //Once logged in:
@@ -354,14 +362,11 @@ public class MainActivity extends ActionBarActivity {
                 //uploadPhoto();
             }
 
-
-
             //Add photo to the Gallery (listen for broadcast and let gallery take action)
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(mMediaUri);
             sendBroadcast(mediaScanIntent);
 
-            //TODO: Go to Login Activity (or Fragment?)
         }
         else if(resultCode != RESULT_CANCELED) {
             Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
