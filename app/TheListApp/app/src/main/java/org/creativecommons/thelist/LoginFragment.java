@@ -144,7 +144,7 @@ public class LoginFragment extends Fragment {
                             mContext.getString(R.string.login_error_title),
                             mContext.getString(R.string.login_error_message));
                 } else {
-                    Log.v(TAG, "new user created");
+                    //Log.v(TAG, "new user created");
                     createNewUser();
                 }
             }
@@ -224,7 +224,7 @@ public class LoginFragment extends Fragment {
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }
-        Log.v(TAG, userObject.toString());
+        //Log.v(TAG, userObject.toString());
         //Data to be sent
 
         //Send new user object
@@ -235,7 +235,7 @@ public class LoginFragment extends Fragment {
                         try {
                             //Handle Data
                             mUserData = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            Log.v("this is the API response", mUserData.toString());
+                            //Log.v("this is the API response", mUserData.toString());
                             JSONObject data = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             //Log.v(TAG,response.toString());
 

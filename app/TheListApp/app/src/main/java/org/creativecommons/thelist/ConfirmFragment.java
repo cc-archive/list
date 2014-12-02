@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.utils.ListUser;
@@ -21,6 +22,7 @@ public class ConfirmFragment extends Fragment {
 
     protected TextView mTitle;
     protected TextView mText;
+    protected ImageView mIcon;
 
     //Interface with Activity
     ConfirmListener mCallback;
@@ -51,6 +53,7 @@ public class ConfirmFragment extends Fragment {
 
         mTitle = (TextView)getView().findViewById(R.id.confirm_title);
         mText = (TextView)getView().findViewById(R.id.confirm_text);
+        mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
         switch(status) {
           case CANCEL:

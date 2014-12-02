@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/learn_more_button_label"
+            android:text="@string/terms_learn_more_label"
             android:id="@+id/learnMoreButton"
             android:layout_below="@+id/confirm_text"
             android:layout_centerHorizontal="true"
@@ -105,7 +105,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/checkbox_label"
+            android:text="@string/terms_checkbox_label"
             android:id="@+id/checkBox"
             android:gravity="center"
             android:layout_alignParentTop="true"
@@ -115,7 +115,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Continue"
+            android:text="@string/terms_continue_button_label"
             android:textColor="@android:color/white"
             android:background="@color/primary_dark_material_light"
             android:visibility="invisible"
@@ -123,8 +123,5 @@
             android:layout_marginTop="50dp" />
 
     </RelativeLayout>
-
-
-    <!--android:onClick="onCheckboxClicked"-->
 
 </RelativeLayout>

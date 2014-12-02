@@ -3,11 +3,13 @@ package org.creativecommons.thelist;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import org.creativecommons.thelist.utils.RequestMethods;
 
@@ -19,7 +21,8 @@ public class TermsFragment extends Fragment {
 
     protected Button mNextButton;
     protected CheckBox mCheckBox;
-    protected Button mCancelButton;
+    protected TextView mLearnMoreButton;
+    protected TextView mCancelButton;
 
     //Interface with Activity
     TermsClickListener mCallback;
@@ -43,7 +46,8 @@ public class TermsFragment extends Fragment {
 
         mCheckBox = (CheckBox)getView().findViewById(R.id.checkBox);
         mNextButton = (Button)getView().findViewById(R.id.nextButton);
-        mCancelButton = (Button)getView().findViewById(R.id.cancelButton);
+        mCancelButton = (TextView)getView().findViewById(R.id.cancelButton);
+        mLearnMoreButton = (TextView)getView().findViewById(R.id.learnMoreButton);
 
         mCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +73,10 @@ public class TermsFragment extends Fragment {
                 mCallback.onTermsCancelled();
             }
         });
+
+        if(mLearnMoreButton != null){
+            mLearnMoreButton.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
     @Override

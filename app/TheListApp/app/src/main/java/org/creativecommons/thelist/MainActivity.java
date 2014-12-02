@@ -402,7 +402,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void UserCreated(String userData) {
         try {
-
             //Set current user data
             mCurrentUserObject = new JSONObject(userData);
             mCurrentUser.setUserID(mCurrentUserObject.getInt(ApiConstants.USER_ID));
@@ -486,7 +485,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     .remove(confirmFragment)
                     .commit();
         }
-    }, 20000);
+    }, 3000);
     mFrameLayout.setClickable(false);
     getSupportActionBar().show();
     } //onConfirmFinish

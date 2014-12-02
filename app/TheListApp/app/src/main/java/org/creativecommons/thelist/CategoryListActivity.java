@@ -221,7 +221,7 @@ public class CategoryListActivity extends Activity {
         //Create Object to send
         JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject
                 (ApiConstants.USER_CATEGORIES,mContext);
-        Log.v(TAG, UserCategoriesObject.toString());
+        //Log.v(TAG, UserCategoriesObject.toString());
 
         //Volley Request
         JsonObjectRequest putCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
@@ -236,7 +236,7 @@ public class CategoryListActivity extends Activity {
 
                             //Handle Data
                             mPutResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            Log.v(TAG, mPutResponse.toString());
+                            //Log.v(TAG, mPutResponse.toString());
 
                             mProgressBar.setVisibility(View.INVISIBLE);
 

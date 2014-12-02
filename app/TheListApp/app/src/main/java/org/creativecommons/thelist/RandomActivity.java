@@ -109,7 +109,7 @@ public class RandomActivity extends Activity {
                         else {
                             //Get array of selected item IDS
                             List<Integer> userItemList = requestMethods.getItemIds(mItemList);
-                            Log.v(TAG,mItemList.toString());
+                            //Log.v(TAG,mItemList.toString());
 
                             //Save Array as String to sharedPreferences
                             sharedPreferencesMethods.SaveSharedPreference
@@ -219,7 +219,7 @@ public class RandomActivity extends Activity {
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
-        Log.v(TAG,jso.toString());
+        //Log.v(TAG,jso.toString());
 
         //Add items to user list
         JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
