@@ -432,8 +432,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         } catch (JSONException e) {
             Log.e(TAG,e.getMessage());
         }
-        //TODO: deal with what happens once photo is uploaded (for pre-existing user)
-        // (in upload photo, create if statement to if user logged in: close Fragment, set clickable, show Actionbar + display message; else: start next fragment in flow)
         uploadPhoto();
     } //UserLoggedIn
 
@@ -450,9 +448,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 .replace(R.id.overlay_fragment_container, confirmFragment)
                 .commit();
     } //CancelUpload
-
-    //TODO: Cancel upload for termsFragment
-
 
     //When account Confirmation Received
     @Override
@@ -485,7 +480,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     .remove(confirmFragment)
                     .commit();
         }
-    }, 3000);
+    }, 3600);
     mFrameLayout.setClickable(false);
     getSupportActionBar().show();
     } //onConfirmFinish

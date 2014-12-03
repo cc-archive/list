@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -56,6 +57,7 @@ public class RandomActivity extends Activity {
     //Handle Data
     protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
+    private List<String> mItemsViewed = new ArrayList<String>();
 
     //UI Elements
     TextView mTextView;
@@ -63,7 +65,6 @@ public class RandomActivity extends Activity {
 
     //Shared variables
     int count;
-    //String countString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class RandomActivity extends Activity {
         setContentView(R.layout.activity_random);
         mContext = this;
 
-        mTextView = (TextView) findViewById(R.id.confirm_text);
+        mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Picker Buttons
@@ -81,7 +82,6 @@ public class RandomActivity extends Activity {
 
         if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
-            count = 1;
             getRandomItemRequest();
             //Yes Button Listener
             YesButton.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +97,7 @@ public class RandomActivity extends Activity {
                     mItemList.add(listItem);
 
                     //Once yes has been hit 3 times, forward to
-                    if(count < 3) {
-                        count ++;
+                    if(mItemList.size() < 3) {
                         getRandomItemRequest();
                     } else {
 
@@ -120,6 +119,8 @@ public class RandomActivity extends Activity {
 
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
                 }
@@ -128,6 +129,7 @@ public class RandomActivity extends Activity {
             NoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     getRandomItemRequest();
                 }
             });
@@ -141,6 +143,8 @@ public class RandomActivity extends Activity {
         } else {
             requestMethods.updateDisplayForError();
         }
+
+
     } //onCreate
 
     private void updateList() {
@@ -154,12 +158,21 @@ public class RandomActivity extends Activity {
             try {
                 //Store values from response JSON Object
                 mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
-                mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
                 mItemID = mListItemData.getInt(ApiConstants.ITEM_ID);
+                //Add item ID to list of items user has seen
+                mItemsViewed.add(String.valueOf(mItemID));
 
-                //Update UI
-                mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+                //If the user has seen the item before, select a new item
+                //TODO: use this to prevent user of seeing repeat items in a single session?
+                if(Arrays.asList(mItemsViewed).contains(mItemID)){
+                    getRandomItemRequest();
+                } else {
+                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+                    //Update UI
+                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+                }
+
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }
@@ -177,9 +190,9 @@ public class RandomActivity extends Activity {
         String randomNumber = String.valueOf(n);
 
         //Genymotion Emulator
-        String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
+        String url = ApiConstants.GET_SINGLE_ITEM + randomNumber;
         //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber + "/maker";
+        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber;
 
         JsonObjectRequest randomItemRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -203,7 +216,7 @@ public class RandomActivity extends Activity {
         RequestQueue queue = Volley.newRequestQueue(this);
         String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/user/" + userID;
+        String url = ApiConstants.UPDATE_USER + userID;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/user";
 

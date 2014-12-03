@@ -19,6 +19,10 @@
             android:name="org.creativecommons.thelist.CategoryListActivity"
             android:label="@string/title_activity_category_list"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="org.creativecommons.thelist.RandomActivity"
@@ -31,10 +35,6 @@
         <activity
             android:name="org.creativecommons.thelist.StartActivity"
             android:label="@string/title_activity_start" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/login_fragment_text"
-        android:id="@+id/confirm_text"
+        android:id="@+id/item_text"
         android:paddingLeft="10dp"
         android:layout_below="@+id/confirm_title"
         android:gravity="center"
