@@ -128,7 +128,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             } else {
                 getUserSelectedItems();
             }
-
             //TODO: Get other content for feed
             //getCategoriesList();
            // getAllListItems();
@@ -479,10 +478,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .remove(confirmFragment)
                     .commit();
+            mFrameLayout.setClickable(false);
+            getSupportActionBar().show();
         }
     }, 3600);
-    mFrameLayout.setClickable(false);
-    getSupportActionBar().show();
     } //onConfirmFinish
 
     @Override

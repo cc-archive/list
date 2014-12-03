@@ -30,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -57,7 +56,7 @@ public class RandomActivity extends Activity {
     //Handle Data
     protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    private List<String> mItemsViewed = new ArrayList<String>();
+    private ArrayList<Integer> mItemsViewed = new ArrayList<Integer>();
 
     //UI Elements
     TextView mTextView;
@@ -83,12 +82,13 @@ public class RandomActivity extends Activity {
         if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             getRandomItemRequest();
+
             //Yes Button Listener
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Visual Confirmation of add
-                    Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT).show();
 
                     MainListItem listItem = new MainListItem();
                     listItem.setItemID(mItemID);
@@ -129,7 +129,6 @@ public class RandomActivity extends Activity {
             NoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     getRandomItemRequest();
                 }
             });
@@ -151,7 +150,6 @@ public class RandomActivity extends Activity {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
-            //requestMethods.updateDisplayForError();
             requestMethods.showErrorDialog(mContext, "Oops", "No data found. Please try again.");
         }
         else {
@@ -159,14 +157,18 @@ public class RandomActivity extends Activity {
                 //Store values from response JSON Object
                 mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                 mItemID = mListItemData.getInt(ApiConstants.ITEM_ID);
-                //Add item ID to list of items user has seen
-                mItemsViewed.add(String.valueOf(mItemID));
+
+                Log.v(TAG, mItemsViewed.toString() + " this is the id " + String.valueOf(mItemID));
 
                 //If the user has seen the item before, select a new item
                 //TODO: use this to prevent user of seeing repeat items in a single session?
-                if(Arrays.asList(mItemsViewed).contains(mItemID)){
+                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() <= ApiConstants.MAX_ITEMS_VIEWED){
+                    Log.v(TAG, "this item has been viewed before");
                     getRandomItemRequest();
                 } else {
+                    Log.v(TAG, "this item is new to me");
+                    //Add item ID to list of items user has seen
+                    mItemsViewed.add(mItemID);
                     mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
                     //Update UI

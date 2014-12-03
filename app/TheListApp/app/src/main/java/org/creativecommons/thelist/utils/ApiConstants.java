@@ -5,9 +5,13 @@ package org.creativecommons.thelist.utils;
  */
 public final class ApiConstants {
 
-    //TODO: Limit returned results
+    //TODO: Limit results
     //LIMIT for category request
     //LIMIT for list item requests
+
+    //Limit how many items user will view before possibility of repeats (RandomActivity)
+    public static final int MAX_ITEMS_VIEWED = 5;
+
 
     //Response Object
     public static final String RESPONSE_CONTENT = "content";

@@ -85,5 +85,6 @@
     <string name="upload_failed_title">Upload Failed</string>
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="terms_continue_button_label">Continue</string>
+    <string name="category_list_text">What do you like taking pictures of?</string>
 
 </resources>
