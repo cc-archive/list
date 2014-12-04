@@ -40,7 +40,7 @@ public class RandomActivity extends Activity {
 
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
@@ -56,6 +56,7 @@ public class RandomActivity extends Activity {
     //Handle Data
     protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
+    private ArrayList<Integer> mItemsViewed = new ArrayList<Integer>();
 
     //UI Elements
     TextView mTextView;
@@ -63,7 +64,6 @@ public class RandomActivity extends Activity {
 
     //Shared variables
     int count;
-    //String countString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class RandomActivity extends Activity {
         setContentView(R.layout.activity_random);
         mContext = this;
 
-        mTextView = (TextView) findViewById(R.id.confirm_text);
+        mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Picker Buttons
@@ -81,14 +81,14 @@ public class RandomActivity extends Activity {
 
         if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
-            count = 1;
             getRandomItemRequest();
+
             //Yes Button Listener
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Visual Confirmation of add
-                    Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT).show();
 
                     MainListItem listItem = new MainListItem();
                     listItem.setItemID(mItemID);
@@ -97,8 +97,7 @@ public class RandomActivity extends Activity {
                     mItemList.add(listItem);
 
                     //Once yes has been hit 3 times, forward to
-                    if(count < 3) {
-                        count ++;
+                    if(mItemList.size() < 3) {
                         getRandomItemRequest();
                     } else {
 
@@ -112,14 +111,16 @@ public class RandomActivity extends Activity {
                             //Log.v(TAG,mItemList.toString());
 
                             //Save Array as String to sharedPreferences
-                            sharedPreferencesMethods.SaveSharedPreference
-                                    (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                            sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
+                            SharedPreferencesMethods.SaveSharedPreference
+                                    (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                            SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                             userItemList.toString(), mContext);
                         }
 
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
                 }
@@ -141,25 +142,39 @@ public class RandomActivity extends Activity {
         } else {
             requestMethods.updateDisplayForError();
         }
+
+
     } //onCreate
 
     private void updateList() {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
-            //requestMethods.updateDisplayForError();
             requestMethods.showErrorDialog(mContext, "Oops", "No data found. Please try again.");
         }
         else {
             try {
                 //Store values from response JSON Object
                 mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
-                mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
                 mItemID = mListItemData.getInt(ApiConstants.ITEM_ID);
 
-                //Update UI
-                mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+                Log.v(TAG, mItemsViewed.toString() + " this is the id " + String.valueOf(mItemID));
+
+                //If the user has seen the item before, select a new item
+                //TODO: use this to prevent user of seeing repeat items in a single session?
+                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() <= ApiConstants.MAX_ITEMS_VIEWED){
+                    Log.v(TAG, "this item has been viewed before");
+                    getRandomItemRequest();
+                } else {
+                    Log.v(TAG, "this item is new to me");
+                    //Add item ID to list of items user has seen
+                    mItemsViewed.add(mItemID);
+                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+                    //Update UI
+                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+                }
+
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }
@@ -177,9 +192,9 @@ public class RandomActivity extends Activity {
         String randomNumber = String.valueOf(n);
 
         //Genymotion Emulator
-        String url ="http://10.0.3.2:3000/api/item/" + randomNumber + "/maker";
+        String url = ApiConstants.GET_SINGLE_ITEM + randomNumber;
         //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber + "/maker";
+        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber;
 
         JsonObjectRequest randomItemRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -203,14 +218,14 @@ public class RandomActivity extends Activity {
         RequestQueue queue = Volley.newRequestQueue(this);
         String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
-        String url = "http://10.0.3.2:3000/api/user/" + userID;
+        String url = ApiConstants.UPDATE_USER + userID;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/user";
 
         //Retrieve User list item preferences
-        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
-                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
+        JSONArray userPreferences = SharedPreferencesMethods.RetrieveSharedPreference
+                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
 
         //Create Object to send
         JSONObject jso = new JSONObject();

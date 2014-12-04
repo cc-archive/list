@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/list"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:id="@android:id/empty"-->
-        <!--android:text="@string/empty_list"/>-->
+    android:layout_height="match_parent"
+    android:padding="5dp">
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerInParent="true"
+        android:id="@+id/progressBar" />
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/next_button_label"
-        android:id="@+id/nextButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:id="@+id/category_prompt"
+            android:text="@string/category_list_text"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:id="@+id/section_listview"
+            >
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/list" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/next_button_label"
+            android:id="@+id/nextButton"
+            android:layout_weight="0.25"
+            android:padding="5dp"
+            android:minHeight="60dp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

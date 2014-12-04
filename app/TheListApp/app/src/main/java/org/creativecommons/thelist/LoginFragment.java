@@ -239,6 +239,13 @@ public class LoginFragment extends Fragment {
                             JSONObject data = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             //Log.v(TAG,response.toString());
 
+                            //TODO: Clear sharedPreferences once DB has user data
+//                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.CATEGORY_PREFERENCE,
+//                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, mContext);
+//                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+//                                    SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, mContext);
+
+
                             //TODO: Handle Errors
                             mCallback.UserCreated(mUserData.toString());
 

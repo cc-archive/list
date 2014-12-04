@@ -8,19 +8,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.creativecommons.thelist.utils.ListUser;
+
 
 public class StartActivity extends Activity {
-
+    ListUser mCurrentUser = new ListUser();
     protected Button mStartButton;
-
+    protected Button mAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        //TODO: Check if user token, redirect to MainActivity if yes
+//        if(!(mCurrentUser.getUserID().isEmpty())) {
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//        }
+
         //UI Elements
         mStartButton = (Button) findViewById(R.id.startButton);
+        mAccountButton = (Button) findViewById(R.id.accountButton);
 
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,7 +39,6 @@ public class StartActivity extends Activity {
                 //Navigate to Next Activity
                 Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
                 startActivity(intent);
-
             }
         });
 

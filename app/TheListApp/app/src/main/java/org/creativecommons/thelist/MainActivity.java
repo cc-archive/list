@@ -128,7 +128,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             } else {
                 getUserSelectedItems();
             }
-
             //TODO: Get other content for feed
             //getCategoriesList();
            // getAllListItems();
@@ -432,8 +431,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         } catch (JSONException e) {
             Log.e(TAG,e.getMessage());
         }
-        //TODO: deal with what happens once photo is uploaded (for pre-existing user)
-        // (in upload photo, create if statement to if user logged in: close Fragment, set clickable, show Actionbar + display message; else: start next fragment in flow)
         uploadPhoto();
     } //UserLoggedIn
 
@@ -450,9 +447,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 .replace(R.id.overlay_fragment_container, confirmFragment)
                 .commit();
     } //CancelUpload
-
-    //TODO: Cancel upload for termsFragment
-
 
     //When account Confirmation Received
     @Override
@@ -484,10 +478,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .remove(confirmFragment)
                     .commit();
+            mFrameLayout.setClickable(false);
+            getSupportActionBar().show();
         }
-    }, 3000);
-    mFrameLayout.setClickable(false);
-    getSupportActionBar().show();
+    }, 3600);
     } //onConfirmFinish
 
     @Override

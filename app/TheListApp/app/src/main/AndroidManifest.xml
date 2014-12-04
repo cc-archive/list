@@ -18,14 +18,16 @@
         <activity
             android:name="org.creativecommons.thelist.CategoryListActivity"
             android:label="@string/title_activity_category_list"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:noHistory="true" >
         </activity>
         <activity
             android:name="org.creativecommons.thelist.RandomActivity"
-            android:label="@string/title_activity_random" >
+            android:label="@string/title_activity_random"
+            android:noHistory="true" >
         </activity>
         <activity
-            android:name=".misc.AccountActivity"
+            android:name=".AccountActivity"
             android:label="@string/title_activity_account" >
         </activity>
         <activity

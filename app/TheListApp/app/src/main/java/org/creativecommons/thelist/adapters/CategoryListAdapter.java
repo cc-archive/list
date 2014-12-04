@@ -41,6 +41,7 @@ public class CategoryListAdapter extends BaseAdapter {
         return position;
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
@@ -49,7 +50,7 @@ public class CategoryListAdapter extends BaseAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item_category, null);
+            convertView = inflater.inflate(R.layout.list_item_category, parent, false);
             holder = new ViewHolder();
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
             holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);

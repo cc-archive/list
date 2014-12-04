@@ -52,7 +52,7 @@ public class ConfirmFragment extends Fragment {
         STATUS status = (STATUS)b.getSerializable("status");
 
         mTitle = (TextView)getView().findViewById(R.id.confirm_title);
-        mText = (TextView)getView().findViewById(R.id.confirm_text);
+        mText = (TextView)getView().findViewById(R.id.item_text);
         mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
         switch(status) {

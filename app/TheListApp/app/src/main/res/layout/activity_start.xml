@@ -36,9 +36,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_button_label"
+        android:minWidth="300dp"
         android:id="@+id/startButton"
         android:layout_below="@+id/intro"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/existing_account_text"
+        android:minWidth="300dp"
+        android:textColor="@color/text_secondary"
+        android:id="@+id/accountButton"
+        android:layout_below="@+id/startButton"
+        android:layout_alignLeft="@+id/startButton"
+        android:layout_alignStart="@+id/startButton" />
 
 
 </RelativeLayout>

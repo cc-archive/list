@@ -39,7 +39,7 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey, Context context){
@@ -61,8 +61,16 @@ public class SharedPreferencesMethods {
         return new JSONArray(catIds);
     }
 
+    //TODO: use this
+    public static void ClearSharedPreferences(String preferenceName, String preferenceKey, Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.apply();
+    }
+
     //Create object to send in Category Volley Request
-    public JSONObject createCategoryListObject(String key, Context context) {
+    public static JSONObject createCategoryListObject(String key, Context context) {
         //Create JSON Object
         JSONObject categoryListObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
@@ -77,7 +85,7 @@ public class SharedPreferencesMethods {
     }
 
     //Create object to send in User’s List Items Volley Request
-    public JSONObject createUserItemsObject (String key, Context context) {
+    public static JSONObject createUserItemsObject (String key, Context context) {
         //Create JSON Object
         JSONObject userItemObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
