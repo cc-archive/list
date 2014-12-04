@@ -23,7 +23,7 @@ Contributor Agreement. "Your" has a corresponding meaning.
 
 ## Agreement
 
-1. Your Original Code and Content: Creative Commons commits to
+* 1. Your Original Code and Content: Creative Commons commits to
 licensing The List Project under a GPL-compatible copyleft license. As
 of 4 December 2014, The List Project is available under the GNU Affero
 General Public License v.3 or later. In order to retain the
@@ -63,7 +63,7 @@ the patent rights of any person or entity. You agree to hold Creative
 Commons harmless for any damages arising from a breach of this
 warranty by You.
 
-2. Third Party Code or Content: If You want to contribute Code or
+* 2. Third Party Code or Content: If You want to contribute Code or
 Content created by someone other than You ("Third Party Code" and/or
 "Third Party Content"), You must agree to and comply with the
 following requirements.
@@ -90,7 +90,7 @@ under these terms, and that, to the best of Your knowledge, the
 contribution does not violate the copyright, patent, or other legal
 rights of any person or entity.
 
-3. If You become aware of any information or circumstance that affects
+* 3. If You become aware of any information or circumstance that affects
 Your ability to comply with Your obligations under this Tech
 Contributor Agreement, such as learning that Third Party Code You
 contributed may infringe the rights of another individual or entity,
