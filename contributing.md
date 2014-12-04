@@ -33,7 +33,7 @@ all Code and Content You create and contribute to The List Project,
 including all past and future changes and/or enhancements you identify
 as being intentionally contributed to The List Project (collectively,
 "Your Original Contributions").
-​
+
 a) You hereby agree to assign and do hereby irrevocably assign to
 Creative Commons Your copyright in Your Original Contributions. To the
 fullest extent possible (but not in contravention of applicable law),
