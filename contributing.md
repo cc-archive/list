@@ -33,8 +33,8 @@ all Code and Content You create and contribute to The List Project,
 including all past and future changes and/or enhancements you identify
 as being intentionally contributed to The List Project (collectively,
 "Your Original Contributions").
-
-​* a) You hereby agree to assign and do hereby irrevocably assign to
+​
+* a) You hereby agree to assign and do hereby irrevocably assign to
 Creative Commons Your copyright in Your Original Contributions. To the
 fullest extent possible (but not in contravention of applicable law),
 You hereby waive all claims to moral rights in any of Your Original
@@ -68,7 +68,7 @@ Content created by someone other than You ("Third Party Code" and/or
 "Third Party Content"), You must agree to and comply with the
 following requirements.
 
-​* a) Contributions of Third Party Code will be accepted on a
+* a) Contributions of Third Party Code will be accepted on a
 case-by-case basis in CC's sole discretion, and only under limited
 circumstances. In all cases, You may only submit Third Party Code for
 consideration if it is available under one of the licenses on
@@ -83,7 +83,6 @@ BY 4.0 or CC0 (or is otherwise in the public domain).
 Party Content requires such information to be retained, You must
 prominently mark it to identify its source, its author, and its
 licensing information.
-
 * d) By contributing Third Party Code and/or Third Party Content, You
 warrant that You have the right to contribute it to The List Project
 under these terms, and that, to the best of Your knowledge, the
