@@ -49,7 +49,8 @@
         android:textColor="@color/text_secondary"
         android:id="@+id/accountButton"
         android:layout_below="@+id/startButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/startButton"
+        android:layout_alignStart="@+id/startButton" />
 
 
 </RelativeLayout>

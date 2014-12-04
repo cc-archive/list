@@ -28,9 +28,8 @@ public class AccountActivity extends ActionBarActivity {
     protected JSONObject mUserData;
 
     //UI Elements
-    protected EditText mUsernameField;
-    protected EditText mEmailField;
-    protected EditText mPasswordField;
+    protected EditText mEmailLoginField;
+    protected EditText mPasswordLoginField;
     protected Button mLoginButton;
     //protected ProgressBar mProgressBar;
 
@@ -38,25 +37,21 @@ public class AccountActivity extends ActionBarActivity {
     String mPassword;
     String mEmail;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         mContext = this;
 
-        mUsernameField = (EditText)findViewById(R.id.nameField);
-        mEmailField = (EditText)findViewById(R.id.emailField);
-        mPasswordField = (EditText)findViewById(R.id.passwordField);
-        mLoginButton = (Button)findViewById(R.id.nextButton);
+        mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
+        mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
+        mLoginButton = (Button)findViewById(R.id.loginButton);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUsername = mUsernameField.getText().toString().trim();
-                mPassword = mPasswordField.getText().toString().trim();
-                mEmail = mEmailField.getText().toString().trim();
+                mPassword = mPasswordLoginField.getText().toString().trim();
+                mEmail = mEmailLoginField.getText().toString().trim();
 
                 if(mPassword.isEmpty() || mEmail.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AccountActivity.this);
