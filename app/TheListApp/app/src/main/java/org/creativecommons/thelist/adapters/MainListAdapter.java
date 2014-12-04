@@ -49,7 +49,7 @@ public class MainListAdapter extends BaseAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.list_item_main, null);
+            convertView = inflater.inflate(R.layout.list_item_main, parent, false);
             holder = new ViewHolder();
             holder.iconImageView = (ImageView)convertView.findViewById(R.id.camera_icon);
             holder.nameLabel = (TextView)convertView.findViewById(R.id.list_item_name);

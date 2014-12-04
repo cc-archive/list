@@ -40,7 +40,7 @@ public class RandomActivity extends Activity {
 
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
@@ -111,9 +111,9 @@ public class RandomActivity extends Activity {
                             //Log.v(TAG,mItemList.toString());
 
                             //Save Array as String to sharedPreferences
-                            sharedPreferencesMethods.SaveSharedPreference
-                                    (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                            sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
+                            SharedPreferencesMethods.SaveSharedPreference
+                                    (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                            SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                             userItemList.toString(), mContext);
                         }
 
@@ -223,9 +223,9 @@ public class RandomActivity extends Activity {
         //String url = "http://10.0.2.2:3000/api/user";
 
         //Retrieve User list item preferences
-        JSONArray userPreferences = sharedPreferencesMethods.RetrieveSharedPreference
-                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                        sharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
+        JSONArray userPreferences = SharedPreferencesMethods.RetrieveSharedPreference
+                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
 
         //Create Object to send
         JSONObject jso = new JSONObject();

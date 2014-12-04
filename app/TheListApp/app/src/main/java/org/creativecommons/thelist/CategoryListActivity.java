@@ -146,9 +146,9 @@ public class CategoryListActivity extends Activity {
                         userCategories.add(id);
                     }
                     //Save user categories to shared preferences
-                    sharedPreferencesMethods.SaveSharedPreference
-                            (sharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                    sharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString(), CategoryListActivity.this);
+                    SharedPreferencesMethods.SaveSharedPreference
+                            (SharedPreferencesMethods.CATEGORY_PREFERENCE,
+                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString(), CategoryListActivity.this);
                 }
                 //Navigate to Random Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
@@ -219,7 +219,7 @@ public class CategoryListActivity extends Activity {
         //String url = "http://10.0.2.2:3000/api/user";
 
         //Create Object to send
-        JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject
+        JSONObject UserCategoriesObject = SharedPreferencesMethods.createCategoryListObject
                 (ApiConstants.USER_CATEGORIES,mContext);
         //Log.v(TAG, UserCategoriesObject.toString());
 
