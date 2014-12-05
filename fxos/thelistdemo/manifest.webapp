@@ -1,0 +1,42 @@
+{
+  "version": "0.2.0",
+  "name": "The List",
+  "description": "Demonstrates how to use permissions to load remote content",
+  "launch_path": "/index.html",
+  "icons": {
+    "16": "/img/icons/icon16x16.png",
+    "48": "/img/icons/icon48x48.png",
+    "60": "/img/icons/icon60x60.png",
+    "128": "/img/icons/icon128x128.png"
+  },
+  "developer": {
+    "name": "Your name",
+    "url": "http://example.com"
+  },
+  "type": "privileged",
+  "permissions": {
+    "systemXHR": {
+      "description": "Required to load remote content"
+    },
+    "video-capture":{"description":"We'd like to use your camera"}
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "locales": {
+    "es": {
+      "name": "Aplicación privilegiada",
+      "description": "Demuestra cómo utilizar permisos para cargar contenido remoto",
+      "permissions": {
+        "systemXHR": {
+          "description": "Requerido para cargar contenido remoto"
+        },
+        "video-capture":
+         {
+           "description":"We'd like to use your camera"
+         }  
+      }
+    }
+  },
+  "default_locale": "en"
+}
