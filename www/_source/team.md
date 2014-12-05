@@ -33,14 +33,6 @@ Software Development Intern at Playground Inc. Designer turned developer. Also i
 
 Software Engineer at Playground Inc.
 
-## Maciej Jasiobedzki
-
-<img class="float-left" width="200" src="/img/maciej.jpg" />
-
-Technical Director at Playground Inc. Human being.
-
-## David Senior
-
 ## Elliot Harmon
 
 <img class="float-left" width="200" src="/img/elliot.jpg" />
