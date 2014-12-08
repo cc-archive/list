@@ -46,27 +46,20 @@ public final class ApiConstants {
     //TODO: Add all Endpoints
     public static final String URL = "http://192.168.56.1:3000";
 
-    //FAKE API(
 
-    //REAL API
-    //Must POST
+//    //REAL API
+//    //Must POST
 //    public static final String CREATE_NEW_USER = "https://thelist.creativecommons.org/api/user/";
 //    //Must have user ID (+ userID) + GET
 //    public static final String GET_ALL_USER_ITEMS = "https://thelist.creativecommons.org/api/user/";
 //    //Must have user ID + PUT
-//    public static final String UPDATE_USER = "http://thelist.creativecommons.org/api/user/";
+//    public static final String UPDATE_USER = "https://thelist.creativecommons.org/api/user/";
 //    //User Login
 //    public static final String LOGIN_USER = "https://thelist.creativecommons.org/api/user/";
 //    //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
 //    public static final String GET_MULTIPLE_ITEMS = "https://thelist.creativecommons.org/api/items/";
 //    //GET Method
 //    public static final String GET_ALL_ITEMS = "https://thelist.creativecommons.org/api/item/";
-//    //GET Method
-//    public static final String GET_SINGLE_ITEM = "https://thelist.creativecommons.org/api/item/";
-//    //POST, GET Photo
-//    public static final String POST_PHOTO = "https://thelist.creativecommons.org/api/photo/";
-//    //GET Categories
-//    public static final String GET_CATEGORIES = "https://thelist.creativecommons.org/api/category/";
 
 //    FAKE API, MOBILE NETWORK
     //Must use POST

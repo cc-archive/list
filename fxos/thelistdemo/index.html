@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Privileged app</title>
+        <meta name="description" content="A privileged app stub">
+
+        <!--
+          viewport allows you to control how mobile browsers will render your content.
+          width=device-width tells mobile browsers to render your content across the
+          full width of the screen, without being zoomed out (by default it would render
+          it at a desktop width, then shrink it to fit.)
+          Read more about it here:
+          https://developer.mozilla.org/Mozilla/Mobile/Viewport_meta_tag
+        -->
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/app.css">
+
+        <!--
+        Inline JavaScript code is not allowed for privileged and certified apps,
+        due to Content Security Policy restrictions.
+        You can read more about it here: https://developer.mozilla.org/Apps/CSP
+        Plus keeping your JavaScript separated from your HTML is always a good practice!
+
+        We're also using the 'defer' attribute. This allows us to tell the browser that
+        it should not wait for this file to load before continuing to load the rest of
+        resources in the page. Then, once everything has been loaded, it will parse and
+        execute the deferred files.
+        Read about defer: https://developer.mozilla.org/Web/HTML/Element/script#attr-defer
+        -->
+        <script type="text/javascript" src="js/app.js" defer></script>
+
+        <!--
+        The following two lines are for loading the localisations library
+        and the localisation data-so people can use the app in their
+        own language (as long as you provide translations).
+        -->
+        <link rel="prefetch" type="application/l10n" href="data/locales.ini" />
+        <script type="text/javascript" src="js/libs/l10n.js" defer></script>
+    </head>
+    <body>
+        <section>
+            <h1 data-l10n-id="app_title">Creative Commons</h1>
+            <p data-l10n-id="app_description">This app demonstrates the usage of <code>XMLHttpRequest</code> and the <code>systemXHR</code> permission.</p>
+            <p id="error">...</p>
+            
+            
+            <form id="cas">
+                <div><input type="text" id="username" value="a"></div>
+                <div><input type="password" id="password" value="b"></div>
+                <div><input type="submit" id="cas" /></div>
+            </form>
+            
+            
+            <form>
+              <!-- A placeholder attribute allows us to prefill the input box with some
+                text, so the user gets an idea of what sort of text they should enter
+                into that field. Once they start typing in something, the browser will
+                automatically remove the placeholder text. More info:
+                https://developer.mozilla.org/Web/HTML/Element/Input#attr-placeholder
+              -->
+              <input hidden type="search" placeholder="javascript" id="term" /><button hidden id="search" data-l10n-id="search">Search</button>
+            </form>
+        </section>
+        <section id="results" hidden></section>
+    </body>
+</html>
