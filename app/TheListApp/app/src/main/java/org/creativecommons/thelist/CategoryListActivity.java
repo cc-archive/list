@@ -39,6 +39,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -66,7 +67,7 @@ public class CategoryListActivity extends Activity {
     protected Context mContext;
 
     //GET Request
-    protected JSONObject mCategoryData;
+    protected JSONArray mCategoryData;
     protected JSONArray mJsonCategories;
 
     //PUT request (if user is logged in)
@@ -184,7 +185,7 @@ public class CategoryListActivity extends Activity {
         }
         else {
             try {
-                mJsonCategories = mCategoryData.getJSONArray(ApiConstants.RESPONSE_CONTENT);
+                mJsonCategories = mCategoryData;
 
                 for(int i = 0; i<mJsonCategories.length(); i++) {
                     JSONObject jsonSingleCategory = mJsonCategories.getJSONObject(i);
@@ -210,17 +211,18 @@ public class CategoryListActivity extends Activity {
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/category";
 
-        JsonObjectRequest getCategoriesRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         //Handle Data
                         mCategoryData = response;
                         updateList();
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
                 requestMethods.updateDisplayForError();
             }
         });

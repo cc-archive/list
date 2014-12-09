@@ -41,7 +41,7 @@ public final class ApiConstants {
     public static final String USER_PASSWORD = "password";
 
     //Category Object
-    public static final String CATEGORY_NAME = "name";
+    public static final String CATEGORY_NAME = "title";
     public static final String CATEGORY_ID = "id";
 
     //List Item
@@ -64,7 +64,7 @@ public final class ApiConstants {
     //Virtual Box
     public static final String URL = "http://192.168.56.1:3000/api";
     //Android Emulator
-    //public static final String URL = "http://http://10.0.2.2:3000/api";
+    //public static final String URL = "http://10.0.2.2:3000/api";
     //Creative Commons API
     //public static final String URL = "https://thelist.creativecommons.org/api";
 
@@ -74,6 +74,7 @@ public final class ApiConstants {
     public static final String GET_ALL_USER_ITEMS = URL + "/user/";
     //Must have user ID + PUT
     public static final String UPDATE_USER = URL + "/user/";
+
     //User Login
     public static final String LOGIN_USER = URL + "/user/";
     //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
