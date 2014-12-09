@@ -10,8 +10,8 @@ public class CategoryListItem {
     public CategoryListItem() {
     }
 
-    public CategoryListItem(String name, int id) {
-        this.categoryName = name;
+    public CategoryListItem(String title, int id) {
+        this.categoryName = title;
         this.categoryID = id;
     }
 
@@ -19,8 +19,8 @@ public class CategoryListItem {
         return categoryName;
     }
 
-    public void setCategoryName(String name) {
-        this.categoryName = name;
+    public void setCategoryName(String title) {
+        this.categoryName = title;
     }
 
     public int getCategoryID() {
