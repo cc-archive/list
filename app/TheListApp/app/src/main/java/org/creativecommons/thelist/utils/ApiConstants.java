@@ -1,8 +1,24 @@
+/* The List powered by Creative Commons
+
+   Copyright (C) 2014 Creative Commons
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 package org.creativecommons.thelist.utils;
 
-/**
- * Created by damaris on 2014-11-05.
- */
 public final class ApiConstants {
 
     //TODO: Limit results
@@ -53,17 +69,17 @@ public final class ApiConstants {
     //public static final String URL = "https://thelist.creativecommons.org/api";
 
     //Must POST
-    public static final String CREATE_NEW_USER = "/user/";
+    public static final String CREATE_NEW_USER = URL + "/user/";
     //Must have user ID (+ userID) + GET
-    public static final String GET_ALL_USER_ITEMS = "/user/";
+    public static final String GET_ALL_USER_ITEMS = URL + "/user/";
     //Must have user ID + PUT
-    public static final String UPDATE_USER = "/user/";
+    public static final String UPDATE_USER = URL + "/user/";
     //User Login
-    public static final String LOGIN_USER = "/user/";
+    public static final String LOGIN_USER = URL + "/user/";
     //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
-    public static final String GET_MULTIPLE_ITEMS = "/items/";
+    public static final String GET_MULTIPLE_ITEMS = URL + "/items/";
     //GET Method
-    public static final String GET_ALL_ITEMS = "/item/";
+    public static final String GET_ALL_ITEMS = URL + "/item/";
     //GET Single Item Method
     public static final String GET_SINGLE_ITEM = URL + "/item/";
     //POST, GET Photo

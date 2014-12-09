@@ -1,56 +1,78 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="org.creativecommons.thelist.StartActivity"
-    android:textAlignment="center">
+    style="@style/base_layout_main"
+    android:background="@color/primary_ultralight"
+    tools:context="org.creativecommons.thelist.StartActivity">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:id="@+id/confirm_title"
+            android:maxLines="1"
+            android:textSize="50sp"
+            android:layout_above="@+id/intro"
+            android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/app_name"
-        android:id="@+id/confirm_title"
-        android:maxLines="1"
-        android:textSize="50sp"
-        android:layout_above="@+id/intro"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/explainer1"
+            android:id="@+id/intro"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="15dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/explainer1"
-        android:id="@+id/intro"
-        android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:paddingRight="30dp"
-        android:paddingBottom="15dp"
-        android:paddingLeft="30dp"
-        android:paddingTop="15dp"
-        android:textAlignment="center" />
+        <Button
+            style="@style/standard_button"
+            android:background="@color/text_medium_light"
+            android:text="@string/start_button_label"
+            android:id="@+id/startButton"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/intro"
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_button_label"
-        android:minWidth="300dp"
-        android:id="@+id/startButton"
-        android:layout_below="@+id/intro"
-        android:layout_centerHorizontal="true" />
+        <Button
+            style="@style/standard_button"
+            android:text="@string/existing_account_text"
+            android:textColor="@color/text_medium_dark"
+            android:background="@color/text_medium_light"
+            android:id="@+id/accountButton"
+            android:layout_below="@+id/startButton"
+            android:layout_alignLeft="@+id/startButton"
+            android:layout_alignStart="@+id/startButton" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/existing_account_text"
-        android:minWidth="300dp"
-        android:textColor="@color/text_secondary"
-        android:id="@+id/accountButton"
-        android:layout_below="@+id/startButton"
-        android:layout_alignLeft="@+id/startButton"
-        android:layout_alignStart="@+id/startButton" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cc_logo_layout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <!--TODO: make image link to creative commons website-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:id="@+id/cc_logo"
+                android:src="@drawable/start_logo"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="20dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cc_logo_label"
+                android:id="@+id/cc_logo_label"
+                android:paddingTop="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/cc_logo" />
+        </RelativeLayout>
+
 
 
 </RelativeLayout>

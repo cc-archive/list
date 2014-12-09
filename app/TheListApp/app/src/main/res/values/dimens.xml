@@ -6,6 +6,8 @@
     <dimen name="list_feed_vertical">10dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fragment_vertical_margin">32dp</dimen>
+    <dimen name="activity_extra_horizontal_margin">30dp</dimen>
 
     <!--Text Sizing-->
     <dimen name="main_title">24sp</dimen>
