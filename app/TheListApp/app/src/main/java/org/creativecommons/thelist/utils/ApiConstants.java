@@ -63,25 +63,7 @@ public final class ApiConstants {
 
 //    FAKE API, MOBILE NETWORK
     //Must use POST
-<<<<<<< HEAD
-    public static final String CREATE_NEW_USER = "https://thelist.creativecommons.org/api/user/";
-    //Must have user ID
-public static final String GET_ALL_USER_ITEMS = "https://thelist.creativecommons.org/api/user/";
-    //Must Add ID + use PUT
-    public static final String UPDATE_USER = "https://thelist.creativecommons.org/api/user/";
-    //User Login
-    public static final String LOGIN_USER = "https://thelist.creativecommons.org/api/user/";
-    //Must send array of items
-    public static final String GET_MULTIPLE_ITEMS = "https://thelist.creativecommons.org/api/items/";
-    //GET Method
-    public static final String GET_ALL_ITEMS = "https://thelist.creativecommons.org/api/item/";
-    //GET Single Item Method
-    public static final String GET_SINGLE_ITEM = "https://thelist.creativecommons.org/api/item/";
-    //POST, GET Photo
-    public static final String POST_PHOTO = "https://thelist.creativecommons.org/api/photo/";
-    //GET Categories
-    public static final String GET_CATEGORIES = "https://thelist.creativecommons.org/api/category/";
-=======
+
     public static final String CREATE_NEW_USER = URL + "/api/user/";
     //Must have user ID
     public static final String GET_ALL_USER_ITEMS = URL + "/api/user/";
@@ -99,7 +81,6 @@ public static final String GET_ALL_USER_ITEMS = "https://thelist.creativecommons
     public static final String POST_PHOTO = URL + "/api/photo/";
     //GET Categories
     public static final String GET_CATEGORIES = URL + "/api/category/";
->>>>>>> aa9d0571a37479f5850c63912e652da99bf787ff
 
 //    FAKE API, ANDROID
 //    public static final String CREATE_NEW_USER = "http://10.0.2.2:3000/api/user/";
