@@ -74,7 +74,6 @@ public final class ApiConstants {
     public static final String GET_ALL_USER_ITEMS = URL + "/user/";
     //Must have user ID + PUT
     public static final String UPDATE_USER = URL + "/user/";
-
     //User Login
     public static final String LOGIN_USER = URL + "/user/";
     //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)

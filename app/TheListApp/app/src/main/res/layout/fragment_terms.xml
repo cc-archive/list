@@ -40,26 +40,14 @@
             android:layout_alignParentStart="false"
             android:layout_alignParentTop="true">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:gravity="center"
+                style="@style/fragment_title"
                 android:text="@string/terms_fragment_title"
                 android:id="@+id/confirm_title"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/abc_primary_text_material_dark"
                 android:maxLines="1" />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/terms_fragment_text"
                 android:id="@+id/item_text"
-                android:layout_below="@+id/confirm_title"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                android:textColor="@color/primary_light" />
+                android:text="@string/terms_fragment_text"
+                style="@style/fragment_text" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,7 +58,7 @@
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
                 android:textAllCaps="true"
-                android:textColor="@color/primary_light"
+                android:textColor="@color/text_medium_dark"
                 android:layout_marginTop="10dp"
                 android:gravity="center" />
         </RelativeLayout>
@@ -88,9 +76,10 @@
             android:layout_marginTop="37dp" />
 
         <Button
+            style="@style/standard_button"
             android:text="@string/terms_continue_button_label"
             android:id="@+id/nextButton"
-            style="@style/standard_button"
+            android:visibility="invisible"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
