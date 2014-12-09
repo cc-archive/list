@@ -45,7 +45,7 @@
             android:id="@+id/nextButton"
             android:layout_weight="0.25"
             android:padding="5dp"
-            android:minHeight="60dp"/>
+            android:minHeight="40dp"/>
 
     </LinearLayout>
 
