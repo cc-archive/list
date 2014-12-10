@@ -21,7 +21,7 @@ primary KEY (id)
 
 CREATE TABLE Categories (
 id int(11) NOT NULL auto_increment,
-name VARCHAR(255),
+title VARCHAR(255),
 makerid int(11),
 approved int(11),
 primary KEY (id)
