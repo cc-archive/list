@@ -120,6 +120,31 @@ class UserList {
         return $res;
     }
 
+    static function getListItem($listid) {
+
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+            $query = 'SELECT * FROM List WHERE id = ?';
+            $params[] = $listid;
+
+        try {
+            $res = $adodb->CacheGetAll(60, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+
+    }
+
     static function getPhotosList($number = 10, $userid = false, $offset = 0) {
         global $adodb;
 
@@ -150,7 +175,7 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
 
             $query = 'SELECT * FROM Categories WHERE approved = 1 ORDER BY RAND() LIMIT ?';
-            $params[] = $number
+            $params[] = $number;
 
         try {
             $res = $adodb->CacheGetAll(15, $query, $params);
@@ -167,6 +192,31 @@ class UserList {
         return $res;
         
     }
+
+    static function getCategory($category) {
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+            $query = 'SELECT * FROM Categories WHERE id=?';
+            $params[] = $category;
+
+        try {
+            $res = $adodb->CacheGetAll(60, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+        
+    }
+
 
     static function getCategoriesList($number = 10, $category) {
         global $adodb;
