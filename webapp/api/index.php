@@ -54,7 +54,7 @@ with('/api/category', function () {
 
         $list = new UserList();
 
-	$selection = $list->getCategoriesList(20, $request);
+	$selection = $list->getCategoriesList(20, $request->id);
 
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
