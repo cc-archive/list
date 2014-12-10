@@ -1,106 +1,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@color/translucent_background"
-    tools:context="org.creativecommons.thelist.TermsFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.creativecommons.thelist.TermsFragment"
+    style="@style/fragment_layout_main">
 
     <TextView
+        android:id="@+id/cancelButton"
+        android:text="@string/cancel_button_label"
+        style="@style/cancel_button" />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/cancel_button_label"
-        android:id="@+id/cancelButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        android:clickable="true"
-        android:textColor="#ffffffff" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/section_loading"
-        android:layout_above="@+id/section_text"
+        android:layout_below="@id/cancelButton"
         android:layout_centerHorizontal="true">
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_below="@id/progressBar"
-            android:text="@string/loading_label"
-            android:id="@+id/progressBar_label"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:textColor="#ffffffff" />
+            android:src="@drawable/terms_logo"
+            android:id="@+id/confirm_icon"
+            android:layout_alignParentStart="true" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/section_text"
-        android:paddingTop="50dp"
-        android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/cancelButton"
-        android:layout_alignEnd="@+id/cancelButton">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:text="@string/terms_fragment_title"
-            android:id="@+id/confirm_title"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/abc_primary_text_material_dark"
-            android:maxLines="1" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/terms_fragment_text"
-            android:id="@+id/item_text"
-            android:paddingLeft="10dp"
-            android:layout_below="@+id/confirm_title"
-            android:gravity="center"
-            android:layout_margin="5dp"
-            android:textColor="@color/text_light" />
+        android:id="@+id/section_terms"
+        android:layout_below="@+id/section_loading"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/terms_learn_more_label"
-            android:id="@+id/learnMoreButton"
-            android:layout_below="@+id/item_text"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:gravity="center"
-            android:textColor="@color/text_light"
-            android:layout_marginTop="10dp" />
-    </RelativeLayout>
+            android:id="@+id/section_text"
+            android:paddingTop="35dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="true">
+            <TextView
+                style="@style/fragment_title"
+                android:text="@string/terms_fragment_title"
+                android:id="@+id/confirm_title"
+                android:maxLines="1" />
+            <TextView
+                android:id="@+id/item_text"
+                android:text="@string/terms_fragment_text"
+                style="@style/fragment_text" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/signup_fields"
-        android:layout_marginTop="45dp"
-        android:layout_below="@+id/section_text"
-        android:layout_centerHorizontal="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_learn_more_label"
+                android:id="@+id/learnMoreButton"
+                android:layout_below="@+id/item_text"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/text_medium_dark"
+                android:layout_marginTop="10dp"
+                android:gravity="center" />
+        </RelativeLayout>
+
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -108,19 +70,19 @@
             android:text="@string/terms_checkbox_label"
             android:id="@+id/checkBox"
             android:gravity="center"
-            android:layout_alignParentTop="true"
+            android:textColor="@color/primary_light"
+            android:layout_below="@+id/section_text"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/text_light" />
+            android:layout_marginTop="37dp" />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/standard_button"
             android:text="@string/terms_continue_button_label"
-            android:textColor="@android:color/white"
-            android:background="@color/primary_dark_material_light"
-            android:visibility="invisible"
             android:id="@+id/nextButton"
-            android:layout_marginTop="50dp" />
+            android:visibility="invisible"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 

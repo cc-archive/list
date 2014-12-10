@@ -52,6 +52,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="5dp" />
 
+    <!--Invisible because not used in 1.0-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,6 +62,7 @@
         android:paddingTop="15dp"
         android:id="@+id/forgotPassword"
         android:clickable="true"
+        android:visibility="invisible"
         android:layout_below="@+id/loginButton"
         android:layout_centerHorizontal="true"
         android:gravity="center"

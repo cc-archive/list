@@ -1,4 +1,3 @@
-
 /* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
@@ -28,7 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -95,9 +94,9 @@ public class RandomActivity extends Activity {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Picker Buttons
-        Button YesButton = (Button) findViewById(R.id.YesButton);
-        Button NoButton = (Button) findViewById(R.id.NoButton);
-        Button CameraButton = (Button) findViewById(R.id.CameraButton);
+        ImageButton YesButton = (ImageButton) findViewById(R.id.YesButton);
+        ImageButton NoButton = (ImageButton) findViewById(R.id.NoButton);
+        ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
         if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
@@ -182,7 +181,7 @@ public class RandomActivity extends Activity {
 
                 //If the user has seen the item before, select a new item
                 //TODO: use this to prevent user of seeing repeat items in a single session?
-                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() <= ApiConstants.MAX_ITEMS_VIEWED){
+                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() < ApiConstants.MAX_ITEMS_VIEWED){
                     Log.v(TAG, "this item has been viewed before");
                     getRandomItemRequest();
                 } else {

@@ -1,8 +1,24 @@
+/* The List powered by Creative Commons
+
+   Copyright (C) 2014 Creative Commons
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 package org.creativecommons.thelist.utils;
 
-/**
- * Created by damaris on 2014-11-05.
- */
 public final class ApiConstants {
 
     //TODO: Limit results
@@ -44,61 +60,32 @@ public final class ApiConstants {
 
     //URL
     //TODO: Add all Endpoints
-    public static final String URL = "http://192.168.56.1:3000";
 
+    //Virtual Box
+    public static final String URL = "http://192.168.56.1:3000/api";
+    //Android Emulator
+    //public static final String URL = "http://10.0.2.2:3000/api";
+    //Creative Commons API
+    //public static final String URL = "https://thelist.creativecommons.org/api";
 
-//    //REAL API
-//    //Must POST
-//    public static final String CREATE_NEW_USER = "https://thelist.creativecommons.org/api/user/";
-//    //Must have user ID (+ userID) + GET
-//    public static final String GET_ALL_USER_ITEMS = "https://thelist.creativecommons.org/api/user/";
-//    //Must have user ID + PUT
-//    public static final String UPDATE_USER = "https://thelist.creativecommons.org/api/user/";
-//    //User Login
-//    public static final String LOGIN_USER = "https://thelist.creativecommons.org/api/user/";
-//    //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
-//    public static final String GET_MULTIPLE_ITEMS = "https://thelist.creativecommons.org/api/items/";
-//    //GET Method
-//    public static final String GET_ALL_ITEMS = "https://thelist.creativecommons.org/api/item/";
-
-//    FAKE API, MOBILE NETWORK
-    //Must use POST
-
-    public static final String CREATE_NEW_USER = URL + "/api/user/";
-    //Must have user ID
-    public static final String GET_ALL_USER_ITEMS = URL + "/api/user/";
-    //Must Add ID + use PUT
-    public static final String UPDATE_USER = URL + "/api/user/";
+    //Must POST
+    public static final String CREATE_NEW_USER = URL + "/user/";
+    //Must have user ID (+ userID) + GET
+    public static final String GET_ALL_USER_ITEMS = URL + "/user/";
+    //Must have user ID + PUT
+    public static final String UPDATE_USER = URL + "/user/";
     //User Login
-    public static final String LOGIN_USER = URL + "/api/user/";
-    //Must send array of items
-    public static final String GET_MULTIPLE_ITEMS = URL + "/api/items/";
+    public static final String LOGIN_USER = URL + "/user/";
+    //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
+    public static final String GET_MULTIPLE_ITEMS = URL + "/items/";
     //GET Method
-    public static final String GET_ALL_ITEMS = URL + "/api/item/";
+    public static final String GET_ALL_ITEMS = URL + "/item/";
     //GET Single Item Method
-    public static final String GET_SINGLE_ITEM = URL + "/api/item/";
+    public static final String GET_SINGLE_ITEM = URL + "/item/";
     //POST, GET Photo
-    public static final String POST_PHOTO = URL + "/api/photo/";
+    public static final String POST_PHOTO = URL + "/photo/";
     //GET Categories
-    public static final String GET_CATEGORIES = URL + "/api/category/";
+    public static final String GET_CATEGORIES = URL + "/category/";
 
-//    FAKE API, ANDROID
-//    public static final String CREATE_NEW_USER = "http://10.0.2.2:3000/api/user/";
-//    //Must have user ID
-//    public static final String GET_ALL_USER_ITEMS = "http://10.0.2.2:3000/api/user/";
-//    //Must Add ID + use PUT
-//    public static final String UPDATE_USER = "http://10.0.2.2:3000/api/user/";
-//    //User Login
-//    public static final String LOGIN_USER = "http://10.0.2.2:3000/api/user/";
-//    //Must send array of items
-//    public static final String GET_MULTIPLE_ITEMS = "http://10.0.2.2:3000/api/items/";
-//    //GET Method
-//    public static final String GET_ALL_ITEMS = "http://10.0.2.2:3000/api/item/";
-//    //GET Single Item Method
-//    public static final String GET_SINGLE_ITEM = "http://10.0.2.2:3000/api/item/";
-//    //POST, GET Photo
-//    public static final String POST_PHOTO = "http://10.0.2.2:3000/api/photo/";
-//    //GET Categories
-//    public static final String GET_CATEGORIES = "http://10.0.2.2:3000/api/category/";
 
 }

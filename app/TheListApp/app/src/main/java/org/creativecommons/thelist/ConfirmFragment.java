@@ -1,4 +1,3 @@
-
 /* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
@@ -78,12 +77,15 @@ public class ConfirmFragment extends Fragment {
         switch(status) {
           case CANCEL:
               addConfirmText(getString(R.string.upload_cancelled_title), getString(R.string.upload_cancelled_text));
+              mIcon.setImageResource(R.drawable.confirm_x);
               break;
           case SUCCESS:
               addConfirmText(getString(R.string.upload_success_title), getString(R.string.upload_success_text));
+              mIcon.setImageResource(R.drawable.confirm_checkmark);
               break;
           case FAILURE:
               addConfirmText(getString(R.string.upload_failed_title), getString(R.string.upload_failed_text));
+              mIcon.setImageResource(R.drawable.confirm_x);
               break;
         }
 

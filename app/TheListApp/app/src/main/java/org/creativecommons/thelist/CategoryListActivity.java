@@ -1,4 +1,3 @@
-
 /* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
@@ -208,7 +207,7 @@ public class CategoryListActivity extends Activity {
     private void getCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        String url = ApiConstants.GET_CATEGORIES;
+        String url = "https://thelist.creativecommons.org/api/category";
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/category";
 

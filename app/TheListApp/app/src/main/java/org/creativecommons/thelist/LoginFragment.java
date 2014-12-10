@@ -1,4 +1,3 @@
-
 /* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
@@ -124,7 +123,7 @@ public class LoginFragment extends Fragment {
         mContext = getActivity();
 
         //SignUp/Login Layouts
-        mSignUpFields = (RelativeLayout)getView().findViewById(R.id.signup_fields);
+        mSignUpFields = (RelativeLayout)getView().findViewById(R.id.signup_section);
         mLoginFields = (RelativeLayout)getView().findViewById(R.id.login_fields);
 
         //Other UI
