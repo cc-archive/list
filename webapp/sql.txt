@@ -19,6 +19,14 @@ uri VARCHAR(255),
 primary KEY (id)
 );
 
+CREATE TABLE Categories (
+id int(11) NOT NULL auto_increment,
+name VARCHAR(255),
+makerid int(11),
+approved int(11),
+primary KEY (id)
+);
+
 CREATE TABLE Meta (
 id int(11) NOT NULL auto_increment,
 makerid int(11),
@@ -32,6 +40,7 @@ title VARCHAR(255),
 description TEXT,
 uri VARCHAR(255),
 approved int(11),
+category int(11),
 primary KEY (id)
 );
 
@@ -62,7 +71,15 @@ insert into Users (email, makerid) values ('cerys@example.com',1);
 insert into Makers (name, uri) values ('Catatonia', 'http://en.wikipedia.org/wiki/Catatonia_%28band%29');
 
 
-INSERT into List (makerid, title) values (1, "Aardvark");
+
+INSERT into Categories (approved, makerid, title) values (1, 1, "Animals");
+INSERT into Categories (approved, makerid, title) values (1, 1, "Musicians");
+INSERT into Categories (approved, makerid, title) values (1, 1, "Board Games");
+INSERT into Categories (approved, makerid, title) values (1, 1, "Technology");
+INSERT into Categories (approved, makerid, title) values (1, 1, "Dinosaurs");
+INSERT into Categories (approved, makerid, title) values (1, 1, "Food");
+INSERT into Categories (approved, makerid, title) values (1, 1, "Geography");
+
 INSERT into List (makerid, title) values (1, "Albatross");
 INSERT into List (makerid, title) values (1, "Alligator");
 INSERT into List (makerid, title) values (1, "Alpaca");
@@ -299,3 +316,4 @@ INSERT into List (makerid, title) values (1, "Yak");
 INSERT into List (makerid, title) values (1, "Zebra");
 
 UPDATE List SET approved = 1 where makerid = 1;
+UPDATE List SET category = 1 where makerid = 1;
