@@ -1,0 +1,4 @@
+## API end points
+
+* /api/category -- returns a list of categories, along with their owners
+

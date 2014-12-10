@@ -27,33 +27,6 @@ function respond($method, $route = '*', $callback = null) {
             $route = substr($route, 2);
         } else {
             $negate = false;
-
-
-$__routes = array();
-$__namespace = null;
-
-// Add a route callback
-function respond($method, $route = '*', $callback = null) {
-    global $__routes, $__namespace;
-
-    $args = func_get_args();
-    $callback = array_pop($args);
-    $route = array_pop($args);
-    $method = array_pop($args);
-
-    if (null === $route) {
-        $route = '*';
-    }
-
-    // only consider a request to be matched when not using matchall
-    $count_match = ($route !== '*');
-
-    if ($__namespace && $route[0] === '@' || ($route[0] === '!' && $route[1] === '@')) {
-        if ($route[0] === '!') {
-            $negate = true;
-            $route = substr($route, 2);
-        } else {
-            $negate = false;
             $route = substr($route, 1);
         }
 
@@ -926,3 +899,4 @@ class _Headers {
 }
 
 _Request::$_headers = _Response::$_headers = new _Headers;
+
