@@ -143,5 +143,54 @@ class UserList {
         return $res;
         
     }
+
+    static function getCategories($number = 10) {
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+            $query = 'SELECT * FROM Categories WHERE approved = 1 ORDER BY RAND() LIMIT ?';
+            $params[] = $number
+
+        try {
+            $res = $adodb->CacheGetAll(15, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+        
+    }
+
+    static function getCategoriesList($number = 10, $category) {
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+            $query = 'SELECT * FROM List WHERE approved = 1 AND category =? ORDER BY RAND() LIMIT ?';
+            $params[] = $category;
+            $params[] = $number;
+
+        try {
+            $res = $adodb->CacheGetAll(15, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+        
+    }
         
 }
