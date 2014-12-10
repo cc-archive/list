@@ -4,6 +4,7 @@ drop table if exists Meta;
 drop table if exists List;
 drop table if exists UserList;
 drop table if exists Photos;
+drop table if exists Categories;
 
 CREATE TABLE Users (
 email VARCHAR(255),
