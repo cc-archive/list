@@ -52,9 +52,11 @@ with('/api/category', function () {
     respond('GET', '/[:id]', function ($request, $response) {
         // Show items from a single category
 
+        $id = "" . $request->id;
+
         $list = new UserList();
 
-	$selection = $list->getCategoriesList(20, $request->id);
+	$selection = $list->getCategoriesList(20, $id);
 
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
