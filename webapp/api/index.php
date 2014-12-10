@@ -35,22 +35,33 @@ header('Access-Control-Allow-Origin: https://thelist.creativecommons.org/');
 header('Access-Control-Max-Age: 3628800');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
-$list = new UserList();
-
 with('/api/category', function () {
 
     respond('GET', '/?', function ($request, $response) {
+
+        $list = new UserList();
+
 	$selection = $list->getCategories(20);
+        
+        $output = json_encode($selection, JSON_PRETTY_PRINT);
+        echo $output;
+
+
       });
 
     respond('GET', '/[:id]', function ($request, $response) {
         // Show items from a single category
+
+        $list = new UserList();
+
 	$selection = $list->getCategoriesList(20, $request);
+
+        $output = json_encode($selection, JSON_PRETTY_PRINT);
+        echo $output;
+
       });
 
   });
 
-$output = json_encode($selection, JSON_PRETTY_PRINT);
-echo $output;
 
 dispatch();
