@@ -1,27 +1,31 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/fragment_layout_main"
+    android:orientation="vertical"
     tools:context="org.creativecommons.thelist.LoginFragment">
 
     <TextView
+        style="@style/cancel_button"
         android:text="@string/cancel_button_label"
         android:id="@+id/cancelButton"
-        style="@style/cancel_button"/>
+        android:layout_weight="0"
+        android:layout_gravity="right" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/section_loading"
-        android:layout_below="@+id/cancelButton"
-        android:paddingTop="50dp"
-        android:layout_alignParentTop="true">
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="25dp">
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true" />
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:layout_centerInParent="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +34,8 @@
             android:text="@string/loading_label"
             android:id="@+id/progressBar_label"
             android:gravity="center"
-            android:textColor="#ffffffff"
+            android:layout_gravity="center"
+            android:textColor="@color/primary_light"
             android:layout_below="@+id/progressBar"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
@@ -38,10 +43,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:id="@+id/section_text"
         android:paddingTop="40dp"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/section_loading"
         android:layout_marginBottom="35sp">
     <TextView
         android:text="@string/login_fragment_title"
@@ -58,9 +62,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/signup_section"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/section_text">
+        android:layout_weight="0"
+        android:minHeight="216dp"
+        android:id="@+id/signup_section">
 
         <EditText
             style="@style/input_fields"
@@ -86,30 +90,36 @@
             style="@style/standard_button"
             android:text="@string/signUpButton_label"
             android:id="@+id/signUpButton"
-            android:layout_above="@+id/existingAccount"/>
+            android:layout_below="@+id/passwordField"
+            android:layout_marginTop="20dp"/>
 
         <TextView
+            style="@style/account_helper_style"
             android:text="@string/existing_account_text"
             android:id="@+id/existingAccount"
-            style="@style/account_helper_style"
-            android:layout_alignParentBottom="true" />
-
+            android:layout_below="@id/signUpButton"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/login_fields"
+        android:layout_weight="0"
+        android:minHeight="216dp"
         android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/section_text">
+        android:id="@+id/login_fields">
+
+        <EditText
+            style="@style/input_fields"
+            android:hint="@string/email_hint"
+            android:visibility="invisible"
+            android:id="@+id/hiddenField"/>
 
         <EditText
             style="@style/input_fields"
             android:id="@+id/emailLoginField"
             android:inputType="textEmailAddress"
             android:hint="@string/email_hint"
-            android:layout_above="@+id/passwordLoginField"/>
+            android:layout_below="@+id/hiddenField"/>
 
         <EditText
             style="@style/input_fields"
@@ -117,20 +127,20 @@
             android:id="@+id/passwordLoginField"
             android:inputType="textPassword"
             android:hint="@string/password_hint"
-            android:layout_above="@+id/loginButton" />
+            android:layout_below="@+id/emailLoginField" />
 
         <Button
             style="@style/standard_button"
-            android:layout_marginTop="25dp"
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
-            android:layout_above="@+id/newAccount"/>
+            android:layout_below="@+id/passwordLoginField"
+            android:layout_marginTop="20dp"/>
 
         <TextView
             style="@style/account_helper_style"
             android:text="@string/new_account_text"
             android:id="@+id/newAccount"
-            android:layout_alignParentBottom="true"/>
+            android:layout_below="@+id/loginButton"/>
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

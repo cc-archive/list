@@ -107,7 +107,15 @@ public class RandomActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     //Visual Confirmation of add
-                    Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT).show();
+                    final Toast toast = Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toast.cancel();
+                        }
+                    }, 1200);
 
                     MainListItem listItem = new MainListItem();
                     listItem.setItemID(mItemID);

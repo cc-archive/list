@@ -92,7 +92,7 @@ public class CategoryListActivity extends Activity {
         mContext = this;
 
         //Load UI Elements
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mNextButton = (Button) findViewById(R.id.nextButton);
         mNextButton.setVisibility(View.INVISIBLE);
         mListView = (ListView)findViewById(R.id.list);
@@ -138,7 +138,7 @@ public class CategoryListActivity extends Activity {
 
         //If Network Connection is available, Execute getDataTask
         if(requestMethods.isNetworkAvailable(mContext)) {
-            mProgressBar.setVisibility(View.VISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
             getCategoriesRequest();
         }
         else {
@@ -179,7 +179,7 @@ public class CategoryListActivity extends Activity {
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {
-        mProgressBar.setVisibility(View.INVISIBLE);
+        //mProgressBar.setVisibility(View.INVISIBLE);
         if (mCategoryData == null) {
             requestMethods.updateDisplayForError();
         }
@@ -217,6 +217,7 @@ public class CategoryListActivity extends Activity {
                     public void onResponse(JSONArray response) {
                         //Handle Data
                         mCategoryData = response;
+                        Log.v("HEY LOOK LISTEN", mCategoryData.toString());
                         updateList();
                     }
                 }, new Response.ErrorListener() {
@@ -259,7 +260,7 @@ public class CategoryListActivity extends Activity {
                             mPutResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             //Log.v(TAG, mPutResponse.toString());
 
-                            mProgressBar.setVisibility(View.INVISIBLE);
+                            //mProgressBar.setVisibility(View.INVISIBLE);
 
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());

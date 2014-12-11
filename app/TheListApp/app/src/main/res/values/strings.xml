@@ -2,15 +2,10 @@
 <resources>
 
     <!-- Activity Titles -->
-    <string name="app_name">The List</string>
+    <string name="app_name">THE LIST</string>
     <string name="title_activity_main">Your List</string>
     <string name="title_activity_category_list">Pick Categories</string>
     <string name="title_activity_random">Hit Me</string>
-
-    <!-- Fragment Section Labels -->
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
 
     <!-- Labels -->
     <string name="next_button_label">Next</string>
@@ -38,17 +33,17 @@
     <string-array name="listItem_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <item>Save Item to Your List</item>
+        <!--<item>Save Item to Your List</item>-->
     </string-array>
 
     <string name="hello_world">Hello world!</string>
     <string name="empty_list">No Items To Display</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_feed">FeedActivity</string>
+    <string name="title_activity_login">Login Activity</string>
+    <string name="title_activity_feed">Feed Activity</string>
     <string name="email_hint">Email</string>
     <string name="full_name_hint">Full Name</string>
-    <string name="title_activity_account">AccountActivity</string>
-    <string name="title_activity_start">StartActivity</string>
+    <string name="title_activity_account">Account Activity</string>
+    <string name="title_activity_start">Start Activity</string>
 
     <!-- TODO: Insert ascii codes -->
     <!-- Onboarding Explainers -->
@@ -88,5 +83,6 @@
     <string name="category_list_text">What do you like taking pictures of?</string>
     <string name="account_text_label">Login to your CCID</string>
     <string name="cc_logo_label">powered by Creative Commons</string>
+    <string name="cc_logo_contentDescription">Creative Commons Logo</string>
 
 </resources>

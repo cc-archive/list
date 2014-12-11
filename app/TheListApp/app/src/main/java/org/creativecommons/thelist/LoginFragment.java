@@ -140,7 +140,6 @@ public class LoginFragment extends Fragment {
 
         //Login UI
         mEmailLoginField = (EditText)getView().findViewById(R.id.emailLoginField);
-        mEmailLoginField.requestFocus();
         mPasswordLoginField = (EditText)getView().findViewById(R.id.passwordLoginField);
         mPasswordLoginField.setTypeface(Typeface.DEFAULT);
         mLoginButton = (Button)getView().findViewById(R.id.loginButton);
@@ -193,6 +192,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Switch out field Layout
+                mEmailLoginField.requestFocus();
                 mSignUpFields.setVisibility(View.GONE);
                 mLoginFields.setVisibility(View.VISIBLE);
             }
@@ -202,6 +202,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Switch out field Layout
+                mUsernameField.requestFocus();
                 mSignUpFields.setVisibility(View.VISIBLE);
                 mLoginFields.setVisibility(View.GONE);
             }

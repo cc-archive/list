@@ -3,6 +3,7 @@
     <!--General-->
     <color name="app_black">#ffffff</color>
     <color name="app_white">#000000</color>
+    <color name="apptheme_color">#a3a3a3</color>
 
     <!--Text-->
     <color name="text_light">#d3d3d3</color>
@@ -15,6 +16,7 @@
     <color name="primary_ultralight">#F0F0F0</color>
     <color name="primary_light">#d3d3d3</color>
     <color name="primary_dark">#2B2B2B</color>
+    <color name ="red_accent">#E82D2C</color>
 
     <!--Other-->
     <color name="accent">#ffc400</color>

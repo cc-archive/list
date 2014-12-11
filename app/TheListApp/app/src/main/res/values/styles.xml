@@ -3,32 +3,50 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:textViewStyle">@style/TextViewStyle</item>
         <!--TODO: Why you no work?-->
+        <item name="android:textViewStyle">@style/TextViewAppTheme</item>
+        <item name="android:editTextStyle">@style/input_fields</item>
+        <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
     </style>
 
-    <style name="TextViewStyle" parent="android:Widget.TextView">
+    <!--Theme Components-->
+    <!--<style name="EditTextAppTheme" parent="android:Widget.EditText">-->
+        <!--<item name="android:textColor">@color/red_accent</item>-->
+
+    <!--</style>-->
+
+    <style name="CheckBoxAppTheme" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/btn_check</item>
+    </style>
+    <!--Line Spacing-->
+    <style name="TextViewAppTheme" parent="android:Widget.TextView">
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
-
+    <!--Text Multiplier-->
     <style name="text_spacing">
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
+    <!--Theme-->
     <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+
+        <item name="android:textViewStyle">@style/TextViewAppTheme</item>
+        <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
+
     </style>
 
+    <!--Element/Layout Styles-->
     <style name="cancel_button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_alignParentEnd">true</item>
+        <!--<item name="android:layout_alignParentEnd">true</item>-->
         <item name="android:textStyle">bold</item>
         <item name="android:clickable">true</item>
         <item name="android:textColor">@color/primary_light</item>
@@ -45,7 +63,7 @@
         <item name="android:background">@color/translucent_background</item>
     </style>
 
-    <style name="base_layout_main">
+    <style name="intro_layout_main">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:paddingLeft">@dimen/activity_extra_horizontal_margin</item>
@@ -55,12 +73,13 @@
     </style>
 
 
-    <style name="standard_button" parent="android:style/Widget.Material.Button">
+    <style name="standard_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textColor">@color/primary_light</item>
-        <item name="android:background">@color/primary_dark_material_light</item>
+        <item name="android:background">@drawable/btn_custom</item>
+        <item name="android:minHeight">50dp</item>
     </style>
 
     <style name="account_helper_style">
@@ -74,13 +93,13 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="input_fields">
+    <style name="input_fields" parent="android:Widget.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/app_white</item>
+        <item name="android:background">@drawable/edit_text</item>
+        <item name="android:textColor">@color/primary_light</item>
         <item name="android:textColorHint">@color/text_medium_light</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentStart">true</item>
     </style>
 
     <style name="fragment_title">
@@ -103,6 +122,5 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:textColor">@color/primary_light</item>
     </style>
-
 
 </resources>
