@@ -76,6 +76,32 @@ class UserList {
         return $data;
     }
 
+    static function getSingleListItem ($listid) {
+
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+        $params = array();
+        $query = 'SELECT * From List WHERE id = ?';
+        $params[] = $listid;
+
+        try {
+            $res = $adodb->CacheGetAll(15, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+
+    }
+
     static function getListItems($number = 10, $userid = false, $makerid = false, $offset = 0, $from = false, $to = false) {
         global $adodb;
 
