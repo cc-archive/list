@@ -26,9 +26,6 @@ import android.widget.Checkable;
 import android.widget.CheckedTextView;
 import android.widget.RelativeLayout;
 
-/**
- * Created by damaris on 2014-12-05.
- */
 public class CheckableRelativeLayout extends RelativeLayout implements Checkable {
 
     private boolean checked = false;

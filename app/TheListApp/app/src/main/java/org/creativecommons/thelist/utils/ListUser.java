@@ -124,7 +124,7 @@ public class ListUser {
         final RequestMethods requestMethods = new RequestMethods(mContext);
         RequestQueue queue = Volley.newRequestQueue(mContext);
         //Genymotion Emulator
-        String url = ApiConstants.LOGIN_USER;
+        String url = ApiConstants.LOGIN_USER_FAPI;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/user";
 

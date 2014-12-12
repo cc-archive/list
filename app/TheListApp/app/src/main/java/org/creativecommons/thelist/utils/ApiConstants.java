@@ -75,7 +75,7 @@ public final class ApiConstants {
     //Must have user ID + PUT
     public static final String UPDATE_USER = FAPI + "/user/";
     //User Login
-    public static final String LOGIN_USER = FAPI + "/user/";
+    public static final String LOGIN_USER_FAPI = FAPI + "/user/";
     //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
     public static final String GET_MULTIPLE_ITEMS = FAPI + "/items/";
     //GET Method
@@ -96,6 +96,8 @@ public final class ApiConstants {
     public static final String GET_CATEGORIES = URL + "/category/";
     //GET Maker Object by ID
     public static final String GET_MAKER_NAME = URL + "/user/";
+
+    //TODO: API not ready yet
     //USER LOGIN: send email address in password; return user token
     public static final String LOGIN_USER = URL + "/users/login";
     //USER REGISTER: send email address and password
