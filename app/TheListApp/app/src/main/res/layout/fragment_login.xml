@@ -14,18 +14,18 @@
     <RelativeLayout
         android:id="@+id/section_loading"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="25dp">
+        android:layout_gravity="center">
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
             android:layout_gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:layout_centerInParent="true" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:id="@+id/section_text"
-        android:paddingTop="40dp"
-        android:layout_marginBottom="35sp">
+        android:paddingTop="20dp"
+        android:layout_marginBottom="20dp">
     <TextView
         android:text="@string/login_fragment_title"
         android:id="@+id/confirm_title"
