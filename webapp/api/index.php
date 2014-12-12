@@ -87,7 +87,7 @@ with('/api/items', function () {
 
         $list = new UserList();
 
-        $selection = $list->getSingleListItem(20, $id);
+        $selection = $list->getSingleListItem($id);
 
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
