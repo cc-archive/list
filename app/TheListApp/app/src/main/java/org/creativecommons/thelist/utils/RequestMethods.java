@@ -88,10 +88,10 @@ public final class RequestMethods {
 
     //TODO: ask WHYY
     //Parse List Objects of List Items and return list of Item IDS
-    public List<Integer> getItemIds(List<MainListItem> list){
-        List<Integer>arrayList = new ArrayList<Integer>();
+    public List<String> getItemIds(List<MainListItem> list){
+        List<String>arrayList = new ArrayList<String>();
         for (int i = 0; i < list.size(); i++) {
-            int singleID = list.get(i).getItemID();
+            String singleID = list.get(i).getItemID();
             arrayList.add(singleID);
         }
         return arrayList;

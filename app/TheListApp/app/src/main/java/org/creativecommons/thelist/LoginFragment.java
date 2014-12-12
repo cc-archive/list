@@ -260,10 +260,17 @@ public class LoginFragment extends Fragment {
                             //Log.v(TAG,response.toString());
 
                             //TODO: Clear sharedPreferences once DB has user data
-//                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.CATEGORY_PREFERENCE,
-//                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, mContext);
-//                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-//                                    SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, mContext);
+                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.CATEGORY_PREFERENCE,
+                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, mContext);
+                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                    SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, mContext);
+                            //TODO: Test Deleted Shared Preferences
+                            if(SharedPreferencesMethods.RetrieveSharedPreference(SharedPreferencesMethods.CATEGORY_PREFERENCE,
+                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, mContext) != null) {
+                                Log.v("YO", "it is gone!");
+                            } else {
+                                Log.v("YO", "Something is still here");
+                            }
 
 
                             //TODO: Handle Errors

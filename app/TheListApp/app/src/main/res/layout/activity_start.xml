@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="@string/existing_account_text"
+            android:textSize="12sp"
             android:textColor="@color/text_medium_dark"
             android:id="@+id/accountButton"
             android:layout_gravity="center"
@@ -75,14 +76,10 @@
             android:layout_above="@+id/cc_logo_label"
             android:layout_centerHorizontal="true" />
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            style="@style/account_helper_style"
             android:text="@string/cc_logo_label"
             android:id="@+id/cc_logo_label"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
 </LinearLayout>

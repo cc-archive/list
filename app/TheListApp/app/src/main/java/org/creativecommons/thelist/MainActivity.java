@@ -172,7 +172,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     MainListItem listItem = new MainListItem();
                     listItem.setItemName(jsonSingleItem.getString(ApiConstants.ITEM_NAME));
                     listItem.setMakerName(jsonSingleItem.getString(ApiConstants.MAKER_NAME));
-                    listItem.setItemID(jsonSingleItem.getInt(ApiConstants.ITEM_ID));
+                    listItem.setItemID(String.valueOf(jsonSingleItem.getInt(ApiConstants.ITEM_ID)));
 
                     //Adding to array of List Items
                     mItemList.add(listItem);
@@ -369,7 +369,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //Get Photo Object
         JSONObject photoObject = requestMethods.createUploadPhotoObject(mCurrentItem, mMediaUri);
-        //Log.v(TAG,photoObject.toString());
+        Log.v(TAG,photoObject.toString());
 
         //Volley Request
         JsonObjectRequest postPhotoRequest = new JsonObjectRequest(Request.Method.POST, url, photoObject,
@@ -384,7 +384,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                             //Handle Data
                             //TODO: Handle Response
                             JSONObject postResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            //Log.v(TAG, postResponse.toString());
+                            Log.v(TAG, postResponse.toString());
 
                             //TODO: if status is NOT ok, Change TextView in confirmFragment
                             //SUCCESS text in confirmFragment

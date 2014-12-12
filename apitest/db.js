@@ -47,21 +47,21 @@
 
 	var photo = [
 		{
-			id: 1,
+			id: "1",
 			itemId: 1,
 			userId:1,
 			photoUrl: "http://examplepic.com",
 			dateCreated:""
 		},
 		{
-			id: 2,
+			id: "2",
 			itemId: 4,
 			userId:1,
 			photoUrl: "http://examplepic.com",
 			dateCreated:""
 		},
 		{
-			id: 2,
+			id: "2",
 			itemId: 4,
 			userId:5,
 			photoUrl: "http://examplepic.com",
@@ -71,23 +71,23 @@
 
 	var category = [
 		{
-			id: 1,
+			id: "1",
 			name: "Parks"
 		},
 		{
-			id: 2,
+			id: "2",
 			name: "Design"
 		},
 		{
-			id: 3,
+			id: "3",
 			name: "Food"
 		},
 		{
-			id:4,
+			id:"4",
 			name:"People"		
 		},
 		{
-			id:5,
+			id:"5",
 			name:"Fandom"
 		}
 	];

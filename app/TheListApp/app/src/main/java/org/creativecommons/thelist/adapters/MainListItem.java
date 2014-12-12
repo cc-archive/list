@@ -5,22 +5,22 @@ package org.creativecommons.thelist.adapters;
  */
 public class MainListItem {
     private String itemName, makerName;
-    private int itemID;
+    private String itemID;
 
     public MainListItem() {
     }
 
-    public MainListItem(int id, String name, String maker) {
+    public MainListItem(String id, String name, String maker) {
         this.itemID = itemID;
         this.itemName = name;
         this.makerName = maker;
     }
 
-    public int getItemID() {
+    public String getItemID() {
         return itemID;
     }
 
-    public void setItemID(int id) {
+    public void setItemID(String id) {
         this.itemID = id;
     }
 

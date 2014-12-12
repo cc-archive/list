@@ -60,9 +60,7 @@ public class StartActivity extends Activity {
                 startActivity(intent);
             }
         });
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

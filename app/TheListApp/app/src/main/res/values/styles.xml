@@ -10,14 +10,10 @@
     </style>
 
     <!--Theme Components-->
-    <!--<style name="EditTextAppTheme" parent="android:Widget.EditText">-->
-        <!--<item name="android:textColor">@color/red_accent</item>-->
-
-    <!--</style>-->
-
     <style name="CheckBoxAppTheme" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/btn_check</item>
     </style>
+
     <!--Line Spacing-->
     <style name="TextViewAppTheme" parent="android:Widget.TextView">
         <item name="android:lineSpacingMultiplier">1.2</item>
@@ -33,7 +29,6 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-
         <item name="android:textViewStyle">@style/TextViewAppTheme</item>
         <item name="android:checkboxStyle">@style/CheckBoxAppTheme</item>
 

@@ -67,7 +67,7 @@ public class RandomActivity extends Activity {
     protected JSONObject mListItemData;
     String mMakerName;
     String mItemName;
-    int mItemID;
+    String mItemID;
 
     //PUT request (if user is logged in)
     protected JSONObject mPutResponse;
@@ -75,7 +75,7 @@ public class RandomActivity extends Activity {
     //Handle Data
     protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    private ArrayList<Integer> mItemsViewed = new ArrayList<Integer>();
+    private ArrayList<String> mItemsViewed = new ArrayList<String>();
 
     //UI Elements
     TextView mTextView;
@@ -134,7 +134,7 @@ public class RandomActivity extends Activity {
                         }
                         else {
                             //Get array of selected item IDS
-                            List<Integer> userItemList = requestMethods.getItemIds(mItemList);
+                            List<String> userItemList = requestMethods.getItemIds(mItemList);
                             //Log.v(TAG,mItemList.toString());
 
                             //Save Array as String to sharedPreferences
@@ -183,7 +183,7 @@ public class RandomActivity extends Activity {
             try {
                 //Store values from response JSON Object
                 mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                mItemID = mListItemData.getInt(ApiConstants.ITEM_ID);
+                mItemID = String.valueOf(mListItemData.getInt(ApiConstants.ITEM_ID));
 
                 Log.v(TAG, mItemsViewed.toString() + " this is the id " + String.valueOf(mItemID));
 

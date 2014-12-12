@@ -33,7 +33,7 @@
     <string-array name="listItem_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <!--<item>Save Item to Your List</item>-->
+        <!-- <item>Save Item to Your List</item> -->
     </string-array>
 
     <string name="hello_world">Hello world!</string>
@@ -61,7 +61,7 @@
     <string name="login_fragment_text">Create a Creative Commons account in one click</string>
     <string name="cancel_button_label">CANCEL</string>
 
-    <!--Terms Fragment-->
+    <!-- Terms Fragment -->
     <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
     <string name="terms_fragment_text">Anyone who uses your images must give you credit and indicate if any changes have been made.</string>
     <string name="terms_learn_more_label"><a href="https://thelist.creativecommons.org/app/"><u>LEARN MORE</u></a></string>
@@ -73,7 +73,7 @@
     <string name="existing_account_text">I already have an account</string>
     <string name="new_account_text">Actually, I need an account</string>
 
-    <!--confirm Fragment-->
+    <!-- confirm Fragment -->
     <string name="upload_cancelled_title">Upload Cancelled</string>
     <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
@@ -84,5 +84,6 @@
     <string name="account_text_label">Login to your CCID</string>
     <string name="cc_logo_label">powered by Creative Commons</string>
     <string name="cc_logo_contentDescription">Creative Commons Logo</string>
+    <string name="title_activity_explainer1">Explainer1</string>
 
 </resources>

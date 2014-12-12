@@ -37,40 +37,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="20dp">
 
         <!--TODO: make smaller images bigger (because camera button will not be in 1.0)-->
         <ImageButton
             android:id="@+id/YesButton"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center_horizontal|center"
-            android:src="@drawable/random_checkmark"
-            android:background="@drawable/rounded_corners"/>
+            android:adjustViewBounds="false"
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/btn_checkmark"
+            android:layout_gravity="center_vertical" />
 
         <ImageButton
             android:id="@+id/CameraButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:layout_gravity="center"
             android:src="@drawable/random_camera"
             android:background="@drawable/rounded_corners" />
 
         <ImageButton
             android:id="@+id/NoButton"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center"
-            android:src="@drawable/random_x"
-            android:background="@drawable/rounded_corners"/>
+            android:adjustViewBounds="false"
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/btn_x" />
     </LinearLayout>
 
 </RelativeLayout>
