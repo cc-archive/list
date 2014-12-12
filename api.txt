@@ -1,4 +1,29 @@
 ## API end points
 
-* /api/category -- returns a list of categories, along with their owners
+* GET /api/category -- returns a list of categories, along with their owners
 
+See it here: https://thelist.creativecommons.org/api/category/
+
+* GET /api/category/N -- returns some random list items from category number N
+
+See it here: https://thelist.creativecommons.org/api/category/1
+
+* GET /api/items -- get some random items
+
+See it here: https://thelist.creativecommons.org/api/items
+
+* GET /api/items/N -- get all the details on a single item
+
+See it here: https://thelist.creativecommons.org/api/items/1
+
+== In progress ==
+
+* POST /api/items/N -- add item N to your list
+
+See it here: https://thelist.creativecommons.org/api/items/1
+
+* POST /api/users/login -- send email address and password, get back a user token TBD or 'FAIL'
+
+* POST /api/users/register -- send email address and password -- user will get a confirmation email, get API will return 'SUCCESS' or 'FAIL'
+
+* GET /api/users/EMAIL -- returns a user's profile and a copy of their list?

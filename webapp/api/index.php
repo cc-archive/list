@@ -66,4 +66,67 @@ with('/api/category', function () {
   });
 
 
+with('/api/items', function () {
+
+    respond('GET', '/?', function ($request, $response) {
+
+        $list = new UserList();
+
+	$selection = $list->getNewList(20);
+        
+        $output = json_encode($selection, JSON_PRETTY_PRINT);
+        echo $output;
+
+
+      });
+
+    respond('GET', '/[:id]', function ($request, $response) {
+        // Show items from a single category
+
+	$id =$request->id;
+
+        $list = new UserList();
+
+        $selection = $list->getSingleListItem(20, $id);
+
+        $output = json_encode($selection, JSON_PRETTY_PRINT);
+        echo $output;
+
+      });
+
+    respond('POST','/[:id]', function ($rquest, $response) {
+
+        echo "This is where you can add things to your list";
+
+    });
+
+  });
+
+
+with('/api/users', function () {
+
+    respond('POST', '/login', function ($request, $response) {
+
+        echo "This is the login stub";
+
+    });
+
+    respond('POST', '/register', function ($request, $response) {
+
+        echo "This is the register stub";
+
+    });
+
+    respond('GET', '/[:email]', function ($request, $response) {
+
+        echo "This is the GET USER stub";
+
+    });
+
+
+
+  });
+
+
+
 dispatch();
