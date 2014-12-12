@@ -26,7 +26,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,15 +66,6 @@ public final class RequestMethods {
 //    }
 
     //UPDATE DISPLAY FOR ERROR METHOD
-    public void updateDisplayForError() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(mContext.getString(R.string.error_title));
-        builder.setMessage(mContext.getString(R.string.error_message));
-        builder.setPositiveButton(android.R.string.ok,null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-    //TODO: Replace above with showErrorDialog
     //Generic Error Dialog Builder
     public void showErrorDialog(Context context, String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -116,7 +106,6 @@ public final class RequestMethods {
         return null;
     }
 
-
     //Create Upload Photo Object (in bytes) + return object with ID and userID
     public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
         ListUser listUser = new ListUser();
@@ -144,4 +133,10 @@ public final class RequestMethods {
             return photoObject;
         }
     }
+
+
+
+
+
+
 }

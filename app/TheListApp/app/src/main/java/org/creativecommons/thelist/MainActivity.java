@@ -161,7 +161,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mProgressBar.setVisibility(View.INVISIBLE);
         if (mItemData == null) {
             //TODO: User Error Message in dialog (updateDisplay for Error: update so you can pass in JSON response)
-            requestMethods.updateDisplayForError();
+            requestMethods.showErrorDialog(mContext,
+                    getString(R.string.error_title),
+                    getString(R.string.error_message));
         }
         else {
             try {
@@ -209,7 +211,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse (VolleyError error){
-                    requestMethods.updateDisplayForError();
+                    requestMethods.showErrorDialog(mContext,
+                            getString(R.string.error_title),
+                            getString(R.string.error_message));
                 }
         });
         queue.add(getUserItemsRequest);
@@ -236,7 +240,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
             }
         });
         queue.add(getUserItemsRequest);
@@ -409,7 +415,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
                 //TODO: is this where error responses will be returned from API?
             }
         });

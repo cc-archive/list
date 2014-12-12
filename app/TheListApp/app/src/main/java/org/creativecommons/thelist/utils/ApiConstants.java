@@ -26,7 +26,7 @@ public final class ApiConstants {
     //LIMIT for list item requests
 
     //Limit how many items user will view before possibility of repeats (RandomActivity)
-    public static final int MAX_ITEMS_VIEWED = 5;
+    //public static final int MAX_ITEMS_VIEWED = 5;
 
 
     //Response Object
@@ -48,7 +48,7 @@ public final class ApiConstants {
     public static final String ITEM_NAME = "name";
     public static final String ITEM_ID = "id";
     public static final String ITEM_CATEGORY = "category";
-    public static final String MAKER_ID = "userId";
+    public static final String MAKER_ID = "makerid";
     public static final String MAKER_NAME = "user";
     public static final String EXAMPLE_URL = "exampleUrl";
 
@@ -62,30 +62,44 @@ public final class ApiConstants {
     //TODO: Add all Endpoints
 
     //Virtual Box
-    public static final String URL = "http://192.168.56.1:3000/api";
+    public static final String FAPI = "http://192.168.56.1:3000/api";
     //Android Emulator
     //public static final String URL = "http://10.0.2.2:3000/api";
     //Creative Commons API
-    //public static final String URL = "https://thelist.creativecommons.org/api";
+    public static final String URL = "https://thelist.creativecommons.org/api";
 
     //Must POST
-    public static final String CREATE_NEW_USER = URL + "/user/";
+    public static final String CREATE_NEW_USER = FAPI + "/user/";
     //Must have user ID (+ userID) + GET
-    public static final String GET_ALL_USER_ITEMS = URL + "/user/";
+    public static final String GET_ALL_USER_ITEMS = FAPI + "/user/";
     //Must have user ID + PUT
-    public static final String UPDATE_USER = URL + "/user/";
+    public static final String UPDATE_USER = FAPI + "/user/";
     //User Login
-    public static final String LOGIN_USER = URL + "/user/";
+    public static final String LOGIN_USER = FAPI + "/user/";
     //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
-    public static final String GET_MULTIPLE_ITEMS = URL + "/items/";
+    public static final String GET_MULTIPLE_ITEMS = FAPI + "/items/";
     //GET Method
-    public static final String GET_ALL_ITEMS = URL + "/item/";
+    public static final String GET_ALL_ITEMS = FAPI + "/item/";
     //GET Single Item Method
-    public static final String GET_SINGLE_ITEM = URL + "/item/";
+    public static final String GET_SINGLE_ITEM = FAPI + "/item/";
     //POST, GET Photo
-    public static final String POST_PHOTO = URL + "/photo/";
+    public static final String POST_PHOTO = FAPI + "/photo/";
+
+
+    //Real API
+
+    //Must add item ID
+    public static final String POST_SINGLE_ITEM = URL + "/items/";
+    //GET ITEMS (currently returns 20 random ones)
+    public static final String GET_RANDOM_ITEMS = URL + "/items/";
     //GET Categories
     public static final String GET_CATEGORIES = URL + "/category/";
+    //GET Maker Object by ID
+    public static final String GET_MAKER_NAME = URL + "/user/";
+    //USER LOGIN: send email address in password; return user token
+    public static final String LOGIN_USER = URL + "/users/login";
+    //USER REGISTER: send email address and password
+    public static final String REGISTER_USER = URL + "/users/register";
 
 
 }

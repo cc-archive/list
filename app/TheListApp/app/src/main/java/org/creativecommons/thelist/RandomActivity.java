@@ -36,6 +36,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -50,8 +51,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
@@ -63,9 +62,11 @@ public class RandomActivity extends Activity {
     ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
-    protected JSONObject mRandomItemData;
+    protected JSONArray mRandomItemData;
     protected JSONObject mListItemData;
+    protected JSONObject mMakerNameData;
     String mMakerName;
+    String mMakerID;
     String mItemName;
     String mItemID;
 
@@ -73,7 +74,6 @@ public class RandomActivity extends Activity {
     protected JSONObject mPutResponse;
 
     //Handle Data
-    protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
     private ArrayList<String> mItemsViewed = new ArrayList<String>();
 
@@ -82,7 +82,8 @@ public class RandomActivity extends Activity {
     ProgressBar mProgressBar;
 
     //Shared variables
-    int count;
+    int itemAddedCount;
+    int itemPositionCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,28 +107,38 @@ public class RandomActivity extends Activity {
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Visual Confirmation of add
-                    final Toast toast = Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT);
-                    toast.show();
-
-                    new android.os.Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            toast.cancel();
-                        }
-                    }, 1200);
-
-                    MainListItem listItem = new MainListItem();
-                    listItem.setItemID(mItemID);
-                    listItem.setItemName(mItemName);
-                    listItem.setMakerName(mMakerName);
-                    mItemList.add(listItem);
 
                     //Once yes has been hit 3 times, forward to
+                    //TODO: Also condition that user is logged in
                     if(mItemList.size() < 3) {
-                        getRandomItemRequest();
+                        if(mCurrentUser.isLoggedIn()) {
+                            //TODO: DO PUT REQUEST TO USER LIST
+
+                        } else {
+                            //TODO: Save item id to list
+                            //Create list of items
+                            MainListItem listItem = new MainListItem();
+                            listItem.setItemID(mItemID);
+                            listItem.setItemName(mItemName);
+                            listItem.setMakerName(mMakerName);
+                            mItemList.add(listItem);
+                        }
+
+                        //Toast: Confirm List Item has been added
+                        final Toast toast = Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT);
+                        toast.show();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 1500);
+
+                        updateList();
+
                     } else {
 
+                        //TODO: SAVE LIST TO PREFERENCES AND GO TO NEW ACTIVITY
                         //If user is logged in, send chosen list items to DB
                         if(mCurrentUser.isLoggedIn()) {
                             putRandomItemsRequest();
@@ -156,21 +167,25 @@ public class RandomActivity extends Activity {
             NoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getRandomItemRequest();
+                    //TODO:THIS ELSE NEEDS TO UPDATE LIST
+                    updateList();
                 }
             });
+
+            //TODO: Camera Intent, (possibly remove if user is not logged in)
             //Camera Button Functionality
-            CameraButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: Camera Intent, (possibly remove if user is not logged in)
-                }
-            });
+//            CameraButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
         } else {
-            requestMethods.updateDisplayForError();
+            //Display network error
+            requestMethods.showErrorDialog(mContext,
+                    getString(R.string.error_title),
+                    getString(R.string.error_message));
         }
-
-
     } //onCreate
 
     private void updateList() {
@@ -181,73 +196,112 @@ public class RandomActivity extends Activity {
         }
         else {
             try {
-                //Store values from response JSON Object
-                mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                mItemID = String.valueOf(mListItemData.getInt(ApiConstants.ITEM_ID));
 
-                Log.v(TAG, mItemsViewed.toString() + " this is the id " + String.valueOf(mItemID));
+                mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
+                //Store values from response JSON Array
+                mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
+                mMakerID = mListItemData.getString(ApiConstants.MAKER_ID);
 
-                //If the user has seen the item before, select a new item
-                //TODO: use this to prevent user of seeing repeat items in a single session?
-                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() < ApiConstants.MAX_ITEMS_VIEWED){
-                    Log.v(TAG, "this item has been viewed before");
-                    getRandomItemRequest();
-                } else {
-                    Log.v(TAG, "this item is new to me");
-                    //Add item ID to list of items user has seen
-                    mItemsViewed.add(mItemID);
-                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
-                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
-                    //Update UI
-                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
-                }
+                getMakerRequest(mMakerID); //Updates UI as well
 
+                itemPositionCount++;
+
+//                //If the user has seen the item before, select a new item
+//                //TODO: use this to prevent user of seeing repeat items in a single session?
+//                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() < 20){
+//                    Log.v(TAG, "this item has been viewed before");
+//                    getRandomItemRequest();
+//                } else {
+//                    Log.v(TAG, "this item is new to me");
+//                    //Add item ID to list of items user has seen
+//                    mItemsViewed.add(mItemID);
+//                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+//                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+//                    //Update UI
+//                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+//                }
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }
         }
     } //updateList
 
+//    ------------------------------------------------------------------------------------------
+//    ------------------------------------------------------------------------------------------
+
+    //GET Random Items from API
     private void getRandomItemRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-
-        //Generate number to request random item by ID
-        //TODO: Select item from random position in item array
-        Random random = new Random();
-        //TODO: Change max to length of response?
-        int n = random.nextInt(5) + 1;
-        String randomNumber = String.valueOf(n);
-
         //Genymotion Emulator
-        String url = ApiConstants.GET_SINGLE_ITEM + randomNumber;
+        String url = ApiConstants.GET_CATEGORIES;
         //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber;
+        //String url = "http://10.0.2.2:3000/api/category";
 
-        JsonObjectRequest randomItemRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                            //Log.v(TAG,response.toString());
-                            mRandomItemData = response;
-                            updateList();
+                    public void onResponse(JSONArray response) {
+                        //Handle Data
+                        mRandomItemData = response;
+
+                        try {
+                            mMakerID = response.getJSONObject(itemPositionCount).getString("makerid");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
             }
         });
         queue.add(randomItemRequest);
-    } //GetRandomItemRequest
+    } //getRandomItemRequest
 
+    private void getMakerRequest(String makerID) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        //Genymotion Emulator
+        String url = ApiConstants.GET_MAKER_NAME + makerID;
 
+        JsonArrayRequest makerRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Handle Data
+                        mRandomItemData = response;
+                        try {
+                            mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+                            mMakerName = mMakerNameData.getString(ApiConstants.MAKER_NAME);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Update UI
+                        mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
+            }
+        });
+        queue.add(makerRequest);
+    } //getRandomItemRequest
+
+    //Add random item to user list
     private void putRandomItemsRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user";
 
         //Retrieve User list item preferences
         JSONArray userPreferences = SharedPreferencesMethods.RetrieveSharedPreference
@@ -264,7 +318,7 @@ public class RandomActivity extends Activity {
         //Log.v(TAG,jso.toString());
 
         //Add items to user list
-        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
+        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.POST, url, jso,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -276,11 +330,14 @@ public class RandomActivity extends Activity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
             }
         });
         queue.add(putItemsRequest);
     } //putRandomItemsRequest
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
