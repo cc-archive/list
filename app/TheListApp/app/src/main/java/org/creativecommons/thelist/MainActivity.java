@@ -203,7 +203,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     @Override
                     public void onResponse(JSONObject response) {
                         mItemData = response;
-                        //Log.v(TAG,response.toString());
+                        Log.v(TAG,response.toString());
                         updateList();
                     }
                 }, new Response.ErrorListener() {

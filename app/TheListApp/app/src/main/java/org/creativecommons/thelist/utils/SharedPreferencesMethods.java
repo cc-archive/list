@@ -67,11 +67,12 @@ public class SharedPreferencesMethods {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(value);
         JsonArray array = element.getAsJsonArray();
+        Log.v("HEY LOOK LISTEN", array.toString());
 
         //Make usable as JSONArray
-        List<Integer> catIds = new ArrayList<Integer>();
+        List<String> catIds = new ArrayList<String>();
         for (int i = 0; i < array.size(); i++) {
-            catIds.add(array.get(i).getAsInt());
+            catIds.add(array.get(i).getAsString());
         }
 
         return new JSONArray(catIds);
@@ -103,14 +104,28 @@ public class SharedPreferencesMethods {
     //Create object to send in User’s List Items Volley Request
     public static JSONObject createUserItemsObject (String key, Context context) {
         //Create JSON Object
+        //TODO: remove this with real API
         JSONObject userItemObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
                 (LIST_ITEM_PREFERENCE,LIST_ITEM_PREFERENCE_KEY, context);
+        JSONArray intPreferences = new JSONArray();
+
+        for(int i = 0; i <userPreferences.length(); i++ ) {
+
+            try {
+                int item = Integer.valueOf(userPreferences.getString(i));
+                intPreferences.put(i,item);
+
+            } catch (JSONException e) {
+                Log.v(TAG, e.getMessage());
+            }
+        }
 
         try {
-            userItemObject.put(key, userPreferences);
+            Log.v(TAG, intPreferences.toString());
+            userItemObject.put(key, intPreferences);
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
         return userItemObject;
     }
