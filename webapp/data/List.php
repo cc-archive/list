@@ -302,12 +302,7 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
         $row = $adodb->CacheGetRow(1, $query);
 
-        if (is_array($row)) {
-
-            $this->email            = $row['email'];
-            $this->id               = $row['id'];
-            $this->makerid          = $row['makerid'];
-        }
+        return $row;
 
     }
 
