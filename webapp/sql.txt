@@ -1,10 +1,7 @@
 drop table if exists Users;
-drop table if exists Makers;
 drop table if exists Meta;
-drop table if exists List;
 drop table if exists UserList;
 drop table if exists Photos;
-drop table if exists Categories;
 
 CREATE TABLE Users (
 email VARCHAR(255),
@@ -13,35 +10,9 @@ id int(11) NOT NULL auto_increment,
 primary KEY (id)
 );
 
-CREATE TABLE Makers (
-id int(11) NOT NULL auto_increment,
-name VARCHAR(255),
-uri VARCHAR(255),
-primary KEY (id)
-);
-
-CREATE TABLE Categories (
-id int(11) NOT NULL auto_increment,
-title VARCHAR(255),
-makerid int(11),
-approved int(11),
-primary KEY (id)
-);
-
 CREATE TABLE Meta (
 id int(11) NOT NULL auto_increment,
 makerid int(11),
-primary KEY (id)
-);
-
-CREATE TABLE List (
-id int(11) NOT NULL auto_increment,
-makerid int(11),
-title VARCHAR(255),
-description TEXT,
-uri VARCHAR(255),
-approved int(11),
-category int(11),
 primary KEY (id)
 );
 
@@ -69,6 +40,37 @@ alter table List add unique (uri);
 
 insert into Users (email) values ('joe@example.com');
 insert into Users (email, makerid) values ('cerys@example.com',1);
+
+drop table if exists List;
+drop table if exists Makers;
+drop table if exists Categories;
+
+CREATE TABLE Makers (
+id int(11) NOT NULL auto_increment,
+name VARCHAR(255),
+uri VARCHAR(255),
+primary KEY (id)
+);
+
+CREATE TABLE Categories (
+id int(11) NOT NULL auto_increment,
+title VARCHAR(255),
+makerid int(11),
+approved int(11),
+primary KEY (id)
+);
+
+CREATE TABLE List (
+id int(11) NOT NULL auto_increment,
+makerid int(11),
+title VARCHAR(255),
+description TEXT,
+uri VARCHAR(255),
+approved int(11),
+category int(11),
+primary KEY (id)
+);
+
 insert into Makers (name, uri) values ('Catatonia', 'http://en.wikipedia.org/wiki/Catatonia_%28band%29');
 insert into Makers (name, uri) values ('Joy Division', '');
 insert into Makers (name, uri) values ('The Smiths', '');
