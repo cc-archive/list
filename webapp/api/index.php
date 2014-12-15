@@ -177,7 +177,7 @@ with('/api/userlist', function () {
 
         $list = new UserList();
 
-        $selection = $list->getUserTopList(50, $userid)
+        $selection = $list->getUserTopList(100, $userid);
 
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
