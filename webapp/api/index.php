@@ -107,7 +107,24 @@ with('/api/users', function () {
 
     respond('POST', '/login', function ($request, $response) {
 
-        echo "This is the login stub";
+        $url = 'https://login.creativecommons.org/x.php';
+        $fields = array(
+            'username' => urlencode($request->param($username)),
+            'password' => urlencode($request->param($password))
+        );
+
+        foreach($fields as $key=>$value) { $posty .= $key.'='.$value.'&'; }
+        rtrim($posty, '&');
+
+        $curl = curl_init();
+
+        curl_setopt($curl,CURLOPT_URL, $url);
+        curl_setopt($curl,CURLOPT_POST, count($fields));
+        curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
+
+        $result = curl_exec($curl);
+
+        curl_close($curl);
 
     });
 
