@@ -169,6 +169,23 @@ with('/api/makers', function () {
 
 });
 
+with('/api/userlist', function () {
+
+    respond('GET', '/[:id]', function ($request, $response) {
+
+	$id =$request->id;
+
+        $list = new UserList();
+
+        $selection = $list->getUserTopList(50, $userid)
+
+        $output = json_encode($selection, JSON_PRETTY_PRINT);
+        echo $output;
+
+    });
+
+});
+
 
 
 dispatch();
