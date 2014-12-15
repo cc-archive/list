@@ -105,14 +105,12 @@ with('/api/items', function () {
 
 with('/api/users', function () {
 
-    $user = new User();
-
     respond('POST', '/login', function ($request, $response) {
 
         $url = 'https://login.creativecommons.org/x.php';
         $fields = array(
-            'username' => urlencode($request->param($username)),
-            'password' => urlencode($request->param($password))
+            'username' => urlencode($request->param('username')),
+            'password' => urlencode($request->param('password'))
         );
 
         foreach($fields as $key=>$value) { $posty .= $key.'='.$value.'&'; }
@@ -125,6 +123,8 @@ with('/api/users', function () {
         curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
 
         $result = curl_exec($curl);
+
+        $user = new UserList();
 
         $foo = $user->getUserInfo($result);
 
