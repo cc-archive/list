@@ -1,4 +1,3 @@
-
 /* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
@@ -18,92 +17,92 @@
 
 */
 
-package org.creativecommons.thelist;
+package fragments;
+
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.R;
 
-public class TermsFragment extends Fragment {
-    public static final String TAG = TermsFragment.class.getSimpleName();
-    RequestMethods requestMethods = new RequestMethods(getActivity());
-//    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
-//    ListUser mCurrentUser = new ListUser();
+public class ExplainerFragment extends Fragment {
+    public static final String TAG = ExplainerFragment.class.getSimpleName();
 
     protected Button mNextButton;
-    protected CheckBox mCheckBox;
-    protected TextView mLearnMoreButton;
-    protected TextView mCancelButton;
+    protected TextView mTextView;
+    protected ImageView mImageView;
 
     //Interface with Activity
-    TermsClickListener mCallback;
+    OnClickListener mCallback;
 
     //LISTENER
-    public interface TermsClickListener {
-        public void onTermsClicked();
-        public void onTermsCancelled();
+    public interface OnClickListener {
+        public void onNextClicked();
+    }
+
+    public ExplainerFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_terms, container, false);
+        return inflater.inflate(R.layout.fragment_explainer, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        mCheckBox = (CheckBox)getView().findViewById(R.id.checkBox);
         mNextButton = (Button)getView().findViewById(R.id.nextButton);
-        mCancelButton = (TextView)getView().findViewById(R.id.cancelButton);
-        mLearnMoreButton = (TextView)getView().findViewById(R.id.learnMoreButton);
-
-        mCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mCheckBox.isChecked()) {
-                    mNextButton.setVisibility(View.VISIBLE);
-                } else {
-                    mNextButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        mTextView = (TextView)getView().findViewById(R.id.explainer_text);
+        //TODO: if clickCount < array.length(), show next item in array else, send onNextClicked()
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onTermsClicked();
+                int count = 0;
+
+                //Text/Image Resources
+                String [] explainerText = getResources().getStringArray
+                        (R.array.onboarding_explainers);
+                String [] explainerButtonText = getResources().getStringArray
+                        (R.array.onboarding_button_text);
+                //TODO: check this works
+                String imageName = "R.drawable.explainer" + String.valueOf(count+1);
+
+                if(count < explainerText.length) {
+                    //Set Image/Text Resources
+                    int id = getResources().getIdentifier(imageName, null, null);
+                    mImageView.setImageResource(id);
+                    mTextView.setText(explainerText[count]);
+                    mNextButton.setText(explainerButtonText[count]);
+
+                    count ++;
+                } else {
+                    //Notify Activity
+                    mCallback.onNextClicked();
+                }
+
+
+
             }
         });
-
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onTermsCancelled();
-            }
-        });
-
-        if(mLearnMoreButton != null){
-            mLearnMoreButton.setMovementMethod(LinkMovementMethod.getInstance());
-        }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallback = (TermsClickListener) activity;
+            mCallback = (OnClickListener) activity;
         } catch(ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + activity.getString(R.string.terms_callback_exception_message));
@@ -115,4 +114,5 @@ public class TermsFragment extends Fragment {
         super.onDetach();
         mCallback = null;
     }
+
 }

@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist;
+package fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -40,6 +40,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;

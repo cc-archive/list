@@ -19,9 +19,9 @@
 
 package org.creativecommons.thelist;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +29,16 @@ import android.widget.Button;
 
 import org.creativecommons.thelist.utils.ListUser;
 
+import fragments.ExplainerFragment;
 
-public class StartActivity extends Activity {
+
+public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener {
     ListUser mCurrentUser = new ListUser();
     protected Button mStartButton;
     protected Button mAccountButton;
+
+    //Fragment
+    ExplainerFragment explainerFragment = new ExplainerFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +60,23 @@ public class StartActivity extends Activity {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Navigate to Next Activity
-                Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
-                startActivity(intent);
+                //Load explainerFragment
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.layout.activity_start,explainerFragment)
+                        .commit();
             }
         });
+
+
     }
+
+    @Override
+    public void onNextClicked() {
+        Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+        startActivity(intent);
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -102,6 +102,8 @@ public final class ApiConstants {
     public static final String LOGIN_USER = URL + "/users/login";
     //USER REGISTER: send email address and password
     public static final String REGISTER_USER = URL + "/users/register";
+    //USER PROFILE (append with EMAIL?)
+    public static final String USER_PROFILE = URL + "/api/users/";
 
 
 }

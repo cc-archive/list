@@ -66,6 +66,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import fragments.ConfirmFragment;
+import fragments.LoginFragment;
+import fragments.TermsFragment;
+
 
 public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
         TermsFragment.TermsClickListener, ConfirmFragment.ConfirmListener {
@@ -74,7 +78,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
     protected JSONObject mCurrentUserObject;
@@ -198,7 +202,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //TODO: if logged in, get user’s list
         //Create Object of List Item IDs to send
-        JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS, this);
+        JSONObject UserItemObject = SharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS, this);
 
         JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, UserItemObject,
                 new Response.Listener<JSONObject>() {
