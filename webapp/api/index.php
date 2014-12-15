@@ -128,7 +128,7 @@ with('/api/users', function () {
 
         $foo = $user->getUserInfo($result);
 
-        echo $foo;
+        echo json_encode($foo, JSON_PRETTY_PRINT);
 
         curl_close($curl);
 
