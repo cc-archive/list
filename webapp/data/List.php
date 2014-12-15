@@ -53,6 +53,31 @@ class UserList {
         return $data;
     }
 
+    function getMakerProfile($makerid) {
+
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+        $params = array();
+        $query = 'SELECT * From Makers WHERE id = ?';
+        $params[] = $listid;
+
+        try {
+            $res = $adodb->CacheGetAll(500, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+
+    }
 
     function getMakerList($number, $makerid, $offset = 0, $from = false, $to = false) {
         $data = UserList::getListItems($number, 0, $makerid, $offset, $from, $to);
