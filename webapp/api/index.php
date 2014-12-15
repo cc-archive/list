@@ -173,13 +173,14 @@ with('/api/userlist', function () {
 
     respond('GET', '/[:id]', function ($request, $response) {
 
-	$id =$request->id;
+	$id=$request->id;
 
         $list = new UserList();
 
-        $selection = $list->getUserTopList(100, $userid);
+        $selection = $list->getUserTopList(100, $id);
 
         $output = json_encode($selection, JSON_PRETTY_PRINT);
+
         echo $output;
 
     });
