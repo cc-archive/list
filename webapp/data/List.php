@@ -61,7 +61,7 @@ class UserList {
 
         $params = array();
         $query = 'SELECT * From Makers WHERE id = ?';
-        $params[] = $listid;
+        $params[] = $makerid;
 
         try {
             $res = $adodb->CacheGetAll(500, $query, $params);
