@@ -76,4 +76,24 @@ class User {
                 $this->makerid          = $row['makerid'];
             }
         }
+
+        function getUserInfo($email) {
+
+            global $adodb;
+            $query = 'SELECT * FROM Users WHERE lower(email) = lower(' . $adodb->qstr($email) . ') LIMIT 1';
+
+            $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+            $row = $adodb->CacheGetRow(1, $query);
+
+            if (is_array($row)) {
+
+                $this->email            = $row['email'];
+                $this->id               = $row['id'];
+                $this->makerid          = $row['makerid'];
+            }
+
+        }
+
+
+
 }
