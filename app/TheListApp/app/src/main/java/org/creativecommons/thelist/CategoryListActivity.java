@@ -241,8 +241,6 @@ public class CategoryListActivity extends Activity {
         String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user";
 
         //Create Object to send
         JSONObject UserCategoriesObject = SharedPreferencesMethods.createCategoryListObject

@@ -45,12 +45,20 @@ public final class ApiConstants {
     public static final String CATEGORY_ID = "id";
 
     //List Item
-    public static final String ITEM_NAME = "name";
+    public static final String ITEM_MAKER_ID = "makerid";
     public static final String ITEM_ID = "id";
+    public static final String ITEM_NAME = "title";
+    public static final String ITEM_DESCRIPTION = "description";
+    public static final String ITEM_URI = "uri";
+    public static final String ITEM_PHOTOS = "approved";
     public static final String ITEM_CATEGORY = "category";
-    public static final String MAKER_ID = "makerid";
-    public static final String MAKER_NAME = "user";
-    public static final String EXAMPLE_URL = "exampleUrl";
+
+    //public static final String EXAMPLE_URL = "exampleUrl";
+
+    //Maker Item
+    public static final String MAKER_ID = "id";
+    public static final String MAKER_NAME = "name";
+    public static final String MAKER_URI = "uri";
 
     //Photo
     public static final String PHOTO_ID = "id";
@@ -95,7 +103,7 @@ public final class ApiConstants {
     //GET Categories
     public static final String GET_CATEGORIES = URL + "/category/";
     //GET Maker Object by ID
-    public static final String GET_MAKER_NAME = URL + "/user/";
+    public static final String GET_MAKER_NAME = URL + "/makers/";
 
     //TODO: API not ready yet
     //USER LOGIN: send email address in password; return user token

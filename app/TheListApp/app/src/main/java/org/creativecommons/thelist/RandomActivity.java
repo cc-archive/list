@@ -114,6 +114,7 @@ public class RandomActivity extends Activity {
                         if(mCurrentUser.isLoggedIn()) {
                             //TODO: DO PUT REQUEST TO USER LIST
 
+
                         } else {
                             //TODO: Save item id to list
                             //Create list of items
@@ -141,7 +142,9 @@ public class RandomActivity extends Activity {
                         //TODO: SAVE LIST TO PREFERENCES AND GO TO NEW ACTIVITY
                         //If user is logged in, send chosen list items to DB
                         if(mCurrentUser.isLoggedIn()) {
-                            putRandomItemsRequest();
+                            //TODO: Check: this takes all user selections and sends at once
+                            //putRandomItemsRequest();
+                            Log.v(TAG, "user is logged in but items should already be in user list");
                         }
                         else {
                             //Get array of selected item IDS
@@ -154,7 +157,6 @@ public class RandomActivity extends Activity {
                                             SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                             userItemList.toString(), mContext);
                         }
-
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -196,30 +198,15 @@ public class RandomActivity extends Activity {
         }
         else {
             try {
-
                 mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
                 //Store values from response JSON Array
                 mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
-                mMakerID = mListItemData.getString(ApiConstants.MAKER_ID);
+                mMakerID = mListItemData.getString(ApiConstants.ITEM_MAKER_ID);
 
                 getMakerRequest(mMakerID); //Updates UI as well
 
                 itemPositionCount++;
 
-//                //If the user has seen the item before, select a new item
-//                //TODO: use this to prevent user of seeing repeat items in a single session?
-//                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() < 20){
-//                    Log.v(TAG, "this item has been viewed before");
-//                    getRandomItemRequest();
-//                } else {
-//                    Log.v(TAG, "this item is new to me");
-//                    //Add item ID to list of items user has seen
-//                    mItemsViewed.add(mItemID);
-//                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
-//                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
-//                    //Update UI
-//                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
-//                }
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }
@@ -233,9 +220,7 @@ public class RandomActivity extends Activity {
     private void getRandomItemRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        String url = ApiConstants.GET_CATEGORIES;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/category";
+        String url = ApiConstants.GET_RANDOM_ITEMS;
 
         JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -243,11 +228,14 @@ public class RandomActivity extends Activity {
                     public void onResponse(JSONArray response) {
                         //Handle Data
                         mRandomItemData = response;
+                        Log.v("HI RANDOM DATA", response.toString());
 
                         try {
                             mMakerID = response.getJSONObject(itemPositionCount).getString("makerid");
+                            Log.v("THIS IS MY MAKER", mMakerID);
+                            updateList();
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.v(TAG, e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -271,18 +259,21 @@ public class RandomActivity extends Activity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        //Handle Data
-                        mRandomItemData = response;
                         try {
+                            //Handle Response
+                            mMakerNameData = response.getJSONObject(0);
+                            Log.v("HI RANDOM MAKER DATA", mMakerNameData.getString("name"));
+
+                            //mItemName is from previous request! (it’s supposed to be here, bro!)
                             mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
                             mMakerName = mMakerNameData.getString(ApiConstants.MAKER_NAME);
+
+                            //Update UI
+                            mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.v(TAG, e.getMessage());
                         }
-
-                        //Update UI
-                        mTextView.setText(mMakerName + " needs a picture of " + mItemName);
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -294,31 +285,20 @@ public class RandomActivity extends Activity {
             }
         });
         queue.add(makerRequest);
-    } //getRandomItemRequest
+    } //getMakerRequest
 
-    //Add random item to user list
+    //Add SINGLE random item to user list
     private void putRandomItemsRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
+
+        //TODO: session token will know which user this is?
         String userID = mCurrentUser.getUserID();
-        //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
 
-        //Retrieve User list item preferences
-        JSONArray userPreferences = SharedPreferencesMethods.RetrieveSharedPreference
-                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
-
-        //Create Object to send
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put(ApiConstants.USER_ITEMS, userPreferences);
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        //Log.v(TAG,jso.toString());
+        //TODO: send single item ID to add item to user list
 
         //Add items to user list
-        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.POST, url, jso,
+        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

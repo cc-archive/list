@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/explainer1"
+            android:text=""
             android:lineSpacingMultiplier="1.2"
             android:paddingBottom="15dp"
             android:id="@+id/intro"

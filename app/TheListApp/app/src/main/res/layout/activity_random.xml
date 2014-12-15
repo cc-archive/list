@@ -29,7 +29,7 @@
             android:textStyle="normal"
             android:maxLines="5"
             android:lineSpacingMultiplier="1.2"
-            android:text="Britain needs a picture of Lasagna"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

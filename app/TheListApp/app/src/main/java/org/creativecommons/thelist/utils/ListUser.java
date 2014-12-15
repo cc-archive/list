@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,13 +148,15 @@ public class ListUser {
                         //Log.v(TAG,response.toString());
                         JSONObject responseData = response;
                         //TODO: set token in ListUser
-                        //TODO: Save token in sharedPreferences
+                        //TODO: Save session token in sharedPreferences
                         logInState = true;
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
             }
         });
         queue.add(logInUserRequest);

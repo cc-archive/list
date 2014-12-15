@@ -40,10 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Explainer1Activity"
-            android:label="@string/title_activity_explainer1" >
-        </activity>
     </application>
 
 </manifest>
