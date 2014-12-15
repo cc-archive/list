@@ -105,6 +105,8 @@ with('/api/items', function () {
 
 with('/api/users', function () {
 
+    $user = new User();
+
     respond('POST', '/login', function ($request, $response) {
 
         $url = 'https://login.creativecommons.org/x.php';
@@ -123,6 +125,10 @@ with('/api/users', function () {
         curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
 
         $result = curl_exec($curl);
+
+        $foo = $user->getUserInfo($result);
+
+        echo $foo;
 
         curl_close($curl);
 
