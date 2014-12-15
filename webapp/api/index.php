@@ -121,6 +121,7 @@ with('/api/users', function () {
         curl_setopt($curl,CURLOPT_URL, $url);
         curl_setopt($curl,CURLOPT_POST, count($fields));
         curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($curl);
 
