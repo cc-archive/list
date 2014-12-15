@@ -16,6 +16,10 @@ See it here: https://thelist.creativecommons.org/api/items
 
 See it here: https://thelist.creativecommons.org/api/items/1
 
+* GET /api/maker/1 -- get the maker's profile
+
+See it here: https://thelist.creativecommons.org/api/maker/1
+
 == In progress ==
 
 * POST /api/items/N -- add item N to your list
