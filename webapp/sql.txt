@@ -1,35 +1,28 @@
 drop table if exists Users;
-drop table if exists Meta;
 drop table if exists UserList;
 drop table if exists Photos;
 
 CREATE TABLE Users (
-email VARCHAR(255),
+email VARCHAR(255) NOT NULL,
 makerid int(11),
 id int(11) NOT NULL auto_increment,
-primary KEY (id)
-);
-
-CREATE TABLE Meta (
-id int(11) NOT NULL auto_increment,
-makerid int(11),
 primary KEY (id)
 );
 
 CREATE TABLE UserList (
 id int(11) NOT NULL auto_increment,
-userid int(11),
-listid int(11),
+userid int(11) NOT NULL,
+listid int(11) NOT NULL,
 complete int(11),
 primary KEY(id)
 );
 
 CREATE TABLE Photos (
 id int(11) NOT NULL auto_increment,
-userid int(11),
-filename varchar(255),
+userid int(11) NOT NULL,
+filename varchar(255) NOT NULL,
 url varchar(255),
-listitem int(11),
+listitem int(11) NOT NULL,
 primary KEY (id)
 );
 
@@ -47,23 +40,23 @@ drop table if exists Categories;
 
 CREATE TABLE Makers (
 id int(11) NOT NULL auto_increment,
-name VARCHAR(255),
+name VARCHAR(255) NOT NULL,
 uri VARCHAR(255),
 primary KEY (id)
 );
 
 CREATE TABLE Categories (
 id int(11) NOT NULL auto_increment,
-title VARCHAR(255),
-makerid int(11),
+title VARCHAR(255) NOT NULL,
+makerid int(11) NOT NULL,
 approved int(11),
 primary KEY (id)
 );
 
 CREATE TABLE List (
 id int(11) NOT NULL auto_increment,
-makerid int(11),
-title VARCHAR(255),
+makerid int(11) NOT NULL,
+title VARCHAR(255) NOT NULL,
 description TEXT,
 uri VARCHAR(255),
 approved int(11),
