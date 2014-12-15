@@ -67,11 +67,11 @@ alter table List add unique (uri);
 
 
 insert into Makers (name, uri) values ('Catatonia', 'http://en.wikipedia.org/wiki/Catatonia_%28band%29');
-insert into Makers (name, uri) values ('Joy Division', '');
-insert into Makers (name, uri) values ('The Smiths', '');
-insert into Makers (name, uri) values ('Pulp', '');
-insert into Makers (name, uri) values ('The Freshies', '');
-insert into Makers (name, uri) values ("Gorky's Zygotic Mynci", '');
+insert into Makers (name, uri) values ('Joy Division', 'factoryrecords.net');
+insert into Makers (name, uri) values ('The Smiths', 'smiths.co.uk');
+insert into Makers (name, uri) values ('Pulp', 'pulponline.com');
+insert into Makers (name, uri) values ('The Freshies', 'tf.biz');
+insert into Makers (name, uri) values ("Gorky's Zygotic Mynci", 'gzm.net');
 
 
 INSERT into Categories (approved, makerid, title) values (1, 1, "Animals");
