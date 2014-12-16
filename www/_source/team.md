@@ -26,6 +26,11 @@ Technology Lead at Creative Commons. Bearded free software hacker. GNU developer
 
 Software Development Intern at Playground Inc. Designer turned developer. Also in love with service design.
 
+## Maciej Jasiobedzki
+
+<img class="float-left" width="200" src="/img/maciej.jpg" />
+
+Technical Director at Playground Inc. Human being.
 
 ## David Bartholomew
 
