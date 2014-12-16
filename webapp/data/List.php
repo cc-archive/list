@@ -183,7 +183,7 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
 
         $params = array();
-        $query = 'SELECT l.*,m.* From List l LEFT JOIN Makers m on (l.makerid = m.id) WHERE l.id = ?';
+        $query = 'SELECT l.*,m.name, m.uri From List l LEFT JOIN Makers m on (l.makerid = m.id) WHERE l.id = ?';
         $params[] = $listid;
 
         try {
@@ -209,7 +209,7 @@ class UserList {
 
         if ($userid) {
             $params = array();
-            $query = 'SELECT ul.*, l.*, m.* FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete IS NULL AND ul.userid=?';
+            $query = 'SELECT ul.*, l.*, m.name, m.uri FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete IS NULL AND ul.userid=?';
             $params[] = $userid;
 
         }
@@ -223,7 +223,7 @@ class UserList {
 
         if ($query == "") {
             $params = array();
-            $query = "SELECT DISTINCT l.*, m.* from List l LEFT JOIN Makers m ON (l.makerid = m.id)  WHERE APPROVED=1 ORDER BY RAND()";
+            $query = "SELECT DISTINCT l.*, m.name, m.uri from List l LEFT JOIN Makers m ON (l.makerid = m.id)  WHERE APPROVED=1 ORDER BY RAND()";
         }
         
 
