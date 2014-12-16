@@ -24,7 +24,13 @@
   <div class="form-group">
     <label for="list-description">Optional description</label>
     <p><textarea class="form-control" name="list-description" id="list-description"></textarea></p>
-    <p class="help-block">Example block-level help text here.</p>
+    <p class="help-block"></p>
+    <label for="list-category">Category</label>
+    <p><select name="list-category" id="list-category">
+      {foreach from=$categories item=cat}
+	<option vale="{$cat.id}">{$cat.title}</option>
+      {/foreach}
+    </select></p>
   </div>
   <button type="submit" class="btn btn-success">Submit</button>
 

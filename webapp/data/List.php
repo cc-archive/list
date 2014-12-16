@@ -42,6 +42,28 @@ class UserList {
 	 *
 	 * @param string $email The name of the user to load
 	 */
+    
+    function getCategories($makerid) {
+
+        global $adodb;
+
+        $query = "SELECT * FROM Categories WHERE approved = 1 AND makerid=?";
+        
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($makerid)
+            ));
+
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            //echo "There was an error";
+            
+            return null;
+        }
+           
+    }
 
     function addToTheList($makerid, $subject, $desc, $url) {
 
@@ -58,15 +80,12 @@ class UserList {
             ));
 
 	    $adodb->CacheFlush();
-
-	    header('Location: add.php');
-
             
         } catch (Exception $e) {
             
             //echo $e;
 
-            echo "There was an error";
+            //echo "There was an error";
             
             return null;
         }
@@ -81,7 +100,7 @@ class UserList {
         $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
 
         try {
-            $res = $adodb->Execute(sprintf($query,
+            $res = $adodb->CacheGetAll(60, sprintf($query,
             $adodb->qstr($userid),
             $adodb->qstr($listitem)
             ));
