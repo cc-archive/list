@@ -185,6 +185,20 @@ with('/api/userlist', function () {
 
     });
 
+    respond('POST','/[:user]/[:id]', function ($request, $response) {
+
+        $item=$request->id;
+	$userid=$request->user;
+
+        // We'll need to figure out a way to do these more securely
+
+        $list = new UserList();
+        $save = $list->addToMyList($item, $userid);
+
+        echo "[]";
+
+    });
+
 });
 
 with('/api', function () {
