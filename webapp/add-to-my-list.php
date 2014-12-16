@@ -29,7 +29,7 @@ if ($userid) {
     if ($auth) {
         $item = $_POST['list-item'];
         $list = new UserList();
-        $save = list->addToMyList($item, $userid);
+        $save = $list->addToMyList($item, $userid);
         header('Location: my-list.php');
     }
 }
