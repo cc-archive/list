@@ -43,6 +43,62 @@ class UserList {
 	 * @param string $email The name of the user to load
 	 */
 
+    function addToTheList($makerid, $subject, $desc, $url) {
+
+        global $adodb;
+
+        $query = "INSERT INTO List (makerid, title, description, uri, approved) VALUES (%s,%s,%s,%s,1)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($makerid),
+            $adodb->qstr($subject),
+            $adodb->qstr($desc),
+            $adodb->qstr($url)
+            ));
+
+	    $adodb->CacheFlush();
+
+	    header('Location: add.php');
+
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            echo "There was an error";
+            
+            return null;
+        }
+
+
+    }
+
+    function addToMyList($listitem, $userid){
+
+        global $adodb;
+
+        $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($listitem)
+            ));
+
+    	    $adodb->CacheFlush();	
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            // echo "There was an error";
+            
+            return null;
+        }
+
+    }
+
     function getUserTopList($number, $userid, $offset = 0, $from = false, $to = false) {
         $data = UserList::getListItems($number, $userid, 0, $offset, $from, $to);
 

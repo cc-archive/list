@@ -28,7 +28,7 @@ if ($userid) {
 
     if ($auth) {
         $item = $_POST['list-item'];
-        $list = new List();
+        $list = new UserList();
         $save = list->addToMyList($item, $userid);
         header('Location: my-list.php');
     }

@@ -29,7 +29,7 @@ if ($makerid) {
         $subject = $_POST['list-title'];
         $desc = $_POST['list-description'];
         $url = $_POST['list-url'];
-        $list = new List();
+        $list = new UserList();
         $save = $list->addToTheList($makerid, $subject, $desc, $url);
         header('Location: add.php');
         
