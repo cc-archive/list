@@ -187,6 +187,16 @@ with('/api/userlist', function () {
 
 });
 
+with('/api/', function () {
+
+    respond('GET', '/', function ($request, $response) {
+
+        require_once('api.html');
+
+    });
+
+});
+
 
 
 dispatch();
