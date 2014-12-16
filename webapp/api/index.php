@@ -187,10 +187,11 @@ with('/api/userlist', function () {
 
 });
 
-with('/api/', function () {
+with('/api', function () {
 
     respond('GET', '/', function ($request, $response) {
 
+        header('Content-Type: text/html; charset=utf8');
         require_once('api.html');
 
     });
