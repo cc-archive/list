@@ -43,7 +43,7 @@ if (isset($_REQUEST['hs'])) {
 
             $list = new UserList();
             
-            $categories = $list->getCategories($makerid);
+            $categories = $list->getMakerCategories($makerid);
 
             //$listitems = $list->getMakerList(500, $makerid);
 

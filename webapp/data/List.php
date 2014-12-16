@@ -43,7 +43,7 @@ class UserList {
 	 * @param string $email The name of the user to load
 	 */
     
-    function getCategories($makerid) {
+    function getMakerCategories($makerid) {
 
         global $adodb;
 
