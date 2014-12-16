@@ -183,7 +183,7 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
 
         $params = array();
-        $query = 'SELECT l.*,m.id From List l LEFT JOIN Makers m on (l.makerid = m.id) WHERE l.id = ?';
+        $query = 'SELECT l.*,m.* From List l LEFT JOIN Makers m on (l.makerid = m.id) WHERE l.id = ?';
         $params[] = $listid;
 
         try {
