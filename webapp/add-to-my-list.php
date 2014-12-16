@@ -22,42 +22,16 @@
 // This needs a lot of work to make it not horribly unsafe.
 
 require "templating.php";
-
+require "data/List.php";
 
 if ($userid) {
 
     if ($auth) {
-
-        global $adodb;
-        
         $item = $_POST['list-item'];
-
-        $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
-
-        try {
-            $res = $adodb->Execute(sprintf($query,
-            $userid,
-            $adodb->qstr($item)
-            ));
-
-    	    $adodb->CacheFlush();	
-
-	    header('Location: my-list.php');
-
-            
-        } catch (Exception $e) {
-            
-            //echo $e;
-
-	  echo "There was an error";
-            
-            return null;
-        }
-
-
+        $list = new List();
+        $save = list->addToMyList($item, $userid);
+        header('Location: my-list.php');
     }
-
 }
-
 
 ?>
