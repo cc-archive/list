@@ -40,6 +40,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Google Analytics Version v4 needs this value for easy tracking -->
+        <meta-data android:name="com.google.android.gms.analytics.globalConfigResource"
+            android:resource="@xml/global_tracker" />
+
     </application>
 
 </manifest>
