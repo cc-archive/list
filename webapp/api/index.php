@@ -133,13 +133,15 @@ with('/api/users', function () {
 
             global $adodb;
 
+            $email = $request->param('username');
+
             $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
             , $adodb->qstr($email));
 
             try {
                 $res = $adodb->Execute($q);
                 $user = new UserList();
-                $foo = $user->getUserInfo($request->param('username'));
+                $foo = $user->getUserInfo($email);
 
             } catch (Exception $e) {
                 echo "There was an error";
