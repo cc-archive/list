@@ -118,6 +118,12 @@ with('/api/photos', function () {
         $image = fopen($tmp, "w") or die("Unable to open file!");
         fwrite($image, $filedata);
         fclose($image);
+
+        
+        $list = new UserList;       
+        $filename = $tmp;
+                    
+        $result = $list->addPhoto($userid, $filename, $listitem);
         
     });
 
