@@ -94,7 +94,7 @@ with('/api/items', function () {
 
     });
 
-    respond('POST','/[:id]', function ($rquest, $response) {
+    respond('POST','/[:id]', function ($request, $response) {
 
         echo "This is where you can add things to your list";
 
@@ -102,6 +102,21 @@ with('/api/items', function () {
 
 });
 
+with('/api/photos', function () {
+
+    respond('POST', '/[:userid]/[:id]', function ($request, $response) {
+
+        $userid = $request->userid;
+        $listitem = $request->id;
+        
+        $filedata = $request->param('filedata');
+
+        echo $filedata;
+        
+
+    });
+
+});
 
 with('/api/users', function () {
 
