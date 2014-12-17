@@ -129,7 +129,7 @@ with('/api/users', function () {
 
         $foo = $user->getUserInfo($result);
 
-        if ($foo == "") {
+        if (count($foo) == 0) {
 
             global $adodb;
 
