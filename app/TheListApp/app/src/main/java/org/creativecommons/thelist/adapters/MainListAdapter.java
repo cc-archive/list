@@ -71,23 +71,29 @@ public class MainListAdapter extends BaseAdapter {
             holder.nameLabel = (TextView)convertView.findViewById(R.id.list_item_name);
             holder.makerLabel = (TextView)convertView.findViewById(R.id.list_item_maker);
 
-            //getting Data for the row
-            MainListItem l = listItems.get(position);
-
-            //Item Name
-            holder.nameLabel.setText(l.getItemName());
-
-            //Maker Name
-            holder.makerLabel.setText("requested by " + l.getMakerName());
-
-            //Camera Icon
-            holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder)convertView.getTag();
         }
 
+        //Getting Data for the row
+        MainListItem l = listItems.get(position);
+        //Item Name
+        holder.nameLabel.setText(l.getItemName());
+        //Maker Name
+        holder.makerLabel.setText("requested by " + l.getMakerName());
+        //Camera Icon
+        holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
+
+
+        //holder.removeAllViews();
         return convertView;
+
+
     }
 
     private static class ViewHolder {
+
         ImageView iconImageView;
         TextView nameLabel;
         TextView makerLabel;

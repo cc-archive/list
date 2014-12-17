@@ -64,9 +64,7 @@ public class RandomActivity extends Activity {
     //GET Request
     protected JSONArray mRandomItemData;
     protected JSONObject mListItemData;
-    protected JSONObject mMakerNameData;
     String mMakerName;
-    String mMakerID;
     String mItemName;
     String mItemID;
 
@@ -75,7 +73,7 @@ public class RandomActivity extends Activity {
 
     //Handle Data
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    private ArrayList<String> mItemsViewed = new ArrayList<String>();
+    //private ArrayList<String> mItemsViewed = new ArrayList<String>();
 
     //UI Elements
     TextView mTextView;
@@ -107,13 +105,12 @@ public class RandomActivity extends Activity {
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     //Once yes has been hit 3 times, forward to
                     //TODO: Also condition that user is logged in
-                    if(mItemList.size() < 3) {
+                    if(mItemList.size() < 2) {
                         if(mCurrentUser.isLoggedIn()) {
                             //TODO: DO PUT REQUEST TO USER LIST
-
+                            putRandomItemsRequest(); //includes confirmation toast
 
                         } else {
                             //TODO: Save item id to list
@@ -123,21 +120,29 @@ public class RandomActivity extends Activity {
                             listItem.setItemName(mItemName);
                             listItem.setMakerName(mMakerName);
                             mItemList.add(listItem);
+
+                            Log.v("ITEM ID", mItemID);
+
+                            //Toast: Confirm List Item has been added
+                            final Toast toast = Toast.makeText(RandomActivity.this,
+                                    "Added to Your List", Toast.LENGTH_SHORT);
+                            toast.show();
+                            new android.os.Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    toast.cancel();
+                                }
+                            }, 1500);
                         }
-
-                        //Toast: Confirm List Item has been added
-                        final Toast toast = Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT);
-                        toast.show();
-                        new android.os.Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                toast.cancel();
-                            }
-                        }, 1500);
-
-                        updateList();
-
-                    } else {
+                        updateView();
+                    }
+                    else {
+                        //Create list of items
+                        MainListItem listItem = new MainListItem();
+                        listItem.setItemID(mItemID);
+                        listItem.setItemName(mItemName);
+                        listItem.setMakerName(mMakerName);
+                        mItemList.add(listItem);
 
                         //TODO: SAVE LIST TO PREFERENCES AND GO TO NEW ACTIVITY
                         //If user is logged in, send chosen list items to DB
@@ -165,12 +170,12 @@ public class RandomActivity extends Activity {
                     }
                 }
             });
+
             //No Button Functionality
             NoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO:THIS ELSE NEEDS TO UPDATE LIST
-                    updateList();
+                    updateView();
                 }
             });
 
@@ -190,7 +195,7 @@ public class RandomActivity extends Activity {
         }
     } //onCreate
 
-    private void updateList() {
+    private void updateView() {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
@@ -198,20 +203,28 @@ public class RandomActivity extends Activity {
         }
         else {
             try {
-                mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
-                //Store values from response JSON Array
-                mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
-                mMakerID = mListItemData.getString(ApiConstants.ITEM_MAKER_ID);
+                if(itemPositionCount == mRandomItemData.length()) {
+                    getRandomItemRequest();
+                    //TODO: or take to next activity?
+                } else {
+                    mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
+                    Log.v(TAG, mListItemData.toString());
+                    //Store values from response JSON Array
+                    mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
+                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+                    Log.v(TAG +" this is the maker name for this item", mMakerName);
+                    //Update UI
+                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
 
-                getMakerRequest(mMakerID); //Updates UI as well
-
-                itemPositionCount++;
+                    itemPositionCount++;
+                }
 
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }
         }
-    } //updateList
+    } //updateView
 
 //    ------------------------------------------------------------------------------------------
 //    ------------------------------------------------------------------------------------------
@@ -229,14 +242,8 @@ public class RandomActivity extends Activity {
                         //Handle Data
                         mRandomItemData = response;
                         Log.v("HI RANDOM DATA", response.toString());
+                        updateView();
 
-                        try {
-                            mMakerID = response.getJSONObject(itemPositionCount).getString("makerid");
-                            Log.v("THIS IS MY MAKER", mMakerID);
-                            updateList();
-                        } catch (JSONException e) {
-                            Log.v(TAG, e.getMessage());
-                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -250,54 +257,15 @@ public class RandomActivity extends Activity {
         queue.add(randomItemRequest);
     } //getRandomItemRequest
 
-    private void getMakerRequest(String makerID) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        //Genymotion Emulator
-        String url = ApiConstants.GET_MAKER_NAME + makerID;
-
-        JsonArrayRequest makerRequest = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            //Handle Response
-                            mMakerNameData = response.getJSONObject(0);
-                            Log.v("HI RANDOM MAKER DATA", mMakerNameData.getString("name"));
-
-                            //mItemName is from previous request! (it’s supposed to be here, bro!)
-                            mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
-                            mMakerName = mMakerNameData.getString(ApiConstants.MAKER_NAME);
-
-                            //Update UI
-                            mTextView.setText(mMakerName + " needs a picture of " + mItemName);
-
-                        } catch (JSONException e) {
-                            Log.v(TAG, e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("error", error.toString());
-                requestMethods.showErrorDialog(mContext,
-                        getString(R.string.error_title),
-                        getString(R.string.error_message));
-            }
-        });
-        queue.add(makerRequest);
-    } //getMakerRequest
-
     //Add SINGLE random item to user list
     private void putRandomItemsRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         //TODO: session token will know which user this is?
-        String userID = mCurrentUser.getUserID();
-        String url = ApiConstants.UPDATE_USER + userID;
+        String url = ApiConstants.ADD_ITEM + mCurrentUser.getUserID() + "/" + mItemID;
 
-        //TODO: send single item ID to add item to user list
 
-        //Add items to user list
+        //Add singl item to user list
         JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.POST, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -306,10 +274,24 @@ public class RandomActivity extends Activity {
                         //Log.v(TAG,response.toString());
                         mPutResponse = response;
                         //TODO: do something with response?
+
+                        //Toast: Confirm List Item has been added
+                        final Toast toast = Toast.makeText(RandomActivity.this,
+                                "Added to Your List", Toast.LENGTH_SHORT);
+                        toast.show();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 1500);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
+
+                //TODO: Add “not successful“ toast
                 requestMethods.showErrorDialog(mContext,
                         getString(R.string.error_title),
                         getString(R.string.error_message));

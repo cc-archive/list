@@ -19,9 +19,32 @@
 
 package org.creativecommons.thelist.adapters;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.creativecommons.thelist.MainActivity;
+import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.RequestMethods;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainListItem {
     private String itemName, makerName;
     private String itemID;
+    private RequestMethods requestMethods;
+    private Context mContext;
+    private MainActivity mainActivity;
+    private ListUser mCurrentUser;
+    public boolean completed = false;
 
     public MainListItem() {
     }
@@ -55,4 +78,88 @@ public class MainListItem {
     public void setMakerName(String maker) {
         this.makerName = maker;
     }
+
+    public void setRequestMethods(RequestMethods rm) {
+        requestMethods = rm;
+    }
+
+    public void setContext(Context c) {
+        mContext = c;
+    }
+
+    public void setMainActivity(MainActivity m) {
+        mainActivity = m;
+    }
+
+    public void setListUser(ListUser lu) {
+        mCurrentUser = lu;
+    }
+
+    public void createNewUserListItem() {
+        RequestQueue queue = Volley.newRequestQueue(mainActivity);
+        String itemRequesturl = ApiConstants.GET_SINGLE_ITEM + String.valueOf(itemID);
+
+        JsonArrayRequest newUserListRequest = new JsonArrayRequest(itemRequesturl,
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    //Handle Data
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(0);
+                        setItemName(jsonObject.getString(ApiConstants.ITEM_NAME));
+                        setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
+                        setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
+                        completed = true;
+                        mainActivity.CheckComplete();
+                    } catch (JSONException e) {
+                        Log.v("MainListItem", e.getMessage());
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
+            }
+        });
+        queue.add(newUserListRequest);
+    }
+
+    //TODO: Test this
+//    public void addToUserList() {
+//        RequestQueue queue = Volley.newRequestQueue(mainActivity);
+//        String itemRequesturl = ApiConstants.ADD_ITEM + mCurrentUser.getUserID() + "/" + String.valueOf(itemID);
+//
+//        JsonArrayRequest addItemRequest = new JsonArrayRequest(itemRequesturl,
+//                new Response.Listener<JSONArray>() {
+//                    @Override
+//                    public void onResponse(JSONArray response) {
+//                        //Handle Data
+//                        try {
+//                            JSONObject jsonObject = response.getJSONObject(0);
+//                            setItemName(jsonObject.getString(ApiConstants.ITEM_NAME));
+//                            setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
+//                            setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
+//                            completed = true;
+//                            mainActivity.CheckComplete();
+//                        } catch (JSONException e) {
+//                            Log.v("MainListItem", e.getMessage());
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("error", error.toString());
+//                requestMethods.showErrorDialog(mContext,
+//                        mContext.getString(R.string.error_title),
+//                        mContext.getString(R.string.error_message));
+//            }
+//        });
+//        queue.add(addItemRequest);
+//    }
+
 }

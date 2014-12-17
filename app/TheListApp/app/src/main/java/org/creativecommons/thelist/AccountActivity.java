@@ -41,7 +41,7 @@ public class AccountActivity extends ActionBarActivity {
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    ListUser mCurrentUser = new ListUser();
+    ListUser mCurrentUser = new ListUser(mContext);
 
     //For Request
     protected JSONObject mUserData;
@@ -69,8 +69,8 @@ public class AccountActivity extends ActionBarActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPassword = mPasswordLoginField.getText().toString().trim();
                 mEmail = mEmailLoginField.getText().toString().trim();
+                mPassword = mPasswordLoginField.getText().toString().trim();
 
                 if(mPassword.isEmpty() || mEmail.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AccountActivity.this);
@@ -83,15 +83,14 @@ public class AccountActivity extends ActionBarActivity {
                 else {
                     //Login User
                     //TODO: Login the user (how does this work?)
-                    //mCurrentUser.logIn(mUsername, mPassword);
-
+                    mCurrentUser.logIn(mEmail, mPassword);
 
                     //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences
                     //2. Login now and pass the data to MainActivity to set things
                     //3. Set sharedPreferences in login() and retrieve them in MainActivity
 
                     //Add username, id, token to sharedPreferences
-                    Intent intent = new Intent(mContext, MainActivity.class);
+                    Intent intent = new Intent(mContext, RandomActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

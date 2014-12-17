@@ -114,8 +114,8 @@ public final class RequestMethods {
         JSONObject photoObject = new JSONObject();
 
         //Convert photo file to byte[]
-        byte[] fileBytes = FileHelper.getByteArrayFromFile(mContext, uri);
-        if(fileBytes == null) {
+        String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
+        if(fileString == null) {
             return null;
         } else {
             //reduce size for upload: may not be necessary
@@ -125,7 +125,7 @@ public final class RequestMethods {
             try {
                 photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
                 photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
-                photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileBytes);
+                photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileString);
             }
             catch (JSONException e) {
                 Log.e(TAG, e.getMessage());

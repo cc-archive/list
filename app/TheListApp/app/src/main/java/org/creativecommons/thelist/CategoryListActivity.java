@@ -254,19 +254,14 @@ public class CategoryListActivity extends Activity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            //TODO: Check response code + display error
-//                            if(responseCode != 200), get response data + show error
+                        //TODO: Check response code + display error
+                            //if(responseCode != 200), get response data + show error
 
-                            //Handle Data
-                            mPutResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            //Log.v(TAG, mPutResponse.toString());
+                        //Handle Data
+                        mPutResponse = response;
+                        //Log.v(TAG, mPutResponse.toString());
 
-                            //mProgressBar.setVisibility(View.INVISIBLE);
-
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
+                        //mProgressBar.setVisibility(View.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
             @Override

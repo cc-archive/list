@@ -28,7 +28,7 @@ public final class ApiConstants {
     //Limit how many items user will view before possibility of repeats (RandomActivity)
     //public static final int MAX_ITEMS_VIEWED = 5;
 
-
+    //TODO: Eventually get rid of this
     //Response Object
     public static final String RESPONSE_CONTENT = "content";
 
@@ -52,7 +52,6 @@ public final class ApiConstants {
     public static final String ITEM_URI = "uri";
     public static final String ITEM_PHOTOS = "approved";
     public static final String ITEM_CATEGORY = "category";
-
     //public static final String EXAMPLE_URL = "exampleUrl";
 
     //Maker Item
@@ -89,29 +88,37 @@ public final class ApiConstants {
     //GET Method
     public static final String GET_ALL_ITEMS = FAPI + "/item/";
     //GET Single Item Method
-    public static final String GET_SINGLE_ITEM = FAPI + "/item/";
+    //public static final String GET_SINGLE_ITEM = FAPI + "/item/";
     //POST, GET Photo
     public static final String POST_PHOTO = FAPI + "/photo/";
 
 
     //Real API
-
+    //Must add item ID
+    public static final String GET_SINGLE_ITEM = URL + "/items/";
     //Must add item ID
     public static final String POST_SINGLE_ITEM = URL + "/items/";
     //GET ITEMS (currently returns 20 random ones)
     public static final String GET_RANDOM_ITEMS = URL + "/items/";
     //GET Categories
     public static final String GET_CATEGORIES = URL + "/category/";
-    //GET Maker Object by ID
+    //GET Maker Object (+ID)
     public static final String GET_MAKER_NAME = URL + "/makers/";
+    //GET User List (+ ID)
+    public static final String GET_USER_LIST = URL + "/userlist/";
+    //POST Item to User List (+ ID , + ItemID)
+    public static final String ADD_ITEM = URL + "/userlist/";
+    //POST photo (+ ID, + ItemID)
+    public static final String ADD_PHOTO = URL + "/photo/";
+    //POST login (+ email and password)
+    public static final String LOGIN_USER = URL + "/users/login";
 
     //TODO: API not ready yet
     //USER LOGIN: send email address in password; return user token
-    public static final String LOGIN_USER = URL + "/users/login";
-    //USER REGISTER: send email address and password
-    public static final String REGISTER_USER = URL + "/users/register";
-    //USER PROFILE (append with EMAIL?)
-    public static final String USER_PROFILE = URL + "/api/users/";
 
+    //USER REGISTER: send email address and password
+    //public static final String REGISTER_USER = URL + "/users/register";
+    //USER PROFILE (append with EMAIL?)
+    //public static final String USER_PROFILE = URL + "/api/users/";
 
 }
