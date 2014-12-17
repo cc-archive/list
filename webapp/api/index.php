@@ -111,9 +111,14 @@ with('/api/photos', function () {
         
         $filedata = $request->param('filedata');
 
-        echo $filedata;
-        
+        $filedata = base64_decode($filedata);
 
+        $tmp = "" . tempnam("../list-uploads/", "process-me-" . $userid . "-");
+
+        $image = fopen($tmp, "w") or die("Unable to open file!");
+        fwrite($image, $filedata);
+        fclose($image);
+        
     });
 
 });
