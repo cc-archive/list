@@ -42,33 +42,13 @@ if ($auth) {
        if (move_uploaded_file($_FILES["list-image"]["tmp_name"], $tmp))
          {
 
-        global $adodb;
-        
-        $filename = $tmp;
-	$id = $_POST['id'];
+             $list = new UserList;       
+             $filename = $tmp;
+             $id = $_POST['id'];
 
-        $query = "INSERT INTO Photos (userid, filename, listitem) VALUES (%s,%s, %s)";
+             $result = $list->addPhoto($userid, $filename, $id);
 
-        try {
-	  $res = $adodb->Execute(sprintf($query,
-					 $userid,
-					 $adodb->qstr($filename),
-					 $adodb->qstr($id)
-					 ));
-
-	  $adodb->CacheFlush();
-
-	  header('Location: my-list.php?msg=1');
-
-            
-        } catch (Exception $e) {
-            
-	  //echo $e;
-
-	  echo "There was an error";
-            
-	  return null;
-        }
+             header('Location: my-list.php?msg=1');
 
          }
        else

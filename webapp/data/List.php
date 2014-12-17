@@ -42,6 +42,33 @@ class UserList {
 	 *
 	 * @param string $email The name of the user to load
 	 */
+
+    function addPhoto($userid, $filename, $listitem) {
+
+        global $adodb;
+
+        $query = "INSERT INTO Photos (userid, filename, listitem) VALUES (%s,%s, %s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($filename),
+            $adodb->qstr($listitem)
+            ));
+
+            $adodb->CacheFlush();
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            echo "There was an error";
+            
+            return null;
+        }
+
+
+    }
     
     function getMakerCategories($makerid) {
 
