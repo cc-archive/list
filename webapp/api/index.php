@@ -125,13 +125,11 @@ with('/api/users', function () {
 
         $result = curl_exec($curl);
 
-        if ($result) {
-
         $user = new UserList();
 
         $foo = $user->getUserInfo($result);
 
-        } else {
+        if ($foo = "") {
 
             global $adodb;
 
