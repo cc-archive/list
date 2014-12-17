@@ -125,9 +125,30 @@ with('/api/users', function () {
 
         $result = curl_exec($curl);
 
+        if ($result) {
+
         $user = new UserList();
 
         $foo = $user->getUserInfo($result);
+
+        } else {
+
+            global $adodb;
+
+            $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
+            , $adodb->qstr($email));
+
+            try {
+                $res = $adodb->Execute($q);
+                $user = new UserList();
+                $foo = $user->getUserInfo($request->param('username'));
+
+            } catch (Exception $e) {
+                echo "There was an error";
+                header('Content-Type: text/plain');
+                exit;
+            }
+        }
 
         echo json_encode($foo, JSON_PRETTY_PRINT);
 
