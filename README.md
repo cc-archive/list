@@ -13,10 +13,11 @@ people, and events that they need photographs of. And when users are
 in the right place at the right time, they can claim an item from the
 list and publish a photograph of it.
 
-* See our [functional spec](spec.md)
+* See our [functional spec](docs/spec.md)
 
-    The List
-    Copyright (C) 2014 Creative Commons
+    The List powered by Creative Commons
+	
+    Copyright (c) 2014 Creative Commons
 
     This program is free software: you can redistribute it and/or
     modify it under the terms of the GNU Affero General Public License
