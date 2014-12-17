@@ -129,7 +129,7 @@ with('/api/users', function () {
 
         $foo = $user->getUserInfo($result);
 
-        if ($foo = "") {
+        if ($foo == "") {
 
             global $adodb;
 
