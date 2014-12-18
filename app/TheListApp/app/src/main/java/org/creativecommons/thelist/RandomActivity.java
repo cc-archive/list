@@ -32,12 +32,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.MainListItem;
@@ -89,6 +87,8 @@ public class RandomActivity extends Activity {
         setContentView(R.layout.activity_random);
         mContext = this;
 
+
+
         mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -110,7 +110,7 @@ public class RandomActivity extends Activity {
                     if(mItemList.size() < 2) {
                         if(mCurrentUser.isLoggedIn()) {
                             //TODO: DO PUT REQUEST TO USER LIST
-                            putRandomItemsRequest(); //includes confirmation toast
+                            mCurrentUser.addItemToUserList(mItemID); //includes confirmation toast
 
                         } else {
                             //TODO: Save item id to list
@@ -148,7 +148,7 @@ public class RandomActivity extends Activity {
                         //If user is logged in, send chosen list items to DB
                         if(mCurrentUser.isLoggedIn()) {
                             //TODO: Check: this takes all user selections and sends at once
-                            //putRandomItemsRequest();
+                            //postRandomItemsRequest();
                             Log.v(TAG, "user is logged in but items should already be in user list");
                         }
                         else {
@@ -256,50 +256,6 @@ public class RandomActivity extends Activity {
         });
         queue.add(randomItemRequest);
     } //getRandomItemRequest
-
-    //Add SINGLE random item to user list
-    private void putRandomItemsRequest() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        //TODO: session token will know which user this is?
-        String url = ApiConstants.ADD_ITEM + mCurrentUser.getUserID() + "/" + mItemID;
-
-
-        //Add singl item to user list
-        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.POST, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //get Response
-                        //Log.v(TAG,response.toString());
-                        mPutResponse = response;
-                        //TODO: do something with response?
-
-                        //Toast: Confirm List Item has been added
-                        final Toast toast = Toast.makeText(RandomActivity.this,
-                                "Added to Your List", Toast.LENGTH_SHORT);
-                        toast.show();
-                        new android.os.Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                toast.cancel();
-                            }
-                        }, 1500);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-
-                //TODO: Add “not successful“ toast
-                requestMethods.showErrorDialog(mContext,
-                        getString(R.string.error_title),
-                        getString(R.string.error_message));
-            }
-        });
-        queue.add(putItemsRequest);
-    } //putRandomItemsRequest
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

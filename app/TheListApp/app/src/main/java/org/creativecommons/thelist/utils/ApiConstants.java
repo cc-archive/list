@@ -54,16 +54,20 @@ public final class ApiConstants {
     public static final String ITEM_CATEGORY = "category";
     //public static final String EXAMPLE_URL = "exampleUrl";
 
+    //List Item Request
+    public static final String POST_ITEM_ID = "listid";
+    public static final String POST_USER_ID = "userid";
+
     //Maker Item
     public static final String MAKER_ID = "id";
     public static final String MAKER_NAME = "name";
     public static final String MAKER_URI = "uri";
 
     //Photo
-    public static final String PHOTO_ID = "id";
-    public static final String PHOTO_ITEM_ID = "itemID";
-    public static final String PHOTO_USER_ID = "userID";
-    public static final String PHOTO_BYTE_ARRAY = "photoFile";
+    //public static final String PHOTO_ID = "id";
+    //public static final String PHOTO_ITEM_ID = "itemID";
+    //public static final String PHOTO_USER_ID = "userID";
+    public static final String PHOTO_BYTE_ARRAY = "photo";
 
     //URL
     //TODO: Add all Endpoints

@@ -65,11 +65,18 @@ public class SharedPreferencesMethods {
         String value = sharedPref.getString(preferenceKey, null);
 
         //TODO: Switch to json library (JSONNNN)
+        //JSONArray catIds = null;
+
+//        try {
+//            catIds = new JSONArray(value);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         //Convert from String to Array
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(value);
         JsonArray array = element.getAsJsonArray();
-
+//
         //Make usable as JSONArray
         List<Integer> catIds = new ArrayList<Integer>();
         for (int i = 0; i < array.size(); i++) {
@@ -78,7 +85,7 @@ public class SharedPreferencesMethods {
 
         return new JSONArray(catIds);
     }
-
+    //Get User ID from SharedPreferences
     public static String getUserId(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(USER_ID_PREFERENCE, Context.MODE_PRIVATE);
         String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
@@ -143,6 +150,7 @@ public class SharedPreferencesMethods {
         return new JSONArray(catIds);
     }
 
+    //Retrieve User Item Preference
     public static JSONArray RetrieveUserItemPreference(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(LIST_ITEM_PREFERENCE, Context.MODE_PRIVATE);
         String value = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);

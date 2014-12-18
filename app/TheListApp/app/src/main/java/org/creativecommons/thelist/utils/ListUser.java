@@ -21,6 +21,7 @@ package org.creativecommons.thelist.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,12 +45,15 @@ public class ListUser {
     private String userID;
     private boolean logInState;
     private Context mContext;
+    private RequestMethods requestMethods;
     private ArrayList<MainListItem> userItems;
     private ArrayList<MainListItem> userCategories;
 
 
+
     public ListUser(Context mc) {
         mContext = mc;
+        requestMethods = new RequestMethods(mContext);
     }
 
     public ListUser() {
@@ -58,7 +62,7 @@ public class ListUser {
     public ListUser(String name, String id) {
         this.userName = name;
         this.userID = id;
-        this.logInState = true;
+        this.logInState = false;
     }
 
     public boolean isUser() {
@@ -68,12 +72,16 @@ public class ListUser {
 
     public boolean isLoggedIn() {
         //TODO: Check if User is logged in
+        userID = SharedPreferencesMethods.getUserId(mContext);
+
+        if(userID == null) {
+            logInState = false;
+        } else {
+            logInState = true;
+        }
+
         return logInState;
     }
-
-//    public void setLogInState(boolean bol) {
-//        this.logInState = bol;
-//    }
 
     public String getUserName() {
         return userName;
@@ -86,15 +94,22 @@ public class ListUser {
 //    public int getUserID() {
 //        return 2;
 //    }
-
+    //TODO: get rid of this
     public void setLogInState(boolean bol) {
         logInState = bol;
     }
 
     public String getUserID() {
         //TODO: actually get ID
-        return String.valueOf(3);
-        //return userID;
+        userID = SharedPreferencesMethods.getUserId(mContext);
+
+        if(userID == null) {
+            Log.v(TAG, "You don’t got no userID, man");
+            return null;
+        } else {
+            return userID;
+        }
+
     }
 
     public void setUserID(String id) {
@@ -111,43 +126,17 @@ public class ListUser {
         //TODO: Figure out what logOut even means…
         //LogOut User
         //Destroy mCurrentUser
-        //setLoginState to true (aka a token exists)
-    }
+        userName = null;
+        userID = null;
+        logInState = false;
 
-//    public void logIn(String name, String email, String password) {
-//        //Also Set login state to true?
-//        //this.logInState = true;
-//
-//        //Get User Preferences for List Items + Category Items
-//
-//        if(name == null) {
-//            //PUT + add category Items
-//            //else, just login User?
-//        } else {
-//            //Use POST method + createNewUser
-//
-//        }
-//    }
+       //TODO: take you back to startActivity?
+    }
 
 
     public void logIn(final String username, final String password) {
-
-        Log.v("Heellllo", "WorldPre");
-        final RequestMethods requestMethods = new RequestMethods(mContext);
-        Log.v("HERE", "NOW");
-        Log.v("MCONTEXT", mContext.toString());
         RequestQueue queue = Volley.newRequestQueue(mContext);
-        Log.v("HERE", "NOW");
         String url = ApiConstants.LOGIN_USER;
-
-        Log.v("Heellllo", "World");
-
-//        String requestBody = "";
-        //Data to be sent
-        //HashMap<String, String> params = new HashMap<String, String>();
-//        List<NameValuePair> params = new ArrayList<NameValuePair>();
-//        params.add(new BasicNameValuePair(ApiConstants.USER_NAME, username));
-//        params.add(new BasicNameValuePair(ApiConstants.USER_PASSWORD, password));
 
         //Login User
         StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
@@ -174,6 +163,7 @@ public class ListUser {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Log.v(TAG, "THERE WAS AN ERROR");
                     requestMethods.showErrorDialog(mContext,
                             mContext.getString(R.string.error_title),
                             mContext.getString(R.string.error_message));
@@ -189,36 +179,55 @@ public class ListUser {
             }
         };
         queue.add(logInUserRequest);
-
-
-
-//        PostJsonArrayRequest logInUserRequest = new PostJsonArrayRequest(username, password, url,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        //Get Response
-//                        try {
-//                            Log.v("DOES THIS EVER HAPPEN?", "HRM?");
-//                            Log.v(TAG, response.toString());
-//                            userID = response.getString(ApiConstants.USER_ID);
-//                            Log.v("USER ID: ", userID);
-//                        } catch (JSONException e) {
-//                            Log.v(TAG, e.getMessage());
-//                        }
-//                        //TODO: set token in ListUser
-//                        //TODO: Save session token in sharedPreferences
-//                        logInState = true;
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse (VolleyError error){
-//                        Log.v("EXPLODED", "DONT UNCOMMENT THIS");
-////                        requestMethods.showErrorDialog(mContext,
-////                                mContext.getString(R.string.error_title),
-////                                mContext.getString(R.string.error_message));
-//                    }
-//        });
-//        queue.add(logInUserRequest);
-        //return userID;
     } //logIn User
-}
+
+    //Add SINGLE random item to user list
+    public void addItemToUserList (final String itemID) {
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+
+        //TODO: session token will know which user this is?
+        String url = ApiConstants.ADD_ITEM + userID + "/" + itemID;
+
+        //Add single item to user list
+        StringRequest postItemsRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //get Response
+                        Log.v(TAG,response.toString());
+                        //TODO: do something with response?
+
+                        //Toast: Confirm List Item has been added
+                        final Toast toast = Toast.makeText(mContext,
+                                "Added to Your List", Toast.LENGTH_SHORT);
+                        toast.show();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 1500);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse (VolleyError error){
+                //TODO: Add “not successful“ toast
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(ApiConstants.POST_ITEM_ID, userID);
+                params.put(ApiConstants.POST_USER_ID, itemID);
+
+                return params;
+            }
+        };
+        queue.add(postItemsRequest);
+    } //addItemToUserList
+
+} //ListUser
