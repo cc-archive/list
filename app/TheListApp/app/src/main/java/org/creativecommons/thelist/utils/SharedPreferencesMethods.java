@@ -49,6 +49,8 @@ public class SharedPreferencesMethods {
     public static final String CATEGORY_PREFERENCE_KEY = "org.creativecommons.thelist.445329";
     public static final String LIST_ITEM_PREFERENCE = "item";
     public static final String LIST_ITEM_PREFERENCE_KEY = "org.creativecommons.thelist.348914";
+    public static final String USER_ID_PREFERENCE = "id";
+    public static final String USER_ID_PREFERENCE_KEY = "org.creativecommons.thelist.234958";
 
     //Add Array to SharedPreferences
     public static void SaveSharedPreference (String preferenceName, String key, String value, Context context){
@@ -77,7 +79,12 @@ public class SharedPreferencesMethods {
         return new JSONArray(catIds);
     }
 
-    //TODO: use this
+    public static String getUserId(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(USER_ID_PREFERENCE, Context.MODE_PRIVATE);
+        String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
+        return userID;
+    }
+
     public static void ClearSharedPreferences(String preferenceName, String preferenceKey, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

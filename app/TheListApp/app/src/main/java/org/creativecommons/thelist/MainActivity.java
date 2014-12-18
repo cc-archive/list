@@ -126,10 +126,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         feedAdapter = new MainListAdapter(this, mItemList);
         //mListView.setAdapter(feedAdapter);
 
-        //Check Log in state
-
-
-
         //Show Dialog on List Item Click
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -173,10 +169,15 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         JsonArrayRequest userListRequest;
         String itemRequesturl;
         JSONArray itemIds;
+        String userID = SharedPreferencesMethods.getUserId(mContext);
 
-        mCurrentUser.setLogInState(true);
-        boolean loggedin = mCurrentUser.isLoggedIn();
-            Log.v(TAG,"I AM LOGGED IN " + loggedin);
+        if(userID == null) {
+            mCurrentUser.setLogInState(false);
+            Log.v("YO", "NOT LOGGED IN");
+        } else {
+            mCurrentUser.setLogInState(true);
+            Log.v("YO", "LOGGED IN");
+        }
 
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
@@ -184,7 +185,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
             //TODO: Check if anything is in sharedPreferences, and add those first?
 
-            String userID = mCurrentUser.getUserID();
             itemRequesturl = ApiConstants.GET_USER_LIST + userID;
 
             userListRequest = new JsonArrayRequest(itemRequesturl,

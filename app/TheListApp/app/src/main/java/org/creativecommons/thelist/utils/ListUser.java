@@ -31,7 +31,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,16 +43,18 @@ public class ListUser {
     private String userName;
     private String userID;
     private boolean logInState;
+    private Context mContext;
     private ArrayList<MainListItem> userItems;
     private ArrayList<MainListItem> userCategories;
 
-    protected Context mContext;
-    public ListUser(Context mContext) {
-        this.mContext = mContext;
+
+    public ListUser(Context mc) {
+        mContext = mc;
     }
 
     public ListUser() {
     }
+
     public ListUser(String name, String id) {
         this.userName = name;
         this.userID = id;
@@ -128,60 +129,96 @@ public class ListUser {
 //        }
 //    }
 
-    public String logIn(final String email, final String password) {
+
+    public void logIn(final String username, final String password) {
+
+        Log.v("Heellllo", "WorldPre");
         final RequestMethods requestMethods = new RequestMethods(mContext);
+        Log.v("HERE", "NOW");
+        Log.v("MCONTEXT", mContext.toString());
         RequestQueue queue = Volley.newRequestQueue(mContext);
+        Log.v("HERE", "NOW");
         String url = ApiConstants.LOGIN_USER;
 
-        //Create Hashmap to send
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(ApiConstants.USER_EMAIL, email);
-        params.put(ApiConstants.USER_PASSWORD, password);
+        Log.v("Heellllo", "World");
 
-        //Create Object to send
-//        JSONObject jso = new JSONObject();
-//        try {
-//            jso.put(ApiConstants.USER_EMAIL, email);
-//            jso.put(ApiConstants.USER_PASSWORD, password);
-//        } catch (JSONException e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//        Log.v(TAG,jso.toString());
+//        String requestBody = "";
+        //Data to be sent
+        //HashMap<String, String> params = new HashMap<String, String>();
+//        List<NameValuePair> params = new ArrayList<NameValuePair>();
+//        params.add(new BasicNameValuePair(ApiConstants.USER_NAME, username));
+//        params.add(new BasicNameValuePair(ApiConstants.USER_PASSWORD, password));
 
-        //Add items to user list
-        StringRequest logInUserRequest = new StringRequest (Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //get Response
-                        try {
-                            JSONArray res = new JSONArray(response);
-                            userID = res.getJSONObject(0).getString(ApiConstants.USER_ID);
-                        } catch (JSONException e) {
-                            Log.v(TAG, e.getMessage());
-                        }
-                        //TODO: set token in ListUser
-                        //TODO: Save session token in sharedPreferences
-                        logInState = true;
+        //Login User
+        StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    //Get Response
+                    Log.v(TAG, response.toString());
+                    try {
+                        JSONObject res = new JSONObject(response);
+                        userID = res.getString(ApiConstants.USER_ID);
+                    } catch (JSONException e) {
+                        Log.v(TAG,e.getMessage());
                     }
-                }, new Response.ErrorListener() {
+                    //TODO: Save session token in sharedPreferences
+                    //Save userID in sharedPreferences
+                    SharedPreferencesMethods.SaveSharedPreference
+                            (SharedPreferencesMethods.USER_ID_PREFERENCE,
+                                    SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
+                                    userID, mContext);
+
+                    logInState = true;
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    requestMethods.showErrorDialog(mContext,
+                            mContext.getString(R.string.error_title),
+                            mContext.getString(R.string.error_message));
+                }
+            }) {
             @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.error_title),
-                        mContext.getString(R.string.error_message));
-            }
-        }) {
-           @Override
-           protected Map<String, String> getParams() {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put(ApiConstants.USER_EMAIL, email);
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
                 params.put(ApiConstants.USER_PASSWORD, password);
 
                 return params;
-           }
+            }
         };
         queue.add(logInUserRequest);
-        return userID;
+
+
+
+//        PostJsonArrayRequest logInUserRequest = new PostJsonArrayRequest(username, password, url,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        //Get Response
+//                        try {
+//                            Log.v("DOES THIS EVER HAPPEN?", "HRM?");
+//                            Log.v(TAG, response.toString());
+//                            userID = response.getString(ApiConstants.USER_ID);
+//                            Log.v("USER ID: ", userID);
+//                        } catch (JSONException e) {
+//                            Log.v(TAG, e.getMessage());
+//                        }
+//                        //TODO: set token in ListUser
+//                        //TODO: Save session token in sharedPreferences
+//                        logInState = true;
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse (VolleyError error){
+//                        Log.v("EXPLODED", "DONT UNCOMMENT THIS");
+////                        requestMethods.showErrorDialog(mContext,
+////                                mContext.getString(R.string.error_title),
+////                                mContext.getString(R.string.error_message));
+//                    }
+//        });
+//        queue.add(logInUserRequest);
+        //return userID;
     } //logIn User
 }

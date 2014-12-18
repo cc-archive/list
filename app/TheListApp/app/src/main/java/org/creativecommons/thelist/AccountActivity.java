@@ -32,7 +32,6 @@ import android.widget.EditText;
 
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.json.JSONObject;
 
 
 public class AccountActivity extends ActionBarActivity {
@@ -41,10 +40,7 @@ public class AccountActivity extends ActionBarActivity {
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    ListUser mCurrentUser = new ListUser(mContext);
-
-    //For Request
-    protected JSONObject mUserData;
+    ListUser mCurrentUser;// = new ListUser(mContext);
 
     //UI Elements
     protected EditText mEmailLoginField;
@@ -61,6 +57,7 @@ public class AccountActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         mContext = this;
+        mCurrentUser = new ListUser(mContext);
 
         mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
         mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
@@ -81,8 +78,7 @@ public class AccountActivity extends ActionBarActivity {
                     dialog.show();
                 }
                 else {
-                    //Login User
-                    //TODO: Login the user (how does this work?)
+                    //Login User + save to sharedPreferences
                     mCurrentUser.logIn(mEmail, mPassword);
 
                     //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences

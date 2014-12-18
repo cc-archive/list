@@ -31,7 +31,6 @@ import com.android.volley.toolbox.Volley;
 import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +42,6 @@ public class MainListItem {
     private RequestMethods requestMethods;
     private Context mContext;
     private MainActivity mainActivity;
-    private ListUser mCurrentUser;
     public boolean completed = false;
 
     public MainListItem() {
@@ -89,10 +87,6 @@ public class MainListItem {
 
     public void setMainActivity(MainActivity m) {
         mainActivity = m;
-    }
-
-    public void setListUser(ListUser lu) {
-        mCurrentUser = lu;
     }
 
     public void createNewUserListItem() {

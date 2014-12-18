@@ -85,11 +85,7 @@ public class MainListAdapter extends BaseAdapter {
         //Camera Icon
         holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
 
-
-        //holder.removeAllViews();
         return convertView;
-
-
     }
 
     private static class ViewHolder {
