@@ -127,12 +127,10 @@ class UserList {
         $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
 
         try {
-            $res = $adodb->CacheGetAll(60, sprintf($query,
+            $res = $adodb->Execute(sprintf($query,
             $adodb->qstr($userid),
             $adodb->qstr($listitem)
             ));
-
-    	    $adodb->CacheFlush();	
             
         } catch (Exception $e) {
             
