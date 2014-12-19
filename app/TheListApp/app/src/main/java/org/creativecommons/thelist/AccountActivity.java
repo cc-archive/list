@@ -20,7 +20,6 @@
 package org.creativecommons.thelist;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -31,6 +30,7 @@ import android.widget.EditText;
 
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
 public class AccountActivity extends ActionBarActivity {
@@ -38,7 +38,8 @@ public class AccountActivity extends ActionBarActivity {
     protected Context mContext;
 
     //Request Methods
-    RequestMethods requestMethods = new RequestMethods(this);
+    RequestMethods requestMethods;
+    SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser;// = new ListUser(mContext);
 
     //UI Elements
@@ -56,7 +57,12 @@ public class AccountActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        mContext = this;
+        mContext = AccountActivity.this;
+        sharedPreferencesMethods = new SharedPreferencesMethods(this);
+        requestMethods = new RequestMethods(this);
+
+        SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+
         mCurrentUser = new ListUser(mContext);
 
         mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
@@ -75,18 +81,18 @@ public class AccountActivity extends ActionBarActivity {
                 }
                 else {
                     //Login User + save to sharedPreferences
-                    mCurrentUser.logIn(mEmail, mPassword);
+                    mCurrentUser.logIn(mEmail, mPassword, mContext, "randomActivity");
 
                     //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences
                     //2. Login now and pass the data to MainActivity to set things
                     //3. Set sharedPreferences in login() and retrieve them in MainActivity
 
-                    if(mCurrentUser.isLoggedIn()) {
-                        Intent intent = new Intent(mContext, RandomActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
+//                    if(mCurrentUser.isLoggedIn()) {
+//                        Intent intent = new Intent(mContext, RandomActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(intent);
+//                    }
                 }
             }
         });

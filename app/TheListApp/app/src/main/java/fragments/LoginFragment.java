@@ -88,7 +88,7 @@ public class LoginFragment extends Fragment {
     String mLoginPassword;
 
     //Interface with Activity
-    LoginClickListener mCallback;
+    public LoginClickListener mCallback;
 
     // --------------------------------------------------------
 
@@ -183,10 +183,10 @@ public class LoginFragment extends Fragment {
                             mContext.getString(R.string.login_error_title),
                             mContext.getString(R.string.login_error_message));
                 } else {
-                    mCurrentUser.logIn(mLoginEmail, mLoginPassword);
-                    if(mCurrentUser.isLoggedIn()){
-                        mCallback.UserLoggedIn("User Logged In");
-                    }
+                    mCurrentUser.logIn(mLoginEmail, mLoginPassword, mCallback);
+//                    if(mCurrentUser.isLoggedIn()){
+//                        mCallback.UserLoggedIn("User Logged In");
+//                    }
                 }
             }
         });
@@ -235,10 +235,10 @@ public class LoginFragment extends Fragment {
         //String url = "http://10.0.2.2:3000/api/user";
 
         //Combine login data with user preferences
-        JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject
+        JSONObject categoryListObject = SharedPreferencesMethods.createCategoryListObject
                 (ApiConstants.USER_CATEGORIES, getActivity());
         //Log.v(TAG,categoryListObject.toString());
-        JSONObject userItemObject = sharedPreferencesMethods.createUserItemsObject
+        JSONObject userItemObject = SharedPreferencesMethods.createUserItemsObject
                 (ApiConstants.USER_ITEMS, getActivity());
         //Log.v(TAG,userItemObject.toString());
 
@@ -269,19 +269,8 @@ public class LoginFragment extends Fragment {
                             //Log.v("this is the API response", mUserData.toString());
                             JSONObject data = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             //Log.v(TAG,response.toString());
-
+                            SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
                             //TODO: Clear sharedPreferences once DB has user data
-                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, mContext);
-                            SharedPreferencesMethods.ClearSharedPreferences(SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                    SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, mContext);
-                            //TODO: Test Deleted Shared Preferences
-                            if(SharedPreferencesMethods.RetrieveSharedPreference(SharedPreferencesMethods.CATEGORY_PREFERENCE,
-                                    SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, mContext) != null) {
-                                Log.v("YO", "it is gone!");
-                            } else {
-                                Log.v("YO", "Something is still here");
-                            }
 
                             //TODO: check for null user before sending callback
 

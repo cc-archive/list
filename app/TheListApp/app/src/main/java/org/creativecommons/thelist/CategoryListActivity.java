@@ -152,7 +152,8 @@ public class CategoryListActivity extends Activity {
 
                 //If logged in, put to user profile, else create sharedPreference
                 if(mCurrentUser.isLoggedIn()) {
-                    storeCategoriesRequest();
+                    Log.v(TAG, "User is logged in so no preferences are being saved");
+                    //storeCategoriesRequest();
                 } else {
                     SparseBooleanArray positions = mListView.getCheckedItemPositions();
                     int length = positions.size();
@@ -233,7 +234,6 @@ public class CategoryListActivity extends Activity {
         });
         queue.add(getCategoriesRequest);
     } //getCategoriesRequest
-
 
     //PUT REQUEST: Add category preferences to DB
     private void storeCategoriesRequest() {

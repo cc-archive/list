@@ -20,6 +20,7 @@
 package org.creativecommons.thelist.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,11 +32,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.RandomActivity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fragments.LoginFragment;
 
 public class ListUser {
     public static final String TAG = ListUser.class.getSimpleName();
@@ -44,12 +49,14 @@ public class ListUser {
     private boolean logInState;
     private Context mContext;
     private RequestMethods requestMethods;
+    private SharedPreferencesMethods sharedPreferencesMethods;
     //private ArrayList<MainListItem> userItems;
     //private ArrayList<MainListItem> userCategories;
 
     public ListUser(Context mc) {
         mContext = mc;
         requestMethods = new RequestMethods(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
     }
 
     public ListUser() {
@@ -70,7 +77,7 @@ public class ListUser {
         //TODO: Check if User is logged in
         userID = SharedPreferencesMethods.getUserId(mContext);
 
-        if(userID == null) {
+        if (userID == null) {
             logInState = false;
         } else {
             logInState = true;
@@ -87,7 +94,7 @@ public class ListUser {
         this.userName = name;
     }
 
-//    public int getUserID() {
+    //    public int getUserID() {
 //        return 2;
 //    }
     //TODO: get rid of this
@@ -99,7 +106,7 @@ public class ListUser {
         //TODO: actually get ID
         userID = SharedPreferencesMethods.getUserId(mContext);
 
-        if(userID == null) {
+        if (userID == null) {
             Log.v(TAG, "You don’t got no userID, man");
             return null;
         } else {
@@ -126,54 +133,67 @@ public class ListUser {
         userID = null;
         logInState = false;
 
-       //TODO: take you back to startActivity?
+        //TODO: take you back to startActivity?
     }
 
-
-    public void logIn(final String username, final String password) {
+    public void logIn(final String username, final String password, final LoginFragment.LoginClickListener listener) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
-
         //Login User
+
         StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Get Response
-                    if(response.equals("null")) {
-                       requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
-                               "Sure you got your email/password combo right?");
-                    } else {
-                        Log.v(TAG, response.toString());
-                        try {
-                            JSONObject res = new JSONObject(response);
-                            userID = res.getString(ApiConstants.USER_ID);
-                        } catch (JSONException e) {
-                            Log.v(TAG,e.getMessage());
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Get Response
+                        if(response == null || response.equals("null")) {
+                            Log.v("RESPONSE IS NULL IF YOU ARE HERE", response);
+                            requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
+                                    "Sure you got your email/password combo right?");
+                        } else {
+                            Log.v(TAG, response.toString());
+                            try {
+                                JSONObject res = new JSONObject(response);
+                                userID = res.getString(ApiConstants.USER_ID);
+
+                                //Save userID in sharedPreferences
+                                SharedPreferencesMethods.SaveSharedPreference
+                                        (SharedPreferencesMethods.USER_ID_PREFERENCE,
+                                                SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
+                                                userID, mContext);
+
+                                //TODO: Save session token in sharedPreferences
+                                //TODO: Get any list item preferences and add them to userlist
+                                //Add items chosen before login to userlist
+                                //TODO: also add category preferences
+                                JSONArray listItemPref;
+                                Log.v("HEY CONTEXT", mContext.toString());
+                                listItemPref = SharedPreferencesMethods
+                                        .RetrieveUserItemPreference(mContext);
+
+                                if (listItemPref != null && listItemPref.length() > 0) {
+                                    Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
+                                    for (int i = 0; i < listItemPref.length(); i++) {
+                                        Log.v("ITEMS", "ARE BEING ADDED");
+                                        addItemToUserList(listItemPref.getString(i));
+                                    }
+                                }
+
+                                listener.UserLoggedIn("hey logged in");
+                            } catch (JSONException e) {
+                                Log.v(TAG,e.getMessage());
+                            }
                         }
-                        //TODO: Save session token in sharedPreferences
-
-                        //TODO: Get any list item preferences and add them to userlist
-                        //Add items chosen before login to userlist
-                        SharedPreferencesMethods.RetrieveCategorySharedPreference(mContext);
-
-
-                        //Save userID in sharedPreferences
-                        SharedPreferencesMethods.SaveSharedPreference
-                                (SharedPreferencesMethods.USER_ID_PREFERENCE,
-                                        SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
-                                        userID, mContext);
                     }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.v(TAG, "THERE WAS AN ERROR");
-                    requestMethods.showErrorDialog(mContext,
-                            mContext.getString(R.string.error_title),
-                            mContext.getString(R.string.error_message));
-                }
-            }) {
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v(TAG, "THERE WAS AN ERROR");
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
+            }
+        }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
@@ -184,7 +204,82 @@ public class ListUser {
             }
         };
         queue.add(logInUserRequest);
-    } //logIn User
+    }
+
+    public void logIn(final String username, final String password, final Context mContext, final String intentCase) {
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        String url = ApiConstants.LOGIN_USER;
+        //Login User
+
+        StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Get Response
+                        if(response == null || response.equals("null")) {
+                            Log.v("RESPONSE IS NULL IF YOU ARE HERE", response);
+                            requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
+                                    "Sure you got your email/password combo right?");
+                        } else {
+                            Log.v(TAG, response.toString());
+                            try {
+                                JSONObject res = new JSONObject(response);
+                                userID = res.getString(ApiConstants.USER_ID);
+
+                                //Save userID in sharedPreferences
+                                SharedPreferencesMethods.SaveSharedPreference
+                                        (SharedPreferencesMethods.USER_ID_PREFERENCE,
+                                                SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
+                                                userID, mContext);
+
+                                //TODO: Save session token in sharedPreferences
+                                //TODO: Get any list item preferences and add them to userlist
+                                //Add items chosen before login to userlist
+                                //TODO: also add category preferences
+                                JSONArray listItemPref = new JSONArray();
+                                Log.v("HEY CONTEXT", mContext.toString());
+                                listItemPref = SharedPreferencesMethods
+                                        .RetrieveUserItemPreference(mContext);
+
+                                if (listItemPref != null && listItemPref.length() > 0) {
+                                    Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
+                                    for (int i = 0; i < listItemPref.length(); i++) {
+                                        Log.v("ITEMS", "ARE BEING ADDED");
+                                        addItemToUserList(listItemPref.getString(i));
+                                    }
+                                } else {
+                                    if (intentCase == "randomActivity") {
+                                        Intent intent = new Intent(mContext, RandomActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        mContext.startActivity(intent);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                Log.v(TAG,e.getMessage());
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v(TAG, "THERE WAS AN ERROR");
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put(ApiConstants.USER_PASSWORD, password);
+
+                return params;
+            }
+        };
+        queue.add(logInUserRequest);
+    }
 
     //Add SINGLE random item to user list
     public void addItemToUserList (final String itemID) {
@@ -201,7 +296,6 @@ public class ListUser {
                         //get Response
                         Log.v(TAG,"AN ITEM IS BEING ADDED");
                         //TODO: do something with response?
-
 
                         //Toast: Confirm List Item has been added
                         final Toast toast = Toast.makeText(mContext,

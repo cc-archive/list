@@ -175,19 +175,22 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = context.getSharedPreferences(LIST_ITEM_PREFERENCE, Context.MODE_PRIVATE);
         String value = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
 
-        //TODO: Switch to json library (JSONNNN)
-        //Convert from String to Array
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(value);
-        JsonArray array = element.getAsJsonArray();
+        if(value == null) {
+            return null;
+        } else {
+            //TODO: Switch to json library (JSONNNN)
+            //Convert from String to Array
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(value);
+            JsonArray array = element.getAsJsonArray();
 
-        //Make usable as JSONArray
-        List<Integer> itemIds = new ArrayList<Integer>();
-        for (int i = 0; i < array.size(); i++) {
-            itemIds.add(array.get(i).getAsInt());
+            //Make usable as JSONArray
+            List<Integer> itemIds = new ArrayList<Integer>();
+            for (int i = 0; i < array.size(); i++) {
+                itemIds.add(array.get(i).getAsInt());
+            }
+            return new JSONArray(itemIds);
         }
-
-        return new JSONArray(itemIds);
     }
 
 }

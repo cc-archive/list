@@ -70,6 +70,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import fragments.ConfirmFragment;
+import fragments.LoadingFragment;
 import fragments.LoginFragment;
 import fragments.TermsFragment;
 
@@ -112,6 +113,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     LoginFragment loginFragment = new LoginFragment();
     TermsFragment termsFragment = new TermsFragment();
     ConfirmFragment confirmFragment = new ConfirmFragment();
+    LoadingFragment loadingFragment = new LoadingFragment();
 
     // --------------------------------------------------------
 
@@ -197,10 +199,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         Log.v("RESPONSE", response.toString());
                         //Handle Data
                         for(int i=0; i < response.length(); i++) {
+                            //mItemList = new ArrayList<MainListItem>();
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
 
-                                if(singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null") ) {
+                                //if(singleListItem.getString(ApiConstants.ITEM_COMPLETED) == null ||
+                                //   singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
+                                //if (singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
+                                if (singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
                                     listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
@@ -215,6 +221,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                             }
                         }
                         Log.v("ITEMLIST", mItemList.toString());
+
                         feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mListView.setAdapter(feedAdapter);
@@ -387,8 +394,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     public void onResponse(String response) {
                         //Get Response
                         Log.v("PHOTO UPLOADED", response.toString());
+                        getUserListItems();
+//                        mListView.setAdapter(feedAdapter);
                         mItemList.remove(activeItemPosition);
-                        feedAdapter.notifyDataSetChanged();
+                        //feedAdapter.notifyDataSetChanged();
 
                         //SUCCESS text in confirmFragment
                         Bundle b = new Bundle();
@@ -445,16 +454,25 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     //When User has been logged in
     @Override
     public void UserLoggedIn(String userData) {
-        try {
-            //Set current user Data
-            mCurrentUserObject = new JSONObject(userData);
-            mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
-            mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
-            //TODO: set user token
-        } catch (JSONException e) {
-            Log.e(TAG,e.getMessage());
-        }
+        //Show Fragment
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.overlay_fragment_container, loadingFragment)
+                .commit();
+
+
+//        try {
+//            //Set current user Data
+//            mCurrentUserObject = new JSONObject(userData);
+//            mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
+//            mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
+//            //TODO: set user token
+//        } catch (JSONException e) {
+//            Log.e(TAG,e.getMessage());
+//        }
+
         uploadPhoto(mMediaUri);
+
     } //UserLoggedIn
 
     //User has cancelled an upload
@@ -495,16 +513,24 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     public void onConfirmFinish() {
         //Show upload success for limited time
         new Handler().postDelayed(new Runnable() {
-        @Override
-        public void run() {
-            getSupportFragmentManager().beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .remove(confirmFragment)
-                    .commit();
-            mFrameLayout.setClickable(false);
-            getSupportActionBar().show();
-        }
-    }, 3600);
+            @Override
+            public void run() {
+                getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .remove(confirmFragment)
+                        .commit();
+            }
+        }, 2800);
+
+        //Delay action bar and ability to click MainFeed
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFrameLayout.setClickable(false);
+                getSupportActionBar().show();
+            }
+        }, 3000);
+
     } //onConfirmFinish
 
     @Override
