@@ -186,63 +186,38 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         if(mCurrentUser.isLoggedIn()) {
             Log.v("HELLO", "this user is logged in");
 
-<<<<<<< HEAD
-        //TODO: if logged in, get user’s list
-        //Create Object of List Item IDs to send
-        JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS, this);
-
-        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, UserItemObject,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mItemData = response;
-                        Log.v(TAG,response.toString());
-                        updateList();
-                    }
-                }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse (VolleyError error){
-                    requestMethods.updateDisplayForError();
-                }
-        });
-        queue.add(getUserItemsRequest);
-    } //Get All items in the user’s list
-=======
-            //TODO: Check if anything is in sharedPreferences, and add those first?
->>>>>>> apiTest
-
             itemRequesturl = ApiConstants.GET_USER_LIST + userID;
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            Log.v("RESPONSE", response.toString());
-                            //Handle Data
-                            for(int i=0; i < response.length(); i++) {
-                                try {
-                                    MainListItem listItem = new MainListItem();
-                                    JSONObject singleListItem = response.getJSONObject(i);
-                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
-                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
-                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.v("RESPONSE", response.toString());
+                        //Handle Data
+                        for(int i=0; i < response.length(); i++) {
+                            try {
+                                MainListItem listItem = new MainListItem();
+                                JSONObject singleListItem = response.getJSONObject(i);
+                                listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
+                                listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
+                                listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
 
-                                    mItemList.add(listItem);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                                mItemList.add(listItem);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                            }
-                            feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
-                            mProgressBar.setVisibility(View.INVISIBLE);
-                            mListView.setAdapter(feedAdapter);
-                            Log.v("What the hell?", "?");
-                            for (int i = 0; i < mItemList.size(); i++) {
-                                Log.v("ITEM: ", mItemList.get(i).getItemName());
-                            }
-                            //feedAdapter.notifyDataSetChanged();
                         }
-                    }, new Response.ErrorListener() {
+                        feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        mListView.setAdapter(feedAdapter);
+                        Log.v("What the hell?", "?");
+                        for (int i = 0; i < mItemList.size(); i++) {
+                            Log.v("ITEM: ", mItemList.get(i).getItemName());
+                        }
+                        //feedAdapter.notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("error", error.toString());
