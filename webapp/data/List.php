@@ -43,6 +43,106 @@ class UserList {
 	 * @param string $email The name of the user to load
 	 */
 
+    function addPhoto($userid, $filename, $listitem) {
+
+        global $adodb;
+
+        $query = "INSERT INTO Photos (userid, filename, listitem) VALUES (%s,%s, %s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($filename),
+            $adodb->qstr($listitem)
+            ));
+
+            $adodb->CacheFlush();
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            echo "There was an error";
+            
+            return null;
+        }
+
+
+    }
+    
+    function getMakerCategories($makerid) {
+
+        global $adodb;
+
+        $query = "SELECT * FROM Categories WHERE approved = 1 AND makerid=?";
+        
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($makerid)
+            ));
+
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            //echo "There was an error";
+            
+            return null;
+        }
+           
+    }
+
+    function addToTheList($makerid, $subject, $desc, $url) {
+
+        global $adodb;
+
+        $query = "INSERT INTO List (makerid, title, description, uri, approved) VALUES (%s,%s,%s,%s,1)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($makerid),
+            $adodb->qstr($subject),
+            $adodb->qstr($desc),
+            $adodb->qstr($url)
+            ));
+
+	    $adodb->CacheFlush();
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            //echo "There was an error";
+            
+            return null;
+        }
+
+
+    }
+
+    function addToMyList($listitem, $userid){
+
+        global $adodb;
+
+        $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($listitem)
+            ));
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            // echo "There was an error";
+            
+            return null;
+        }
+
+    }
+
     function getUserTopList($number, $userid, $offset = 0, $from = false, $to = false) {
         $data = UserList::getListItems($number, $userid, 0, $offset, $from, $to);
 
@@ -53,6 +153,31 @@ class UserList {
         return $data;
     }
 
+    function getMakerProfile($makerid) {
+
+        global $adodb;
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+
+        $params = array();
+        $query = 'SELECT * From Makers WHERE id = ?';
+        $params[] = $makerid;
+
+        try {
+            $res = $adodb->CacheGetAll(500, $query, $params);
+
+        } catch (Exception $e) {
+
+            echo "<h2>" . $query . "</h2>";
+            
+            echo $e;
+           
+            return null;
+        }
+
+        return $res;
+
+    }
 
     function getMakerList($number, $makerid, $offset = 0, $from = false, $to = false) {
         $data = UserList::getListItems($number, 0, $makerid, $offset, $from, $to);
@@ -83,7 +208,7 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
 
         $params = array();
-        $query = 'SELECT * From List WHERE id = ?';
+        $query = 'SELECT l.*,m.name, m.uri From List l LEFT JOIN Makers m on (l.makerid = m.id) WHERE l.id = ?';
         $params[] = $listid;
 
         try {
@@ -109,7 +234,7 @@ class UserList {
 
         if ($userid) {
             $params = array();
-            $query = 'SELECT ul.*, l.* FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) WHERE ul.complete IS NULL AND ul.userid=?';
+            $query = 'SELECT ul.*, l.*, m.name, m.uri FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete IS NULL AND ul.userid=?';
             $params[] = $userid;
 
         }
@@ -123,7 +248,7 @@ class UserList {
 
         if ($query == "") {
             $params = array();
-            $query = "SELECT DISTINCT * from List WHERE APPROVED=1 ORDER BY RAND()";
+            $query = "SELECT DISTINCT l.*, m.name, m.uri from List l LEFT JOIN Makers m ON (l.makerid = m.id)  WHERE APPROVED=1 ORDER BY RAND()";
         }
         
 
@@ -268,5 +393,18 @@ class UserList {
         return $res;
         
     }
+
+    static  function getUserInfo($email) {
+
+        global $adodb;
+        $query = 'SELECT * FROM Users WHERE lower(email) = lower(' . $adodb->qstr($email) . ') LIMIT 1';
+
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+        $row = $adodb->CacheGetRow(1, $query);
+
+        return $row;
+
+    }
+
         
 }

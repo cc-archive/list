@@ -43,8 +43,11 @@ if (isset($_REQUEST['hs'])) {
 
             $list = new UserList();
             
+            $categories = $list->getMakerCategories($makerid);
+
             //$listitems = $list->getMakerList(500, $makerid);
 
+            $smarty->assign('categories',$categories);
             $smarty->assign('list',$listitems);
 
             $smarty->assign('welcome', true);

@@ -76,4 +76,8 @@ class User {
                 $this->makerid          = $row['makerid'];
             }
         }
+
+
+
+
 }

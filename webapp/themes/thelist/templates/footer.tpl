@@ -24,6 +24,8 @@
 	</small>
       </p>
 
+      <p class="text-center"><small>The software that powers this application is free software, licensed under the GNU Affero General Public License version 3.0 (or later versions) &mdash; <a href="https://github.com/creativecommons/list/archive/master.zip">Download the source code</a>.</small></p>
+
 </footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
