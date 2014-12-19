@@ -4,6 +4,9 @@
 /.emacs.desktop
 /.emacs.desktop.lock
 *.elc
+*.apk
+*.exe
+*.dmg
 auto-save-list
 tramp
 .\#*
