@@ -112,7 +112,6 @@ public final class RequestMethods {
         if(fileString == null) {
             Log.v(TAG, "this is null");
         }
-        Log.v("FILESTRING IS: ", fileString);
         return fileString;
     }
 

@@ -106,6 +106,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     //Photo Variables
     protected Uri mMediaUri;
     protected MainListItem mCurrentItem;
+    protected int activeItemPosition;
 
     //Fragments
     LoginFragment loginFragment = new LoginFragment();
@@ -149,8 +150,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 dialog.show();
 
                 //Store ListItem in variable
+                activeItemPosition = position;
                 mCurrentItem = (MainListItem) mListView.getItemAtPosition(position);
-                //Log.v(TAG, mCurrentItem.toString());
             }
         });
 
@@ -174,8 +175,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mProgressBar.setVisibility(View.INVISIBLE);
         mListView.setAdapter(feedAdapter);
         feedAdapter.notifyDataSetChanged();
-    }
+    } //CheckComplete
 
+    //GET USER LIST ITEMS
     private void getUserListItems() {
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonArrayRequest userListRequest;
@@ -196,25 +198,26 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         //Handle Data
                         for(int i=0; i < response.length(); i++) {
                             try {
-                                MainListItem listItem = new MainListItem();
                                 JSONObject singleListItem = response.getJSONObject(i);
-                                listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
-                                listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
-                                listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
 
-                                mItemList.add(listItem);
+                                if(singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null") ) {
+                                    MainListItem listItem = new MainListItem();
+                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
+                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
+                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
+                                    mItemList.add(listItem);
+                                } else {
+                                    //TODO: Does THIS WORK?
+                                   continue;
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
+                        Log.v("ITEMLIST", mItemList.toString());
                         feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mListView.setAdapter(feedAdapter);
-                        Log.v("What the hell?", "?");
-                        for (int i = 0; i < mItemList.size(); i++) {
-                            Log.v("ITEM: ", mItemList.get(i).getItemName());
-                        }
                         //feedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -296,7 +299,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                 return null;
                             }
                         }
-
                         // 3. Create a file name
                         // 4. Create the file
                         File mediaFile;
@@ -343,7 +345,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Log.v("DATA", data.toString());
                     mMediaUri = data.getData();
                 }
             }
@@ -361,12 +362,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 mFrameLayout.setClickable(true);
                 getSupportActionBar().hide();
             }
-
             //Add photo to the Gallery (listen for broadcast and let gallery take action)
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(mMediaUri);
             sendBroadcast(mediaScanIntent);
-
         }
         else if(resultCode != RESULT_CANCELED) {
             Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
@@ -378,11 +377,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + mCurrentItem.getItemID();
 
-        Log.v("URL IS: ", url);
-
-        //Get Photo Object
-
-        Log.v("URI TEST", uri.toString());
+        //Get Photo as Base64 encoded String
         final String photoFile = requestMethods.createUploadPhotoObject(uri);
 
         //Upload Photo
@@ -392,6 +387,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     public void onResponse(String response) {
                         //Get Response
                         Log.v("PHOTO UPLOADED", response.toString());
+                        mItemList.remove(activeItemPosition);
+                        feedAdapter.notifyDataSetChanged();
 
                         //SUCCESS text in confirmFragment
                         Bundle b = new Bundle();

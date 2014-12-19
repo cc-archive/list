@@ -97,7 +97,6 @@ public class LoginFragment extends Fragment {
         public void UserLoggedIn(String userData);
         public void UserCreated(String userData);
         public void CancelUpload();
-
     }
 
     @Override
@@ -185,7 +184,9 @@ public class LoginFragment extends Fragment {
                             mContext.getString(R.string.login_error_message));
                 } else {
                     mCurrentUser.logIn(mLoginEmail, mLoginPassword);
-                    mCallback.UserLoggedIn("User Logged In");
+                    if(mCurrentUser.isLoggedIn()){
+                        mCallback.UserLoggedIn("User Logged In");
+                    }
                 }
             }
         });
@@ -282,6 +283,7 @@ public class LoginFragment extends Fragment {
                                 Log.v("YO", "Something is still here");
                             }
 
+                            //TODO: check for null user before sending callback
 
                             //TODO: Handle Errors
                             mCallback.UserCreated(mUserData.toString());
@@ -299,14 +301,6 @@ public class LoginFragment extends Fragment {
         });
         queue.add(newUserRequest);
     } //createNewUser
-
-
-    public void changeText(){
-        //this textview should be bound in the fragment onCreate as a member variable
-        TextView frv =(TextView) getView().findViewById(R.id.confirm_title);
-        frv.setText(getString(R.string.upload_cancelled_text));
-    }
-
 
     @Override
     public void onDetach() {

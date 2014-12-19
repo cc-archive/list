@@ -140,21 +140,30 @@ public class ListUser {
                 @Override
                 public void onResponse(String response) {
                     //Get Response
-                    Log.v(TAG, response.toString());
-                    try {
-                        JSONObject res = new JSONObject(response);
-                        userID = res.getString(ApiConstants.USER_ID);
-                    } catch (JSONException e) {
-                        Log.v(TAG,e.getMessage());
-                    }
-                    //TODO: Save session token in sharedPreferences
-                    //Save userID in sharedPreferences
-                    SharedPreferencesMethods.SaveSharedPreference
-                            (SharedPreferencesMethods.USER_ID_PREFERENCE,
-                                    SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
-                                    userID, mContext);
+                    if(response.equals("null")) {
+                       requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
+                               "Sure you got your email/password combo right?");
+                    } else {
+                        Log.v(TAG, response.toString());
+                        try {
+                            JSONObject res = new JSONObject(response);
+                            userID = res.getString(ApiConstants.USER_ID);
+                        } catch (JSONException e) {
+                            Log.v(TAG,e.getMessage());
+                        }
+                        //TODO: Save session token in sharedPreferences
 
-                    //logInState = true;
+                        //TODO: Get any list item preferences and add them to userlist
+                        //Add items chosen before login to userlist
+                        SharedPreferencesMethods.RetrieveCategorySharedPreference(mContext);
+
+
+                        //Save userID in sharedPreferences
+                        SharedPreferencesMethods.SaveSharedPreference
+                                (SharedPreferencesMethods.USER_ID_PREFERENCE,
+                                        SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
+                                        userID, mContext);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

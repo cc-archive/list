@@ -19,7 +19,6 @@
 
 package org.creativecommons.thelist;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -71,12 +70,8 @@ public class AccountActivity extends ActionBarActivity {
                 mPassword = mPasswordLoginField.getText().toString().trim();
 
                 if(mPassword.isEmpty() || mEmail.isEmpty()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AccountActivity.this);
-                    builder.setMessage(R.string.login_error_message)
-                            .setTitle(R.string.login_error_title)
-                            .setPositiveButton(android.R.string.ok, null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
+                            getString(R.string.login_error_message));
                 }
                 else {
                     //Login User + save to sharedPreferences
@@ -86,11 +81,12 @@ public class AccountActivity extends ActionBarActivity {
                     //2. Login now and pass the data to MainActivity to set things
                     //3. Set sharedPreferences in login() and retrieve them in MainActivity
 
-                    //Add username, id, token to sharedPreferences
-                    Intent intent = new Intent(mContext, RandomActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    if(mCurrentUser.isLoggedIn()) {
+                        Intent intent = new Intent(mContext, RandomActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                 }
             }
         });

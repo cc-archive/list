@@ -52,6 +52,7 @@ public final class ApiConstants {
     public static final String ITEM_URI = "uri";
     public static final String ITEM_PHOTOS = "approved";
     public static final String ITEM_CATEGORY = "category";
+    public static final String ITEM_COMPLETED = "complete";
     //public static final String EXAMPLE_URL = "exampleUrl";
 
     //List Item Request
