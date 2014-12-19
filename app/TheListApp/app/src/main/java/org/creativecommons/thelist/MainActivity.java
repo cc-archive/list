@@ -45,7 +45,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.MainListAdapter;
@@ -63,8 +64,14 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import fragments.ConfirmFragment;
+import fragments.LoginFragment;
+import fragments.TermsFragment;
 
 
 public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
@@ -74,14 +81,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
     protected JSONObject mCurrentUserObject;
+    protected String userID;
 
     //For API Requests + Response
-    protected JSONObject mItemData;
-    protected JSONArray mJsonItems;
+    //protected JSONArray mItemData;
 
     //Lists to be adapted
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
@@ -105,7 +112,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     TermsFragment termsFragment = new TermsFragment();
     ConfirmFragment confirmFragment = new ConfirmFragment();
 
-
     // --------------------------------------------------------
 
     @Override
@@ -114,13 +120,23 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         setContentView(R.layout.activity_main);
         mContext = this;
 
+        //Check if user is logged in
+        userID = SharedPreferencesMethods.getUserId(mContext);
+        if(userID == null) {
+            mCurrentUser.setLogInState(false);
+            Log.v("YO" + TAG, "NOT LOGGED IN");
+        } else {
+            mCurrentUser.setLogInState(true);
+            Log.v("YO" + TAG, "LOGGED IN");
+        }
+
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mListView = (ListView)findViewById(R.id.list);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
 
         feedAdapter = new MainListAdapter(this, mItemList);
-        mListView.setAdapter(feedAdapter);
+        //mListView.setAdapter(feedAdapter);
 
         //Show Dialog on List Item Click
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,59 +157,36 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
         if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
-
-            if(mCurrentUser.isLoggedIn()) {
-                getUserListItems();
-            } else {
-                getUserSelectedItems();
-            }
-            //TODO: Get other content for feed
-            //getCategoriesList();
-           // getAllListItems();
+            getUserListItems();
         }
         else {
             Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
         }
     } //onCreate
 
-    //UPDATE LIST WITH CONTENT
-    private void updateList() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        if (mItemData == null) {
-            //TODO: User Error Message in dialog (updateDisplay for Error: update so you can pass in JSON response)
-            requestMethods.updateDisplayForError();
-        }
-        else {
-            try {
-                mJsonItems = mItemData.getJSONArray(ApiConstants.RESPONSE_CONTENT);
-
-                for(int i = 0; i < mJsonItems.length(); i++) {
-                    JSONObject jsonSingleItem = mJsonItems.getJSONObject(i);
-                    MainListItem listItem = new MainListItem();
-                    listItem.setItemName(jsonSingleItem.getString(ApiConstants.ITEM_NAME));
-                    listItem.setMakerName(jsonSingleItem.getString(ApiConstants.MAKER_NAME));
-                    listItem.setItemID(String.valueOf(jsonSingleItem.getInt(ApiConstants.ITEM_ID)));
-
-                    //Adding to array of List Items
-                    mItemList.add(listItem);
-                }
-            } catch (JSONException e) {
-                Log.e(TAG, "Exception Caught: ", e);
+    public void CheckComplete() {
+        Log.v("Check complete", "start");
+        for(int i = 0; i < mItemList.size(); i++) {
+            if (mItemList.get(i).completed == false) {
+                return;
             }
-            feedAdapter.notifyDataSetChanged();
         }
-    } //updateList
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mListView.setAdapter(feedAdapter);
+        feedAdapter.notifyDataSetChanged();
+    }
 
-    //TODO: Create single method for user list items (logged in/not logged in) ~API
-    //GET ALL of USER‘S LIST ITEMS (NOT logged in) (limit # eventually)
-    private void getUserSelectedItems() {
+    private void getUserListItems() {
         RequestQueue queue = Volley.newRequestQueue(this);
+        JsonArrayRequest userListRequest;
+        String itemRequesturl;
+        JSONArray itemIds;
 
-        //Genymotion Emulator
-        String url = ApiConstants.GET_MULTIPLE_ITEMS;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/items";
+        //IF USER IS LOGGED IN
+        if(mCurrentUser.isLoggedIn()) {
+            Log.v("HELLO", "this user is logged in");
 
+<<<<<<< HEAD
         //TODO: if logged in, get user’s list
         //Create Object of List Item IDs to send
         JSONObject UserItemObject = sharedPreferencesMethods.createUserItemsObject(ApiConstants.USER_ITEMS, this);
@@ -214,34 +207,73 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         });
         queue.add(getUserItemsRequest);
     } //Get All items in the user’s list
+=======
+            //TODO: Check if anything is in sharedPreferences, and add those first?
+>>>>>>> apiTest
 
+            itemRequesturl = ApiConstants.GET_USER_LIST + userID;
 
-    //Get User’s List items if logged in
-    private void getUserListItems() {
-        RequestQueue queue = Volley.newRequestQueue(this);
+            userListRequest = new JsonArrayRequest(itemRequesturl,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            Log.v("RESPONSE", response.toString());
+                            //Handle Data
+                            for(int i=0; i < response.length(); i++) {
+                                try {
+                                    MainListItem listItem = new MainListItem();
+                                    JSONObject singleListItem = response.getJSONObject(i);
+                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
+                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
+                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
 
-        //Genymotion Emulator
-        String url = ApiConstants.GET_ALL_USER_ITEMS + mCurrentUser.getUserID();
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user" + mCurrentUser.getUserID();
+                                    mItemList.add(listItem);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
-        JsonObjectRequest getUserItemsRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        mItemData = response;
-                        //Log.v(TAG,response.toString());
-                        updateList();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                            }
+                            feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                            mListView.setAdapter(feedAdapter);
+                            Log.v("What the hell?", "?");
+                            for (int i = 0; i < mItemList.size(); i++) {
+                                Log.v("ITEM: ", mItemList.get(i).getItemName());
+                            }
+                            //feedAdapter.notifyDataSetChanged();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("error", error.toString());
+                    requestMethods.showErrorDialog(mContext,
+                            getString(R.string.error_title),
+                            getString(R.string.error_message));
+                }
+            });
+            queue.add(userListRequest);
+        }
+        //IF USER IS NOT LOGGED IN
+        else {
+            itemIds = SharedPreferencesMethods.RetrieveUserItemPreference(mContext);
+
+            for(int i=0; i < itemIds.length(); i++) {
+                    //TODO: do I need to set ItemID here?
+                    MainListItem listItem = new MainListItem();
+                try {
+                    listItem.setItemID(String.valueOf(itemIds.getInt(i)));
+                    listItem.setRequestMethods(requestMethods);
+                    listItem.setMainActivity(this);
+                    listItem.createNewUserListItem();
+                    Log.v(TAG, "Item added");
+                } catch (JSONException e) {
+                    Log.v(TAG,e.getMessage());
+                }
+                //Adding to array of List Items
+                mItemList.add(listItem);
             }
-        });
-        queue.add(getUserItemsRequest);
+        }
     }
-
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
@@ -265,13 +297,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         case 1: // Choose picture
                             Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             choosePhotoIntent.setType("image/*");
+                            //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
-//                        case 2: // Save Item to My List
-//                            //TODO: POST Data to save list item
-//                            //If logged in: add to array
-//                            //If not logged in: add to sharedPreference array
-//                            break;
                     }
                 }
                 private Uri getOutputMediaFileUri(int mediaType) {
@@ -329,17 +357,27 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 }
             };
 
-
     //Once photo taken or selected then do this:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK) {
+            if(requestCode == PhotoConstants.PICK_PHOTO_REQUEST) {
+                if(data == null) {
+                    Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mMediaUri = data.getData();
+                }
+            }
+
+            Log.i(TAG,"Media URI:" + mMediaUri);
+
+            //TODO: Check file size
             if(mCurrentUser.isLoggedIn()) {
-                //Create and send photo object
-                //Note on server side create relationship between user (creator) and photo
-                uploadPhoto();
+                //Create and upload photo as Base64 encoded string
+                uploadPhoto(mMediaUri);
             } else {
                 //Load Login Fragment
                 getSupportFragmentManager().beginTransaction()
@@ -360,60 +398,51 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     } //onActivityResult
 
     //Upload Photo to DB
-    protected void uploadPhoto() {
+    protected void uploadPhoto(Uri uri) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        //Genymotion Emulator
-        String url = ApiConstants.POST_PHOTO;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/photo";
+        String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + mCurrentItem.getItemID();
+
+        Log.v("URL IS: ", url);
 
         //Get Photo Object
-        JSONObject photoObject = requestMethods.createUploadPhotoObject(mCurrentItem, mMediaUri);
-        Log.v(TAG,photoObject.toString());
+        final String photoFile = requestMethods.createUploadPhotoObject(uri);
 
-        //Volley Request
-        JsonObjectRequest postPhotoRequest = new JsonObjectRequest(Request.Method.POST, url, photoObject,
-                new Response.Listener<JSONObject>() {
-
+        //Upload Photo
+        StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            //TODO: Check response code + display error
-//                            if(responseCode != 200), get response data + show error
+                    public void onResponse(String response) {
+                        //Get Response
+                        Log.v("PHOTO UPLOADED", response.toString());
 
-                            //Handle Data
-                            //TODO: Handle Response
-                            JSONObject postResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            Log.v(TAG, postResponse.toString());
+                        //SUCCESS text in confirmFragment
+                        Bundle b = new Bundle();
+                        b.putSerializable("status", ConfirmFragment.STATUS.SUCCESS);
+                        confirmFragment.setArguments(b);
 
-                            //TODO: if status is NOT ok, Change TextView in confirmFragment
-                            //SUCCESS text in confirmFragment
-                            Bundle b = new Bundle();
-                            b.putSerializable("status", ConfirmFragment.STATUS.SUCCESS);
-                            confirmFragment.setArguments(b);
-
-                            //Start photo confirmation fragment
-                            getSupportFragmentManager().beginTransaction()
-                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                    .replace(R.id.overlay_fragment_container, confirmFragment)
-                                    .commit();
-
-                            //send request to API
-                            //TODO: Find out why this does this twice (is it because the view is re-inflated?)
-                            //getUserSelectedItems();
-
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
+                        //Start photo confirmation fragment
+                        getSupportFragmentManager().beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .replace(R.id.overlay_fragment_container, confirmFragment)
+                                .commit();
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
-                //TODO: is this where error responses will be returned from API?
+            public void onErrorResponse(VolleyError error) {
+                Log.v(TAG, "THERE WAS AN ERROR");
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
             }
-        });
-        queue.add(postPhotoRequest);
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                return params;
+            }
+        };
+        queue.add(uploadPhotoRequest);
     } //uploadPhoto
 
     //When New User fills out sign up (save data locally)
@@ -422,7 +451,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         try {
             //Set current user data
             mCurrentUserObject = new JSONObject(userData);
-            mCurrentUser.setUserID(mCurrentUserObject.getInt(ApiConstants.USER_ID));
+            mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
             mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
             //TODO: set user token
 //            Log.v(TAG, mCurrentUser.getUserName());
@@ -444,13 +473,13 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         try {
             //Set current user Data
             mCurrentUserObject = new JSONObject(userData);
-            mCurrentUser.setUserID(mCurrentUserObject.getInt(ApiConstants.USER_ID));
+            mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
             mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
             //TODO: set user token
         } catch (JSONException e) {
             Log.e(TAG,e.getMessage());
         }
-        uploadPhoto();
+        uploadPhoto(mMediaUri);
     } //UserLoggedIn
 
     //User has cancelled an upload
@@ -471,7 +500,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onTermsClicked() {
         //Upload + take user to success screen
-        uploadPhoto();
+        uploadPhoto(mMediaUri);
     }
 
     @Override
@@ -517,10 +546,17 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        //TODO: Hide this if logged out + show logged in (or just change text to log out or log in)
+        if (id == R.id.logout) {
+            mCurrentUser = null;
+            SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+
+            Intent intent = new Intent(MainActivity.this, StartActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
         //Start Random Item Activity
         if (id == R.id.action_random) {

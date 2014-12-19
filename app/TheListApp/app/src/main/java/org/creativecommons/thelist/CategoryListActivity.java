@@ -181,7 +181,9 @@ public class CategoryListActivity extends Activity {
     private void updateList() {
         //mProgressBar.setVisibility(View.INVISIBLE);
         if (mCategoryData == null) {
-            requestMethods.updateDisplayForError();
+            requestMethods.showErrorDialog(mContext,
+                    getString(R.string.error_title),
+                    getString(R.string.error_message));
         }
         else {
             try {
@@ -207,7 +209,7 @@ public class CategoryListActivity extends Activity {
     private void getCategoriesRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
-        String url = "https://thelist.creativecommons.org/api/category";
+        String url = ApiConstants.GET_CATEGORIES;
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/category";
 
@@ -224,7 +226,9 @@ public class CategoryListActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("error", error.toString());
-                requestMethods.updateDisplayForError();
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
             }
         });
         queue.add(getCategoriesRequest);
@@ -237,8 +241,6 @@ public class CategoryListActivity extends Activity {
         String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
         String url = ApiConstants.UPDATE_USER + userID;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user";
 
         //Create Object to send
         JSONObject UserCategoriesObject = SharedPreferencesMethods.createCategoryListObject
@@ -252,24 +254,21 @@ public class CategoryListActivity extends Activity {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            //TODO: Check response code + display error
-//                            if(responseCode != 200), get response data + show error
+                        //TODO: Check response code + display error
+                            //if(responseCode != 200), get response data + show error
 
-                            //Handle Data
-                            mPutResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            //Log.v(TAG, mPutResponse.toString());
+                        //Handle Data
+                        mPutResponse = response;
+                        //Log.v(TAG, mPutResponse.toString());
 
-                            //mProgressBar.setVisibility(View.INVISIBLE);
-
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
+                        //mProgressBar.setVisibility(View.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                requestMethods.updateDisplayForError();
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
             }
         });
             queue.add(putCategoriesRequest);

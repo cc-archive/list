@@ -32,11 +32,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.MainListItem;
@@ -50,8 +49,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
@@ -63,7 +60,7 @@ public class RandomActivity extends Activity {
     ListUser mCurrentUser = new ListUser(this);
 
     //GET Request
-    protected JSONObject mRandomItemData;
+    protected JSONArray mRandomItemData;
     protected JSONObject mListItemData;
     String mMakerName;
     String mItemName;
@@ -73,16 +70,16 @@ public class RandomActivity extends Activity {
     protected JSONObject mPutResponse;
 
     //Handle Data
-    protected JSONObject mUserListItems; //Store in object to putExtra to next intent?
-    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    private ArrayList<String> mItemsViewed = new ArrayList<String>();
+    private List<MainListItem> mItemList;
+    //private ArrayList<String> mItemsViewed = new ArrayList<String>();
 
     //UI Elements
     TextView mTextView;
     ProgressBar mProgressBar;
 
     //Shared variables
-    int count;
+    int itemAddedCount;
+    int itemPositionCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +87,7 @@ public class RandomActivity extends Activity {
         setContentView(R.layout.activity_random);
         mContext = this;
 
+        mItemList = new ArrayList<MainListItem>();
         mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -106,43 +104,59 @@ public class RandomActivity extends Activity {
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Visual Confirmation of add
-                    final Toast toast = Toast.makeText(RandomActivity.this, "Added to Your List", Toast.LENGTH_SHORT);
-                    toast.show();
-
-                    new android.os.Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            toast.cancel();
-                        }
-                    }, 1200);
-
-                    MainListItem listItem = new MainListItem();
-                    listItem.setItemID(mItemID);
-                    listItem.setItemName(mItemName);
-                    listItem.setMakerName(mMakerName);
-                    mItemList.add(listItem);
-
+                    Log.v("THIS IS ITEMLIST", mItemList.toString());
                     //Once yes has been hit 3 times, forward to
-                    if(mItemList.size() < 3) {
-                        getRandomItemRequest();
+                    //TODO: Also condition that user is logged in
+
+                    //If User is logged in…
+                    if(mCurrentUser.isLoggedIn()) {
+                        Log.v("LOGGED IN", "user is logged in");
+                        //Add to UserList
+                        mCurrentUser.addItemToUserList(mItemID); //includes confirmation toast
+
+                        //Add items to ItemList
+                        MainListItem listItem = new MainListItem();
+                        listItem.setItemID(mItemID);
+                        listItem.setItemName(mItemName);
+                        listItem.setMakerName(mMakerName);
+                        mItemList.add(listItem);
+                    //or if user is not logged in…
                     } else {
+                        //Create list for non-existent user
+                        MainListItem listItem = new MainListItem();
+                        listItem.setItemID(mItemID);
+                        listItem.setItemName(mItemName);
+                        listItem.setMakerName(mMakerName);
+                        mItemList.add(listItem);
 
-                        //If user is logged in, send chosen list items to DB
-                        if(mCurrentUser.isLoggedIn()) {
-                            putRandomItemsRequest();
-                        }
-                        else {
-                            //Get array of selected item IDS
-                            List<String> userItemList = requestMethods.getItemIds(mItemList);
-                            //Log.v(TAG,mItemList.toString());
+                        Log.v("ITEM ID", mItemID);
 
-                            //Save Array as String to sharedPreferences
-                            SharedPreferencesMethods.SaveSharedPreference
-                                    (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                            SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
-                                            userItemList.toString(), mContext);
-                        }
+                        //Toast: Confirm List Item has been added
+                        final Toast toast = Toast.makeText(RandomActivity.this,
+                                "Added to Your List", Toast.LENGTH_SHORT);
+                        toast.show();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 1500);
+                    }
+                    //If mItemList has less than 3 items
+                    if(mItemList.size() < 3) {
+                        //Show me a new item
+                        updateView();
+                    //otherwise: save the items to shared preferences and go to new task
+                    } else {
+                        //Get array of selected item IDS
+                        List<String> userItemList = requestMethods.getItemIds(mItemList);
+                        //Log.v(TAG,mItemList.toString());
+
+                        //Save Array as String to sharedPreferences
+                        SharedPreferencesMethods.SaveSharedPreference
+                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
+                                        userItemList.toString(), mContext);
 
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);
@@ -150,30 +164,35 @@ public class RandomActivity extends Activity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
-                }
-            });
+                } //OnClick
+            }); //YesButton.setOnClickListener
+
             //No Button Functionality
             NoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getRandomItemRequest();
+                    updateView();
                 }
             });
+
+            //TODO: Camera Intent, (possibly remove if user is not logged in)
             //Camera Button Functionality
-            CameraButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: Camera Intent, (possibly remove if user is not logged in)
-                }
-            });
+//            CameraButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
         } else {
-            requestMethods.updateDisplayForError();
+            //Display network error
+            requestMethods.showErrorDialog(mContext,
+                    getString(R.string.error_title),
+                    getString(R.string.error_message));
+            Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
         }
-
-
     } //onCreate
 
-    private void updateList() {
+    private void updateView() {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
@@ -181,106 +200,61 @@ public class RandomActivity extends Activity {
         }
         else {
             try {
-                //Store values from response JSON Object
-                mListItemData = mRandomItemData.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                mItemID = String.valueOf(mListItemData.getInt(ApiConstants.ITEM_ID));
-
-                Log.v(TAG, mItemsViewed.toString() + " this is the id " + String.valueOf(mItemID));
-
-                //If the user has seen the item before, select a new item
-                //TODO: use this to prevent user of seeing repeat items in a single session?
-                if(mItemsViewed.contains(mItemID) && mItemsViewed.size() < ApiConstants.MAX_ITEMS_VIEWED){
-                    Log.v(TAG, "this item has been viewed before");
-                    getRandomItemRequest();
+                if(itemPositionCount == mRandomItemData.length()) {
+                    //If you run out of items, just go to MainActivity
+                    Intent intent = new Intent(RandomActivity.this, MainActivity.class);
+                    startActivity(intent);
                 } else {
-                    Log.v(TAG, "this item is new to me");
-                    //Add item ID to list of items user has seen
-                    mItemsViewed.add(mItemID);
+                    mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
+                    Log.v(TAG, mListItemData.toString());
+                    //Store values from response JSON Array
+                    mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
                     mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+                    Log.v(TAG +" this is the maker name for this item", mMakerName);
                     //Update UI
                     mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+
+                    itemPositionCount++;
                 }
 
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }
         }
-    } //updateList
+    } //updateView
 
+//    ------------------------------------------------------------------------------------------
+//    ------------------------------------------------------------------------------------------
+
+    //GET Random Items from API
     private void getRandomItemRequest() {
         RequestQueue queue = Volley.newRequestQueue(this);
-
-        //Generate number to request random item by ID
-        //TODO: Select item from random position in item array
-        Random random = new Random();
-        //TODO: Change max to length of response?
-        int n = random.nextInt(5) + 1;
-        String randomNumber = String.valueOf(n);
-
         //Genymotion Emulator
-        String url = ApiConstants.GET_SINGLE_ITEM + randomNumber;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/item/" + randomNumber;
+        String url = ApiConstants.GET_RANDOM_ITEMS;
 
-        JsonObjectRequest randomItemRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                            //Log.v(TAG,response.toString());
-                            mRandomItemData = response;
-                            updateList();
+                    public void onResponse(JSONArray response) {
+                        //Handle Data
+                        mRandomItemData = response;
+                        Log.v("HI RANDOM DATA", response.toString());
+                        updateView();
+
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+            public void onErrorResponse(VolleyError error) {
+                Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
+
             }
         });
         queue.add(randomItemRequest);
-    } //GetRandomItemRequest
-
-
-    private void putRandomItemsRequest() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = mCurrentUser.getUserID();
-        //Genymotion Emulator
-        String url = ApiConstants.UPDATE_USER + userID;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user";
-
-        //Retrieve User list item preferences
-        JSONArray userPreferences = SharedPreferencesMethods.RetrieveSharedPreference
-                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY, this);
-
-        //Create Object to send
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put(ApiConstants.USER_ITEMS, userPreferences);
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        //Log.v(TAG,jso.toString());
-
-        //Add items to user list
-        JsonObjectRequest putItemsRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //get Response
-                        //Log.v(TAG,response.toString());
-                        mPutResponse = response;
-                        //TODO: do something with response?
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
-            }
-        });
-        queue.add(putItemsRequest);
-    } //putRandomItemsRequest
+    } //getRandomItemRequest
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -302,5 +276,12 @@ public class RandomActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mItemList = null;
     }
 }

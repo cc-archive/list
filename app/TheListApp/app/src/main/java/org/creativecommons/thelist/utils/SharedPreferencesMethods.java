@@ -49,6 +49,8 @@ public class SharedPreferencesMethods {
     public static final String CATEGORY_PREFERENCE_KEY = "org.creativecommons.thelist.445329";
     public static final String LIST_ITEM_PREFERENCE = "item";
     public static final String LIST_ITEM_PREFERENCE_KEY = "org.creativecommons.thelist.348914";
+    public static final String USER_ID_PREFERENCE = "id";
+    public static final String USER_ID_PREFERENCE_KEY = "org.creativecommons.thelist.234958";
 
     //Add Array to SharedPreferences
     public static void SaveSharedPreference (String preferenceName, String key, String value, Context context){
@@ -57,18 +59,29 @@ public class SharedPreferencesMethods {
         editor.putString(key, value);
         editor.apply();
     }
-
+    //Retrieve sharedPReferences
     public static JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey, Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         String value = sharedPref.getString(preferenceKey, null);
 
         //TODO: Switch to json library (JSONNNN)
+        //JSONArray catIds = null;
+
+//        try {
+//            catIds = new JSONArray(value);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         //Convert from String to Array
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(value);
         JsonArray array = element.getAsJsonArray();
+<<<<<<< HEAD
         Log.v("HEY LOOK LISTEN", array.toString());
 
+=======
+//
+>>>>>>> apiTest
         //Make usable as JSONArray
         List<String> catIds = new ArrayList<String>();
         for (int i = 0; i < array.size(); i++) {
@@ -77,13 +90,24 @@ public class SharedPreferencesMethods {
 
         return new JSONArray(catIds);
     }
+    //Get User ID from SharedPreferences
+    public static String getUserId(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(USER_ID_PREFERENCE, Context.MODE_PRIVATE);
+        String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
+        return userID;
+    }
 
-    //TODO: use this
     public static void ClearSharedPreferences(String preferenceName, String preferenceKey, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.apply();
+    }
+
+    public static void ClearAllSharedPreferences(Context context) {
+        ClearSharedPreferences(USER_ID_PREFERENCE, USER_ID_PREFERENCE_KEY, context);
+        ClearSharedPreferences(CATEGORY_PREFERENCE, CATEGORY_PREFERENCE_KEY, context);
+        ClearSharedPreferences(LIST_ITEM_PREFERENCE, LIST_ITEM_PREFERENCE_KEY, context);
     }
 
     //Create object to send in Category Volley Request
@@ -128,6 +152,47 @@ public class SharedPreferencesMethods {
             e.printStackTrace();
         }
         return userItemObject;
+    }
+
+
+    //Retrieve Shared preferences as JSONArray
+    public static JSONArray RetrieveCategorySharedPreference (Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences(CATEGORY_PREFERENCE, Context.MODE_PRIVATE);
+        String value = sharedPref.getString(CATEGORY_PREFERENCE_KEY, null);
+
+        //TODO: Switch to json library (JSONNNN)
+        //Convert from String to Array
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(value);
+        JsonArray array = element.getAsJsonArray();
+
+        //Make usable as JSONArray
+        List<Integer> catIds = new ArrayList<Integer>();
+        for (int i = 0; i < array.size(); i++) {
+            catIds.add(array.get(i).getAsInt());
+        }
+
+        return new JSONArray(catIds);
+    }
+
+    //Retrieve User Item Preference
+    public static JSONArray RetrieveUserItemPreference(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(LIST_ITEM_PREFERENCE, Context.MODE_PRIVATE);
+        String value = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
+
+        //TODO: Switch to json library (JSONNNN)
+        //Convert from String to Array
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(value);
+        JsonArray array = element.getAsJsonArray();
+
+        //Make usable as JSONArray
+        List<Integer> itemIds = new ArrayList<Integer>();
+        for (int i = 0; i < array.size(); i++) {
+            itemIds.add(array.get(i).getAsInt());
+        }
+
+        return new JSONArray(itemIds);
     }
 
 }

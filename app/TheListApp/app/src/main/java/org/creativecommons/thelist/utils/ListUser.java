@@ -21,36 +21,41 @@ package org.creativecommons.thelist.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListUser {
     public static final String TAG = ListUser.class.getSimpleName();
     private String userName;
-    private int userID;
+    private String userID;
     private boolean logInState;
-    private ArrayList<MainListItem> userItems;
-    private ArrayList<MainListItem> userCategories;
+    private Context mContext;
+    private RequestMethods requestMethods;
+    //private ArrayList<MainListItem> userItems;
+    //private ArrayList<MainListItem> userCategories;
 
-    protected Context mContext;
-    public ListUser(Context mContext) {
-        this.mContext = mContext;
+    public ListUser(Context mc) {
+        mContext = mc;
+        requestMethods = new RequestMethods(mContext);
     }
 
     public ListUser() {
     }
-    public ListUser(String name, int id) {
+
+    public ListUser(String name, String id) {
         this.userName = name;
         this.userID = id;
         this.logInState = false;
@@ -63,12 +68,16 @@ public class ListUser {
 
     public boolean isLoggedIn() {
         //TODO: Check if User is logged in
+        userID = SharedPreferencesMethods.getUserId(mContext);
+
+        if(userID == null) {
+            logInState = false;
+        } else {
+            logInState = true;
+        }
+
         return logInState;
     }
-
-//    public void setLogInState(boolean bol) {
-//        this.logInState = bol;
-//    }
 
     public String getUserName() {
         return userName;
@@ -81,14 +90,25 @@ public class ListUser {
 //    public int getUserID() {
 //        return 2;
 //    }
+    //TODO: get rid of this
+    public void setLogInState(boolean bol) {
+        logInState = bol;
+    }
 
     public String getUserID() {
         //TODO: actually get ID
-        return String.valueOf(2);
-        //return userID;
+        userID = SharedPreferencesMethods.getUserId(mContext);
+
+        if(userID == null) {
+            Log.v(TAG, "You don’t got no userID, man");
+            return null;
+        } else {
+            return userID;
+        }
+
     }
 
-    public void setUserID(int id) {
+    public void setUserID(String id) {
         this.userID = id;
     }
 
@@ -102,61 +122,101 @@ public class ListUser {
         //TODO: Figure out what logOut even means…
         //LogOut User
         //Destroy mCurrentUser
-        //setLoginState to true (aka a token exists)
+        userName = null;
+        userID = null;
+        logInState = false;
+
+       //TODO: take you back to startActivity?
     }
 
-//    public void logIn(String name, String email, String password) {
-//        //Also Set login state to true?
-//        this.logInState = true;
-//
-//        //Get User Preferences for List Items + Category Items
-//
-//        if(name == null) {
-//            //PUT + add category Items
-//            //else, just login User?
-//        } else {
-//            //Use POST method + createNewUser
-//
-//        }
-//    }
 
-    public void logIn(String email, String password) {
-        final RequestMethods requestMethods = new RequestMethods(mContext);
+    public void logIn(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
-        //Genymotion Emulator
         String url = ApiConstants.LOGIN_USER;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user";
 
-        //Create Object to send
-        JSONObject jso = new JSONObject();
-        try {
-            jso.put(ApiConstants.USER_EMAIL, email);
-            jso.put(ApiConstants.USER_PASSWORD, password);
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        Log.v(TAG,jso.toString());
+        //Login User
+        StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    //Get Response
+                    Log.v(TAG, response.toString());
+                    try {
+                        JSONObject res = new JSONObject(response);
+                        userID = res.getString(ApiConstants.USER_ID);
+                    } catch (JSONException e) {
+                        Log.v(TAG,e.getMessage());
+                    }
+                    //TODO: Save session token in sharedPreferences
+                    //Save userID in sharedPreferences
+                    SharedPreferencesMethods.SaveSharedPreference
+                            (SharedPreferencesMethods.USER_ID_PREFERENCE,
+                                    SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
+                                    userID, mContext);
 
-        //Add items to user list
-        JsonObjectRequest logInUserRequest = new JsonObjectRequest(Request.Method.PUT, url, jso,
-                new Response.Listener<JSONObject>() {
+                    //logInState = true;
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.v(TAG, "THERE WAS AN ERROR");
+                    requestMethods.showErrorDialog(mContext,
+                            mContext.getString(R.string.error_title),
+                            mContext.getString(R.string.error_message));
+                }
+            }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put(ApiConstants.USER_PASSWORD, password);
+
+                return params;
+            }
+        };
+        queue.add(logInUserRequest);
+    } //logIn User
+
+    //Add SINGLE random item to user list
+    public void addItemToUserList (final String itemID) {
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+
+        //TODO: session token will know which user this is?
+        String url = ApiConstants.ADD_ITEM + userID + "/" + itemID;
+
+        //Add single item to user list
+        StringRequest postItemsRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         //get Response
-                        //Log.v(TAG,response.toString());
-                        JSONObject responseData = response;
-                        //TODO: set token in ListUser
-                        //TODO: Save token in sharedPreferences
-                        logInState = true;
+                        Log.v(TAG,"AN ITEM IS BEING ADDED");
+                        //TODO: do something with response?
+
+
+                        //Toast: Confirm List Item has been added
+                        final Toast toast = Toast.makeText(mContext,
+                                "Added to Your List", Toast.LENGTH_SHORT);
+                        toast.show();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 1500);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                requestMethods.updateDisplayForError();
+                //TODO: Add “not successful“ toast
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
+                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
             }
         });
-        queue.add(logInUserRequest);
-    } //logIn User
+        queue.add(postItemsRequest);
+    } //addItemToUserList
 
-}
+} //ListUser

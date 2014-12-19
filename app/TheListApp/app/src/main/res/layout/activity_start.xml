@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/explainer1"
+            android:text=""
             android:lineSpacingMultiplier="1.2"
             android:paddingBottom="15dp"
             android:id="@+id/intro"
@@ -77,9 +77,14 @@
             android:layout_centerHorizontal="true" />
         <TextView
             style="@style/account_helper_style"
-            android:text="@string/cc_logo_label"
+            android:text="@string/alpha_release_terms_label"
             android:id="@+id/cc_logo_label"
             android:layout_alignParentBottom="true" />
+        <!--<TextView-->
+            <!--style="@style/account_helper_style"-->
+            <!--android:text="@string/cc_logo_label"-->
+            <!--android:id="@+id/cc_logo_label"-->
+            <!--android:layout_alignParentBottom="true" />-->
     </RelativeLayout>
 
 </LinearLayout>

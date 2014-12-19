@@ -32,7 +32,6 @@ import android.widget.EditText;
 
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.json.JSONObject;
 
 
 public class AccountActivity extends ActionBarActivity {
@@ -41,10 +40,7 @@ public class AccountActivity extends ActionBarActivity {
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
-    ListUser mCurrentUser = new ListUser();
-
-    //For Request
-    protected JSONObject mUserData;
+    ListUser mCurrentUser;// = new ListUser(mContext);
 
     //UI Elements
     protected EditText mEmailLoginField;
@@ -60,7 +56,9 @@ public class AccountActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
         mContext = this;
+        mCurrentUser = new ListUser(mContext);
 
         mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
         mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
@@ -69,8 +67,8 @@ public class AccountActivity extends ActionBarActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPassword = mPasswordLoginField.getText().toString().trim();
                 mEmail = mEmailLoginField.getText().toString().trim();
+                mPassword = mPasswordLoginField.getText().toString().trim();
 
                 if(mPassword.isEmpty() || mEmail.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AccountActivity.this);
@@ -81,21 +79,18 @@ public class AccountActivity extends ActionBarActivity {
                     dialog.show();
                 }
                 else {
-                    //Login User
-                    //TODO: Login the user (how does this work?)
-                    //mCurrentUser.logIn(mUsername, mPassword);
-
+                    //Login User + save to sharedPreferences
+                    mCurrentUser.logIn(mEmail, mPassword);
 
                     //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences
                     //2. Login now and pass the data to MainActivity to set things
                     //3. Set sharedPreferences in login() and retrieve them in MainActivity
 
                     //Add username, id, token to sharedPreferences
-                    Intent intent = new Intent(mContext, MainActivity.class);
+                    Intent intent = new Intent(mContext, RandomActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-
                 }
             }
         });
@@ -141,7 +136,6 @@ public class AccountActivity extends ActionBarActivity {
 //        queue.add(newUserRequest);
 //    }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -157,10 +151,10 @@ public class AccountActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
-}
+}//AccountActivity

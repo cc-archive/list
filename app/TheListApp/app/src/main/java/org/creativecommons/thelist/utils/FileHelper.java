@@ -26,6 +26,7 @@ package org.creativecommons.thelist.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -42,8 +43,9 @@ public class FileHelper {
 	
 	public static final int SHORT_SIDE_TARGET = 1280;
 	
-	public static byte[] getByteArrayFromFile(Context context, Uri uri) {
+	public static String getByteArrayFromFile(Context context, Uri uri) {
 		byte[] fileBytes = null;
+        String fileString = null;
         InputStream inStream = null;
         ByteArrayOutputStream outStream = null;
         
@@ -77,15 +79,17 @@ public class FileHelper {
 	        	File file = new File(uri.getPath());
 	        	FileInputStream fileInput = new FileInputStream(file);
 	        	fileBytes = IOUtils.toByteArray(fileInput);
+                fileString = new String(Base64.encode(fileBytes, Base64.DEFAULT));
         	}
         	catch (IOException e) {
         		Log.e(TAG, e.getMessage());
         	}
        	}
         
-        return fileBytes;
+        return fileString;
 	}
-	
+
+    //Not used reduceImageForUpload
 	public static byte[] reduceImageForUpload(byte[] imageData) {
 		Bitmap bitmap = org.creativecommons.thelist.utils.ImageResizer.resizeImageMaintainAspectRatio(imageData, SHORT_SIDE_TARGET);
 		

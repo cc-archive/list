@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist;
+package fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;

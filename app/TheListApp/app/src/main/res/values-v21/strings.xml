@@ -38,7 +38,6 @@
     <string-array name="listItem_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <item>Save Item to Your List</item>
     </string-array>
 
     <string name="hello_world">Hello world!</string>

@@ -26,9 +26,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -67,15 +65,6 @@ public final class RequestMethods {
 //    }
 
     //UPDATE DISPLAY FOR ERROR METHOD
-    public void updateDisplayForError() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(mContext.getString(R.string.error_title));
-        builder.setMessage(mContext.getString(R.string.error_message));
-        builder.setPositiveButton(android.R.string.ok,null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-    //TODO: Replace above with showErrorDialog
     //Generic Error Dialog Builder
     public void showErrorDialog(Context context, String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -116,32 +105,48 @@ public final class RequestMethods {
         return null;
     }
 
+    //Create Upload Photo Object (in bytes) + return object with ID and userID
+    public String createUploadPhotoObject(Uri uri) {
+        //Convert photo file to Base64 encoded string
+        String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
+        Log.v("FILESTRING IS: ", fileString);
+        if(fileString == null) {
+            Log.v(TAG, "this is null");
+        }
+        return fileString;
+    }
 
     //Create Upload Photo Object (in bytes) + return object with ID and userID
-    public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
-        ListUser listUser = new ListUser();
+//    public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
+//        ListUser listUser = new ListUser();
+//
+//        //Get Data from currentItem to build JSONObject
+//        JSONObject photoObject = new JSONObject();
+//
+//        //Convert photo file to byte[]
+//        String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
+//        if(fileString == null) {
+//            return null;
+//        } else {
+//            //reduce size for upload: may not be necessary
+//            //fileBytes = FileHelper.reduceImageForUpload(fileBytes);
+//            //String fileType = String.valueOf(PhotoConstants.MEDIA_TYPE_IMAGE);
+//            //String fileName = FileHelper.getFileName(this, mMediaUri, fileType);
+//            try {
+//                photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
+//                photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
+//                photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileString);
+//            }
+//            catch (JSONException e) {
+//                Log.e(TAG, e.getMessage());
+//            }
+//            return photoObject;
+//        }
+//    }
 
-        //Get Data from currentItem to build JSONObject
-        JSONObject photoObject = new JSONObject();
 
-        //Convert photo file to byte[]
-        byte[] fileBytes = FileHelper.getByteArrayFromFile(mContext, uri);
-        if(fileBytes == null) {
-            return null;
-        } else {
-            //reduce size for upload: may not be necessary
-            //fileBytes = FileHelper.reduceImageForUpload(fileBytes);
-            //String fileType = String.valueOf(PhotoConstants.MEDIA_TYPE_IMAGE);
-            //String fileName = FileHelper.getFileName(this, mMediaUri, fileType);
-            try {
-                photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
-                photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
-                photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileBytes);
-            }
-            catch (JSONException e) {
-                Log.e(TAG, e.getMessage());
-            }
-            return photoObject;
-        }
-    }
+
+
+
+
 }
