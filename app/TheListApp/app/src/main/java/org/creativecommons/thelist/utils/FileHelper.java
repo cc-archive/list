@@ -44,7 +44,7 @@ public class FileHelper {
 	public static final int SHORT_SIDE_TARGET = 1280;
 	
 	public static String getByteArrayFromFile(Context context, Uri uri) {
-		byte[] fileBytes = null;
+		byte[] fileBytes;
         String fileString = null;
         InputStream inStream = null;
         ByteArrayOutputStream outStream = null;
@@ -62,6 +62,7 @@ public class FileHelper {
         		}
             
         		fileBytes = outStream.toByteArray();
+                fileString = new String(Base64.encode(fileBytes, Base64.DEFAULT));
         	}
 	        catch (IOException e) {
 	        	Log.e(TAG, e.getMessage());

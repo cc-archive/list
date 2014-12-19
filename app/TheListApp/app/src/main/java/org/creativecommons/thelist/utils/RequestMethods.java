@@ -109,10 +109,10 @@ public final class RequestMethods {
     public String createUploadPhotoObject(Uri uri) {
         //Convert photo file to Base64 encoded string
         String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
-        Log.v("FILESTRING IS: ", fileString);
         if(fileString == null) {
             Log.v(TAG, "this is null");
         }
+        Log.v("FILESTRING IS: ", fileString);
         return fileString;
     }
 

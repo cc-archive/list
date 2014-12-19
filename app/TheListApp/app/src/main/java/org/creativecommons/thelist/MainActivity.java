@@ -343,6 +343,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                 }
                 else {
+                    Log.v("DATA", data.toString());
                     mMediaUri = data.getData();
                 }
             }
@@ -380,6 +381,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         Log.v("URL IS: ", url);
 
         //Get Photo Object
+
+        Log.v("URI TEST", uri.toString());
         final String photoFile = requestMethods.createUploadPhotoObject(uri);
 
         //Upload Photo

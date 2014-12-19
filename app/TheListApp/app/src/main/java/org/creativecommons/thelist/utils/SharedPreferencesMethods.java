@@ -76,12 +76,7 @@ public class SharedPreferencesMethods {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(value);
         JsonArray array = element.getAsJsonArray();
-<<<<<<< HEAD
-        Log.v("HEY LOOK LISTEN", array.toString());
 
-=======
-//
->>>>>>> apiTest
         //Make usable as JSONArray
         List<String> catIds = new ArrayList<String>();
         for (int i = 0; i < array.size(); i++) {
