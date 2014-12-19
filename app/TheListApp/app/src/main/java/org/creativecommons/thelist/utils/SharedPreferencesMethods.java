@@ -59,7 +59,7 @@ public class SharedPreferencesMethods {
         editor.putString(key, value);
         editor.apply();
     }
-
+    //Retrieve sharedPReferences
     public static JSONArray RetrieveSharedPreference (String preferenceName, String preferenceKey, Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         String value = sharedPref.getString(preferenceKey, null);
@@ -97,6 +97,12 @@ public class SharedPreferencesMethods {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.apply();
+    }
+
+    public static void ClearAllSharedPreferences(Context context) {
+        ClearSharedPreferences(USER_ID_PREFERENCE, USER_ID_PREFERENCE_KEY, context);
+        ClearSharedPreferences(CATEGORY_PREFERENCE, CATEGORY_PREFERENCE_KEY, context);
+        ClearSharedPreferences(LIST_ITEM_PREFERENCE, LIST_ITEM_PREFERENCE_KEY, context);
     }
 
     //Create object to send in Category Volley Request

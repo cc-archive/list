@@ -46,7 +46,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.MainListAdapter;
@@ -64,8 +64,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import fragments.ConfirmFragment;
 import fragments.LoginFragment;
@@ -83,6 +85,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     ListUser mCurrentUser = new ListUser(this);
 
     protected JSONObject mCurrentUserObject;
+    protected String userID;
 
     //For API Requests + Response
     //protected JSONArray mItemData;
@@ -109,7 +112,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     TermsFragment termsFragment = new TermsFragment();
     ConfirmFragment confirmFragment = new ConfirmFragment();
 
-
     // --------------------------------------------------------
 
     @Override
@@ -117,6 +119,16 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+
+        //Check if user is logged in
+        userID = SharedPreferencesMethods.getUserId(mContext);
+        if(userID == null) {
+            mCurrentUser.setLogInState(false);
+            Log.v("YO" + TAG, "NOT LOGGED IN");
+        } else {
+            mCurrentUser.setLogInState(true);
+            Log.v("YO" + TAG, "LOGGED IN");
+        }
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
@@ -169,15 +181,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         JsonArrayRequest userListRequest;
         String itemRequesturl;
         JSONArray itemIds;
-        String userID = SharedPreferencesMethods.getUserId(mContext);
-
-        if(userID == null) {
-            mCurrentUser.setLogInState(false);
-            Log.v("YO", "NOT LOGGED IN");
-        } else {
-            mCurrentUser.setLogInState(true);
-            Log.v("YO", "LOGGED IN");
-        }
 
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
@@ -271,13 +274,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         case 1: // Choose picture
                             Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             choosePhotoIntent.setType("image/*");
+                            //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
-//                        case 2: // Save Item to My List
-//                            //TODO: POST Data to save list item
-//                            //If logged in: add to array
-//                            //If not logged in: add to sharedPreference array
-//                            break;
                     }
                 }
                 private Uri getOutputMediaFileUri(int mediaType) {
@@ -335,17 +334,27 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 }
             };
 
-
     //Once photo taken or selected then do this:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK) {
+            if(requestCode == PhotoConstants.PICK_PHOTO_REQUEST) {
+                if(data == null) {
+                    Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mMediaUri = data.getData();
+                }
+            }
+
+            Log.i(TAG,"Media URI:" + mMediaUri);
+
+            //TODO: Check file size
             if(mCurrentUser.isLoggedIn()) {
-                //Create and send photo object
-                //Note on server side create relationship between user (creator) and photo
-                uploadPhoto();
+                //Create and upload photo as Base64 encoded string
+                uploadPhoto(mMediaUri);
             } else {
                 //Load Login Fragment
                 getSupportFragmentManager().beginTransaction()
@@ -366,62 +375,51 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     } //onActivityResult
 
     //Upload Photo to DB
-    protected void uploadPhoto() {
+    protected void uploadPhoto(Uri uri) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        //Genymotion Emulator
-        String url = ApiConstants.POST_PHOTO;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/photo";
+        String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + mCurrentItem.getItemID();
+
+        Log.v("URL IS: ", url);
 
         //Get Photo Object
-        JSONObject photoObject = requestMethods.createUploadPhotoObject(mCurrentItem, mMediaUri);
-        Log.v(TAG,photoObject.toString());
+        final String photoFile = requestMethods.createUploadPhotoObject(uri);
 
-        //Volley Request
-        JsonObjectRequest postPhotoRequest = new JsonObjectRequest(Request.Method.POST, url, photoObject,
-                new Response.Listener<JSONObject>() {
-
+        //Upload Photo
+        StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-//                        try {
-//                            //TODO: Check response code + display error
-////                            if(responseCode != 200), get response data + show error
-//
-//                            //Handle Data
-//                            //TODO: Handle Response
-//                            //JSONObject postResponse = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-//                            //Log.v(TAG, postResponse.toString());
-//
-//                            //TODO: if status is NOT ok, Change TextView in confirmFragment
-//                            //SUCCESS text in confirmFragment
-//                            Bundle b = new Bundle();
-//                            b.putSerializable("status", ConfirmFragment.STATUS.SUCCESS);
-//                            confirmFragment.setArguments(b);
-//
-//                            //Start photo confirmation fragment
-//                            getSupportFragmentManager().beginTransaction()
-//                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                                    .replace(R.id.overlay_fragment_container, confirmFragment)
-//                                    .commit();
-//
-//                            //send request to API
-//                            //TODO: Find out why this does this twice (is it because the view is re-inflated?)
-//                            //getUserSelectedItems();
-//
-//                        } catch (JSONException e) {
-//                            Log.e(TAG, e.getMessage());
-//                        }
+                    public void onResponse(String response) {
+                        //Get Response
+                        Log.v("PHOTO UPLOADED", response.toString());
+
+                        //SUCCESS text in confirmFragment
+                        Bundle b = new Bundle();
+                        b.putSerializable("status", ConfirmFragment.STATUS.SUCCESS);
+                        confirmFragment.setArguments(b);
+
+                        //Start photo confirmation fragment
+                        getSupportFragmentManager().beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .replace(R.id.overlay_fragment_container, confirmFragment)
+                                .commit();
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse (VolleyError error){
+            public void onErrorResponse(VolleyError error) {
+                Log.v(TAG, "THERE WAS AN ERROR");
                 requestMethods.showErrorDialog(mContext,
-                        getString(R.string.error_title),
-                        getString(R.string.error_message));
-                //TODO: is this where error responses will be returned from API?
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
             }
-        });
-        queue.add(postPhotoRequest);
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                return params;
+            }
+        };
+        queue.add(uploadPhotoRequest);
     } //uploadPhoto
 
     //When New User fills out sign up (save data locally)
@@ -458,7 +456,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         } catch (JSONException e) {
             Log.e(TAG,e.getMessage());
         }
-        uploadPhoto();
+        uploadPhoto(mMediaUri);
     } //UserLoggedIn
 
     //User has cancelled an upload
@@ -479,7 +477,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onTermsClicked() {
         //Upload + take user to success screen
-        uploadPhoto();
+        uploadPhoto(mMediaUri);
     }
 
     @Override
@@ -525,10 +523,17 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        //TODO: Hide this if logged out + show logged in (or just change text to log out or log in)
+        if (id == R.id.logout) {
+            mCurrentUser = null;
+            SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+
+            Intent intent = new Intent(MainActivity.this, StartActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
         //Start Random Item Activity
         if (id == R.id.action_random) {

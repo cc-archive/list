@@ -24,6 +24,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,7 @@ public class LoginFragment extends Fragment {
     public static final String TAG = LoginFragment.class.getSimpleName();
     RequestMethods requestMethods = new RequestMethods(getActivity());
     SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
-    ListUser mCurrentUser = new ListUser();
+    ListUser mCurrentUser;
     Context mContext;
 
     //For Request
@@ -122,6 +123,7 @@ public class LoginFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mContext = getActivity();
+        mCurrentUser = new ListUser(mContext);
 
         //SignUp/Login Layouts
         mSignUpFields = (RelativeLayout)getView().findViewById(R.id.signup_section);
@@ -182,7 +184,7 @@ public class LoginFragment extends Fragment {
                             mContext.getString(R.string.login_error_title),
                             mContext.getString(R.string.login_error_message));
                 } else {
-                    //mCurrentUser.logIn(mLoginEmail, mLoginPassword);
+                    mCurrentUser.logIn(mLoginEmail, mLoginPassword);
                     mCallback.UserLoggedIn("User Logged In");
                 }
             }
@@ -198,16 +200,21 @@ public class LoginFragment extends Fragment {
                 mLoginFields.setVisibility(View.VISIBLE);
             }
         });
+
+        //TODO: Uncomment when new user’s can actually sign up in the app
         //I actually need to sign up
-        mNewAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Switch out field Layout
-                mUsernameField.requestFocus();
-                mSignUpFields.setVisibility(View.VISIBLE);
-                mLoginFields.setVisibility(View.GONE);
-            }
-        });
+//        mNewAccount.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //Switch out field Layout
+//                mUsernameField.requestFocus();
+//                mSignUpFields.setVisibility(View.VISIBLE);
+//                mLoginFields.setVisibility(View.GONE);
+//            }
+//        });
+        if(mNewAccount != null) {
+            mNewAccount.setMovementMethod(LinkMovementMethod.getInstance());
+        }
 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,8 +247,10 @@ public class LoginFragment extends Fragment {
             userObject.put(ApiConstants.USER_EMAIL,mEmail);
             userObject.put(ApiConstants.USER_PASSWORD,mPassword);
             userObject.put(ApiConstants.USER_NAME, mUsername);
-            userObject.put(ApiConstants.USER_CATEGORIES,categoryListObject.getJSONArray(ApiConstants.USER_CATEGORIES));
-            userObject.put(ApiConstants.USER_ITEMS,userItemObject.getJSONArray(ApiConstants.USER_ITEMS));
+
+            //TODO: send categories and item preferences
+            //userObject.put(ApiConstants.USER_CATEGORIES,categoryListObject.getJSONArray(ApiConstants.USER_CATEGORIES));
+            //userObject.put(ApiConstants.USER_ITEMS,userItemObject.getJSONArray(ApiConstants.USER_ITEMS));
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }

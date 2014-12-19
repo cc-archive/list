@@ -88,7 +88,8 @@ public class FileHelper {
         
         return fileString;
 	}
-	
+
+    //Not used reduceImageForUpload
 	public static byte[] reduceImageForUpload(byte[] imageData) {
 		Bitmap bitmap = org.creativecommons.thelist.utils.ImageResizer.resizeImageMaintainAspectRatio(imageData, SHORT_SIDE_TARGET);
 		

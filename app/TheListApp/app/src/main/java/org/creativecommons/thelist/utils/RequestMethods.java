@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import org.creativecommons.thelist.adapters.MainListItem;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -107,32 +106,43 @@ public final class RequestMethods {
     }
 
     //Create Upload Photo Object (in bytes) + return object with ID and userID
-    public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
-        ListUser listUser = new ListUser();
-
-        //Get Data from currentItem to build JSONObject
-        JSONObject photoObject = new JSONObject();
-
-        //Convert photo file to byte[]
+    public String createUploadPhotoObject(Uri uri) {
+        //Convert photo file to Base64 encoded string
         String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
+        Log.v("FILESTRING IS: ", fileString);
         if(fileString == null) {
-            return null;
-        } else {
-            //reduce size for upload: may not be necessary
-            //fileBytes = FileHelper.reduceImageForUpload(fileBytes);
-            //String fileType = String.valueOf(PhotoConstants.MEDIA_TYPE_IMAGE);
-            //String fileName = FileHelper.getFileName(this, mMediaUri, fileType);
-            try {
-                photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
-                photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
-                photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileString);
-            }
-            catch (JSONException e) {
-                Log.e(TAG, e.getMessage());
-            }
-            return photoObject;
+            Log.v(TAG, "this is null");
         }
+        return fileString;
     }
+
+    //Create Upload Photo Object (in bytes) + return object with ID and userID
+//    public JSONObject createUploadPhotoObject(MainListItem currentItem, Uri uri) {
+//        ListUser listUser = new ListUser();
+//
+//        //Get Data from currentItem to build JSONObject
+//        JSONObject photoObject = new JSONObject();
+//
+//        //Convert photo file to byte[]
+//        String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
+//        if(fileString == null) {
+//            return null;
+//        } else {
+//            //reduce size for upload: may not be necessary
+//            //fileBytes = FileHelper.reduceImageForUpload(fileBytes);
+//            //String fileType = String.valueOf(PhotoConstants.MEDIA_TYPE_IMAGE);
+//            //String fileName = FileHelper.getFileName(this, mMediaUri, fileType);
+//            try {
+//                photoObject.put(ApiConstants.PHOTO_ITEM_ID, currentItem.getItemID());
+//                photoObject.put(ApiConstants.PHOTO_USER_ID, listUser.getUserID());
+//                photoObject.put(ApiConstants.PHOTO_BYTE_ARRAY, fileString);
+//            }
+//            catch (JSONException e) {
+//                Log.e(TAG, e.getMessage());
+//            }
+//            return photoObject;
+//        }
+//    }
 
 
 

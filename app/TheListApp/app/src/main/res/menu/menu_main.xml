@@ -4,6 +4,6 @@
     tools:context="org.creativecommons.thelist.MainActivity">
     <item android:id="@+id/action_random" android:title="@string/action_random_label"
         android:orderInCategory="100" compat:showAsAction="ifRoom" />
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+    <item android:id="@+id/logout" android:title="@string/log_out_menu_label"
         android:orderInCategory="100" compat:showAsAction="never" />
 </menu>

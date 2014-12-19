@@ -64,10 +64,11 @@ public final class ApiConstants {
     public static final String MAKER_URI = "uri";
 
     //Photo
-    //public static final String PHOTO_ID = "id";
-    //public static final String PHOTO_ITEM_ID = "itemID";
-    //public static final String PHOTO_USER_ID = "userID";
+    public static final String PHOTO_ID = "id";
+    public static final String PHOTO_ITEM_ID = "itemID";
+    public static final String PHOTO_USER_ID = "userID";
     public static final String PHOTO_BYTE_ARRAY = "photo";
+    public static final String POST_PHOTO_KEY = "filedata";
 
     //URL
     //TODO: Add all Endpoints
@@ -94,8 +95,7 @@ public final class ApiConstants {
     //GET Single Item Method
     //public static final String GET_SINGLE_ITEM = FAPI + "/item/";
     //POST, GET Photo
-    public static final String POST_PHOTO = FAPI + "/photo/";
-
+    //public static final String POST_PHOTO = FAPI + "/photo/";
 
     //Real API
     //Must add item ID
@@ -113,13 +113,11 @@ public final class ApiConstants {
     //POST Item to User List (+ ID , + ItemID)
     public static final String ADD_ITEM = URL + "/userlist/";
     //POST photo (+ ID, + ItemID)
-    public static final String ADD_PHOTO = URL + "/photo/";
+    public static final String ADD_PHOTO = URL + "/photos/";
     //POST login (+ email and password)
     public static final String LOGIN_USER = URL + "/users/login";
 
     //TODO: API not ready yet
-    //USER LOGIN: send email address in password; return user token
-
     //USER REGISTER: send email address and password
     //public static final String REGISTER_USER = URL + "/users/register";
     //USER PROFILE (append with EMAIL?)

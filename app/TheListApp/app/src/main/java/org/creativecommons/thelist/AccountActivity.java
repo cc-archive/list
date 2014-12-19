@@ -56,6 +56,7 @@ public class AccountActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
         mContext = this;
         mCurrentUser = new ListUser(mContext);
 
@@ -90,7 +91,6 @@ public class AccountActivity extends ActionBarActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-
                 }
             }
         });
@@ -136,7 +136,6 @@ public class AccountActivity extends ActionBarActivity {
 //        queue.add(newUserRequest);
 //    }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -152,10 +151,10 @@ public class AccountActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
-}
+}//AccountActivity

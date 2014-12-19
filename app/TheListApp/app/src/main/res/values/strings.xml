@@ -33,7 +33,6 @@
     <string-array name="listItem_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <!-- <item>Save Item to Your List</item> -->
     </string-array>
 
     <!-- Onboarding Explainers -->
@@ -71,7 +70,7 @@
     <string name="loading_label">Uploading…</string>
     <string name="signUpButton_label">Create my account</string>
     <string name="login_fragment_title">Who do we attribute this photo to?</string>
-    <string name="login_fragment_text">Create a Creative Commons account in one click</string>
+    <string name="login_fragment_text">Login or Create a Creative Commons account in one click</string>
     <string name="cancel_button_label">CANCEL</string>
 
     <!-- Terms Fragment -->
@@ -84,7 +83,7 @@
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
     <string name="upload_success_title">Upload Success!</string>
     <string name="existing_account_text">I already have an account</string>
-    <string name="new_account_text">Actually, I need an account</string>
+    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php"><u>Actually, I need an account</u></a></string>
 
     <!-- confirm Fragment -->
     <string name="upload_cancelled_title">Upload Cancelled</string>
@@ -98,5 +97,6 @@
     <string name="cc_logo_label">powered by Creative Commons</string>
     <string name="cc_logo_contentDescription">Creative Commons Logo</string>
     <string name="title_activity_explainer1">Explainer1</string>
-
+    <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
+    <string name="log_out_menu_label">Log Out</string>
 </resources>

@@ -16,28 +16,34 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingTop="25dp">
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:layout_centerInParent="true" />
+        android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/loading_label"
-            android:id="@+id/progressBar_label"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textColor="@color/primary_light"
-            android:layout_below="@+id/progressBar"
-            android:layout_centerHorizontal="true"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/terms_logo"
+            android:id="@+id/login_icon"
+            android:contentDescription="@string/cc_logo_contentDescription" />
+        <!--<ProgressBar-->
+            <!--style="?android:attr/progressBarStyleLarge"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/progressBar"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:layout_centerInParent="true" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--android:text="@string/loading_label"-->
+            <!--android:id="@+id/progressBar_label"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textColor="@color/primary_light"-->
+            <!--android:layout_below="@+id/progressBar"-->
+            <!--android:layout_centerHorizontal="true"/>-->
     </RelativeLayout>
 
     <RelativeLayout
@@ -46,7 +52,7 @@
         android:layout_weight="0"
         android:id="@+id/section_text"
         android:paddingTop="40dp"
-        android:layout_marginBottom="35sp">
+        android:layout_marginBottom="0dp">
     <TextView
         android:text="@string/login_fragment_title"
         android:id="@+id/confirm_title"
@@ -63,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:minHeight="216dp"
+        android:visibility="gone"
         android:id="@+id/signup_section">
 
         <EditText
@@ -104,14 +110,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:minHeight="216dp"
-        android:visibility="gone"
-        android:id="@+id/login_fields">
+        android:id="@+id/login_fields"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="10dp">
 
         <EditText
             style="@style/input_fields"
             android:hint="@string/email_hint"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:id="@+id/hiddenField"/>
 
         <EditText
@@ -127,14 +133,15 @@
             android:id="@+id/passwordLoginField"
             android:inputType="textPassword"
             android:hint="@string/password_hint"
-            android:layout_below="@+id/emailLoginField" />
+            android:layout_below="@+id/emailLoginField"
+            android:layout_marginBottom="10dp" />
 
         <Button
             style="@style/standard_button"
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
             android:layout_below="@+id/passwordLoginField"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <TextView
             style="@style/account_helper_style"

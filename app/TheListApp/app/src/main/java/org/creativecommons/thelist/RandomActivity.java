@@ -70,7 +70,7 @@ public class RandomActivity extends Activity {
     protected JSONObject mPutResponse;
 
     //Handle Data
-    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
+    private List<MainListItem> mItemList;
     //private ArrayList<String> mItemsViewed = new ArrayList<String>();
 
     //UI Elements
@@ -87,8 +87,7 @@ public class RandomActivity extends Activity {
         setContentView(R.layout.activity_random);
         mContext = this;
 
-
-
+        mItemList = new ArrayList<MainListItem>();
         mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -105,71 +104,68 @@ public class RandomActivity extends Activity {
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.v("THIS IS ITEMLIST", mItemList.toString());
                     //Once yes has been hit 3 times, forward to
                     //TODO: Also condition that user is logged in
-                    if(mItemList.size() < 2) {
-                        if(mCurrentUser.isLoggedIn()) {
-                            //TODO: DO PUT REQUEST TO USER LIST
-                            mCurrentUser.addItemToUserList(mItemID); //includes confirmation toast
 
-                        } else {
-                            //TODO: Save item id to list
-                            //Create list of items
-                            MainListItem listItem = new MainListItem();
-                            listItem.setItemID(mItemID);
-                            listItem.setItemName(mItemName);
-                            listItem.setMakerName(mMakerName);
-                            mItemList.add(listItem);
+                    //If User is logged in…
+                    if(mCurrentUser.isLoggedIn()) {
+                        Log.v("LOGGED IN", "user is logged in");
+                        //Add to UserList
+                        mCurrentUser.addItemToUserList(mItemID); //includes confirmation toast
 
-                            Log.v("ITEM ID", mItemID);
-
-                            //Toast: Confirm List Item has been added
-                            final Toast toast = Toast.makeText(RandomActivity.this,
-                                    "Added to Your List", Toast.LENGTH_SHORT);
-                            toast.show();
-                            new android.os.Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    toast.cancel();
-                                }
-                            }, 1500);
-                        }
-                        updateView();
-                    }
-                    else {
-                        //Create list of items
+                        //Add items to ItemList
+                        MainListItem listItem = new MainListItem();
+                        listItem.setItemID(mItemID);
+                        listItem.setItemName(mItemName);
+                        listItem.setMakerName(mMakerName);
+                        mItemList.add(listItem);
+                    //or if user is not logged in…
+                    } else {
+                        //Create list for non-existent user
                         MainListItem listItem = new MainListItem();
                         listItem.setItemID(mItemID);
                         listItem.setItemName(mItemName);
                         listItem.setMakerName(mMakerName);
                         mItemList.add(listItem);
 
-                        //TODO: SAVE LIST TO PREFERENCES AND GO TO NEW ACTIVITY
-                        //If user is logged in, send chosen list items to DB
-                        if(mCurrentUser.isLoggedIn()) {
-                            //TODO: Check: this takes all user selections and sends at once
-                            //postRandomItemsRequest();
-                            Log.v(TAG, "user is logged in but items should already be in user list");
-                        }
-                        else {
-                            //Get array of selected item IDS
-                            List<String> userItemList = requestMethods.getItemIds(mItemList);
-                            //Log.v(TAG,mItemList.toString());
+                        Log.v("ITEM ID", mItemID);
 
-                            //Save Array as String to sharedPreferences
-                            SharedPreferencesMethods.SaveSharedPreference
-                                    (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                            SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
-                                            userItemList.toString(), mContext);
-                        }
+                        //Toast: Confirm List Item has been added
+                        final Toast toast = Toast.makeText(RandomActivity.this,
+                                "Added to Your List", Toast.LENGTH_SHORT);
+                        toast.show();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 1500);
+                    }
+                    //If mItemList has less than 3 items
+                    if(mItemList.size() < 3) {
+                        //Show me a new item
+                        updateView();
+                    //otherwise: save the items to shared preferences and go to new task
+                    } else {
+                        //Get array of selected item IDS
+                        List<String> userItemList = requestMethods.getItemIds(mItemList);
+                        //Log.v(TAG,mItemList.toString());
+
+                        //Save Array as String to sharedPreferences
+                        SharedPreferencesMethods.SaveSharedPreference
+                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
+                                        userItemList.toString(), mContext);
+
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
-                }
-            });
+                } //OnClick
+            }); //YesButton.setOnClickListener
 
             //No Button Functionality
             NoButton.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +188,7 @@ public class RandomActivity extends Activity {
             requestMethods.showErrorDialog(mContext,
                     getString(R.string.error_title),
                     getString(R.string.error_message));
+            Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
         }
     } //onCreate
 
@@ -204,8 +201,9 @@ public class RandomActivity extends Activity {
         else {
             try {
                 if(itemPositionCount == mRandomItemData.length()) {
-                    getRandomItemRequest();
-                    //TODO: or take to next activity?
+                    //If you run out of items, just go to MainActivity
+                    Intent intent = new Intent(RandomActivity.this, MainActivity.class);
+                    startActivity(intent);
                 } else {
                     mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
                     Log.v(TAG, mListItemData.toString());
@@ -248,10 +246,11 @@ public class RandomActivity extends Activity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("error", error.toString());
+                Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
                 requestMethods.showErrorDialog(mContext,
                         getString(R.string.error_title),
                         getString(R.string.error_message));
+
             }
         });
         queue.add(randomItemRequest);
@@ -277,5 +276,12 @@ public class RandomActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        mItemList = null;
     }
 }

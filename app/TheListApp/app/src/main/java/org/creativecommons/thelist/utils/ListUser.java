@@ -31,11 +31,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.adapters.MainListItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,10 +44,8 @@ public class ListUser {
     private boolean logInState;
     private Context mContext;
     private RequestMethods requestMethods;
-    private ArrayList<MainListItem> userItems;
-    private ArrayList<MainListItem> userCategories;
-
-
+    //private ArrayList<MainListItem> userItems;
+    //private ArrayList<MainListItem> userCategories;
 
     public ListUser(Context mc) {
         mContext = mc;
@@ -158,7 +154,7 @@ public class ListUser {
                                     SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
                                     userID, mContext);
 
-                    logInState = true;
+                    //logInState = true;
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -194,8 +190,9 @@ public class ListUser {
                     @Override
                     public void onResponse(String response) {
                         //get Response
-                        Log.v(TAG,response.toString());
+                        Log.v(TAG,"AN ITEM IS BEING ADDED");
                         //TODO: do something with response?
+
 
                         //Toast: Confirm List Item has been added
                         final Toast toast = Toast.makeText(mContext,
@@ -216,17 +213,9 @@ public class ListUser {
                 requestMethods.showErrorDialog(mContext,
                         mContext.getString(R.string.error_title),
                         mContext.getString(R.string.error_message));
+                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(ApiConstants.POST_ITEM_ID, userID);
-                params.put(ApiConstants.POST_USER_ID, itemID);
-
-                return params;
-            }
-        };
+        });
         queue.add(postItemsRequest);
     } //addItemToUserList
 
