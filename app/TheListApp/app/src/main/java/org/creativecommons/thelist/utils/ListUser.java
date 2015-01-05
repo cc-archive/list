@@ -21,6 +21,7 @@ package org.creativecommons.thelist.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.RandomActivity;
+import org.creativecommons.thelist.StartActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,9 +75,14 @@ public class ListUser {
         return false;
     }
 
-    public boolean isLoggedIn() {
+    public boolean isLoggedIn(Context context) {
         //TODO: Check if User is logged in
-        userID = SharedPreferencesMethods.getUserId(mContext);
+        SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesMethods.USER_ID_PREFERENCE, Context.MODE_PRIVATE);
+
+        
+        if(sharedPref.contains(sharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) {
+            userID = SharedPreferencesMethods.getUserId(mContext);
+        }
 
         if (userID == null) {
             logInState = false;
@@ -104,7 +111,12 @@ public class ListUser {
 
     public String getUserID() {
         //TODO: actually get ID
-        userID = SharedPreferencesMethods.getUserId(mContext);
+        try {
+            userID = SharedPreferencesMethods.getUserId(mContext);
+        } catch(NullPointerException e){
+            userID = null;
+        }
+
 
         if (userID == null) {
             Log.v(TAG, "You don’t got no userID, man");
@@ -129,11 +141,19 @@ public class ListUser {
         //TODO: Figure out what logOut even means…
         //LogOut User
         //Destroy mCurrentUser
+        //Destroy session token
         userName = null;
         userID = null;
         logInState = false;
 
+        //Clear all sharedPreferences
+        SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+
         //TODO: take you back to startActivity?
+        Intent intent = new Intent(mContext, StartActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mContext.startActivity(intent);
     }
 
     public void logIn(final String username, final String password, final LoginFragment.LoginClickListener listener) {

@@ -79,6 +79,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         TermsFragment.TermsClickListener, ConfirmFragment.ConfirmListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
+    private Menu menu;
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
@@ -170,7 +171,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     public void CheckComplete() {
         Log.v("Check complete", "start");
         for(int i = 0; i < mItemList.size(); i++) {
-            if (mItemList.get(i).completed == false) {
+            if (!mItemList.get(i).completed) {
                 return;
             }
         }
@@ -196,16 +197,13 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("RESPONSE", response.toString());
+                        //Log.v("RESPONSE", response.toString());
                         //Handle Data
                         for(int i=0; i < response.length(); i++) {
                             //mItemList = new ArrayList<MainListItem>();
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
-
-                                //if(singleListItem.getString(ApiConstants.ITEM_COMPLETED) == null ||
-                                //   singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
-                                //if (singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
+                                //Only show items in the user’s list that have not been completed
                                 if (singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
@@ -217,11 +215,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                    continue;
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.v(TAG, e.getMessage());
                             }
                         }
-                        Log.v("ITEMLIST", mItemList.toString());
-
+                        //Log.v("ITEMLIST", mItemList.toString());
                         feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mListView.setAdapter(feedAdapter);
@@ -250,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     listItem.setRequestMethods(requestMethods);
                     listItem.setMainActivity(this);
                     listItem.createNewUserListItem();
-                    Log.v(TAG, "Item added");
+                    //Log.v(TAG, "Item added");
                 } catch (JSONException e) {
                     Log.v(TAG,e.getMessage());
                 }
@@ -395,7 +392,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         //Get Response
                         Log.v("PHOTO UPLOADED", response.toString());
                         getUserListItems();
-//                        mListView.setAdapter(feedAdapter);
+                        //mListView.setAdapter(feedAdapter);
                         mItemList.remove(activeItemPosition);
                         //feedAdapter.notifyDataSetChanged();
 
@@ -538,7 +535,24 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
+
+        //Change title names based on logInState
+        updateMenuTitles();
+
+        this.menu = menu;
+        return true;
+        //return super.onCreateOptionsMenu(menu);
+    }
+
+    private void updateMenuTitles(){
+        MenuItem logItem = menu.findItem(R.id.logout);
+        if(mCurrentUser.isLoggedIn()){
+            Log.v(TAG, "YOU ARE LOGGED IN");
+            logItem.setTitle(R.string.login_button_label);
+        } else {
+            logItem.setTitle(R.string.log_out_menu_label);
+            Log.v(TAG, "YOU ARE LOGGED OUT");
+        }
     }
 
     @Override
@@ -551,13 +565,21 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //TODO: Hide this if logged out + show logged in (or just change text to log out or log in)
         if (id == R.id.logout) {
-            mCurrentUser = null;
-            SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
 
-            Intent intent = new Intent(MainActivity.this, StartActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            if(mCurrentUser.isLoggedIn()){
+                mCurrentUser.logOut();
+//                mCurrentUser = null;
+//                SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+//
+//                Intent intent = new Intent(MainActivity.this, StartActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+            } else {
+                //TODO:Make sure MainActivity is added to backstack
+                Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+                startActivity(intent);
+            }
         }
         //Start Random Item Activity
         if (id == R.id.action_random) {

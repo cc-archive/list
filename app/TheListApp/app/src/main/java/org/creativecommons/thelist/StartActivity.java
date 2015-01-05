@@ -49,12 +49,12 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         setContentView(R.layout.activity_start);
 
         //TODO: Check if user token is valid, redirect to MainActivity if yes
-//        if(mCurrentUser.isLoggedIn()) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//        }
+        if(mCurrentUser.isLoggedIn()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
 
         //UI Elements
         mStartButton = (Button) findViewById(R.id.startButton);
@@ -84,15 +84,15 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         }
 
         //TODO: finish explainer fragment
-//        mStartButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //Load explainerFragment
-//                getSupportFragmentManager().beginTransaction()
-//                        .add(R.layout.activity_start,explainerFragment)
-//                        .commit();
-//            }
-//        });
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Load explainerFragment
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container,explainerFragment)
+                        .commit();
+            }
+        }); //StartButton ClickListener
 
     } //OnCreate
 
@@ -101,8 +101,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
         startActivity(intent);
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

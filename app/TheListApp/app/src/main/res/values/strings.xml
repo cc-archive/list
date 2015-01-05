@@ -40,7 +40,7 @@
         <item>Photos you share with The List will be available for any person or organization to
             use, as long as they give you credit</item>
         <item>Youll be helping creators tell their stories – on Wikipedia, social media, in the
-            news, or in campaigns.\nTogether were building a commons of creativity and knowledge
+            news, or in campaigns.\n\nTogether were building a commons of creativity and knowledge
             for everyone</item>
     </string-array>
 
@@ -58,7 +58,7 @@
     <string name="title_activity_feed">Feed Activity</string>
     <string name="email_hint">Email</string>
     <string name="full_name_hint">Full Name</string>
-    <string name="title_activity_account">Account Activity</string>
+    <string name="title_activity_account">Log In</string>
     <string name="title_activity_start">Start Activity</string>
 
     <!-- TODO: Insert ascii codes -->

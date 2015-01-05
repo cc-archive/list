@@ -104,7 +104,7 @@ public class RandomActivity extends Activity {
             YesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.v("THIS IS ITEMLIST", mItemList.toString());
+                    //Log.v("THIS IS ITEMLIST", mItemList.toString());
                     //Once yes has been hit 3 times, forward to
                     //TODO: Also condition that user is logged in
 
@@ -188,7 +188,7 @@ public class RandomActivity extends Activity {
             requestMethods.showErrorDialog(mContext,
                     getString(R.string.error_title),
                     getString(R.string.error_message));
-            Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
+            //Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
         }
     } //onCreate
 
@@ -206,12 +206,12 @@ public class RandomActivity extends Activity {
                     startActivity(intent);
                 } else {
                     mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
-                    Log.v(TAG, mListItemData.toString());
+                    //Log.v(TAG, mListItemData.toString());
                     //Store values from response JSON Array
                     mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
                     mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
-                    Log.v(TAG +" this is the maker name for this item", mMakerName);
+                    //Log.v(TAG +" this is the maker name for this item", mMakerName);
                     //Update UI
                     mTextView.setText(mMakerName + " needs a picture of " + mItemName);
 
@@ -239,14 +239,14 @@ public class RandomActivity extends Activity {
                     public void onResponse(JSONArray response) {
                         //Handle Data
                         mRandomItemData = response;
-                        Log.v("HI RANDOM DATA", response.toString());
+                        //Log.v("HI RANDOM DATA", response.toString());
                         updateView();
 
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
+                //Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
                 requestMethods.showErrorDialog(mContext,
                         getString(R.string.error_title),
                         getString(R.string.error_message));

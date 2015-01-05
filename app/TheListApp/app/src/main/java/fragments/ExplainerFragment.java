@@ -23,6 +23,7 @@ package fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,13 @@ public class ExplainerFragment extends Fragment {
     protected Button mNextButton;
     protected TextView mTextView;
     protected ImageView mImageView;
+
+    protected int count;
+
+    //Text/Image Resources
+    String[] explainerText;
+    String[] explainerButtonText;
+
 
     //Interface with Activity
     OnClickListener mCallback;
@@ -64,38 +72,44 @@ public class ExplainerFragment extends Fragment {
 
         mNextButton = (Button)getView().findViewById(R.id.nextButton);
         mTextView = (TextView)getView().findViewById(R.id.explainer_text);
+        mImageView = (ImageView)getView().findViewById(R.id.explainer_image);
+
+        explainerText = getActivity().getResources().getStringArray
+                (R.array.onboarding_explainers);
+        explainerButtonText = getActivity().getResources().getStringArray
+                (R.array.onboarding_button_text);
+
         //TODO: if clickCount < array.length(), show next item in array else, send onNextClicked()
+        count = 0;
+
+        //Get the first explainer (at [0])
+        setExplainerContent();
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int count = 0;
-
-                //Text/Image Resources
-                String [] explainerText = getResources().getStringArray
-                        (R.array.onboarding_explainers);
-                String [] explainerButtonText = getResources().getStringArray
-                        (R.array.onboarding_button_text);
-                //TODO: check this works
-                String imageName = "R.drawable.explainer" + String.valueOf(count+1);
 
                 if(count < explainerText.length) {
-                    //Set Image/Text Resources
-                    int id = getResources().getIdentifier(imageName, null, null);
-                    mImageView.setImageResource(id);
-                    mTextView.setText(explainerText[count]);
-                    mNextButton.setText(explainerButtonText[count]);
-
-                    count ++;
+                    setExplainerContent();
                 } else {
                     //Notify Activity
                     mCallback.onNextClicked();
                 }
-
-
-
             }
         });
+    }
+
+    public void setExplainerContent(){
+        String imageName = "R.drawable.explainer" + String.valueOf(count+1);
+        Log.v("COUNT IS: ", String.valueOf(count));
+        //Set Image/Text Resources
+        int id = getResources().getIdentifier(imageName, null, null);
+        mImageView.setImageResource(id);
+        mTextView.setText(explainerText[count]);
+        Log.v("EXPLAIN: ", explainerText[count]);
+        mNextButton.setText(explainerButtonText[count]);
+        Log.v("EXPLAIN BUTTON: ", explainerButtonText[count]);
+        count ++;
     }
 
     @Override
