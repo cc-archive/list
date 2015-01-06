@@ -53,9 +53,9 @@ import java.util.List;
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
     protected Context mContext;
-
     //Helper Methods
-    RequestMethods requestMethods = new RequestMethods(this);
+    RequestMethods requestMethods;
+    SharedPreferencesMethods sharedPreferencesMethods;
     //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
@@ -86,6 +86,8 @@ public class RandomActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random);
         mContext = this;
+        requestMethods = new RequestMethods(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
 
         mItemList = new ArrayList<MainListItem>();
         mTextView = (TextView) findViewById(R.id.item_text);
@@ -129,7 +131,7 @@ public class RandomActivity extends Activity {
                         listItem.setMakerName(mMakerName);
                         mItemList.add(listItem);
 
-                        Log.v("ITEM ID", mItemID);
+                        //Log.v("ITEM ID", mItemID);
 
                         //Toast: Confirm List Item has been added
                         final Toast toast = Toast.makeText(RandomActivity.this,
@@ -153,10 +155,9 @@ public class RandomActivity extends Activity {
                         //Log.v(TAG,mItemList.toString());
 
                         //Save Array as String to sharedPreferences
-                        SharedPreferencesMethods.SaveSharedPreference
-                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE,
-                                        SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
-                                        userItemList.toString(), mContext);
+                        sharedPreferencesMethods.SaveSharedPreference
+                                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                        userItemList.toString());
 
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);
@@ -217,7 +218,6 @@ public class RandomActivity extends Activity {
 
                     itemPositionCount++;
                 }
-
             } catch (JSONException e) {
                 Log.e(TAG,e.getMessage());
             }

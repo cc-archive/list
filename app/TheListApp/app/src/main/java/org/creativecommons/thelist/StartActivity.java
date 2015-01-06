@@ -19,7 +19,9 @@
 
 package org.creativecommons.thelist;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
@@ -30,15 +32,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import fragments.ExplainerFragment;
 
 
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener {
-    ListUser mCurrentUser = new ListUser();
+    ListUser mCurrentUser;
     protected Button mStartButton;
     protected Button mAccountButton;
     protected TextView mTermsLink;
+    protected Context mContext;
+    protected SharedPreferencesMethods sharedPreferencesMethods;
 
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
@@ -47,6 +52,13 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        mContext = this;
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mCurrentUser = new ListUser(mContext);
+
+        //Create sharedPreferences
+        SharedPreferences sharedPref = mContext.getSharedPreferences
+                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         //TODO: Check if user token is valid, redirect to MainActivity if yes
         if(mCurrentUser.isLoggedIn()) {

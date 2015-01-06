@@ -56,10 +56,11 @@ public class AccountActivity extends ActionBarActivity {
         setContentView(R.layout.activity_account);
 
         mContext = AccountActivity.this;
-        sharedPreferencesMethods = new SharedPreferencesMethods(this);
+
+        SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
         requestMethods = new RequestMethods(this);
 
-        SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+        sharedPref.ClearAllSharedPreferences();
 
         mCurrentUser = new ListUser(mContext);
 
@@ -78,7 +79,7 @@ public class AccountActivity extends ActionBarActivity {
                             getString(R.string.login_error_message));
                 }
                 else {
-                    //Login User + save to sharedPreferences
+                    //TODO: Login User + save to sharedPreferences
                     mCurrentUser.logIn(mEmail, mPassword, mContext, "randomActivity");
 
                     //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences

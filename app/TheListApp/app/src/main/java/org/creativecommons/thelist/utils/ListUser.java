@@ -75,20 +75,19 @@ public class ListUser {
         return false;
     }
 
-    public boolean isLoggedIn(Context context) {
+    public boolean isLoggedIn() {
         //TODO: Check if User is logged in
-        SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesMethods.USER_ID_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences
+                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-        
-        if(sharedPref.contains(sharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) {
-            userID = SharedPreferencesMethods.getUserId(mContext);
-        }
+        logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE)
+                && sharedPreferencesMethods.getUserId() != null;
 
-        if (userID == null) {
-            logInState = false;
-        } else {
-            logInState = true;
-        }
+//        if(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE)) {
+//            logInState = (sharedPreferencesMethods.getUserId() == null);
+//        } else {
+//            logInState = false;
+//        }
 
         return logInState;
     }
@@ -101,21 +100,18 @@ public class ListUser {
         this.userName = name;
     }
 
-    //    public int getUserID() {
-//        return 2;
-//    }
-    //TODO: get rid of this
+    //TODO: get rid of this eventually
     public void setLogInState(boolean bol) {
         logInState = bol;
     }
 
     public String getUserID() {
         //TODO: actually get ID
-        try {
-            userID = SharedPreferencesMethods.getUserId(mContext);
-        } catch(NullPointerException e){
-            userID = null;
-        }
+
+        userID = sharedPreferencesMethods.getUserId();
+
+        //See if sharedPreference methods contains userID
+        //If yes: get and return userID; else: return null
 
 
         if (userID == null) {
@@ -127,14 +123,9 @@ public class ListUser {
 
     }
 
+    //TODO: might not need with sharedPreferences
     public void setUserID(String id) {
         this.userID = id;
-    }
-
-    public JSONObject getCurrentUser() {
-        //TODO: getCurrentUser (from sharedPreferences?)
-        JSONObject userObject = new JSONObject();
-        return userObject;
     }
 
     public void logOut() {
@@ -147,7 +138,7 @@ public class ListUser {
         logInState = false;
 
         //Clear all sharedPreferences
-        SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+        sharedPreferencesMethods.ClearAllSharedPreferences();
 
         //TODO: take you back to startActivity?
         Intent intent = new Intent(mContext, StartActivity.class);
@@ -175,21 +166,18 @@ public class ListUser {
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
+                                Log.v("THIS IS LOGIN USER ID", userID);
 
                                 //Save userID in sharedPreferences
-                                SharedPreferencesMethods.SaveSharedPreference
-                                        (SharedPreferencesMethods.USER_ID_PREFERENCE,
-                                                SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
-                                                userID, mContext);
+                                sharedPreferencesMethods.SaveSharedPreference
+                                        (sharedPreferencesMethods.USER_ID_PREFERENCE, userID);
 
                                 //TODO: Save session token in sharedPreferences
                                 //TODO: Get any list item preferences and add them to userlist
                                 //Add items chosen before login to userlist
                                 //TODO: also add category preferences
                                 JSONArray listItemPref;
-                                Log.v("HEY CONTEXT", mContext.toString());
-                                listItemPref = SharedPreferencesMethods
-                                        .RetrieveUserItemPreference(mContext);
+                                listItemPref = sharedPreferencesMethods.RetrieveUserItemPreference();
 
                                 if (listItemPref != null && listItemPref.length() > 0) {
                                     Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
@@ -245,21 +233,19 @@ public class ListUser {
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
+                                Log.v("THIS IS LOGIN USER ID", userID);
 
                                 //Save userID in sharedPreferences
-                                SharedPreferencesMethods.SaveSharedPreference
+                                sharedPreferencesMethods.SaveSharedPreference
                                         (SharedPreferencesMethods.USER_ID_PREFERENCE,
-                                                SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
-                                                userID, mContext);
+                                                userID);
 
                                 //TODO: Save session token in sharedPreferences
                                 //TODO: Get any list item preferences and add them to userlist
                                 //Add items chosen before login to userlist
                                 //TODO: also add category preferences
-                                JSONArray listItemPref = new JSONArray();
-                                Log.v("HEY CONTEXT", mContext.toString());
-                                listItemPref = SharedPreferencesMethods
-                                        .RetrieveUserItemPreference(mContext);
+                                JSONArray listItemPref = sharedPreferencesMethods
+                                        .RetrieveUserItemPreference();
 
                                 if (listItemPref != null && listItemPref.length() > 0) {
                                     Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());

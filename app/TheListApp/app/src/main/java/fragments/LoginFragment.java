@@ -54,7 +54,7 @@ import org.json.JSONObject;
 public class LoginFragment extends Fragment {
     public static final String TAG = LoginFragment.class.getSimpleName();
     RequestMethods requestMethods = new RequestMethods(getActivity());
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
     ListUser mCurrentUser;
     Context mContext;
 
@@ -117,7 +117,6 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
-
 
     @Override
     public void onResume() {
@@ -235,12 +234,12 @@ public class LoginFragment extends Fragment {
         //Android Default Emulator
         //String url = "http://10.0.2.2:3000/api/user";
 
+        SharedPreferencesMethods sharedPrefMeth = new SharedPreferencesMethods(mContext);
+
         //Combine login data with user preferences
-        JSONObject categoryListObject = SharedPreferencesMethods.createCategoryListObject
-                (ApiConstants.USER_CATEGORIES, getActivity());
+        JSONObject categoryListObject = sharedPrefMeth.createCategoryListObject();
         //Log.v(TAG,categoryListObject.toString());
-        JSONObject userItemObject = SharedPreferencesMethods.createUserItemsObject
-                (ApiConstants.USER_ITEMS, getActivity());
+        JSONObject userItemObject = sharedPrefMeth.createUserItemsObject();
         //Log.v(TAG,userItemObject.toString());
 
         final JSONObject userObject = new JSONObject();
@@ -267,10 +266,9 @@ public class LoginFragment extends Fragment {
                         try {
                             //Handle Data
                             mUserData = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-                            //Log.v("this is the API response", mUserData.toString());
-                            JSONObject data = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
                             //Log.v(TAG,response.toString());
-                            SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
+                            SharedPreferencesMethods sharedPrefMeth = new SharedPreferencesMethods(mContext);
+                            sharedPrefMeth.ClearAllSharedPreferences();
                             //TODO: Clear sharedPreferences once DB has user data
 
                             //TODO: check for null user before sending callback
@@ -292,7 +290,7 @@ public class LoginFragment extends Fragment {
         queue.add(newUserRequest);
     } //createNewUser
 
-
+    //TODO: I THINK THIS BREAKS STUFF
     //Hide soft keyboard input when activity is removed from stack
     @Override
     public void onPause() {

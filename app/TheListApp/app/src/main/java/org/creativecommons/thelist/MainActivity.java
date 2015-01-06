@@ -115,6 +115,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     TermsFragment termsFragment = new TermsFragment();
     ConfirmFragment confirmFragment = new ConfirmFragment();
     LoadingFragment loadingFragment = new LoadingFragment();
+    SharedPreferencesMethods sharedPreferencesMethods;
 
     // --------------------------------------------------------
 
@@ -125,13 +126,15 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mContext = this;
 
         //Check if user is logged in
-        userID = SharedPreferencesMethods.getUserId(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        userID = sharedPreferencesMethods.getUserId();
+        Log.v("THIS IS MY USER ID IN MAINACT", userID);
         if(userID == null) {
             mCurrentUser.setLogInState(false);
             Log.v("YO" + TAG, "NOT LOGGED IN");
         } else {
             mCurrentUser.setLogInState(true);
-            Log.v("YO" + TAG, "LOGGED IN");
+            Log.v("YO " + TAG, "LOGGED IN");
         }
 
         //Load UI Elements
@@ -197,7 +200,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        //Log.v("RESPONSE", response.toString());
+                        Log.v("RESPONSE", response.toString());
                         //Handle Data
                         for(int i=0; i < response.length(); i++) {
                             //mItemList = new ArrayList<MainListItem>();
@@ -237,7 +240,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         }
         //IF USER IS NOT LOGGED IN
         else {
-            itemIds = SharedPreferencesMethods.RetrieveUserItemPreference(mContext);
+            itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
 
             for(int i=0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
@@ -537,7 +540,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         inflater.inflate(R.menu.menu_main, menu);
 
         //Change title names based on logInState
-        updateMenuTitles();
+        //updateMenuTitles();
 
         this.menu = menu;
         return true;
