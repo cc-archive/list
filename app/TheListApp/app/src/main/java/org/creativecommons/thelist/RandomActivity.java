@@ -37,9 +37,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -89,6 +92,13 @@ public class RandomActivity extends Activity {
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
 
+        //Google Analytics Tracker
+        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
+
         mItemList = new ArrayList<MainListItem>();
         mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -107,8 +117,8 @@ public class RandomActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     //Log.v("THIS IS ITEMLIST", mItemList.toString());
+
                     //Once yes has been hit 3 times, forward to
-                    //TODO: Also condition that user is logged in
 
                     //If User is logged in…
                     if(mCurrentUser.isLoggedIn()) {

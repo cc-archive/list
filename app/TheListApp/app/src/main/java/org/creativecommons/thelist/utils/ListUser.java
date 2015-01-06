@@ -62,6 +62,7 @@ public class ListUser {
     }
 
     public ListUser() {
+
     }
 
     public ListUser(String name, String id) {
@@ -82,12 +83,6 @@ public class ListUser {
 
         logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE)
                 && sharedPreferencesMethods.getUserId() != null;
-
-//        if(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE)) {
-//            logInState = (sharedPreferencesMethods.getUserId() == null);
-//        } else {
-//            logInState = false;
-//        }
 
         return logInState;
     }

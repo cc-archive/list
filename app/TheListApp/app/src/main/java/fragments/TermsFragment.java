@@ -31,7 +31,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.RequestMethods;
 
 public class TermsFragment extends Fragment {
@@ -57,6 +61,14 @@ public class TermsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Google Analytics Tracker
+        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName("Terms Fragment");
+        t.send(new HitBuilders.AppViewBuilder().build());
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_terms, container, false);
     }

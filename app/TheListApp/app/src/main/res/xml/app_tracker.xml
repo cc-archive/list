@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="TypographyDashes">
 
     <!-- The apps Analytics Tracking Id -->
     <string name="ga_trackingId">UA-57679207-1</string>
@@ -20,10 +22,6 @@
     substitute for the full length canonical Activity name in screen view hit. In order to
     specify an alternate screen name use an <screenName> element, with the name attribute
     specifying the canonical name, and the value the alias to use instead. -->
-    <screenName name="org.creativecommons.thelist.MainActivity">Main Feed Activity</screenName>
-    <screenName name="org.creativecommons.thelist.RandomActivity">Random Item Suggestions Activity</screenName>
-    <screenName name="org.creativecommons.thelist.CategoryListActivity">Category List Activity</screenName>
-    <screenName name="org.creativecommons.thelist.StartActivity">Start Activity</screenName>
-    <screenName name="org.creativecommons.thelist.AccountActivity">Account Activity</screenName>
+
 
 </resources>

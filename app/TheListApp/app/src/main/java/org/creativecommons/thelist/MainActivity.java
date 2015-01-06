@@ -48,10 +48,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.adapters.MainListAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -70,7 +73,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import fragments.ConfirmFragment;
-import fragments.LoadingFragment;
 import fragments.LoginFragment;
 import fragments.TermsFragment;
 
@@ -114,7 +116,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     LoginFragment loginFragment = new LoginFragment();
     TermsFragment termsFragment = new TermsFragment();
     ConfirmFragment confirmFragment = new ConfirmFragment();
-    LoadingFragment loadingFragment = new LoadingFragment();
     SharedPreferencesMethods sharedPreferencesMethods;
 
     // --------------------------------------------------------
@@ -124,6 +125,13 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+
+        //Google Analytics Tracker
+        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Check if user is logged in
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
@@ -455,10 +463,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void UserLoggedIn(String userData) {
         //Show Fragment
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container, loadingFragment)
-                .commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                .replace(R.id.overlay_fragment_container, loadingFragment)
+//                .commit();
 
 
 //        try {
