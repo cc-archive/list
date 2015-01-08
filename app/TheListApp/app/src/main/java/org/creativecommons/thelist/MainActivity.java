@@ -19,7 +19,6 @@
 
 package org.creativecommons.thelist;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,14 +29,14 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -49,7 +48,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import org.creativecommons.thelist.adapters.MainListAdapter;
+import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
@@ -80,14 +79,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     protected Context mContext;
     private Menu menu;
 
-    public enum INTENT {
-        SET,
-        UPDATE,
-    }
-
     //Request Methods
-    RequestMethods requestMethods = new RequestMethods(this);
-    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
+    RequestMethods requestMethods;
+    SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser = new ListUser(this);
 
     int count = 0;
@@ -95,17 +89,18 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     protected JSONObject mCurrentUserObject;
     protected String userID;
 
-    //Lists to be adapted
-    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
-    //private List<MainListItem> mUserItemList = new ArrayList<MainListItem>();
+    //RecyclerView
+    //protected MainListAdapter mListAdapter;
 
-    //Adapters
-    protected MainListAdapter mListAdapter;
-    //TODO: figure out adapter for other lists in the feed
+    //RecyclerView
+    private RecyclerView mRecyclerView;
+    private FeedAdapter mFeedAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
 
     //UI Elements
     protected ProgressBar mProgressBar;
-    protected ListView mListView;
+    //protected ListView mListView;
     protected FrameLayout mFrameLayout;
 
     //Photo Variables
@@ -118,7 +113,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     TermsFragment termsFragment = new TermsFragment();
     UploadFragment uploadFragment = new UploadFragment();
     CancelFragment cancelFragment = new CancelFragment();
-    SharedPreferencesMethods sharedPreferencesMethods;
+
 
     // --------------------------------------------------------
 
@@ -127,6 +122,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        requestMethods = new RequestMethods(mContext);
 
         //Google Analytics Tracker
         Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
@@ -136,7 +133,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         t.send(new HitBuilders.AppViewBuilder().build());
 
         //Check if user is logged in
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         userID = sharedPreferencesMethods.getUserId();
         if(userID == null) {
             mCurrentUser.setLogInState(false);
@@ -148,27 +144,31 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
-        mListView = (ListView)findViewById(R.id.list);
+        //mListView = (ListView)findViewById(R.id.list);
+        mRecyclerView = (RecyclerView)findViewById(R.id.list);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
 
-        mListAdapter = new MainListAdapter(MainActivity.this, mItemList);
-        mListView.setAdapter(mListAdapter);
+        mFeedAdapter = new FeedAdapter(mContext, mItemList);
+        mRecyclerView.setAdapter(mFeedAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        //mListAdapter = new MainListAdapter(MainActivity.this, mItemList);
+        //mListView.setAdapter(mListAdapter);
 
         //Show Dialog on List Item Click
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Show Dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setItems(R.array.listItem_choices, mDialogListener);
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-                //Store ListItem in variable
-                activeItemPosition = position;
-                mCurrentItem = (MainListItem) mListView.getItemAtPosition(position);
-            }
-        });
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                //Show Dialog
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                builder.setItems(R.array.listItem_choices, mDialogListener);
+//                AlertDialog dialog = builder.create();
+//                dialog.show();
+//
+//                //Store ListItem in variable
+//                activeItemPosition = position;
+//                mCurrentItem = (MainListItem) mListView.getItemAtPosition(position);
+//            }
+//        });
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
         if(requestMethods.isNetworkAvailable(mContext)) {
@@ -189,7 +189,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         if(mCurrentUser.isLoggedIn()){
             getUserListItems();
         } else {
-            mListView.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            //mListView.setVisibility(View.INVISIBLE);
             //mListAdapter.notifyDataSetChanged();
         }
 
@@ -203,8 +204,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        mListAdapter.notifyDataSetChanged();
-        mListView.setVisibility(View.VISIBLE);
+        //mListAdapter.notifyDataSetChanged();
+        //mListView.setVisibility(View.VISIBLE);
+        mFeedAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
 
     //GET USER LIST ITEMS
@@ -246,8 +249,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         }
                         Log.v("ITEMLIST", mItemList.toString());
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        mListAdapter.notifyDataSetChanged();
-
+                        //mListAdapter.notifyDataSetChanged();
+                        mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
                 @Override
@@ -481,7 +484,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //Refresh user list + remove item that has just been uploaded
         //TODO: do I still need this?
         mItemList.remove(activeItemPosition);
-        mListAdapter.notifyDataSetChanged();
+        //mListAdapter.notifyDataSetChanged();
+        mFeedAdapter.notifyDataSetChanged();
 
         //Show upload message for limited time
         new Handler().postDelayed(new Runnable() {

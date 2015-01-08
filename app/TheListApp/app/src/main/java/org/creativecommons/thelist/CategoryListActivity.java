@@ -76,7 +76,7 @@ public class CategoryListActivity extends Activity {
     //PUT request (if user is logged in)
     protected JSONObject mPutResponse;
 
-    //Handle Data
+    //ListView
     private List<CategoryListItem> mCategoryList = new ArrayList<CategoryListItem>();
     protected CategoryListAdapter adapter;
 
