@@ -81,6 +81,7 @@
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
     <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
+    <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
     <string name="upload_success_title">Upload Success!</string>
     <string name="existing_account_text">I already have an account</string>
     <string name="new_account_text"><a href="https://login.creativecommons.org/register.php"><u>Actually, I need an account</u></a></string>
@@ -99,4 +100,6 @@
     <string name="title_activity_explainer1">Explainer1</string>
     <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
     <string name="log_out_menu_label">Log Out</string>
+    <string name="item_id_bundle_key">item</string>
+    <string name="uri_bundle_key">uri</string>
 </resources>

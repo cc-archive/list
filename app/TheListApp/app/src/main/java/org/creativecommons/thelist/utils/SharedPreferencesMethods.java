@@ -44,12 +44,9 @@ public class SharedPreferencesMethods {
     }
 
     //SharedPreferences Constants
-    public static final String CATEGORY_PREFERENCE = "category";
-    //public static final String CATEGORY_PREFERENCE_KEY = "org.creativecommons.thelist.445329";
-    public static final String LIST_ITEM_PREFERENCE = "item";
-    //public static final String LIST_ITEM_PREFERENCE_KEY = "org.creativecommons.thelist.348914";
-    public static final String USER_ID_PREFERENCE = "id";
-    //public static final String USER_ID_PREFERENCE_KEY = "org.creativecommons.thelist.234958";
+    public static final String CATEGORY_PREFERENCE_KEY = "category";
+    public static final String LIST_ITEM_PREFERENCE_KEY = "item";
+    public static final String USER_ID_PREFERENCE_KEY = "id";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.434932";
 
@@ -84,7 +81,7 @@ public class SharedPreferencesMethods {
     //Get User ID from SharedPreferences
     public String getUserId(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        String userID = sharedPref.getString(USER_ID_PREFERENCE, null);
+        String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
         return userID;
     }
 
@@ -96,12 +93,17 @@ public class SharedPreferencesMethods {
         editor.apply();
     }
 
+    public void ClearTempPreferences(){
+        ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
+        ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
+    }
+
     //Clear all sharedPreferences
     //TODO: add other keys like session token
     public void ClearAllSharedPreferences() {
-        ClearSharedPreference(USER_ID_PREFERENCE);
-        ClearSharedPreference(CATEGORY_PREFERENCE);
-        ClearSharedPreference(LIST_ITEM_PREFERENCE);
+        ClearSharedPreference(USER_ID_PREFERENCE_KEY);
+        ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
+        ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
     }
 
     //Create object to send in Category Volley Request
@@ -109,10 +111,10 @@ public class SharedPreferencesMethods {
         //Create JSON Object
         JSONObject categoryListObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
-                (CATEGORY_PREFERENCE);
+                (CATEGORY_PREFERENCE_KEY);
 
         try {
-            categoryListObject.put(CATEGORY_PREFERENCE, userPreferences);
+            categoryListObject.put(CATEGORY_PREFERENCE_KEY, userPreferences);
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -125,7 +127,7 @@ public class SharedPreferencesMethods {
         //TODO: remove this with real API
         JSONObject userItemObject = new JSONObject();
         JSONArray userPreferences = RetrieveSharedPreference
-                (LIST_ITEM_PREFERENCE);
+                (LIST_ITEM_PREFERENCE_KEY);
         JSONArray intPreferences = new JSONArray();
 
         for(int i = 0; i <userPreferences.length(); i++ ) {
@@ -141,7 +143,7 @@ public class SharedPreferencesMethods {
 
         try {
             Log.v(TAG, intPreferences.toString());
-            userItemObject.put(LIST_ITEM_PREFERENCE, intPreferences);
+            userItemObject.put(LIST_ITEM_PREFERENCE_KEY, intPreferences);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -151,7 +153,7 @@ public class SharedPreferencesMethods {
     //Retrieve Shared preferences as JSONArray
     public JSONArray RetrieveCategorySharedPreference (){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        String value = sharedPref.getString(CATEGORY_PREFERENCE, null);
+        String value = sharedPref.getString(CATEGORY_PREFERENCE_KEY, null);
 
         //TODO: Switch to json library (JSONNNN)
         //Convert from String to Array
@@ -171,10 +173,10 @@ public class SharedPreferencesMethods {
     //Retrieve User Item Preference
     public JSONArray RetrieveUserItemPreference() {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        String value = sharedPref.getString(LIST_ITEM_PREFERENCE, null);
+        String value = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
 
         if(value == null) {
-            return null;
+            return new JSONArray();
         } else {
             //TODO: Switch to json library (JSONNNN)
             //Convert from String to Array

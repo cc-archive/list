@@ -141,8 +141,6 @@ public class RandomActivity extends Activity {
                         listItem.setMakerName(mMakerName);
                         mItemList.add(listItem);
 
-                        //Log.v("ITEM ID", mItemID);
-
                         //Toast: Confirm List Item has been added
                         final Toast toast = Toast.makeText(RandomActivity.this,
                                 "Added to Your List", Toast.LENGTH_SHORT);
@@ -162,11 +160,20 @@ public class RandomActivity extends Activity {
                     } else {
                         //Get array of selected item IDS
                         List<String> userItemList = requestMethods.getItemIds(mItemList);
+                        JSONArray oldItemArray = sharedPreferencesMethods.RetrieveUserItemPreference();
                         //Log.v(TAG,mItemList.toString());
+
+                        for(int i=0; i < oldItemArray.length(); i++) {
+                            try {
+                                userItemList.add(0, oldItemArray.getString(i));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                         //Save Array as String to sharedPreferences
                         sharedPreferencesMethods.SaveSharedPreference
-                                (sharedPreferencesMethods.LIST_ITEM_PREFERENCE,
+                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                         userItemList.toString());
 
                         //Start MainActivity

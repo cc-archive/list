@@ -81,7 +81,7 @@ public class ListUser {
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-        logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE)
+        logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
                 && sharedPreferencesMethods.getUserId() != null;
 
         return logInState;
@@ -165,7 +165,7 @@ public class ListUser {
 
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
-                                        (sharedPreferencesMethods.USER_ID_PREFERENCE, userID);
+                                        (sharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
 
                                 //TODO: Save session token in sharedPreferences
                                 //TODO: Get any list item preferences and add them to userlist
@@ -232,7 +232,7 @@ public class ListUser {
 
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
-                                        (SharedPreferencesMethods.USER_ID_PREFERENCE,
+                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
                                                 userID);
 
                                 //TODO: Save session token in sharedPreferences
@@ -255,6 +255,7 @@ public class ListUser {
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         mContext.startActivity(intent);
                                     }
+
                                 }
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());

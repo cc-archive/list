@@ -41,12 +41,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -67,39 +65,42 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import fragments.ConfirmFragment;
+import fragments.CancelFragment;
 import fragments.LoginFragment;
 import fragments.TermsFragment;
+import fragments.UploadFragment;
 
 
 public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
-        TermsFragment.TermsClickListener, ConfirmFragment.ConfirmListener {
+        TermsFragment.TermsClickListener, UploadFragment.UploadListener, CancelFragment.CancelListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
     private Menu menu;
+
+    public enum INTENT {
+        SET,
+        UPDATE,
+    }
 
     //Request Methods
     RequestMethods requestMethods = new RequestMethods(this);
     //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
     ListUser mCurrentUser = new ListUser(this);
 
+    int count = 0;
+
     protected JSONObject mCurrentUserObject;
     protected String userID;
-
-    //For API Requests + Response
-    //protected JSONArray mItemData;
 
     //Lists to be adapted
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
     //private List<MainListItem> mUserItemList = new ArrayList<MainListItem>();
 
     //Adapters
-    protected MainListAdapter feedAdapter;
+    protected MainListAdapter mListAdapter;
     //TODO: figure out adapter for other lists in the feed
 
     //UI Elements
@@ -115,7 +116,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     //Fragments
     LoginFragment loginFragment = new LoginFragment();
     TermsFragment termsFragment = new TermsFragment();
-    ConfirmFragment confirmFragment = new ConfirmFragment();
+    UploadFragment uploadFragment = new UploadFragment();
+    CancelFragment cancelFragment = new CancelFragment();
     SharedPreferencesMethods sharedPreferencesMethods;
 
     // --------------------------------------------------------
@@ -136,7 +138,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //Check if user is logged in
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         userID = sharedPreferencesMethods.getUserId();
-        Log.v("THIS IS MY USER ID IN MAINACT", userID);
         if(userID == null) {
             mCurrentUser.setLogInState(false);
             Log.v("YO" + TAG, "NOT LOGGED IN");
@@ -150,8 +151,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mListView = (ListView)findViewById(R.id.list);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
 
-        feedAdapter = new MainListAdapter(this, mItemList);
-        //mListView.setAdapter(feedAdapter);
+        mListAdapter = new MainListAdapter(MainActivity.this, mItemList);
+        mListView.setAdapter(mListAdapter);
 
         //Show Dialog on List Item Click
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -179,6 +180,21 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         }
     } //onCreate
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //mItemList = new ArrayList<MainListItem>();
+        Log.v("ON RESUME ", "IS BEING CALLED");
+
+        if(mCurrentUser.isLoggedIn()){
+            getUserListItems();
+        } else {
+            mListView.setVisibility(View.INVISIBLE);
+            //mListAdapter.notifyDataSetChanged();
+        }
+
+    } //onResume
+
     public void CheckComplete() {
         Log.v("Check complete", "start");
         for(int i = 0; i < mItemList.size(); i++) {
@@ -187,8 +203,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        mListView.setAdapter(feedAdapter);
-        feedAdapter.notifyDataSetChanged();
+        mListAdapter.notifyDataSetChanged();
+        mListView.setVisibility(View.VISIBLE);
     } //CheckComplete
 
     //GET USER LIST ITEMS
@@ -201,19 +217,18 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
             Log.v("HELLO", "this user is logged in");
-
             itemRequesturl = ApiConstants.GET_USER_LIST + userID;
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("RESPONSE", response.toString());
-                        //Handle Data
+                        //Log.v("RESPONSE", response.toString());
+
                         for(int i=0; i < response.length(); i++) {
-                            //mItemList = new ArrayList<MainListItem>();
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
+
                                 //Only show items in the user’s list that have not been completed
                                 if (singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
                                     MainListItem listItem = new MainListItem();
@@ -229,11 +244,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                 Log.v(TAG, e.getMessage());
                             }
                         }
-                        //Log.v("ITEMLIST", mItemList.toString());
-                        feedAdapter = new MainListAdapter(MainActivity.this, mItemList);
+                        Log.v("ITEMLIST", mItemList.toString());
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        mListView.setAdapter(feedAdapter);
-                        //feedAdapter.notifyDataSetChanged();
+                        mListAdapter.notifyDataSetChanged();
+
                     }
                 }, new Response.ErrorListener() {
                 @Override
@@ -246,27 +260,29 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             });
             queue.add(userListRequest);
         }
-        //IF USER IS NOT LOGGED IN
-        else {
+        else { //IF USER IS NOT LOGGED IN
             itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
-
             for(int i=0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
                     MainListItem listItem = new MainListItem();
                 try {
                     listItem.setItemID(String.valueOf(itemIds.getInt(i)));
                     listItem.setRequestMethods(requestMethods);
-                    listItem.setMainActivity(this);
+                    Log.v("HELLO", "WE ARE HERE");
+                    listItem.setMainActivity(MainActivity.this);
+                    Log.v("HELLO", "WE ARE AFTER SET");
                     listItem.createNewUserListItem();
-                    //Log.v(TAG, "Item added");
+                    Log.v("HELLO", "WE ARE HERE AFTER CREATE");
                 } catch (JSONException e) {
                     Log.v(TAG,e.getMessage());
                 }
-                //Adding to array of List Items
                 mItemList.add(listItem);
+//                Log.v("LIST ITEM IS", listItem.getItemName());
+//                Log.v("ITEM LIST [0]", mItemList.get(0).getItemName());
             }
+            //mListAdapter.notifyDataSetChanged();
         }
-    }
+    } //getUserListItems
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
@@ -278,7 +294,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             if (mMediaUri == null) {
-                                // display an error
+                                // Display an error
                                 Toast.makeText(MainActivity.this, R.string.error_external_storage,
                                         Toast.LENGTH_LONG).show();
                             }
@@ -368,8 +384,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
             //TODO: Check file size
             if(mCurrentUser.isLoggedIn()) {
-                //Create and upload photo as Base64 encoded string
-                uploadPhoto(mMediaUri);
+                startPhotoUpload();
+
             } else {
                 //Load Login Fragment
                 getSupportFragmentManager().beginTransaction()
@@ -387,61 +403,28 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         }
     } //onActivityResult
 
-    //Upload Photo to DB
-    protected void uploadPhoto(Uri uri) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + mCurrentItem.getItemID();
 
-        //Get Photo as Base64 encoded String
-        final String photoFile = requestMethods.createUploadPhotoObject(uri);
+    //Start UploadFragment and upload photo
+    public void startPhotoUpload(){
+        Bundle b = new Bundle();
+        b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
+        b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
+        uploadFragment.setArguments(b);
 
-        //Upload Photo
-        StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //Get Response
-                        Log.v("PHOTO UPLOADED", response.toString());
-                        getUserListItems();
-                        //mListView.setAdapter(feedAdapter);
-                        mItemList.remove(activeItemPosition);
-                        //feedAdapter.notifyDataSetChanged();
+        //Load Upload Fragment
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.overlay_fragment_container,uploadFragment).commit();
+        mFrameLayout.setClickable(true);
+        getSupportActionBar().hide();
 
-                        //SUCCESS text in confirmFragment
-                        Bundle b = new Bundle();
-                        b.putSerializable("status", ConfirmFragment.STATUS.SUCCESS);
-                        confirmFragment.setArguments(b);
-
-                        //Start photo confirmation fragment
-                        getSupportFragmentManager().beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .replace(R.id.overlay_fragment_container, confirmFragment)
-                                .commit();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v(TAG, "THERE WAS AN ERROR");
-                requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.error_title),
-                        mContext.getString(R.string.error_message));
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
-                return params;
-            }
-        };
-        queue.add(uploadPhotoRequest);
-    } //uploadPhoto
+    }
 
     //When New User fills out sign up (save data locally)
     @Override
     public void UserCreated(String userData) {
         try {
             //Set current user data
+            //TODO: get user password as well
             mCurrentUserObject = new JSONObject(userData);
             mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
             mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
@@ -451,7 +434,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }
-
         //Start terms fragment (must agree to terms before account is created)
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -462,70 +444,52 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     //When User has been logged in
     @Override
     public void UserLoggedIn(String userData) {
-        //Show Fragment
-//        getSupportFragmentManager().beginTransaction()
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                .replace(R.id.overlay_fragment_container, loadingFragment)
-//                .commit();
-
-
-//        try {
-//            //Set current user Data
-//            mCurrentUserObject = new JSONObject(userData);
-//            mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
-//            mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
-//            //TODO: set user token
-//        } catch (JSONException e) {
-//            Log.e(TAG,e.getMessage());
-//        }
-
-        uploadPhoto(mMediaUri);
-
+        //Start UploadFragment and Upload photo
+        startPhotoUpload();
     } //UserLoggedIn
 
     //User has cancelled an upload
     @Override
     public void CancelUpload() {
-        //Change Text in confirmFragment
-        Bundle b = new Bundle();
-        b.putSerializable("status", ConfirmFragment.STATUS.CANCEL);
-        confirmFragment.setArguments(b);
-        //Switch to confirmFragment
+        //Show cancelledFragment
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container, confirmFragment)
+                .replace(R.id.overlay_fragment_container, cancelFragment)
                 .commit();
     } //CancelUpload
 
     //When account Confirmation Received
     @Override
     public void onTermsClicked() {
-        //Upload + take user to success screen
-        uploadPhoto(mMediaUri);
-    }
+        //Start UploadFragment and Upload photo
+        startPhotoUpload();
+    } //onTermsClicked
 
+    //User has cancelled upload
     @Override
     public void onTermsCancelled() {
-        Bundle b = new Bundle();
-        b.putSerializable("status", ConfirmFragment.STATUS.CANCEL);
-        confirmFragment.setArguments(b);
-
+        //Show cancelledFragment
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container, confirmFragment)
+                .replace(R.id.overlay_fragment_container, cancelFragment)
                 .commit();
     }
 
-    //When ConfirmFragment has been inflated
+    //When UploadFragment has gotten response from server
     @Override
-    public void onConfirmFinish() {
-        //Show upload success for limited time
+    public void onUploadFinish() {
+        //Refresh user list + remove item that has just been uploaded
+        //TODO: do I still need this?
+        mItemList.remove(activeItemPosition);
+        mListAdapter.notifyDataSetChanged();
+
+        //Show upload message for limited time
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 getSupportFragmentManager().beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .remove(confirmFragment)
+                        .remove(uploadFragment)
                         .commit();
             }
         }, 2800);
@@ -539,7 +503,30 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             }
         }, 3000);
 
-    } //onConfirmFinish
+    } //onUploadFinish
+
+    @Override
+    public void onCancelStart() {
+        //Remove cancelFragment after set period
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .remove(cancelFragment)
+                        .commit();
+            }
+        }, 2800);
+
+        //Delay action bar and ability to click MainActivity
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFrameLayout.setClickable(false);
+                getSupportActionBar().show();
+            }
+        }, 3000);
+    } //onCancelStart
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

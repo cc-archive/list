@@ -57,7 +57,7 @@ import org.json.JSONObject;
 public class LoginFragment extends Fragment {
     public static final String TAG = LoginFragment.class.getSimpleName();
     RequestMethods requestMethods = new RequestMethods(getActivity());
-    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
     ListUser mCurrentUser;
     Context mContext;
 
@@ -195,9 +195,6 @@ public class LoginFragment extends Fragment {
                             mContext.getString(R.string.login_error_message));
                 } else {
                     mCurrentUser.logIn(mLoginEmail, mLoginPassword, mCallback);
-//                    if(mCurrentUser.isLoggedIn()){
-//                        mCallback.UserLoggedIn("User Logged In");
-//                    }
                 }
             }
         });
@@ -240,17 +237,12 @@ public class LoginFragment extends Fragment {
 
     private void createNewUser() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        //Genymotion Emulator
-        String url = ApiConstants.CREATE_NEW_USER;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/user";
-
-        SharedPreferencesMethods sharedPrefMeth = new SharedPreferencesMethods(mContext);
+        String url = ApiConstants.REGISTER_USER;
 
         //Combine login data with user preferences
-        JSONObject categoryListObject = sharedPrefMeth.createCategoryListObject();
+        JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject();
         //Log.v(TAG,categoryListObject.toString());
-        JSONObject userItemObject = sharedPrefMeth.createUserItemsObject();
+        JSONObject userItemObject = sharedPreferencesMethods.createUserItemsObject();
         //Log.v(TAG,userItemObject.toString());
 
         final JSONObject userObject = new JSONObject();
@@ -274,28 +266,21 @@ public class LoginFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
                             //Handle Data
-                            mUserData = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
+                            mUserData = response;
                             //Log.v(TAG,response.toString());
-                            SharedPreferencesMethods sharedPrefMeth = new SharedPreferencesMethods(mContext);
-                            sharedPrefMeth.ClearAllSharedPreferences();
-                            //TODO: Clear sharedPreferences once DB has user data
 
+                            //Clear Category + List Item sharedPreferences once user has been created
+                            sharedPreferencesMethods.ClearTempPreferences();
                             //TODO: check for null user before sending callback
 
-                            //TODO: Handle Errors
                             mCallback.UserCreated(mUserData.toString());
-
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
-                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse (VolleyError error){
-                //requestMethods.updateDisplayForError();
-                //TODO: Where does the app currently take you?
+                //TODO: write switch to handle HTTP response error codes
+                //TODO: what happens then?
             }
         });
         queue.add(newUserRequest);
@@ -306,6 +291,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        //TODO: get this to work, but also test on devices first?
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }

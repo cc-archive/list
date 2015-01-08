@@ -177,7 +177,7 @@ public class CategoryListActivity extends Activity {
                     }
                     //Save user categories to shared preferences
                     sharedPreferencesMethods.SaveSharedPreference
-                            (SharedPreferencesMethods.CATEGORY_PREFERENCE, userCategories.toString());
+                            (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
                 }
                 //Navigate to Random Activity
                 Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
@@ -228,7 +228,6 @@ public class CategoryListActivity extends Activity {
                     public void onResponse(JSONArray response) {
                         //Handle Data
                         mCategoryData = response;
-                        Log.v("HEY LOOK LISTEN", mCategoryData.toString());
                         updateList();
                     }
                 }, new Response.ErrorListener() {
@@ -248,7 +247,8 @@ public class CategoryListActivity extends Activity {
         RequestQueue queue = Volley.newRequestQueue(this);
         String userID = mCurrentUser.getUserID();
         //Genymotion Emulator
-        String url = ApiConstants.UPDATE_USER + userID;
+        //TODO: FIX URL
+        String url = "" + userID;
 
         //Create Object to send
         JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject();

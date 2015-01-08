@@ -54,6 +54,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
 
+
+    // ---------------------------------------------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

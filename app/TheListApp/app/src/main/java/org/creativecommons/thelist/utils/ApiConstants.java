@@ -21,17 +21,6 @@ package org.creativecommons.thelist.utils;
 
 public final class ApiConstants {
 
-    //TODO: Limit results
-    //LIMIT for category request
-    //LIMIT for list item requests
-
-    //Limit how many items user will view before possibility of repeats (RandomActivity)
-    //public static final int MAX_ITEMS_VIEWED = 5;
-
-    //TODO: Eventually get rid of this
-    //Response Object
-    public static final String RESPONSE_CONTENT = "content";
-
     //User Object
     public static final String USER_ID = "id";
     public static final String USER_NAME = "name";
@@ -71,32 +60,8 @@ public final class ApiConstants {
     public static final String PHOTO_BYTE_ARRAY = "photo";
     public static final String POST_PHOTO_KEY = "filedata";
 
-    //URL
-    //TODO: Add all Endpoints
-
-    //Virtual Box
-    public static final String FAPI = "http://192.168.56.1:3000/api";
-    //Android Emulator
-    //public static final String URL = "http://10.0.2.2:3000/api";
     //Creative Commons API
     public static final String URL = "https://thelist.creativecommons.org/api";
-
-    //Must POST
-    public static final String CREATE_NEW_USER = FAPI + "/user/";
-    //Must have user ID (+ userID) + GET
-    public static final String GET_ALL_USER_ITEMS = FAPI + "/user/";
-    //Must have user ID + PUT
-    public static final String UPDATE_USER = FAPI + "/user/";
-    //User Login
-    public static final String LOGIN_USER_FAPI = FAPI + "/user/";
-    //Must send array of items (only works with PUT, not GET: TODO: look into this with real API)
-    public static final String GET_MULTIPLE_ITEMS = FAPI + "/items/";
-    //GET Method
-    public static final String GET_ALL_ITEMS = FAPI + "/item/";
-    //GET Single Item Method
-    //public static final String GET_SINGLE_ITEM = FAPI + "/item/";
-    //POST, GET Photo
-    //public static final String POST_PHOTO = FAPI + "/photo/";
 
     //Real API
     //Must add item ID
@@ -120,7 +85,7 @@ public final class ApiConstants {
 
     //TODO: API not ready yet
     //USER REGISTER: send email address and password
-    //public static final String REGISTER_USER = URL + "/users/register";
+    public static final String REGISTER_USER = URL + "/users/register";
     //USER PROFILE (append with EMAIL?)
     //public static final String USER_PROFILE = URL + "/api/users/";
 

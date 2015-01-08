@@ -36,8 +36,9 @@ public final class RequestMethods {
     protected Context mContext;
 
     //Set Context
-    public RequestMethods(Context mContext) {
-        this.mContext = mContext;
+    public RequestMethods(Context mc) {
+        mContext = mc;
+
     }
 
     //Check if thar be internets

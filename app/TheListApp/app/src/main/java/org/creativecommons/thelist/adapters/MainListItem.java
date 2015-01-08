@@ -92,6 +92,7 @@ public class MainListItem {
     public void createNewUserListItem() {
         RequestQueue queue = Volley.newRequestQueue(mainActivity);
         String itemRequesturl = ApiConstants.GET_SINGLE_ITEM + String.valueOf(itemID);
+        Log.v("THIS ITEM ID IS", itemID);
 
         JsonArrayRequest newUserListRequest = new JsonArrayRequest(itemRequesturl,
             new Response.Listener<JSONArray>() {
@@ -99,9 +100,11 @@ public class MainListItem {
                 public void onResponse(JSONArray response) {
                     //Handle Data
                     try {
+                        Log.v("CREATE ITEM RESPONSE", response.toString());
                         JSONObject jsonObject = response.getJSONObject(0);
                         setItemName(jsonObject.getString(ApiConstants.ITEM_NAME));
                         setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
+                        Log.v("MAKER NAME", getMakerName());
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
                         completed = true;
                         mainActivity.CheckComplete();
@@ -122,7 +125,6 @@ public class MainListItem {
         queue.add(newUserListRequest);
     }
 
-    //TODO: Test this
 //    public void addToUserList() {
 //        RequestQueue queue = Volley.newRequestQueue(mainActivity);
 //        String itemRequesturl = ApiConstants.ADD_ITEM + mCurrentUser.getUserID() + "/" + String.valueOf(itemID);
