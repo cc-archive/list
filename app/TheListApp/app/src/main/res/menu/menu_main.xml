@@ -6,4 +6,6 @@
         android:orderInCategory="100" compat:showAsAction="ifRoom" />
     <item android:id="@+id/logout" android:title="@string/log_out_menu_label"
         android:orderInCategory="100" compat:showAsAction="never" />
+    <item android:id="@+id/login" android:title="@string/login_menu_label"
+        android:orderInCategory="200" compat:showAsAction="never" />
 </menu>

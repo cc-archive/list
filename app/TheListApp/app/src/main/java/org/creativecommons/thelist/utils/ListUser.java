@@ -126,8 +126,7 @@ public class ListUser {
     public void logOut() {
         //TODO: Figure out what logOut even means…
         //LogOut User
-        //Destroy mCurrentUser
-        //Destroy session token
+        //Destroy session token?
         userName = null;
         userID = null;
         logInState = false;

@@ -20,7 +20,6 @@
 
 package org.creativecommons.thelist.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,7 +33,6 @@ import org.creativecommons.thelist.R;
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder> {
-    private Activity activity;
     private LayoutInflater inflater;
     private List<MainListItem> listItems; //Collections.emptyList()
 
@@ -43,10 +41,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
         inflater = LayoutInflater.from(context);
     }
 
-
     @Override
-    public FeedViewholder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public FeedViewholder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View view = inflater.inflate(R.layout.list_item_main, viewGroup, false);
+
         FeedViewholder holder = new FeedViewholder(view);
         return holder;
     }
@@ -55,31 +53,36 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
     public void onBindViewHolder(FeedViewholder holder, int position) {
         //Getting Data for the row
         MainListItem l = listItems.get(position);
-        //Item Name
+        for(int i = 0; i < getItemCount(); i++) {
+        }
         holder.nameLabel.setText(l.getItemName());
-        //Maker Name
         holder.makerLabel.setText("requested by " + l.getMakerName());
-        //Camera Icon
         holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
 
+        //holder.itemView.setTag(l);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return listItems.size();
     }
 
-    public class FeedViewholder extends RecyclerView.ViewHolder {
+    public class FeedViewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView iconImageView;
         TextView nameLabel;
         TextView makerLabel;
 
         public FeedViewholder(View itemView) {
             super(itemView);
-
             iconImageView = (ImageView)itemView.findViewById(R.id.camera_icon);
             nameLabel = (TextView)itemView.findViewById(R.id.list_item_name);
             makerLabel = (TextView)itemView.findViewById(R.id.list_item_maker);
+
+            iconImageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
 
         }
     }

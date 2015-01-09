@@ -102,4 +102,5 @@
     <string name="log_out_menu_label">Log Out</string>
     <string name="item_id_bundle_key">item</string>
     <string name="uri_bundle_key">uri</string>
+    <string name="login_menu_label">Login</string>
 </resources>

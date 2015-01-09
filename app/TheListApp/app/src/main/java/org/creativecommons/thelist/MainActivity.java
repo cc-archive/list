@@ -29,6 +29,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,13 +46,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListApplication;
+import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -94,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
     //RecyclerView
     private RecyclerView mRecyclerView;
-    private FeedAdapter mFeedAdapter;
+    private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<MainListItem> mItemList = new ArrayList<MainListItem>();
 
@@ -126,11 +125,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         requestMethods = new RequestMethods(mContext);
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName(TAG);
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Check if user is logged in
         userID = sharedPreferencesMethods.getUserId();
@@ -145,12 +144,18 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         //mListView = (ListView)findViewById(R.id.list);
-        mRecyclerView = (RecyclerView)findViewById(R.id.list);
+        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
+
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
 
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
         //mListAdapter = new MainListAdapter(MainActivity.this, mItemList);
         //mListView.setAdapter(mListAdapter);
 
@@ -183,8 +188,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onResume() {
         super.onResume();
-        //mItemList = new ArrayList<MainListItem>();
-        Log.v("ON RESUME ", "IS BEING CALLED");
+        //Log.v("ON RESUME ", "IS BEING CALLED");
 
         if(mCurrentUser.isLoggedIn()){
             getUserListItems();
@@ -228,6 +232,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     public void onResponse(JSONArray response) {
                         //Log.v("RESPONSE", response.toString());
 
+                        mItemList.clear();
+
                         for(int i=0; i < response.length(); i++) {
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
@@ -247,7 +253,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                 Log.v(TAG, e.getMessage());
                             }
                         }
-                        Log.v("ITEMLIST", mItemList.toString());
+                        //Log.v("ITEMLIST", mItemList.toString());
                         mProgressBar.setVisibility(View.INVISIBLE);
                         //mListAdapter.notifyDataSetChanged();
                         mFeedAdapter.notifyDataSetChanged();
@@ -280,6 +286,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     Log.v(TAG,e.getMessage());
                 }
                 mItemList.add(listItem);
+                Log.v("HELLO ITEMS", mItemList.toString());
 //                Log.v("LIST ITEM IS", listItem.getItemName());
 //                Log.v("ITEM LIST [0]", mItemList.get(0).getItemName());
             }
@@ -444,14 +451,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 .commit();
     } //UserCreated
 
-    //When User has been logged in
     @Override
     public void UserLoggedIn(String userData) {
+        //Create menu again (update login to logout)
+        invalidateOptionsMenu();
         //Start UploadFragment and Upload photo
         startPhotoUpload();
     } //UserLoggedIn
 
-    //User has cancelled an upload
     @Override
     public void CancelUpload() {
         //Show cancelledFragment
@@ -461,14 +468,12 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 .commit();
     } //CancelUpload
 
-    //When account Confirmation Received
     @Override
     public void onTermsClicked() {
         //Start UploadFragment and Upload photo
         startPhotoUpload();
     } //onTermsClicked
 
-    //User has cancelled upload
     @Override
     public void onTermsCancelled() {
         //Show cancelledFragment
@@ -537,23 +542,25 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-
-        //Change title names based on logInState
-        //updateMenuTitles();
-
         this.menu = menu;
+
+        //Make login or logout visible based on login status
+        updateMenuTitles();
         return true;
         //return super.onCreateOptionsMenu(menu);
     }
 
     private void updateMenuTitles(){
-        MenuItem logItem = menu.findItem(R.id.logout);
+        MenuItem logOut = menu.findItem(R.id.logout);
+        MenuItem logIn = menu.findItem(R.id.login);
         if(mCurrentUser.isLoggedIn()){
             Log.v(TAG, "YOU ARE LOGGED IN");
-            logItem.setTitle(R.string.login_button_label);
+            logOut.setVisible(true);
+            logIn.setVisible(false);
         } else {
-            logItem.setTitle(R.string.log_out_menu_label);
-            Log.v(TAG, "YOU ARE LOGGED OUT");
+            logOut.setVisible(false);
+            logIn.setVisible(true);
+            Log.v(TAG, "YOU ARE NOT LOGGED IN");
         }
     }
 
@@ -562,32 +569,20 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-
-        //TODO: Hide this if logged out + show logged in (or just change text to log out or log in)
-        if (id == R.id.logout) {
-
-            if(mCurrentUser.isLoggedIn()){
+        switch(item.getItemId()){
+            case R.id.login:
+                Intent loginIntent = new Intent(MainActivity.this, AccountActivity.class);
+                startActivity(loginIntent);
+                return true;
+            case R.id.logout:
                 mCurrentUser.logOut();
-//                mCurrentUser = null;
-//                SharedPreferencesMethods.ClearAllSharedPreferences(mContext);
-//
-//                Intent intent = new Intent(MainActivity.this, StartActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(intent);
-            } else {
-                //TODO:Make sure MainActivity is added to backstack
-                Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-                startActivity(intent);
-            }
+                return true;
+            case R.id.action_random:
+                Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);
+                startActivity(hitMeIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        //Start Random Item Activity
-        if (id == R.id.action_random) {
-            Intent intent = new Intent(MainActivity.this, RandomActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
