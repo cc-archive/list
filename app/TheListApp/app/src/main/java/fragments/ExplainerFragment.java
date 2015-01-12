@@ -112,10 +112,10 @@ public class ExplainerFragment extends Fragment {
     }
 
     public void setExplainerContent(){
-        String imageName = "R.drawable.explainer" + String.valueOf(count+1);
-        Log.v("COUNT IS: ", String.valueOf(count));
         //Set Image/Text Resources
-        int id = getResources().getIdentifier(imageName, null, null);
+        int id = getResources().getIdentifier("explainer" + String.valueOf(count + 1), "drawable",
+                getActivity().getPackageName());
+
         mImageView.setImageResource(id);
         mTextView.setText(explainerText[count]);
         Log.v("EXPLAIN: ", explainerText[count]);

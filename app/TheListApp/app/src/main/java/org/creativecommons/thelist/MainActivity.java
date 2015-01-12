@@ -19,6 +19,7 @@
 
 package org.creativecommons.thelist;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -152,28 +153,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
 
-        mFeedAdapter = new FeedAdapter(mContext, mItemList);
+        mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
-        //mListAdapter = new MainListAdapter(MainActivity.this, mItemList);
-        //mListView.setAdapter(mListAdapter);
-
-        //Show Dialog on List Item Click
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                //Show Dialog
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//                builder.setItems(R.array.listItem_choices, mDialogListener);
-//                AlertDialog dialog = builder.create();
-//                dialog.show();
-//
-//                //Store ListItem in variable
-//                activeItemPosition = position;
-//                mCurrentItem = (MainListItem) mListView.getItemAtPosition(position);
-//            }
-//        });
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
         if(requestMethods.isNetworkAvailable(mContext)) {
@@ -208,8 +191,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        //mListAdapter.notifyDataSetChanged();
-        //mListView.setVisibility(View.VISIBLE);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
@@ -231,7 +212,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     @Override
                     public void onResponse(JSONArray response) {
                         //Log.v("RESPONSE", response.toString());
-
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
@@ -291,8 +271,21 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 //                Log.v("ITEM LIST [0]", mItemList.get(0).getItemName());
             }
             //mListAdapter.notifyDataSetChanged();
+            mFeedAdapter.notifyDataSetChanged();
         }
     } //getUserListItems
+
+    public void onListItemClick(int position, MainListItem item){
+        //Show Dialog on List Item Click
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setItems(R.array.listItem_choices, mDialogListener);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        activeItemPosition = position;
+        mCurrentItem = item;
+    } //onListItemClick
+
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
