@@ -89,7 +89,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
 
         @Override
         public void onClick(View v) {
-            mainActivity.onListItemClick(getPosition(), listItems.get(getPosition()));
+            //mainActivity.onListItemClick(getPosition(), listItems.get(getPosition()));
 
         }
     }

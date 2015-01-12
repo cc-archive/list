@@ -34,9 +34,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -71,6 +73,7 @@ import fragments.CancelFragment;
 import fragments.LoginFragment;
 import fragments.TermsFragment;
 import fragments.UploadFragment;
+import swipedismiss.SwipeDismissRecyclerViewTouchListener;
 
 
 public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
@@ -100,7 +103,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
     //UI Elements
     protected ProgressBar mProgressBar;
-    //protected ListView mListView;
     protected FrameLayout mFrameLayout;
 
     //Photo Variables
@@ -144,7 +146,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
-        //mListView = (ListView)findViewById(R.id.list);
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
@@ -156,6 +157,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        initRecyclerView();
 
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
@@ -177,8 +179,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             getUserListItems();
         } else {
             mRecyclerView.setVisibility(View.INVISIBLE);
-            //mListView.setVisibility(View.INVISIBLE);
-            //mListAdapter.notifyDataSetChanged();
+            mFeedAdapter.notifyDataSetChanged();
         }
 
     } //onResume
@@ -235,7 +236,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         }
                         //Log.v("ITEMLIST", mItemList.toString());
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        //mListAdapter.notifyDataSetChanged();
                         mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -270,10 +270,46 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 //                Log.v("LIST ITEM IS", listItem.getItemName());
 //                Log.v("ITEM LIST [0]", mItemList.get(0).getItemName());
             }
-            //mListAdapter.notifyDataSetChanged();
             mFeedAdapter.notifyDataSetChanged();
         }
     } //getUserListItems
+
+    private void initRecyclerView(){
+        SwipeDismissRecyclerViewTouchListener touchListener =
+                new SwipeDismissRecyclerViewTouchListener(
+                        mRecyclerView,
+                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+
+                                    // TODO: this is temp solution for preventing blinking item onDismiss
+                                    mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
+
+                                    mItemList.remove(position);
+                                    mFeedAdapter.notifyItemRemoved(position);
+                                }
+                            }
+                        });
+        mRecyclerView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
+                new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        //Toast.makeText(MainActivity.this, "Clicked " + mItemList.get(position), Toast.LENGTH_SHORT).show();
+                        onListItemClick(position, mItemList.get(position));
+                    }
+                }));
+    } //initRecyclerView
+
 
     public void onListItemClick(int position, MainListItem item){
         //Show Dialog on List Item Click
@@ -285,6 +321,42 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         activeItemPosition = position;
         mCurrentItem = item;
     } //onListItemClick
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
+    }
+
+    public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+        private OnItemClickListener mListener;
+
+        GestureDetector mGestureDetector;
+
+        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
+            mListener = listener;
+            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    Log.v("HI", "ON SINGLE TAG UP CALLED");
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+            View childView = view.findChildViewUnder(e.getX(), e.getY());
+            Log.v("HI", "INTERCEPT TOUCH EVENT CALLED");
+            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+                mListener.onItemClick(childView, view.getChildPosition(childView));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+            Log.v("HI", "ON TOUCH EVENT CALLED");
+        }
+    }
 
 
     //DIALOG FOR LIST ITEM ACTION
@@ -482,7 +554,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //Refresh user list + remove item that has just been uploaded
         //TODO: do I still need this?
         mItemList.remove(activeItemPosition);
-        //mListAdapter.notifyDataSetChanged();
         mFeedAdapter.notifyDataSetChanged();
 
         //Show upload message for limited time
