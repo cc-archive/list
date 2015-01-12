@@ -131,7 +131,7 @@ with('/api/photos', function () {
 
         else {
 
-            http_response_code(204);
+            http_response_code(400);
         }
         
     });
