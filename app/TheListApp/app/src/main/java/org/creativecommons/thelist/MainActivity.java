@@ -153,10 +153,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mRecyclerView.addItemDecoration(itemDecoration);
 
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
-
+        mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setLayoutManager(mLayoutManager);
         initRecyclerView();
 
 
@@ -290,9 +290,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
+                                    mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
+                                    //TODO: remove item from user list
+
                                 }
                             }
                         });
@@ -345,7 +347,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         @Override
         public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
             View childView = view.findChildViewUnder(e.getX(), e.getY());
-            Log.v("HI", "INTERCEPT TOUCH EVENT CALLED");
             if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
                 mListener.onItemClick(childView, view.getChildPosition(childView));
             }

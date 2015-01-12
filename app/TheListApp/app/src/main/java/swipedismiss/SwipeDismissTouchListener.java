@@ -122,7 +122,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent motionEvent) {
         // offset because the view is translated during swipe
         motionEvent.offsetLocation(mTranslationX, 0);
-
+        Log.v("OHNO", "TURNS OUT IM BEING USED");
         if (mViewWidth < 2) {
             mViewWidth = mView.getWidth();
         }

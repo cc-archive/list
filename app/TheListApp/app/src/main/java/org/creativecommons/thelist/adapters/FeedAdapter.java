@@ -71,7 +71,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
         return listItems.size();
     }
 
-    public class FeedViewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class FeedViewholder extends RecyclerView.ViewHolder {
         RelativeLayout relativeLayout;
         ImageView iconImageView;
         TextView nameLabel;
@@ -79,18 +79,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
 
         public FeedViewholder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            //itemView.setOnClickListener(this);
             iconImageView = (ImageView)itemView.findViewById(R.id.camera_icon);
             nameLabel = (TextView)itemView.findViewById(R.id.list_item_name);
             makerLabel = (TextView)itemView.findViewById(R.id.list_item_maker);
 
-            iconImageView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            //mainActivity.onListItemClick(getPosition(), listItems.get(getPosition()));
-
+            //iconImageView.setOnClickListener(this);
         }
     }
 }

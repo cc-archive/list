@@ -17,12 +17,12 @@
 package swipedismiss;
 
 import android.animation.Animator;
-import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -145,6 +145,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      */
     public void setEnabled(boolean enabled) {
         mPaused = !enabled;
+        Log.v("Paused is: ", String.valueOf(mPaused));
     }
 
     /**
@@ -175,8 +176,14 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             mViewWidth = mRecyclerView.getWidth();
         }
 
+        Log.v("onTouch", "Is getting called?");
+
+        //mPaused = false;
+
         switch (motionEvent.getActionMasked()) {
+            case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN: {
+                Log.v("Action", "Down!");
                 if (mPaused) {
                     return false;
                 }
@@ -215,6 +222,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_CANCEL: {
+                Log.v("Action", "Cancel!");
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -238,6 +246,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_UP: {
+                Log.v("Action", "Up!");
                 if (mVelocityTracker == null) {
                     break;
                 }
@@ -293,9 +302,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             }
 
             case MotionEvent.ACTION_MOVE: {
+                Log.v("Action", "Move!");
                 if (mVelocityTracker == null || mPaused) {
                     break;
                 }
+
 
                 mVelocityTracker.addMovement(motionEvent);
                 float deltaX = motionEvent.getRawX() - mDownX;
@@ -322,6 +333,9 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 }
                 break;
             }
+            default:
+                Log.v("DEFAULT", "DEFAULT");
+                break;
         }
         return false;
     }
@@ -365,6 +379,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     for (int i = mPendingDismisses.size() - 1; i >= 0; i--) {
                         dismissPositions[i] = mPendingDismisses.get(i).position;
                     }
+                    Log.v("TEST", "DISMISSING SOMETHING");
                     mCallbacks.onDismiss(mRecyclerView, dismissPositions);
 
                     // Reset mDownPosition to avoid MotionEvent.ACTION_UP trying to start a dismiss
