@@ -113,6 +113,8 @@ with('/api/photos', function () {
 
         $filedata = base64_decode($filedata);
 
+        if (strlen($filedata) > 50) {
+
         $tmp = "" . tempnam("../list-uploads/", "process-me-" . $userid . "-");
 
         $image = fopen($tmp, "w") or die("Unable to open file!");
@@ -124,6 +126,13 @@ with('/api/photos', function () {
         $filename = $tmp;
                     
         $result = $list->addPhoto($userid, $filename, $listitem);
+
+        }
+
+        else {
+
+            http_response_code(204);
+        }
         
     });
 
