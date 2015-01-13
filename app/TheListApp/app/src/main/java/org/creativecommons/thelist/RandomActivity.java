@@ -119,7 +119,6 @@ public class RandomActivity extends Activity {
                     //Log.v("THIS IS ITEMLIST", mItemList.toString());
 
                     //Once yes has been hit 3 times, forward to
-
                     //If User is logged in…
                     if(mCurrentUser.isLoggedIn()) {
                         Log.v("LOGGED IN", "user is logged in");
@@ -256,7 +255,7 @@ public class RandomActivity extends Activity {
                     public void onResponse(JSONArray response) {
                         //Handle Data
                         mRandomItemData = response;
-                        //Log.v("HI RANDOM DATA", response.toString());
+                        Log.v("HI RANDOM DATA", response.toString());
                         updateView();
 
                     }

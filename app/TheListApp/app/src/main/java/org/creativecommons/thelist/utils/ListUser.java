@@ -104,11 +104,8 @@ public class ListUser {
         //TODO: actually get ID
 
         userID = sharedPreferencesMethods.getUserId();
-
         //See if sharedPreference methods contains userID
         //If yes: get and return userID; else: return null
-
-
         if (userID == null) {
             Log.v(TAG, "You don’t got no userID, man");
             return null;
@@ -287,7 +284,7 @@ public class ListUser {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
         //TODO: session token will know which user this is?
-        String url = ApiConstants.ADD_ITEM + userID + "/" + itemID;
+        String url = ApiConstants.ADD_ITEM + getUserID() + "/" + itemID;
 
         //Add single item to user list
         StringRequest postItemsRequest = new StringRequest(Request.Method.POST, url,
@@ -295,6 +292,7 @@ public class ListUser {
                     @Override
                     public void onResponse(String response) {
                         //get Response
+                        Log.v("Response", response.toString());
                         Log.v(TAG,"AN ITEM IS BEING ADDED");
                         //TODO: do something with response?
 

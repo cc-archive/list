@@ -60,6 +60,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
         //Getting Data for the row
         MainListItem l = listItems.get(position);
 
+        //TODO: Check this works?
+        holder.relativeLayout.setVisibility(View.VISIBLE);
+
         holder.nameLabel.setText(l.getItemName());
         holder.makerLabel.setText("requested by " + l.getMakerName());
         holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
@@ -79,12 +82,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
 
         public FeedViewholder(View itemView) {
             super(itemView);
-            //itemView.setOnClickListener(this);
             iconImageView = (ImageView)itemView.findViewById(R.id.camera_icon);
             nameLabel = (TextView)itemView.findViewById(R.id.list_item_name);
             makerLabel = (TextView)itemView.findViewById(R.id.list_item_maker);
-
-            //iconImageView.setOnClickListener(this);
+            relativeLayout = (RelativeLayout)itemView.findViewById(R.id.full_list_item);
         }
     }
 }

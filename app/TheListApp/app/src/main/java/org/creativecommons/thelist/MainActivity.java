@@ -65,6 +65,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -87,28 +88,21 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser = new ListUser(this);
 
-    int count = 0;
-
     protected JSONObject mCurrentUserObject;
+    protected MainListItem mCurrentItem;
+    protected int activeItemPosition;
     protected String userID;
-
-    //RecyclerView
-    //protected MainListAdapter mListAdapter;
+    protected Uri mMediaUri;
 
     //RecyclerView
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<MainListItem> mItemList = new ArrayList<MainListItem>();
+    private List<MainListItem> mItemList = new ArrayList<>();
 
     //UI Elements
     protected ProgressBar mProgressBar;
     protected FrameLayout mFrameLayout;
-
-    //Photo Variables
-    protected Uri mMediaUri;
-    protected MainListItem mCurrentItem;
-    protected int activeItemPosition;
 
     //Fragments
     LoginFragment loginFragment = new LoginFragment();
@@ -141,24 +135,26 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             Log.v("YO" + TAG, "NOT LOGGED IN");
         } else {
             mCurrentUser.setLogInState(true);
+            mCurrentUser.setUserID(userID);
             Log.v("YO " + TAG, "LOGGED IN");
         }
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
+        mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
+
+        //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
-
-        mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
         mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        initRecyclerView();
 
+        initRecyclerView();
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
         if(requestMethods.isNetworkAvailable(mContext)) {
@@ -174,7 +170,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     public void onResume() {
         super.onResume();
         //Log.v("ON RESUME ", "IS BEING CALLED");
-
         if(mCurrentUser.isLoggedIn()){
             getUserListItems();
         } else {
@@ -192,6 +187,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
+        Collections.reverse(mItemList);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
@@ -212,15 +208,15 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        //Log.v("RESPONSE", response.toString());
+                        Log.v("RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
-
                                 //Only show items in the user’s list that have not been completed
-                                if (singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
+                                if (singleListItem.getString(ApiConstants.ITEM_COMPLETED) == null ||
+                                        singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
                                     listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
@@ -234,8 +230,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                 Log.v(TAG, e.getMessage());
                             }
                         }
-                        //Log.v("ITEMLIST", mItemList.toString());
                         mProgressBar.setVisibility(View.INVISIBLE);
+                        Collections.reverse(mItemList);
                         mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -257,18 +253,13 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 try {
                     listItem.setItemID(String.valueOf(itemIds.getInt(i)));
                     listItem.setRequestMethods(requestMethods);
-                    Log.v("HELLO", "WE ARE HERE");
                     listItem.setMainActivity(MainActivity.this);
-                    Log.v("HELLO", "WE ARE AFTER SET");
                     listItem.createNewUserListItem();
-                    Log.v("HELLO", "WE ARE HERE AFTER CREATE");
                 } catch (JSONException e) {
                     Log.v(TAG,e.getMessage());
                 }
                 mItemList.add(listItem);
-                Log.v("HELLO ITEMS", mItemList.toString());
-//                Log.v("LIST ITEM IS", listItem.getItemName());
-//                Log.v("ITEM LIST [0]", mItemList.get(0).getItemName());
+                //Log.v("HELLO ITEMS", mItemList.toString());
             }
             mFeedAdapter.notifyDataSetChanged();
         }
@@ -287,7 +278,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
                                     mItemList.remove(position);
@@ -306,31 +296,24 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        //Toast.makeText(MainActivity.this, "Clicked " + mItemList.get(position), Toast.LENGTH_SHORT).show();
-                        onListItemClick(position, mItemList.get(position));
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setItems(R.array.listItem_choices, mDialogListener);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        activeItemPosition = position;
+                        mCurrentItem = mItemList.get(position);
                     }
                 }));
     } //initRecyclerView
 
-
-    public void onListItemClick(int position, MainListItem item){
-        //Show Dialog on List Item Click
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setItems(R.array.listItem_choices, mDialogListener);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        activeItemPosition = position;
-        mCurrentItem = item;
-    } //onListItemClick
-
+    //For Swipe to Dismiss
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
     }
-
+    //For Swipe to Dismiss
     public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
         private OnItemClickListener mListener;
-
         GestureDetector mGestureDetector;
 
         public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
@@ -338,7 +321,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
-                    Log.v("HI", "ON SINGLE TAG UP CALLED");
+                    //Log.v("HI", "ON SINGLE TAG UP CALLED");
                     return true;
                 }
             });
@@ -352,13 +335,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             }
             return false;
         }
-
         @Override
         public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
-            Log.v("HI", "ON TOUCH EVENT CALLED");
+            //Log.v("HI", "ON TOUCH EVENT CALLED");
         }
     }
-
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
@@ -455,7 +436,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                     mMediaUri = data.getData();
                 }
             }
-
             Log.i(TAG,"Media URI:" + mMediaUri);
 
             //TODO: Check file size
@@ -479,7 +459,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         }
     } //onActivityResult
 
-
     //Start UploadFragment and upload photo
     public void startPhotoUpload(){
         Bundle b = new Bundle();
@@ -494,7 +473,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         getSupportActionBar().hide();
 
     }
-
     //When New User fills out sign up (save data locally)
     @Override
     public void UserCreated(String userData) {
@@ -554,7 +532,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     public void onUploadFinish() {
         //Refresh user list + remove item that has just been uploaded
         //TODO: do I still need this?
-        mItemList.remove(activeItemPosition);
+        getUserListItems();
+        //mItemList.remove(activeItemPosition);
         mFeedAdapter.notifyDataSetChanged();
 
         //Show upload message for limited time
@@ -641,6 +620,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 return true;
             case R.id.logout:
                 mCurrentUser.logOut();
+                userID = null;
                 return true;
             case R.id.action_random:
                 Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);

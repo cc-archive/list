@@ -89,7 +89,6 @@ public class ExplainerFragment extends Fragment {
 
         //TODO: if clickCount < array.length(), show next item in array else, send onNextClicked()
         count = 0;
-
         //Get the first explainer (at [0])
         setExplainerContent();
 
@@ -99,7 +98,6 @@ public class ExplainerFragment extends Fragment {
                 if(count < explainerText.length) {
                     setExplainerContent();
                 } else {
-                    //Notify Activity
                     mCallback.onNextClicked();
                 }
             }
