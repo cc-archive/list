@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile files('libs/nineoldandroids-2.4.0.jar')
 }

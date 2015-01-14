@@ -54,5 +54,4 @@
             android:id="@+id/nextButton"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
-
 </LinearLayout>

@@ -50,8 +50,6 @@
         <item>Cool, let’s go</item>
     </string-array>
 
-
-
     <string name="hello_world">Hello world!</string>
     <string name="empty_list">No Items To Display</string>
     <string name="title_activity_login">Login Activity</string>
@@ -103,4 +101,6 @@
     <string name="item_id_bundle_key">item</string>
     <string name="uri_bundle_key">uri</string>
     <string name="login_menu_label">Log In</string>
+    <string name="title_activity_nine_old_androids">NineOldAndroidsActivity</string>
+
 </resources>

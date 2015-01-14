@@ -5,14 +5,25 @@
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/primary_light</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorControlHighlight">@color/accent</item>
+        <item name="android:buttonStyle">@style/raised_button</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+    </style>
+
+    <style name="ListThemeNoActionBar" parent="AppTheme.Base">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:buttonStyle">@style/raised_button</item>
     </style>
 
     <!--Checkbox for CategoryListActivity-->
     <style name="CheckBoxStyle" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/btn_check</item>
+    </style>
+
+    <!--EditTextStyle-->
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
     </style>
 
     <!--Material Design Buttons-->
