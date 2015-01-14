@@ -6,7 +6,7 @@
     style="@style/fragment_layout_main">
 
     <TextView
-        style="@style/cancel_button"
+        style="@style/flat_button"
         android:id="@+id/cancelButton"
         android:text="@string/cancel_button_label"
         android:layout_weight="0"

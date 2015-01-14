@@ -2,6 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         style="@style/intro_layout_main"
         android:orientation="vertical"
@@ -21,42 +22,35 @@
                 android:text="@string/app_name"
                 android:id="@+id/confirm_title"
                 android:maxLines="1"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textSize="50sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:paddingBottom="15dp"
-                android:layout_centerVertical="true" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="130dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=""
-                android:lineSpacingMultiplier="1.2"
-                android:paddingBottom="15dp"
+                android:text="The List is a collaborative project to build a global collection of images that anyone can use"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:id="@+id/intro"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:layout_below="@id/confirm_title"/>
+                android:layout_below="@id/confirm_title"
+                android:paddingBottom="30dp" />
 
             <Button
-                style="@style/standard_button"
-                android:background="@color/text_medium_dark"
-                android:textColor="@color/text_light"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:text="@string/start_button_label"
                 android:id="@+id/startButton"
-                android:layout_marginBottom="5dp"
-                android:layout_below="@+id/intro"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp" />
+                android:layout_below="@+id/intro" />
 
             <Button
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:layout_width="match_parent"
                 android:text="@string/existing_account_text"
-                android:textSize="12sp"
-                android:textColor="@color/text_medium_dark"
                 android:id="@+id/accountButton"
                 android:layout_gravity="center"
                 android:layout_below="@+id/startButton"
@@ -68,26 +62,19 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/cc_logo_layout">
-            <!--TODO: make image link to creative commons website-->
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:id="@+id/cc_logo"
                 android:src="@drawable/start_logo"
-                android:paddingBottom="7dp"
                 android:layout_above="@+id/cc_logo_label"
                 android:layout_centerHorizontal="true" />
             <TextView
-                style="@style/account_helper_style"
+                style="@style/clickable_textView"
                 android:text="@string/alpha_release_terms_label"
                 android:id="@+id/cc_logo_label"
                 android:layout_alignParentBottom="true" />
-            <!--<TextView-->
-                <!--style="@style/account_helper_style"-->
-                <!--android:text="@string/cc_logo_label"-->
-                <!--android:id="@+id/cc_logo_label"-->
-                <!--android:layout_alignParentBottom="true" />-->
         </RelativeLayout>
     </LinearLayout>
 
@@ -95,5 +82,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"/>
-
 </merge>

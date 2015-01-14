@@ -5,7 +5,7 @@
     tools:context="fragments.LoginFragment">
 
     <TextView
-        style="@style/cancel_button"
+        style="@style/flat_button"
         android:text="@string/cancel_button_label"
         android:id="@+id/cancelButton"
         android:layout_weight="0"
@@ -84,14 +84,14 @@
             android:layout_below="@+id/emailField" />
 
         <Button
-            style="@style/standard_button"
+            style="@style/raised_button"
             android:text="@string/signUpButton_label"
             android:id="@+id/signUpButton"
             android:layout_below="@+id/passwordField"
             android:layout_marginTop="20dp"/>
 
         <TextView
-            style="@style/account_helper_style"
+            style="@style/clickable_textView"
             android:text="@string/existing_account_text"
             android:id="@+id/existingAccount"
             android:layout_below="@id/signUpButton"/>
@@ -136,7 +136,7 @@
             android:layout_marginTop="10dp"/>
 
         <TextView
-            style="@style/account_helper_style"
+            style="@style/clickable_textView"
             android:text="@string/new_account_text"
             android:id="@+id/newAccount"
             android:layout_below="@+id/loginButton"/>

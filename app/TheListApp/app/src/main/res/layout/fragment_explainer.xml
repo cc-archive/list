@@ -48,7 +48,8 @@
         android:id="@+id/section_text"
         android:layout_weight="1">
         <Button
-            style="@style/standard_button"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:text=""
             android:id="@+id/nextButton"
             android:layout_centerInParent="true"/>

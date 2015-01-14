@@ -33,6 +33,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -120,6 +121,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mContext = this;
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         requestMethods = new RequestMethods(mContext);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
