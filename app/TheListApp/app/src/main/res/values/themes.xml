@@ -2,14 +2,16 @@
 <resources>
     <style name="ListTheme" parent="AppTheme.Base"/>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/red_700</item>
-        <item name="colorPrimaryDark">@color/red_900</item>
-        <item name="colorControlNormal">@color/amber_700</item>
-        <item name="colorControlActivated">@color/amber_900</item>
-        <item name="colorControlHighlight">@color/amber_500</item>
+    <style name="AppTheme.Base" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorSecondary</item>
+        <item name="colorControlActivated">@color/colorSecondaryDark</item>
+        <item name="colorControlHighlight">@color/colorSecondaryLight</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <item name="android:buttonStyle">@style/raised_button</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
+
         <!--TODO: can change typeface in here-->
     </style>
 
