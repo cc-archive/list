@@ -16,9 +16,6 @@
 
 package swipedismiss;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.app.ListActivity;
 import android.app.ListFragment;
 import android.util.Log;
@@ -29,6 +26,10 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import static com.nineoldandroids.view.ViewHelper.setAlpha;
+import static com.nineoldandroids.view.ViewHelper.setTranslationX;
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * A {@link View.OnTouchListener} that makes any {@link View} dismissable when the
@@ -68,6 +69,7 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
     // Fixed properties
     private View mView;
     private DismissCallbacks mCallbacks;
+    private OnDismissCallback mCallback;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
     // Transient properties
@@ -79,10 +81,23 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
     private VelocityTracker mVelocityTracker;
     private float mTranslationX;
 
+
+
     /**
      * The callback interface used by {@link SwipeDismissTouchListener} to inform its client
      * about a successful dismissal of the view for which it was created.
      */
+    public interface OnDismissCallback {
+        /**
+         * Called when the user has indicated they she would like to dismiss the view.
+         *
+         * @param view  The originating {@link View} to be dismissed.
+         * @param token The optional token passed to this object's constructor.
+         */
+        void onDismiss(View view, Object token);
+    }
+
+
     public interface DismissCallbacks {
         /**
          * Called to determine whether the view can be dismissed.
@@ -103,10 +118,10 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
      *
      * @param view     The view to make dismissable.
      * @param token    An optional token/cookie object to be passed through to the callback.
-     * @param callbacks The callback to trigger when the user has indicated that she would like to
+     * //@param callbacks The callback to trigger when the user has indicated that she would like to
      *                 dismiss this view.
      */
-    public SwipeDismissTouchListener(View view, Object token, DismissCallbacks callbacks) {
+    public SwipeDismissTouchListener(View view, Object token, OnDismissCallback callback) {
         ViewConfiguration vc = ViewConfiguration.get(view.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -115,7 +130,8 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
                 android.R.integer.config_shortAnimTime);
         mView = view;
         mToken = token;
-        mCallbacks = callbacks;
+        //mCallbacks = callbacks;
+        mCallback = callback;
     }
 
     @Override
@@ -165,48 +181,27 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
                 }
                 if (dismiss) {
                     // dismiss
-                    mView.animate()
+                    animate(mView)
                             .translationX(dismissRight ? mViewWidth : -mViewWidth)
                             .alpha(0)
                             .setDuration(mAnimationTime)
-                            .setListener(new AnimatorListenerAdapter() {
+                            .setListener(new com.nineoldandroids.animation.AnimatorListenerAdapter() {
                                 @Override
-                                public void onAnimationEnd(Animator animation) {
+                                public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
                                     performDismiss();
                                 }
                             });
-                } else if (mSwiping) {
+                } else {
                     // cancel
-                    mView.animate()
+                    animate(mView)
                             .translationX(0)
                             .alpha(1)
                             .setDuration(mAnimationTime)
                             .setListener(null);
                 }
-                mVelocityTracker.recycle();
                 mVelocityTracker = null;
                 mTranslationX = 0;
                 mDownX = 0;
-                mDownY = 0;
-                mSwiping = false;
-                break;
-            }
-
-            case MotionEvent.ACTION_CANCEL: {
-                if (mVelocityTracker == null) {
-                    break;
-                }
-
-                mView.animate()
-                        .translationX(0)
-                        .alpha(1)
-                        .setDuration(mAnimationTime)
-                        .setListener(null);
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
-                mTranslationX = 0;
-                mDownX = 0;
-                mDownY = 0;
                 mSwiping = false;
                 break;
             }
@@ -218,26 +213,22 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
 
                 mVelocityTracker.addMovement(motionEvent);
                 float deltaX = motionEvent.getRawX() - mDownX;
-                float deltaY = motionEvent.getRawY() - mDownY;
-                if (Math.abs(deltaX) > mSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
+                if (Math.abs(deltaX) > mSlop) {
                     mSwiping = true;
-                    mSwipingSlop = (deltaX > 0 ? mSlop : -mSlop);
                     mView.getParent().requestDisallowInterceptTouchEvent(true);
 
                     // Cancel listview's touch
                     MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
-                            (motionEvent.getActionIndex() <<
-                                    MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+                            (motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                     mView.onTouchEvent(cancelEvent);
-                    cancelEvent.recycle();
                 }
 
                 if (mSwiping) {
                     mTranslationX = deltaX;
-                    mView.setTranslationX(deltaX - mSwipingSlop);
+                    setTranslationX(mView, deltaX);
                     // TODO: use an ease-out interpolator or such
-                    mView.setAlpha(Math.max(0f, Math.min(1f,
+                    setAlpha(mView, Math.max(0f, Math.min(1f,
                             1f - 2f * Math.abs(deltaX) / mViewWidth)));
                     return true;
                 }
@@ -255,28 +246,28 @@ public class SwipeDismissTouchListener implements View.OnTouchListener {
         final ViewGroup.LayoutParams lp = mView.getLayoutParams();
         final int originalHeight = mView.getHeight();
 
-        ValueAnimator animator = ValueAnimator.ofInt(originalHeight, 1).setDuration(mAnimationTime);
+        com.nineoldandroids.animation.ValueAnimator animator = com.nineoldandroids.animation
+                .ValueAnimator.ofInt(originalHeight, 1).setDuration(mAnimationTime);
 
-        animator.addListener(new AnimatorListenerAdapter() {
+        animator.addListener(new com.nineoldandroids.animation.AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                mCallbacks.onDismiss(mView, mToken);
+            public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
+                mCallback.onDismiss(mView, mToken);
                 // Reset view presentation
-                mView.setAlpha(1f);
-                mView.setTranslationX(0);
+                setAlpha(mView, 1f);
+                setTranslationX(mView, 0);
                 lp.height = originalHeight;
                 mView.setLayoutParams(lp);
             }
         });
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        animator.addUpdateListener(new com.nineoldandroids.animation.ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            public void onAnimationUpdate(com.nineoldandroids.animation.ValueAnimator valueAnimator) {
                 lp.height = (Integer) valueAnimator.getAnimatedValue();
                 mView.setLayoutParams(lp);
             }
         });
-
         animator.start();
     }
 }

@@ -54,7 +54,6 @@ import com.android.volley.toolbox.Volley;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -152,9 +151,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.ItemDecoration itemDecoration =
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        mRecyclerView.addItemDecoration(itemDecoration);
+        //RecyclerView.ItemDecoration itemDecoration =
+        //        new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        //mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
@@ -275,12 +274,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         SwipeDismissRecyclerViewTouchListener touchListener =
                 new SwipeDismissRecyclerViewTouchListener(
                         mRecyclerView,
-                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
-
+                        new SwipeDismissRecyclerViewTouchListener.OnDismissCallback() {
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {

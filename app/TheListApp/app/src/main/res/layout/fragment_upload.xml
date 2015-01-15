@@ -53,7 +53,7 @@
                 android:text="@string/upload_success_title"
                 android:id="@+id/confirm_title"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/abc_primary_text_material_dark" />
+                android:textColor="@color/primary_text_default_material_dark" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                 android:layout_below="@+id/confirm_title"
                 android:gravity="center"
                 android:layout_margin="5dp"
-                android:textColor="@color/primary_light" />
+                android:textColor="@color/primary_text_default_material_dark" />
         </RelativeLayout>
     </RelativeLayout>
 

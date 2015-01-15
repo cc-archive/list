@@ -59,9 +59,9 @@
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_camera_alt_black_36dp"/>
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"/>
+    <!--TODO: get touch feedback working-->
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="?android:attr/selectableItemBackground"/>-->
 </FrameLayout>

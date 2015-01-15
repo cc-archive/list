@@ -6,7 +6,6 @@
         style="@style/intro_layout_main"
         android:orientation="vertical"
         android:weightSum="5"
-        android:background="@color/primary_ultralight"
         tools:context="org.creativecommons.thelist.StartActivity">
 
         <RelativeLayout

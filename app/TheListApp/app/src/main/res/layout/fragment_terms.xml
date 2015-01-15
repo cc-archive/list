@@ -37,22 +37,26 @@
                 style="@style/fragment_title"
                 android:text="@string/terms_fragment_title"
                 android:id="@+id/confirm_title"
+                android:textColor="@color/primary_text_default_material_dark"
                 android:maxLines="1" />
             <TextView
                 android:id="@+id/item_text"
                 android:text="@string/terms_fragment_text"
+                android:textColor="@color/primary_text_default_material_dark"
                 style="@style/fragment_text" />
-
+             <!--TODO: Should have flat button styling-->
             <TextView
+                style="@style/flat_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/terms_learn_more_label"
                 android:id="@+id/learnMoreButton"
                 android:layout_below="@+id/item_text"
                 android:layout_centerHorizontal="true"
+
                 android:textStyle="bold"
                 android:textAllCaps="true"
-                android:textColor="@color/text_medium_dark"
+                android:textColor="@color/primary_text_default_material_dark"
                 android:layout_marginTop="10dp"
                 android:gravity="center" />
 
@@ -63,7 +67,7 @@
                 android:button="@drawable/btn_check"
                 android:id="@+id/checkBox"
                 android:gravity="center"
-                android:textColor="@color/primary_light"
+                android:textColor="@color/primary_text_default_material_dark"
                 android:layout_below="@+id/learnMoreButton"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="37dp" />

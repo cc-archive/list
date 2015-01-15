@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/text_medium_light"
+    <item android:drawable="@color/red_700"
         android:state_pressed="true" />
-    <item android:drawable="@color/primary_dark"
+    <item android:drawable="@color/red_900"
         android:state_focused="true" />
-    <item android:drawable="@color/text_medium_dark" />
+    <item android:drawable="@color/amber_500" />
 </selector>

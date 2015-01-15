@@ -15,7 +15,6 @@
         android:textSize="18sp"
         android:gravity="center"
         android:paddingBottom="20dp"
-        android:textColor="@color/text_medium_dark"
         android:id="@+id/category_prompt"
         android:text="@string/category_list_text"/>
 

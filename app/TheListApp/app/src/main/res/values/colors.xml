@@ -1,35 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Theme Colours-->
-    <color name="colorPrimaryDark">#F26444</color>
-    <color name="colorPrimary">#F29057</color>
-    <color name="colorAccent">#555973</color>
-    <color name="colorControlNormal">#BF8450</color>
-    <color name="colorControlLight">#F2B366</color>
+    <color name="red_900">#B71C1C</color>
+    <color name="red_700">#D32F2F</color>
+    <color name="red_500">#F44336</color>
+    <color name="amber_900">#FF6F00</color>
+    <color name="amber_700">#FFA000</color>
+    <color name="amber_500">#FFC107</color>
+
 
     <!--Button Colours-->
-    <color name="NORMAL_STATE_COLOR">@color/colorPrimary</color>
-    <color name="PRESSED_STATE_COLOR">@color/colorPrimaryDark</color>
-    <color name="FOCUSED_STATE_COLOR">@color/colorAccent</color>
-
-    <!--General-->
-    <color name="app_black">#ffffff</color>
-    <color name="app_white">#000000</color>
-    <color name="apptheme_color">#a3a3a3</color>
+    <color name="NORMAL_STATE_COLOR">@color/red_700</color>
+    <color name="PRESSED_STATE_COLOR">@color/red_900</color>
+    <color name="FOCUSED_STATE_COLOR">@color/amber_500</color>
 
     <!--Text-->
-    <color name="text_light">#d3d3d3</color>
-    <color name="text_dark">#2B2B2B</color>
-    <color name="text_medium_light">#A6A6A6</color>
-    <color name="text_medium_dark">#5C5C5C</color>
+    <!-- Black 87% -->
+    <color name="primary_text_default_material_light">#de000000</color>
+    <!-- Black 54% -->
+    <color name="secondary_text_material_light">#8a000000</color>
+    <!--Hint/Disabled 26% Black-->
+    <color name="hint_disabled_text_material_light">@color/abc_primary_text_disable_only_material_light</color>
+
+    <!-- White 87% -->
+    <color name="primary_text_default_material_dark">#deffffff</color>
+    <!-- White 38% -->
+    <color name="secondary_text_material_dark">#61ffffff</color>
+    <!--Hint/Disabled 30% White-->
+    <color name="hint_disabled_text_material_dark">@color/abc_primary_text_disable_only_material_dark</color>
 
     <!--Background Colours-->
     <color name="translucent_background">#D9000000</color>
-    <color name="primary_ultralight">#F0F0F0</color>
-    <color name="primary_light">#d3d3d3</color>
-    <color name="primary_dark">#2B2B2B</color>
-    <color name ="red_accent">#E82D2C</color>
+
+
+    <!--General-->
+    <!--<color name="app_black">#ffffff</color>-->
+    <!--<color name="app_white">#000000</color>-->
+    <!--<color name="apptheme_color">#a3a3a3</color>-->
 
     <!--Other-->
-    <color name="accent">#ffc400</color>
+    <!--<color name="accent">#ffc400</color>-->
+    <!--<color name ="red_accent">#E82D2C</color>-->
+
+    <!--Theme Colours-->
+    <!--<color name="colorPrimaryDark">#F26444</color>-->
+    <!--<color name="colorPrimary">#F29057</color>-->
+    <!--<color name="colorAccent">#555973</color>-->
+    <!--<color name="colorControlNormal">#BF8450</color>-->
+    <!--<color name="colorControlLight">#F2B366</color>-->
+
 </resources>
