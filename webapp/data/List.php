@@ -131,6 +131,8 @@ class UserList {
             $adodb->qstr($userid),
             $adodb->qstr($listitem)
             ));
+
+            $adodb->CacheFlush();
             
         } catch (Exception $e) {
             
