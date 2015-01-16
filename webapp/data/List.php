@@ -124,7 +124,7 @@ class UserList {
 
         global $adodb;
 
-        $query = "INSERT INTO UserList (userid, listid) VALUES (%s,%s)";
+        $query = "INSERT INTO UserList (userid, listid, complete) VALUES (%s,%s,0)";
 
         try {
             $res = $adodb->Execute(sprintf($query,
