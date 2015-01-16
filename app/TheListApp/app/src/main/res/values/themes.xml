@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="ListTheme" parent="AppTheme.Base"/>
-
-    <style name="AppTheme.Base" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorControlNormal">@color/colorSecondary</item>
         <item name="colorControlActivated">@color/colorSecondaryDark</item>
         <item name="colorControlHighlight">@color/colorSecondaryLight</item>
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <item name="android:buttonStyle">@style/raised_button</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
-
         <!--TODO: can change typeface in here-->
     </style>
 
     <!--No Action Bar Theme-->
-    <style name="ListThemeNoActionBar" parent="AppTheme.Base">
+    <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="android:buttonStyle">@style/raised_button</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <!--TODO: hide the status bar in pre-L-->
     </style>
 
@@ -32,17 +31,5 @@
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
         <!--Can make changes to default in here-->
     </style>
-
-    <!--Material Design Buttons-->
-    <style name="raised_button" parent="android:Widget.Button">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
-        <item name="android:background">@drawable/material_button</item>
-        <item name="android:minHeight">36dp</item>
-        <item name="android:layout_marginTop">@dimen/button_padding_vertical_material</item>
-        <item name="android:layout_marginBottom">@dimen/button_padding_vertical_material</item>
-    </style>
-
 
 </resources>

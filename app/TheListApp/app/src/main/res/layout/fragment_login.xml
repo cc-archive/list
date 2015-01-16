@@ -5,7 +5,7 @@
     tools:context="fragments.LoginFragment">
 
     <TextView
-        style="@style/flat_button"
+        style="@style/flat_button_dark"
         android:text="@string/cancel_button_label"
         android:id="@+id/cancelButton"
         android:layout_weight="0"
@@ -91,7 +91,7 @@
             android:layout_marginTop="20dp"/>
 
         <TextView
-            style="@style/clickable_textView"
+            style="@style/clickable_text"
             android:text="@string/existing_account_text"
             android:id="@+id/existingAccount"
             android:layout_below="@id/signUpButton"/>
@@ -130,13 +130,14 @@
 
         <Button
             style="@style/standard_button"
+            android:layout_width="match_parent"
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
             android:layout_below="@+id/passwordLoginField"
             android:layout_marginTop="10dp"/>
 
         <TextView
-            style="@style/clickable_textView"
+            style="@style/clickable_text"
             android:text="@string/new_account_text"
             android:id="@+id/newAccount"
             android:layout_below="@+id/loginButton"/>

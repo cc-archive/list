@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:textSize="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:gravity="center"
         android:paddingBottom="20dp"
         android:id="@+id/category_prompt"
@@ -25,11 +25,9 @@
         android:id="@+id/list" />
 
     <Button
-        style="@style/standard_button"
+        style="@style/raised_button"
+        android:layout_width="match_parent"
         android:text="@string/next_button_label"
         android:id="@+id/nextButton"
-        android:layout_weight="0"
-        android:paddingTop="5dp"/>
-
-
+        android:layout_weight="0"/>
 </LinearLayout>

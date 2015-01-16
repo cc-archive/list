@@ -6,7 +6,7 @@
     style="@style/fragment_layout_main">
 
     <TextView
-        style="@style/flat_button"
+        style="@style/flat_button_dark"
         android:id="@+id/cancelButton"
         android:text="@string/cancel_button_label"
         android:layout_weight="0"
@@ -46,7 +46,7 @@
                 style="@style/fragment_text" />
              <!--TODO: Should have flat button styling-->
             <TextView
-                style="@style/flat_button"
+                style="@style/clickable_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/terms_learn_more_label"

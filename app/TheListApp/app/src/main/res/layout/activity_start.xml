@@ -68,7 +68,7 @@
                 android:layout_above="@+id/cc_logo_label"
                 android:layout_centerHorizontal="true" />
             <TextView
-                style="@style/clickable_textView"
+                style="@style/clickable_text"
                 android:text="@string/alpha_release_terms_label"
                 android:id="@+id/cc_logo_label"
                 android:layout_alignParentBottom="true" />

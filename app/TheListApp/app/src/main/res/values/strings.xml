@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Activity Titles -->
-    <string name="app_name">THE LIST</string>
+    <string name="app_name">The List</string>
     <string name="title_activity_main">Your List</string>
     <string name="title_activity_category_list">Pick Categories</string>
     <string name="title_activity_random">Hit Me</string>
