@@ -234,7 +234,7 @@ class UserList {
 
         if ($userid) {
             $params = array();
-            $query = 'SELECT ul.*, l.*, m.name, m.uri FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete IS NOT 1 AND ul.userid=?';
+            $query = 'SELECT ul.*, l.*, m.name, m.uri FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete != 1 AND ul.userid=?';
             $params[] = $userid;
 
         }
