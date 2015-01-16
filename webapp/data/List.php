@@ -47,7 +47,7 @@ class UserList {
 
         global $adodb;
 
-        $query = "INSERT INTO Photos (userid, filename, listitem, completed) VALUES (%s,%s, %s, 1)";
+        $query = "INSERT INTO Photos (userid, filename, listitem, completed) VALUES (%s,%s, %s, 2)";
 
         try {
             $res = $adodb->Execute(sprintf($query,
@@ -234,7 +234,7 @@ class UserList {
 
         if ($userid) {
             $params = array();
-            $query = 'SELECT ul.*, l.*, m.name, m.uri FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete != 1 AND ul.userid=?';
+            $query = 'SELECT ul.*, l.*, m.name, m.uri FROM UserList ul LEFT JOIN List l ON (ul.listid=l.id) LEFT JOIN Makers m ON (l.makerid = m.id) WHERE ul.complete != 2 AND ul.userid=?';
             $params[] = $userid;
 
         }
