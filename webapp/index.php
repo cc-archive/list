@@ -48,7 +48,7 @@ if (isset($_REQUEST['hs'])) {
             $smarty->assign('list',$listitems);
 
             $smarty->assign('welcome', true);
-            $smarty->display('my-list.tpl');
+            $smarty->display('welcome.tpl');
         }
         else {
             $smarty->display('noauth.tpl');

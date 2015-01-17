@@ -59,8 +59,16 @@ if ($auth) {
 
 
          }
-      }
+  } else {
+
+      echo "File naming error!";
+
+  }
+
+} else {
+
+    echo "Authentication error!";
   
- }
+}
 
 ?>
