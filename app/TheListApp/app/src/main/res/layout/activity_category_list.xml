@@ -18,14 +18,23 @@
         android:id="@+id/category_prompt"
         android:text="@string/category_list_text"/>
 
-    <ListView
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/list" />
+        android:id="@+id/categoryGrid"
+        android:numColumns="auto_fit"
+        android:columnWidth="90dp"
+        android:stretchMode="columnWidth"
+        android:choiceMode="multipleChoice"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:gravity="center"/>
 
     <Button
-        style="@style/raised_button"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="@string/next_button_label"
         android:id="@+id/nextButton"

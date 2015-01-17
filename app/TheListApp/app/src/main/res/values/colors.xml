@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Theme Colours-->
-    <color name="colorPrimaryDark">#B71C1C</color>
-    <color name="colorPrimary">#D32F2F</color>
-    <color name="colorPrimaryLight">#F44336</color>
+    <color name="colorPrimaryDark">#004D40</color>
+    <color name="colorPrimary">#00796B</color>
+    <color name="colorPrimaryLight">#26A69A</color>
     <color name="colorSecondaryDark">#FF6F00</color>
     <color name="colorSecondary">#FFA000</color>
     <color name="colorSecondaryLight">#FFC107</color>

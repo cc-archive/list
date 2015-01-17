@@ -70,29 +70,24 @@ public class CategoryListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
             holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
+            holder.checkableRelativeLayout = (org.creativecommons.thelist.utils
+                    .CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             convertView.setTag(holder);
-
-            //Getting Data for the row
-            CategoryListItem c = categoryListItems.get(position);
-            //Item Name
-            holder.categoryNameLabel.setText(c.getCategoryName());
 
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
 
-//        If items have been previously checked in DB
-//        ListView listview = (ListView)parent;
-//        if(listview.isItemChecked(position)) {
-//            holder.checkmarkView.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.checkmarkView.setVisibility(View.INVISIBLE);
-//        }
+        //Getting Data for the row
+        CategoryListItem c = categoryListItems.get(position);
+        //Item Name
+        holder.categoryNameLabel.setText(c.getCategoryName());
 
         return convertView;
     }
 
     private static class ViewHolder {
+        org.creativecommons.thelist.utils.CheckableRelativeLayout checkableRelativeLayout;
         TextView categoryNameLabel;
         ImageView checkmarkView;
     }

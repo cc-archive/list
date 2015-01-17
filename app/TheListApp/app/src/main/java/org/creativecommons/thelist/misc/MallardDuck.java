@@ -1,8 +1,6 @@
 package org.creativecommons.thelist.misc;
 
-/**
- * Created by damaris on 2015-01-14.
- */
+
 //public class MallardDuck extends Duck {
 //
 //}
@@ -23,4 +21,9 @@ package org.creativecommons.thelist.misc;
 //        //do nothing, can’t fly?
 //    }
 //}
-
+//
+//public class MallardDuck{
+//    Duck duck = new Duck();
+//
+//    Duck.quack("QUACKMALLARSOUND");
+//}

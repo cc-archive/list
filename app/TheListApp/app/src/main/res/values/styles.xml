@@ -12,7 +12,7 @@
 
     <style name="raised_button" parent="@style/standard_button">
         <item name="android:background">@drawable/material_button</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
         <item name="android:minHeight">50dp</item>
     </style>
 

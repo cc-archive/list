@@ -54,8 +54,7 @@
     <string name="empty_list">No Items To Display</string>
     <string name="title_activity_login">Login Activity</string>
     <string name="title_activity_feed">Feed Activity</string>
-    <string name="email_hint">Email</string>
-    <string name="full_name_hint">Full Name</string>
+    <string name="title_activity_login_fragment">Login Fragment</string>
     <string name="title_activity_account">Log In</string>
     <string name="title_activity_start">Start Activity</string>
 
@@ -63,10 +62,12 @@
 
     <string name="start_button_label">I’m new to The List</string>
     <string name="general_error">Sorry there was an error!</string>
-    <string name="title_activity_login_fragment">LoginFragment</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_hint">Email</string>
+    <string name="full_name_hint">Full Name</string>
     <string name="loading_label">Uploading…</string>
     <string name="signUpButton_label">Create my account</string>
+
+    <!--Login Fragment-->
     <string name="login_fragment_title">Who do we attribute this photo to?</string>
     <string name="login_fragment_text">Login or Create a Creative Commons account in one click</string>
     <string name="cancel_button_label">CANCEL</string>
@@ -74,7 +75,7 @@
     <!-- Terms Fragment -->
     <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
     <string name="terms_fragment_text">Anyone who uses your images must give you credit and indicate if any changes have been made.</string>
-    <string name="terms_learn_more_label"><a href="https://thelist.creativecommons.org/app/"><u>LEARN MORE</u></a></string>
+    <string name="terms_learn_more_label"><a href="https://thelist.creativecommons.org/app/">LEARN MORE</a></string>
     <string name="terms_checkbox_label">I agree to the terms and conditions</string>
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
     <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
@@ -84,7 +85,7 @@
     <string name="existing_account_text">I already have an account</string>
     <string name="new_account_text"><a href="https://login.creativecommons.org/register.php"><u>Actually, I need an account</u></a></string>
 
-    <!-- confirm Fragment -->
+    <!-- Confirm Fragment -->
     <string name="upload_cancelled_title">Upload Cancelled</string>
     <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>

@@ -9,5 +9,4 @@
         <item name="android:buttonStyle">@style/raised_button</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
     </style>
-
 </resources>

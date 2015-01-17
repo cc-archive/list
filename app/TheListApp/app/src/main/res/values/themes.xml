@@ -16,7 +16,6 @@
     <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:buttonStyle">@style/raised_button</item>
         <item name="android:windowBackground">@color/colorPrimaryDark</item>
         <!--TODO: hide the status bar in pre-L-->
     </style>

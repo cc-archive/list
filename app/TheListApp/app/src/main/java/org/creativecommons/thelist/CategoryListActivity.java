@@ -30,8 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -81,9 +81,9 @@ public class CategoryListActivity extends Activity {
     protected CategoryListAdapter adapter;
 
     //UI Elements
+    protected GridView mGridView;
     protected ProgressBar mProgressBar;
     protected Button mNextButton;
-    protected ListView mListView;
 
     // --------------------------------------------------------
 
@@ -102,30 +102,40 @@ public class CategoryListActivity extends Activity {
 
         //Load UI Elements
         //mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mGridView = (GridView) findViewById(R.id.categoryGrid);
         mNextButton = (Button) findViewById(R.id.nextButton);
         mNextButton.setVisibility(View.INVISIBLE);
-        mListView = (ListView)findViewById(R.id.list);
+        //mListView = (ListView)findViewById(R.id.list);
 
         //Set List Adapter
         adapter = new CategoryListAdapter(this,mCategoryList);
-        mListView.setAdapter(adapter);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mGridView.setAdapter(adapter);
+        //mGridView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         //Category Selection
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
+                Log.v("POSITION", String.valueOf(position));
+                Log.v("IS ITEM CHECKED BEFORE", String.valueOf(mGridView.isItemChecked(position)));
+                Log.v("VISIBLE BEFORE?", String.valueOf(checkmarkView.getVisibility()));
 
-                if(mListView.isItemChecked(position)) {
+                if(mGridView.isItemChecked(position)) {
                     checkmarkView.setVisibility(View.VISIBLE);
+                    Log.v("VISIBLE!?", String.valueOf(checkmarkView.getVisibility()));
                 } else {
                     checkmarkView.setVisibility(View.INVISIBLE);
+                    Log.v("INVISIBLE!?", String.valueOf(checkmarkView.getVisibility()));
                 }
 
+
+                Log.v("IS ITEM CHECKED AFTER AFTER", String.valueOf(mGridView.isItemChecked(position)));
+                Log.v("VISIBLE AFTER?", String.valueOf(checkmarkView.getVisibility()));
+
                 //Count how many items are checked: if at least 3, show Next Button
-                SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+                Log.v("POSITIONS ARRAY", positions.toString());
                 int length = positions.size();
                 int ItemsChecked = 0;
                 if (positions != null) {
@@ -164,14 +174,14 @@ public class CategoryListActivity extends Activity {
                     Log.v(TAG, "User is logged in so no preferences are being saved");
                     //storeCategoriesRequest();
                 } else {
-                    SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                    SparseBooleanArray positions = mGridView.getCheckedItemPositions();
                     int length = positions.size();
                     //Array of user selected categories
                     List<Integer> userCategories = new ArrayList<Integer>();
 
                     for(int i = 0; i < length; i++) {
                         int itemPosition = positions.keyAt(i);
-                        CategoryListItem item = (CategoryListItem) mListView.getItemAtPosition(itemPosition);
+                        CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
                         int id = item.getCategoryID();
                         userCategories.add(id);
                     }

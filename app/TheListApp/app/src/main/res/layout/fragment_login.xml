@@ -142,5 +142,4 @@
             android:id="@+id/newAccount"
             android:layout_below="@+id/loginButton"/>
     </RelativeLayout>
-
 </LinearLayout>
