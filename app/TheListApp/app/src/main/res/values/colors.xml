@@ -14,6 +14,14 @@
     <color name="PRESSED_STATE_COLOR">@color/colorPrimaryDark</color>
     <color name="FOCUSED_STATE_COLOR">@color/colorSecondaryLight</color>
 
+    <!--Category List Colours-->
+    <color name="category_default">@color/colorSecondaryLight</color>
+
+    <!--Snackbar colours-->
+    <color name="snackbar_background_default">#323232</color>
+    <!--nb: should be accent colour-->
+    <color name="snackbar_action">@color/colorSecondary</color>
+
     <!--Text-->
     <!-- Black 87% -->
     <color name="primary_text_default_material_light">#de000000</color>

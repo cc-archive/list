@@ -72,7 +72,7 @@
                 android:layout_marginTop="37dp" />
 
             <Button
-                style="@style/standard_button"
+                style="@style/flat_button_dark"
                 android:text="@string/terms_continue_button_label"
                 android:id="@+id/nextButton"
                 android:visibility="invisible"

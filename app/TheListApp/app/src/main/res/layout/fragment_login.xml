@@ -74,10 +74,10 @@
 
         <Button
             style="@style/raised_button"
+            android:layout_width="match_parent"
             android:text="@string/signUpButton_label"
             android:id="@+id/signUpButton"
-            android:layout_below="@+id/passwordField"
-            android:layout_marginTop="20dp"/>
+            android:layout_below="@+id/passwordField"/>
 
         <TextView
             style="@style/clickable_text"
@@ -118,11 +118,11 @@
             android:layout_marginBottom="10dp" />
 
         <Button
-
+            style="@style/raised_button"
+            android:layout_width="match_parent"
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
-            android:layout_below="@+id/passwordLoginField"
-            android:layout_marginTop="10dp"/>
+            android:layout_below="@+id/passwordLoginField"/>
 
         <TextView
             style="@style/clickable_text"

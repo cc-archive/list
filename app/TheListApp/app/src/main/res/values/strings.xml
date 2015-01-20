@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Activity Titles -->
     <string name="app_name">The List</string>
     <string name="title_activity_main">Your List</string>
     <string name="title_activity_category_list">Pick Categories</string>
     <string name="title_activity_random">Hit Me</string>
+    <string name="title_activity_login">Login Activity</string>
+    <string name="title_activity_feed">Feed Activity</string>
+    <string name="title_activity_login_fragment">Login Fragment</string>
+    <string name="title_activity_explainer">What’s up with the List?</string>
+    <string name="title_activity_account">Log In</string>
+    <string name="title_activity_start">Start Activity</string>
 
-    <!-- Labels -->
-    <string name="next_button_label">Next</string>
+    <!--Menu Button Labels-->
+    <string name="log_out_menu_label">Log Out</string>
+    <string name="login_menu_label">Log In</string>
+    <string name="pick_categories_menu_label">Pick Categories</string>
     <string name="action_randomItem_label">Hit Me</string>
     <string name="action_random_label">Hit Me</string>
-
-    <!-- Menu Strings -->
-    <string name="action_settings">Settings</string>
 
     <!-- Error Messages -->
     <string name="error_external_storage">There was a problem accessing your device\’s external storage</string>
@@ -25,7 +29,7 @@
 
     <!-- Login/SignUp Shared Strings -->
     <string name="password_hint">Password</string>
-    <string name="login_button_label">Login</string>
+    <string name="login_button_label">LOGIN</string>
     <string name="login_error_title">Oops!</string>
     <string name="login_error_message">Please make sure you enter a valid name and password</string>
 
@@ -50,13 +54,15 @@
         <item>Cool, let’s go</item>
     </string-array>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="empty_list">No Items To Display</string>
-    <string name="title_activity_login">Login Activity</string>
-    <string name="title_activity_feed">Feed Activity</string>
-    <string name="title_activity_login_fragment">Login Fragment</string>
-    <string name="title_activity_account">Log In</string>
-    <string name="title_activity_start">Start Activity</string>
+    <!--Category Background Colours-->
+    <string-array name="category_background_colours">
+        <item>#F44336</item>
+        <item>#3F51B5</item>
+        <item>#2196F3</item>
+        <item>#673AB7</item>
+        <item>#4CAF50</item>
+        <item>#FFC107</item>
+    </string-array>
 
     <!-- TODO: Insert ascii codes -->
 
@@ -65,44 +71,52 @@
     <string name="email_hint">Email</string>
     <string name="full_name_hint">Full Name</string>
     <string name="loading_label">Uploading…</string>
-    <string name="signUpButton_label">Create my account</string>
+
+    <!--CategoryList Activity-->
+    <string name="category_list_text">What do you like taking pictures of?</string>
+    <string name="next_button_label">NEXT</string>
+
+    <!--Account Activity-->
+    <string name="account_text_label">Login to your CCID</string>
+
+    <!--Shared Components-->
+    <string name="cancel_button_label">CANCEL</string>
+    <string name="cc_logo_label">powered by Creative Commons</string>
+    <string name="cc_logo_contentDescription">Creative Commons Logo</string>
 
     <!--Login Fragment-->
     <string name="login_fragment_title">Who do we attribute this photo to?</string>
     <string name="login_fragment_text">Login or Create a Creative Commons account in one click</string>
-    <string name="cancel_button_label">CANCEL</string>
+    <string name="signUpButton_label">CREATE MY ACCOUNT</string>
+    <string name="existing_account_text">I already have an account</string>
+    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php"><u>Actually, I need an account</u></a></string>
 
     <!-- Terms Fragment -->
     <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
     <string name="terms_fragment_text">Anyone who uses your images must give you credit and indicate if any changes have been made.</string>
     <string name="terms_learn_more_label"><a href="https://thelist.creativecommons.org/app/">LEARN MORE</a></string>
     <string name="terms_checkbox_label">I agree to the terms and conditions</string>
+    <string name="terms_continue_button_label">CONTINUE</string>
+
+    <!-- Upload Fragment -->
+    <string name="upload_cancelled_title">Upload Cancelled</string>
+    <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
+    <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
+    <string name="upload_success_title">Upload Success!</string>
+    <string name="upload_failed_title">Upload Failed</string>
+    <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
+    <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
+
+    <!--Fragment Callback Exception Messages-->
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
     <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
     <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
-    <string name="upload_success_title">Upload Success!</string>
-    <string name="existing_account_text">I already have an account</string>
-    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php"><u>Actually, I need an account</u></a></string>
 
-    <!-- Confirm Fragment -->
-    <string name="upload_cancelled_title">Upload Cancelled</string>
-    <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
-    <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
-    <string name="upload_failed_title">Upload Failed</string>
-    <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
-    <string name="terms_continue_button_label">Continue</string>
-    <string name="category_list_text">What do you like taking pictures of?</string>
-    <string name="account_text_label">Login to your CCID</string>
-    <string name="cc_logo_label">powered by Creative Commons</string>
-    <string name="cc_logo_contentDescription">Creative Commons Logo</string>
-    <string name="title_activity_explainer1">Explainer1</string>
-    <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
-    <string name="log_out_menu_label">Log Out</string>
+    <!--Fragment/Activity Bundle Keys-->
     <string name="item_id_bundle_key">item</string>
     <string name="uri_bundle_key">uri</string>
-    <string name="login_menu_label">Log In</string>
-    <string name="title_activity_nine_old_androids">NineOldAndroidsActivity</string>
-    <string name="pick_categories_menu_label">Pick Categories</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_done">DONE</string>
 
 </resources>

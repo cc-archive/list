@@ -21,6 +21,7 @@ package org.creativecommons.thelist.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class CategoryListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        String[] colours = activity.getResources().getStringArray(R.array.category_background_colours);
 
         if (inflater == null) {
             inflater = (LayoutInflater) activity
@@ -68,12 +70,10 @@ public class CategoryListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_category, parent, false);
             holder = new ViewHolder();
+            holder.checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
             holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
-            holder.checkableRelativeLayout = (org.creativecommons.thelist.utils
-                    .CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
@@ -81,13 +81,18 @@ public class CategoryListAdapter extends BaseAdapter {
         //Getting Data for the row
         CategoryListItem c = categoryListItems.get(position);
         //Item Name
-        holder.categoryNameLabel.setText(c.getCategoryName());
-
+        holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
+        //Item Background Color
+        if(colours[position] != null){
+            holder.checkableLayout.setBackgroundColor(Color.parseColor(colours[position]));
+        } else {
+            holder.checkableLayout.setBackgroundColor(activity.getResources().getColor(R.color.category_default));
+        }
         return convertView;
     }
 
     private static class ViewHolder {
-        org.creativecommons.thelist.utils.CheckableRelativeLayout checkableRelativeLayout;
+        org.creativecommons.thelist.utils.CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
         ImageView checkmarkView;
     }
