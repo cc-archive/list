@@ -103,5 +103,6 @@
     <string name="uri_bundle_key">uri</string>
     <string name="login_menu_label">Log In</string>
     <string name="title_activity_nine_old_androids">NineOldAndroidsActivity</string>
+    <string name="pick_categories_menu_label">Pick Categories</string>
 
 </resources>

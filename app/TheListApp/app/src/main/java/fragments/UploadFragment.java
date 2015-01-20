@@ -177,7 +177,7 @@ public class UploadFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         //Get Response
-                        Log.v("PHOTO UPLOADED", response.toString());
+                        Log.v("PHOTO UPLOADED RESPONES: ", response.toString());
                         //TODO: add conditions? What happens when photo upload fails?
 
                         addConfirmText(getString(R.string.upload_success_title),
@@ -194,7 +194,7 @@ public class UploadFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v(TAG, "THERE WAS AN ERROR");
+                Log.v(TAG, "THERE WAS AN ERROR IN THE VOLLEY UPLOAD ATTEMPT");
                     //TODO: add switch for all possible error codes
 
                     addConfirmText(getString(R.string.upload_failed_title),

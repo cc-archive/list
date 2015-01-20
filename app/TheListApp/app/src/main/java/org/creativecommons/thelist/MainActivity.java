@@ -158,7 +158,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         initRecyclerView();
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
@@ -174,7 +173,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onResume() {
         super.onResume();
-        //Log.v("ON RESUME ", "IS BEING CALLED");
+        Log.v("ON RESUME ", "IS BEING CALLED");
         if(mCurrentUser.isLoggedIn()){
             getUserListItems();
         } else {
@@ -213,15 +212,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("RESPONSE", response.toString());
+                        //Log.v("RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
                                 //Only show items in the user’s list that have not been completed
-                                if (singleListItem.getString(ApiConstants.ITEM_COMPLETED) == null ||
-                                        singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
+                                if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
                                     listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
@@ -427,8 +425,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.v("RESULTCODE: ", (String.valueOf(resultCode)));
+
         if(resultCode == RESULT_OK) {
             if(requestCode == PhotoConstants.PICK_PHOTO_REQUEST) {
+                Log.v("RESULTCODE OK ", (String.valueOf(resultCode)));
                 if(data == null) {
                     Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                 }
@@ -468,7 +469,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //Load Upload Fragment
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.overlay_fragment_container,uploadFragment).commit();
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.overlay_fragment_container,uploadFragment).commit();
         mFrameLayout.setClickable(true);
         getSupportActionBar().hide();
 
@@ -625,6 +627,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             case R.id.action_random:
                 Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);
                 startActivity(hitMeIntent);
+                return true;
+            case R.id.pick_categories:
+                Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
+                startActivity(pickCategoriesIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

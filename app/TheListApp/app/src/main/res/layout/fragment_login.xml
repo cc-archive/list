@@ -24,17 +24,6 @@
             android:src="@drawable/terms_logo"
             android:id="@+id/login_icon"
             android:contentDescription="@string/cc_logo_contentDescription" />
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-            <!--android:text="@string/loading_label"-->
-            <!--android:id="@+id/progressBar_label"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textColor="@color/primary_light"-->
-            <!--android:layout_below="@+id/progressBar"-->
-            <!--android:layout_centerHorizontal="true"/>-->
     </RelativeLayout>
 
     <RelativeLayout
@@ -129,8 +118,7 @@
             android:layout_marginBottom="10dp" />
 
         <Button
-            style="@style/standard_button"
-            android:layout_width="match_parent"
+
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
             android:layout_below="@+id/passwordLoginField"

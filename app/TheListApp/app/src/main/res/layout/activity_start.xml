@@ -3,7 +3,8 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        style="@style/intro_layout_main"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:weightSum="5"
         tools:context="org.creativecommons.thelist.StartActivity">
@@ -45,14 +46,11 @@
                 android:layout_below="@+id/intro" />
 
             <Button
-                style="@style/raised_button"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/existing_account_text"
                 android:id="@+id/accountButton"
-                android:layout_gravity="center"
-                android:layout_below="@+id/startButton"
-                android:layout_centerHorizontal="true" />
+                android:layout_below="@+id/startButton" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -69,7 +67,8 @@
                 android:layout_above="@+id/cc_logo_label"
                 android:layout_centerHorizontal="true" />
             <TextView
-                style="@style/clickable_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/alpha_release_terms_label"
                 android:id="@+id/cc_logo_label"
                 android:layout_alignParentBottom="true" />
@@ -79,5 +78,7 @@
     <FrameLayout android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"/>
+        android:clickable="false"
+        android:layout_centerHorizontal="true" />
+
 </merge>
