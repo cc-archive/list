@@ -47,13 +47,14 @@ class UserList {
 
         global $adodb;
 
-        $query = "INSERT INTO Photos (userid, filename, listitem, completed) VALUES (%s,%s, %s, 2)";
+        $query = "INSERT INTO Photos (userid, filename, listitem, completed) VALUES (%s,%s, %s, %s)";
 
         try {
             $res = $adodb->Execute(sprintf($query,
             $adodb->qstr($userid),
             $adodb->qstr($filename),
-            $adodb->qstr($listitem)
+            $adodb->qstr($listitem),
+            $adodb->qstr("2")
             ));
 
             $adodb->CacheFlush();
