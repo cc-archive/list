@@ -89,7 +89,6 @@ public class MainListAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
-
         ImageView iconImageView;
         TextView nameLabel;
         TextView makerLabel;

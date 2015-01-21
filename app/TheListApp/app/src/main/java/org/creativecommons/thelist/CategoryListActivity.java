@@ -19,10 +19,11 @@
 
 package org.creativecommons.thelist;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
@@ -30,8 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -42,13 +43,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -60,7 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CategoryListActivity extends Activity {
+public class CategoryListActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     //Helper Methods
     RequestMethods requestMethods = new RequestMethods(this);
@@ -72,18 +70,17 @@ public class CategoryListActivity extends Activity {
     //GET Request
     protected JSONArray mCategoryData;
     protected JSONArray mJsonCategories;
-
     //PUT request (if user is logged in)
     protected JSONObject mPutResponse;
 
-    //ListView
-    private List<CategoryListItem> mCategoryList = new ArrayList<CategoryListItem>();
+    //GridView
+    protected GridView mGridView;
+    private List<CategoryListItem> mCategoryList = new ArrayList<>();
     protected CategoryListAdapter adapter;
 
     //UI Elements
     protected ProgressBar mProgressBar;
     protected Button mNextButton;
-    protected ListView mListView;
 
     // --------------------------------------------------------
 
@@ -93,43 +90,43 @@ public class CategoryListActivity extends Activity {
         setContentView(R.layout.activity_category_list);
         mContext = this;
 
-        //Google Analytics Tracker
-        Tracker t = ((ListApplication) CategoryListActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+        //Google Analytics Tracker
+//        Tracker t = ((ListApplication) CategoryListActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName(TAG);
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Load UI Elements
-        //mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //mProgressBar = (ProgressBar) findViewById(R.id.category_progressBar);
+        mGridView = (GridView) findViewById(R.id.categoryGrid);
         mNextButton = (Button) findViewById(R.id.nextButton);
-        mNextButton.setVisibility(View.INVISIBLE);
-        mListView = (ListView)findViewById(R.id.list);
+        mNextButton.setVisibility(View.GONE);
 
         //Set List Adapter
         adapter = new CategoryListAdapter(this,mCategoryList);
-        mListView.setAdapter(adapter);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mGridView.setAdapter(adapter);
 
         //Category Selection
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
-
-                if(mListView.isItemChecked(position)) {
+                if(mGridView.isItemChecked(position)) {
                     checkmarkView.setVisibility(View.VISIBLE);
                 } else {
-                    checkmarkView.setVisibility(View.INVISIBLE);
+                    checkmarkView.setVisibility(View.GONE);
                 }
-
                 //Count how many items are checked: if at least 3, show Next Button
-                SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                SparseBooleanArray positions = mGridView.getCheckedItemPositions();
                 int length = positions.size();
                 int ItemsChecked = 0;
-                if (positions != null) {
-
+                if (positions.size() > 0) {
                     for (int i = 0; i < length; i++) {
                         if (positions.get(positions.keyAt(i))) {
                             ItemsChecked++;
@@ -140,7 +137,7 @@ public class CategoryListActivity extends Activity {
                     mNextButton.setVisibility(View.VISIBLE);
                 }
                 else {
-                    mNextButton.setVisibility(View.INVISIBLE);
+                    mNextButton.setVisibility(View.GONE);
                 }
             }
         });
@@ -164,14 +161,14 @@ public class CategoryListActivity extends Activity {
                     Log.v(TAG, "User is logged in so no preferences are being saved");
                     //storeCategoriesRequest();
                 } else {
-                    SparseBooleanArray positions = mListView.getCheckedItemPositions();
+                    SparseBooleanArray positions = mGridView.getCheckedItemPositions();
                     int length = positions.size();
                     //Array of user selected categories
-                    List<Integer> userCategories = new ArrayList<Integer>();
+                    List<Integer> userCategories = new ArrayList<>();
 
                     for(int i = 0; i < length; i++) {
                         int itemPosition = positions.keyAt(i);
-                        CategoryListItem item = (CategoryListItem) mListView.getItemAtPosition(itemPosition);
+                        CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
                         int id = item.getCategoryID();
                         userCategories.add(id);
                     }
@@ -197,7 +194,6 @@ public class CategoryListActivity extends Activity {
         else {
             try {
                 mJsonCategories = mCategoryData;
-
                 for(int i = 0; i<mJsonCategories.length(); i++) {
                     JSONObject jsonSingleCategory = mJsonCategories.getJSONObject(i);
                     CategoryListItem categoryListItem = new CategoryListItem();
@@ -262,12 +258,11 @@ public class CategoryListActivity extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
                         //TODO: Check response code + display error
-                            //if(responseCode != 200), get response data + show error
+                        //if(responseCode != 200), get response data + show error
 
                         //Handle Data
                         mPutResponse = response;
                         //Log.v(TAG, mPutResponse.toString());
-
                         //mProgressBar.setVisibility(View.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
@@ -278,8 +273,7 @@ public class CategoryListActivity extends Activity {
                         getString(R.string.error_message));
             }
         });
-            queue.add(putCategoriesRequest);
-
+        queue.add(putCategoriesRequest);
     } //storeCategoriesRequest
 
 
@@ -298,12 +292,9 @@ public class CategoryListActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_done) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 }
-
-
-

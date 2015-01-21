@@ -5,7 +5,7 @@
     tools:context="fragments.LoginFragment">
 
     <TextView
-        style="@style/flat_button"
+        style="@style/flat_button_dark"
         android:text="@string/cancel_button_label"
         android:id="@+id/cancelButton"
         android:layout_weight="0"
@@ -24,17 +24,6 @@
             android:src="@drawable/terms_logo"
             android:id="@+id/login_icon"
             android:contentDescription="@string/cc_logo_contentDescription" />
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-            <!--android:text="@string/loading_label"-->
-            <!--android:id="@+id/progressBar_label"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textColor="@color/primary_light"-->
-            <!--android:layout_below="@+id/progressBar"-->
-            <!--android:layout_centerHorizontal="true"/>-->
     </RelativeLayout>
 
     <RelativeLayout
@@ -85,13 +74,13 @@
 
         <Button
             style="@style/raised_button"
+            android:layout_width="match_parent"
             android:text="@string/signUpButton_label"
             android:id="@+id/signUpButton"
-            android:layout_below="@+id/passwordField"
-            android:layout_marginTop="20dp"/>
+            android:layout_below="@+id/passwordField"/>
 
         <TextView
-            style="@style/clickable_textView"
+            style="@style/clickable_text"
             android:text="@string/existing_account_text"
             android:id="@+id/existingAccount"
             android:layout_below="@id/signUpButton"/>
@@ -129,17 +118,16 @@
             android:layout_marginBottom="10dp" />
 
         <Button
-            style="@style/standard_button"
+            style="@style/raised_button"
+            android:layout_width="match_parent"
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
-            android:layout_below="@+id/passwordLoginField"
-            android:layout_marginTop="10dp"/>
+            android:layout_below="@+id/passwordLoginField"/>
 
         <TextView
-            style="@style/clickable_textView"
+            style="@style/clickable_text"
             android:text="@string/new_account_text"
             android:id="@+id/newAccount"
             android:layout_below="@+id/loginButton"/>
     </RelativeLayout>
-
 </LinearLayout>

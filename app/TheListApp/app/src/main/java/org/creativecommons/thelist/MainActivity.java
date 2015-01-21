@@ -50,10 +50,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.melnykov.fab.FloatingActionButton;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -98,7 +103,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.ItemDecoration mItemDecoration;
     private List<MainListItem> mItemList = new ArrayList<>();
+    private FloatingActionButton mFab;
 
     //UI Elements
     protected ProgressBar mProgressBar;
@@ -147,17 +154,19 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
 
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        //RecyclerView.ItemDecoration itemDecoration =
-        //        new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        //mRecyclerView.addItemDecoration(itemDecoration);
+        mItemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(mItemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mFab.attachToRecyclerView(mRecyclerView);
 
         initRecyclerView();
 
@@ -174,14 +183,13 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onResume() {
         super.onResume();
-        //Log.v("ON RESUME ", "IS BEING CALLED");
+        Log.v("ON RESUME ", "IS BEING CALLED");
         if(mCurrentUser.isLoggedIn()){
             getUserListItems();
         } else {
             mRecyclerView.setVisibility(View.INVISIBLE);
             mFeedAdapter.notifyDataSetChanged();
         }
-
     } //onResume
 
     public void CheckComplete() {
@@ -213,15 +221,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("RESPONSE", response.toString());
+                        //Log.v("RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
                             try {
                                 JSONObject singleListItem = response.getJSONObject(i);
                                 //Only show items in the user’s list that have not been completed
-                                if (singleListItem.getString(ApiConstants.ITEM_COMPLETED) == null ||
-                                        singleListItem.getString(ApiConstants.ITEM_COMPLETED).equals("null")) {
+                                if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
                                     listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
@@ -280,11 +287,34 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                 for (int position : reverseSortedPositions) {
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
+
+
+                                    //What happens when item is swiped offscreen
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
                                     mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
                                     //TODO: remove item from user list
 
+                                    if(!mCurrentUser.isLoggedIn()){
+
+                                    } else {
+                                        //TODO: remove item from list in DB
+                                    }
+
+                                    SnackbarManager.show(
+                                            //also includes duration: SHORT, LONG, INDEFINITE,
+                                            Snackbar.with(mContext)
+                                            .text("Item deleted") //text to display
+                                            .actionColor(getResources().getColor(R.color.colorSecondary)) //action colour
+                                            .actionLabel("undo".toUpperCase())
+                                            .actionListener(new ActionClickListener() {
+                                                @Override
+                                                public void onActionClicked(Snackbar snackbar) {
+                                                    //TODO: store deleted item position + deleted item
+                                                    Log.v("SNACKBAR: ", "Item should be re-added to the RecyclerView");
+                                                }
+                                            }) //action button’s listener
+                                    , MainActivity.this);
                                 }
                             }
                         });
@@ -427,8 +457,11 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.v("RESULTCODE: ", (String.valueOf(resultCode)));
+
         if(resultCode == RESULT_OK) {
             if(requestCode == PhotoConstants.PICK_PHOTO_REQUEST) {
+                Log.v("RESULTCODE OK ", (String.valueOf(resultCode)));
                 if(data == null) {
                     Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                 }
@@ -468,7 +501,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
         //Load Upload Fragment
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.overlay_fragment_container,uploadFragment).commit();
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.overlay_fragment_container,uploadFragment).commit();
         mFrameLayout.setClickable(true);
         getSupportActionBar().hide();
 
@@ -625,6 +659,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             case R.id.action_random:
                 Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);
                 startActivity(hitMeIntent);
+                return true;
+            case R.id.pick_categories:
+                Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
+                startActivity(pickCategoriesIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

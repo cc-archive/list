@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Theme Colours-->
-    <color name="red_900">#B71C1C</color>
-    <color name="red_700">#D32F2F</color>
-    <color name="red_500">#F44336</color>
-    <color name="amber_900">#FF6F00</color>
-    <color name="amber_700">#FFA000</color>
-    <color name="amber_500">#FFC107</color>
+    <color name="colorPrimaryDark">#004D40</color>
+    <color name="colorPrimary">#00796B</color>
+    <color name="colorPrimaryLight">#26A69A</color>
+    <color name="colorSecondaryDark">#FF6F00</color>
+    <color name="colorSecondary">#FFA000</color>
+    <color name="colorSecondaryLight">#FFC107</color>
 
 
     <!--Button Colours-->
-    <color name="NORMAL_STATE_COLOR">@color/red_700</color>
-    <color name="PRESSED_STATE_COLOR">@color/red_900</color>
-    <color name="FOCUSED_STATE_COLOR">@color/amber_500</color>
+    <color name="NORMAL_STATE_COLOR">@color/colorPrimary</color>
+    <color name="PRESSED_STATE_COLOR">@color/colorPrimaryDark</color>
+    <color name="FOCUSED_STATE_COLOR">@color/colorSecondaryLight</color>
+
+    <color name="FAB_NORMAL_COLOR">@color/colorSecondary</color>
+    <color name="FAB_PRESSED_COLOR">@color/colorSecondaryDark</color>
+    <color name="FAB_RIPPLE_COLOR">@color/colorSecondaryLight</color>
+
+    <!--Category List Colours-->
+    <color name="category_default">@color/colorSecondaryLight</color>
+
+    <!--Snackbar colours-->
+    <color name="snackbar_background_default">#323232</color>
+    <!--nb: should be accent colour-->
+    <color name="snackbar_action">@color/colorSecondary</color>
 
     <!--Text-->
     <!-- Black 87% -->
@@ -31,7 +43,6 @@
 
     <!--Background Colours-->
     <color name="translucent_background">#D9000000</color>
-
 
     <!--General-->
     <!--<color name="app_black">#ffffff</color>-->
