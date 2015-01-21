@@ -61,7 +61,7 @@ class UserList {
             
         } catch (Exception $e) {
             
-            //echo $e;
+            echo $e;
 
             echo "There was an error";
             
