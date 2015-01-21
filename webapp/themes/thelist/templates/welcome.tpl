@@ -1,7 +1,13 @@
 {include file="header.tpl" }
 
+<div class="container">
+<div class="row">
+
 <h1>Welcome, {$handle}</h1>
 
-<p><a class="btn btn-success" href="/my-list.php">Add to my list</a></p>
+<p>This is the very exciting homepage. We'll show something here eventually.</p>
+
+</div>
+</div>
 
 {include file="footer.tpl" }
