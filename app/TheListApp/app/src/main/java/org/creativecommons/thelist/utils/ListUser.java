@@ -112,7 +112,6 @@ public class ListUser {
         } else {
             return userID;
         }
-
     }
 
     //TODO: might not need with sharedPreferences
@@ -153,7 +152,7 @@ public class ListUser {
                             requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
-                            Log.v(TAG, response.toString());
+                            Log.v(TAG, response);
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
@@ -220,7 +219,7 @@ public class ListUser {
                             requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
-                            Log.v(TAG, response.toString());
+                            Log.v(TAG, response);
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
@@ -251,7 +250,6 @@ public class ListUser {
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         mContext.startActivity(intent);
                                     }
-
                                 }
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
@@ -280,19 +278,19 @@ public class ListUser {
     }
 
     //Add SINGLE random item to user list
-    public void addItemToUserList (final String itemID) {
+    public void addItemToUserList(final String itemID) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
         //TODO: session token will know which user this is?
         String url = ApiConstants.ADD_ITEM + getUserID() + "/" + itemID;
 
         //Add single item to user list
-        StringRequest postItemsRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest postItemRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //get Response
-                        Log.v("Response", response.toString());
+                        Log.v("Response: ", response);
                         Log.v(TAG,"AN ITEM IS BEING ADDED");
                         //TODO: do something with response?
 
@@ -305,7 +303,7 @@ public class ListUser {
                             public void run() {
                                 toast.cancel();
                             }
-                        }, 1500);
+                        }, 1000);
 
                     }
                 }, new Response.ErrorListener() {
@@ -318,7 +316,37 @@ public class ListUser {
                 Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
             }
         });
-        queue.add(postItemsRequest);
+        queue.add(postItemRequest);
     } //addItemToUserList
+
+    //REMOVE SINGLE item from user list
+    //TODO: FILL IN WITH REAL API INFO
+    public void removeItemFromUserList(final String itemID){
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+
+        //TODO: session token? + REMOVE ITEM CORRECT URL
+        String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
+
+        StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //get Response
+                        Log.v("Response: ", response);
+                        Log.v(TAG,"AN ITEM IS BEING REMOVED");
+                        //TODO: do something with response?
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse (VolleyError error){
+                //TODO: Add “not successful“ toast
+                requestMethods.showErrorDialog(mContext,
+                        mContext.getString(R.string.error_title),
+                        mContext.getString(R.string.error_message));
+                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
+            }
+        });
+        queue.add(deleteItemRequest);
+    } //removeItemFromUserList
 
 } //ListUser

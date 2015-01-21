@@ -50,6 +50,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
@@ -102,7 +103,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.ItemDecoration mItemDecoration;
     private List<MainListItem> mItemList = new ArrayList<>();
+    private FloatingActionButton mFab;
 
     //UI Elements
     protected ProgressBar mProgressBar;
@@ -151,17 +154,20 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
 
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.ItemDecoration itemDecoration =
+        mItemDecoration =
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        mRecyclerView.addItemDecoration(itemDecoration);
+        mRecyclerView.addItemDecoration(mItemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mFab.attachToRecyclerView(mRecyclerView);
+
         initRecyclerView();
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
@@ -282,15 +288,24 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
 
+
                                     //What happens when item is swiped offscreen
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
                                     mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
                                     //TODO: remove item from user list
 
+                                    if(!mCurrentUser.isLoggedIn()){
+
+                                    } else {
+                                        //TODO: remove item from list in DB
+                                    }
+
                                     SnackbarManager.show(
+                                            //also includes duration: SHORT, LONG, INDEFINITE,
                                             Snackbar.with(mContext)
                                             .text("Item deleted") //text to display
+                                            .actionColor(getResources().getColor(R.color.colorSecondary)) //action colour
                                             .actionLabel("undo".toUpperCase())
                                             .actionListener(new ActionClickListener() {
                                                 @Override
