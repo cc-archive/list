@@ -47,7 +47,7 @@ class UserList {
 
         global $adodb;
 
-        $query = "INSERT INTO Photos (userid, filename, listitem, completed) VALUES (%s,%s, %s, %s)";
+        $query = "INSERT INTO Photos (userid, filename, listitem, complete) VALUES (%s,%s, %s, %s)";
 
         try {
             $res = $adodb->Execute(sprintf($query,
