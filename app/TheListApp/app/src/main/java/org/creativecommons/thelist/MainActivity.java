@@ -50,10 +50,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -151,9 +155,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        //RecyclerView.ItemDecoration itemDecoration =
-        //        new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        //mRecyclerView.addItemDecoration(itemDecoration);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
@@ -180,7 +184,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             mRecyclerView.setVisibility(View.INVISIBLE);
             mFeedAdapter.notifyDataSetChanged();
         }
-
     } //onResume
 
     public void CheckComplete() {
@@ -278,11 +281,25 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                 for (int position : reverseSortedPositions) {
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
+
+                                    //What happens when item is swiped offscreen
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
                                     mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
                                     //TODO: remove item from user list
 
+                                    SnackbarManager.show(
+                                            Snackbar.with(mContext)
+                                            .text("Item deleted") //text to display
+                                            .actionLabel("undo".toUpperCase())
+                                            .actionListener(new ActionClickListener() {
+                                                @Override
+                                                public void onActionClicked(Snackbar snackbar) {
+                                                    //TODO: store deleted item position + deleted item
+                                                    Log.v("SNACKBAR: ", "Item should be re-added to the RecyclerView");
+                                                }
+                                            }) //action button’s listener
+                                    , MainActivity.this);
                                 }
                             }
                         });
