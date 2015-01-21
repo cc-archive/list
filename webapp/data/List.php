@@ -56,7 +56,7 @@ class UserList {
             $adodb->qstr($listitem)
             ));
 
-            $query = "UPDATE UserList SET complete = %s WHERE listitem = %s and userid=%s";
+            $query = "UPDATE UserList SET complete = %s WHERE listid = %s and userid=%s";
             
             $res = $adodb->Execute(sprintf($query, 
             $adodb->qstr("2"),
