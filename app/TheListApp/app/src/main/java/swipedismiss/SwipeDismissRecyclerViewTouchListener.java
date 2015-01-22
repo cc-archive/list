@@ -17,7 +17,9 @@
 package swipedismiss;
 
 import android.graphics.Rect;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -26,6 +28,8 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -101,6 +105,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private View mDownView;
     private boolean mPaused;
 
+    private int lastKnownFirst = 0;
     private final Object mAnimationLock = new Object();
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
@@ -171,7 +176,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      *
      * @see SwipeDismissRecyclerViewTouchListener
      */
-    public RecyclerView.OnScrollListener makeScrollListener() {
+    public RecyclerView.OnScrollListener makeScrollListener(RecyclerView.LayoutManager layoutManager, final FloatingActionButton fab) {
         return new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -180,6 +185,13 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
+                if (llm.findFirstVisibleItemPosition() > lastKnownFirst) {
+                    fab.hide();
+                } else if (llm.findFirstVisibleItemPosition() < lastKnownFirst) {
+                    fab.show();
+                }
+                lastKnownFirst = llm.findFirstVisibleItemPosition();
             }
         };
     }

@@ -7,7 +7,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="72dp"
+        android:height="72dp"
+        android:paddingTop="@dimen/list_item_padding"
+        android:paddingBottom="@dimen/list_item_padding"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:id="@+id/full_list_item">
@@ -15,20 +17,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:text="Item Name"
-            android:id="@+id/list_item_name"
-            android:layout_centerVertical="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:paddingTop="@dimen/activity_horizontal_margin"
-            android:paddingRight="35dp"/>
+            android:id="@+id/list_item_name"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,11 +33,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:text="Maker Name"
             android:id="@+id/list_item_maker"
-            android:layout_below="@+id/list_item_name"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:paddingBottom="@dimen/activity_horizontal_margin"
-            android:paddingRight="35dp"/>
+            android:layout_below="@+id/list_item_name"/>
         </RelativeLayout>
 
         <ImageView
@@ -51,13 +44,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/list_feed_horizontal"
-            android:paddingEnd="@dimen/list_feed_horizontal"
-            android:paddingTop="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_camera_alt_black_36dp"/>
+            android:src="@drawable/ic_camera_alt_grey600_24dp"/>
     </RelativeLayout>
     <!--TODO: get touch feedback working-->
     <!--<View-->

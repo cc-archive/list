@@ -6,6 +6,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">20dp</dimen>
+    <dimen name="list_padding">8dp</dimen>
 
     <!--Item Sizing-->
     <dimen name="button_minHeight">36dp</dimen>
@@ -23,5 +24,11 @@
     <dimen name="text_size_display1">34sp</dimen>
     
     <dimen name="snackbar_text">14sp</dimen>
+
+    <dimen name="snackbar_height">48dp</dimen>
+    <dimen name="fab_height">56dp</dimen>
+    <dimen name="fab_bottom_padding">16dp</dimen>
+    <dimen name="fab_top_padding">16dp</dimen>
+    <dimen name="list_item_padding">20dp</dimen>
 
 </resources>

@@ -41,6 +41,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -54,6 +56,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
@@ -166,7 +169,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mFab.attachToRecyclerView(mRecyclerView);
 
         initRecyclerView();
 
@@ -288,7 +290,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
 
-
                                     //What happens when item is swiped offscreen
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
@@ -311,9 +312,38 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                                 @Override
                                                 public void onActionClicked(Snackbar snackbar) {
                                                     //TODO: store deleted item position + deleted item
-                                                    Log.v("SNACKBAR: ", "Item should be re-added to the RecyclerView");
                                                 }
                                             }) //action button’s listener
+                                            .eventListener(new EventListener() {
+                                                @Override
+                                                public void onShow(Snackbar snackbar) {
+                                                    Animation moveUp = AnimationUtils.loadAnimation(mContext, R.anim.fab__in);
+                                                    mFab.startAnimation(moveUp);
+//                                                    animate(mFab)
+//                                                            .translationY(-(snackbar.getHeight()))
+//                                                            .alpha(1)
+//                                                            .setDuration(300)
+//                                                            .setListener(null);
+                                                    //mFab.setY(mFab.getY() - snackbar.getHeight());
+                                                }
+                                                @Override
+                                                public void onShown(Snackbar snackbar) {
+                                                }
+                                                @Override
+                                                public void onDismiss(Snackbar snackbar) {
+                                                    Animation moveDown = AnimationUtils.loadAnimation(mContext, R.anim.fab__out);
+                                                    mFab.startAnimation(moveDown);
+
+//                                                    animate(mFab)
+//                                                            .translationY(0)
+//                                                            .alpha(1)
+//                                                            .setDuration(300)
+//                                                            .setListener(null);
+                                                }
+                                                @Override
+                                                public void onDismissed(Snackbar snackbar) {
+                                                }
+                                            }) //event listener
                                     , MainActivity.this);
                                 }
                             }
@@ -321,7 +351,9 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
-        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener());
+        LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
+
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
                 new OnItemClickListener() {
                     @Override
