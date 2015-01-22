@@ -41,8 +41,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -60,6 +60,7 @@ import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
@@ -158,6 +159,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);
+                startActivity(hitMeIntent);
+            }
+        });
 
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -279,6 +288,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         }
     } //getUserListItems
 
+
     private void initRecyclerView(){
         SwipeDismissRecyclerViewTouchListener touchListener =
                 new SwipeDismissRecyclerViewTouchListener(
@@ -301,50 +311,59 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                     } else {
                                         //TODO: remove item from list in DB
                                     }
+                                    Log.v("FAB Y BEFOREBEFORE: ", String.valueOf(mFab.getY()));
 
                                     SnackbarManager.show(
                                             //also includes duration: SHORT, LONG, INDEFINITE,
                                             Snackbar.with(mContext)
-                                            .text("Item deleted") //text to display
-                                            .actionColor(getResources().getColor(R.color.colorSecondary)) //action colour
-                                            .actionLabel("undo".toUpperCase())
-                                            .actionListener(new ActionClickListener() {
-                                                @Override
-                                                public void onActionClicked(Snackbar snackbar) {
-                                                    //TODO: store deleted item position + deleted item
-                                                }
-                                            }) //action button’s listener
-                                            .eventListener(new EventListener() {
-                                                @Override
-                                                public void onShow(Snackbar snackbar) {
-                                                    Animation moveUp = AnimationUtils.loadAnimation(mContext, R.anim.fab__in);
-                                                    mFab.startAnimation(moveUp);
-//                                                    animate(mFab)
-//                                                            .translationY(-(snackbar.getHeight()))
-//                                                            .alpha(1)
-//                                                            .setDuration(300)
-//                                                            .setListener(null);
-                                                    //mFab.setY(mFab.getY() - snackbar.getHeight());
-                                                }
-                                                @Override
-                                                public void onShown(Snackbar snackbar) {
-                                                }
-                                                @Override
-                                                public void onDismiss(Snackbar snackbar) {
-                                                    Animation moveDown = AnimationUtils.loadAnimation(mContext, R.anim.fab__out);
-                                                    mFab.startAnimation(moveDown);
+                                                    .text("Item deleted") //text to display
+                                                    .actionColor(getResources().getColor(R.color.colorSecondary)) //action colour
+                                                    .actionLabel("undo".toUpperCase())
+                                                    .actionListener(new ActionClickListener() {
+                                                        @Override
+                                                        public void onActionClicked(Snackbar snackbar) {
+                                                            //TODO: store deleted item position + deleted item
+                                                        }
+                                                    }) //action button’s listener
+                                                    .eventListener(new EventListener() {
+                                                        Interpolator interpolator = new MaterialInterpolator();
 
-//                                                    animate(mFab)
-//                                                            .translationY(0)
-//                                                            .alpha(1)
-//                                                            .setDuration(300)
-//                                                            .setListener(null);
-                                                }
-                                                @Override
-                                                public void onDismissed(Snackbar snackbar) {
-                                                }
-                                            }) //event listener
-                                    , MainActivity.this);
+                                                        @Override
+                                                        public void onShow(Snackbar snackbar) {
+                                                            Log.v("FAB Y SHOW: ", String.valueOf(mFab.getY()));
+
+                                                            TranslateAnimation tsa = new TranslateAnimation(0,0,0, -snackbar.getHeight());
+                                                            tsa.setInterpolator(interpolator);
+                                                            tsa.setFillAfter(true);
+                                                            tsa.setFillEnabled(true);
+                                                            tsa.setDuration(300);
+
+                                                            mFab.startAnimation(tsa);
+                                                        }
+
+                                                        @Override
+                                                        public void onShown(Snackbar snackbar) {
+                                                        }
+
+                                                        @Override
+                                                        public void onDismiss(Snackbar snackbar) {
+
+                                                            TranslateAnimation tsa2 = new TranslateAnimation(0,0,-snackbar.getHeight(),0);
+                                                            tsa2.setInterpolator(interpolator);
+                                                            tsa2.setFillAfter(true);
+                                                            tsa2.setFillEnabled(true);
+                                                            tsa2.setStartOffset(100);
+                                                            tsa2.setDuration(300);
+
+                                                            mFab.startAnimation(tsa2);
+                                                        }
+
+                                                        @Override
+                                                        public void onDismissed(Snackbar snackbar) {
+                                                        }
+                                                    }) //event listener
+                                            , MainActivity.this);
+
                                 }
                             }
                         });
@@ -687,10 +706,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             case R.id.logout:
                 mCurrentUser.logOut();
                 userID = null;
-                return true;
-            case R.id.action_random:
-                Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);
-                startActivity(hitMeIntent);
                 return true;
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<translate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="500"
-    android:fromYDelta="-144"
-    android:interpolator="@interpolator/sb__accelerate_cubic"
-    android:toYDelta="100%" />
