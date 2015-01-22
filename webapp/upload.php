@@ -2,7 +2,7 @@
 
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    based on:
 
@@ -29,33 +29,26 @@ require_once('database.php');
 require 'data/User.php';
 require 'data/List.php';
 
-if (isset($_REQUEST['hs'])) {
+require_once('templating.php');
 
-    // foo
+if ($auth) {
 
-} else {
-	//If we're not handshaking we display the start page
-	require_once('templating.php');
+    if (isset($_GET['id'])) {
 
-        if ($auth) {
+        $smarty->assign('id', $_GET['id']);
+        $smarty->assign('welcome', true);
+        $smarty->display('upload.tpl');
+    }
 
-	if (isset($_GET['id'])) {
+    else {
 
-	    $smarty->assign('id', $_GET['id']);
-            $smarty->assign('welcome', true);
-            $smarty->display('upload.tpl');
-        }
-
-	else {
-
-	  $smarty->display('nolist.tpl');	
+        $smarty->display('nolist.tpl');	
 					
-	}					
-
-	}
-
-        else {
-            $smarty->display('noauth.tpl');
-        }
+    }					
 
 }
+
+else {
+    $smarty->display('noauth.tpl');
+}
+

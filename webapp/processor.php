@@ -71,7 +71,7 @@ $query = "SELECT * FROM Photos WHERE url IS NULL LIMIT 1";
 
 	try {
 
-	  $query = "UPDATE UserList SET complete = 1 WHERE listid=(%s)";
+	  $query = "UPDATE UserList SET complete = 2 WHERE listid=(%s)";
 
 	  $res = $adodb->Execute(sprintf($query,$adodb->qstr($listid)));
 
