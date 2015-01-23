@@ -9,9 +9,9 @@ public class MaterialInterpolator implements Interpolator {
     @Override
     public float getInterpolation(float input) {
         if(input<1./3f)
-            return new AccelerateInterpolator().getInterpolation(input);
+            return new AccelerateInterpolator(1f).getInterpolation(input);
         else
-            return new DecelerateInterpolator().getInterpolation(input);
+            return new DecelerateInterpolator(0.75f).getInterpolation(input);
     }
 
 }

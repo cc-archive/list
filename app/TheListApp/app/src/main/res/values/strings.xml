@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Activity Titles -->
     <string name="app_name">The List</string>
     <string name="title_activity_main">Your List</string>
@@ -12,7 +13,7 @@
     <string name="title_activity_account">Log In</string>
     <string name="title_activity_start">Start Activity</string>
 
-    <!--Menu Button Labels-->
+    <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
     <string name="login_menu_label">Log In</string>
     <string name="pick_categories_menu_label">Pick Categories</string>
@@ -54,7 +55,7 @@
         <item>Cool, let’s go</item>
     </string-array>
 
-    <!--Category Background Colours-->
+    <!-- Category Background Colours -->
     <string-array name="category_background_colours">
         <item>#F44336</item>
         <item>#3F51B5</item>
@@ -72,19 +73,19 @@
     <string name="full_name_hint">Full Name</string>
     <string name="loading_label">Uploading…</string>
 
-    <!--CategoryList Activity-->
+    <!-- CategoryList Activity -->
     <string name="category_list_text">What do you like taking pictures of?</string>
     <string name="next_button_label">NEXT</string>
 
-    <!--Account Activity-->
+    <!-- Account Activity -->
     <string name="account_text_label">Login to your CCID</string>
 
-    <!--Shared Components-->
+    <!-- Shared Components -->
     <string name="cancel_button_label">CANCEL</string>
     <string name="cc_logo_label">powered by Creative Commons</string>
     <string name="cc_logo_contentDescription">Creative Commons Logo</string>
 
-    <!--Login Fragment-->
+    <!-- Login Fragment -->
     <string name="login_fragment_title">Who do we attribute this photo to?</string>
     <string name="login_fragment_text">Login or Create a Creative Commons account in one click</string>
     <string name="signUpButton_label">CREATE MY ACCOUNT</string>
@@ -107,16 +108,17 @@
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
 
-    <!--Fragment Callback Exception Messages-->
+    <!-- Fragment Callback Exception Messages -->
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
     <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
     <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
 
-    <!--Fragment/Activity Bundle Keys-->
+    <!-- Fragment/Activity Bundle Keys -->
     <string name="item_id_bundle_key">item</string>
     <string name="uri_bundle_key">uri</string>
     <string name="action_settings">Settings</string>
     <string name="action_done">DONE</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

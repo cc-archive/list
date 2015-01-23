@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/fragment_layout_main"
     android:orientation="vertical"
-    tools:context="fragments.LoginFragment">
+    tools:context="fragments.AccountFragment">
 
-    <Button
+    <TextView
         style="@style/flat_button_dark"
         android:text="@string/cancel_button_label"
         android:id="@+id/cancelButton"
@@ -33,16 +33,57 @@
         android:id="@+id/section_text"
         android:paddingTop="20dp"
         android:layout_marginBottom="20dp">
+    <TextView
+        android:text="@string/login_fragment_title"
+        android:id="@+id/confirm_title"
+        style="@style/fragment_title" />
+    <TextView
+        style="@style/fragment_text"
+        android:text="@string/login_fragment_text"
+        android:id="@+id/item_text"
+        android:layout_below="@+id/confirm_title"
+        android:textColor="@color/primary_text_default_material_dark" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:visibility="gone"
+        android:id="@+id/signup_section">
+
+        <EditText
+            style="@style/input_fields"
+            android:id="@+id/nameField"
+            android:hint="@string/full_name_hint"/>
+
+        <EditText
+            style="@style/input_fields"
+            android:id="@+id/emailField"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_hint"
+            android:layout_below="@+id/nameField"/>
+
+        <EditText
+            style="@style/input_fields"
+            android:ems="10"
+            android:id="@+id/passwordField"
+            android:inputType="textPassword"
+            android:hint="@string/password_hint"
+            android:layout_below="@+id/emailField" />
+
+        <Button
+            style="@style/raised_button"
+            android:layout_width="match_parent"
+            android:text="@string/signUpButton_label"
+            android:id="@+id/signUpButton"
+            android:layout_below="@+id/passwordField"/>
+
         <TextView
-            android:text="Log Into Your CCID"
-            android:id="@+id/confirm_title"
-            style="@style/fragment_title" />
-        <TextView
-            style="@style/fragment_text"
-            android:text="@string/login_fragment_text"
-            android:id="@+id/item_text"
-            android:layout_below="@+id/confirm_title"
-            android:textColor="@color/primary_text_default_material_dark" />
+            style="@style/clickable_text"
+            android:text="@string/existing_account_text"
+            android:id="@+id/existingAccount"
+            android:layout_below="@id/signUpButton"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -53,6 +94,12 @@
         android:windowSoftInputMode="stateVisible|adjustPan"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="10dp">
+
+        <EditText
+            style="@style/input_fields"
+            android:hint="@string/email_hint"
+            android:visibility="gone"
+            android:id="@+id/hiddenField"/>
 
         <EditText
             style="@style/input_fields"
@@ -71,18 +118,10 @@
             android:layout_marginBottom="10dp" />
 
         <Button
-            android:visibility="invisible"
             style="@style/raised_button"
             android:layout_width="match_parent"
             android:text="@string/login_button_label"
             android:id="@+id/loginButton"
-            android:layout_below="@+id/passwordLoginField"/>
-
-        <Button
-            style="@style/raised_button"
-            android:layout_width="match_parent"
-            android:text="@string/signUpButton_label"
-            android:id="@+id/signUpButton"
             android:layout_below="@+id/passwordLoginField"/>
 
         <TextView
@@ -90,6 +129,5 @@
             android:text="@string/new_account_text"
             android:id="@+id/newAccount"
             android:layout_below="@+id/loginButton"/>
-
     </RelativeLayout>
 </LinearLayout>

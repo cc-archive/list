@@ -42,7 +42,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import fragments.LoginFragment;
+import fragments.AccountFragment;
 
 public class ListUser {
     public static final String TAG = ListUser.class.getSimpleName();
@@ -137,7 +137,7 @@ public class ListUser {
         mContext.startActivity(intent);
     }
 
-    public void logIn(final String username, final String password, final LoginFragment.LoginClickListener listener) {
+    public void logIn(final String username, final String password, final AccountFragment.LoginClickListener listener) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
         //Login User

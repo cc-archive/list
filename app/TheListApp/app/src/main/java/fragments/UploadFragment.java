@@ -113,21 +113,6 @@ public class UploadFragment extends Fragment {
         mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
         uploadPhoto();
-
-//        switch(status) {
-//          case CANCEL:
-//              addConfirmText(getString(R.string.upload_cancelled_title), getString(R.string.upload_cancelled_text));
-//              mIcon.setImageResource(R.drawable.confirm_x);
-//              break;
-//          case SUCCESS:
-//              addConfirmText(getString(R.string.upload_success_title), getString(R.string.upload_success_text));
-//              mIcon.setImageResource(R.drawable.confirm_checkmark);
-//              break;
-//          case FAILURE:
-//              addConfirmText(getString(R.string.upload_failed_title), getString(R.string.upload_failed_text));
-//              mIcon.setImageResource(R.drawable.confirm_x);
-//              break;
-//        }
     } //onResume
 
     @Override
@@ -187,7 +172,6 @@ public class UploadFragment extends Fragment {
                         //Hide progress bar and show result of upload attempt
                         mProgressLayout.setVisibility(View.GONE);
                         mResultMessage.setVisibility(View.VISIBLE);
-
                         //Send notice to activity (will execute timed close of this fragment)
                         mCallback.onUploadFinish();
                     }

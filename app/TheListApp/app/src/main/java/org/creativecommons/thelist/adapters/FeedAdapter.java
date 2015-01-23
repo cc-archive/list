@@ -65,7 +65,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
 
         holder.nameLabel.setText(l.getItemName());
         holder.makerLabel.setText("requested by " + l.getMakerName());
-        holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
+        holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
 
     }
 

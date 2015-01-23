@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -79,14 +80,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import fragments.AccountFragment;
 import fragments.CancelFragment;
-import fragments.LoginFragment;
 import fragments.TermsFragment;
 import fragments.UploadFragment;
 import swipedismiss.SwipeDismissRecyclerViewTouchListener;
 
 
-public class MainActivity extends ActionBarActivity implements LoginFragment.LoginClickListener,
+public class MainActivity extends ActionBarActivity implements AccountFragment.LoginClickListener,
         TermsFragment.TermsClickListener, UploadFragment.UploadListener, CancelFragment.CancelListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
@@ -109,17 +110,19 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.ItemDecoration mItemDecoration;
     private List<MainListItem> mItemList = new ArrayList<>();
-    private FloatingActionButton mFab;
 
     //UI Elements
+    private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
     protected FrameLayout mFrameLayout;
 
     //Fragments
-    LoginFragment loginFragment = new LoginFragment();
+    AccountFragment accountFragment = new AccountFragment();
     TermsFragment termsFragment = new TermsFragment();
     UploadFragment uploadFragment = new UploadFragment();
     CancelFragment cancelFragment = new CancelFragment();
+
+    private boolean photoToBeUploaded;
 
 
     // --------------------------------------------------------
@@ -218,6 +221,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
 
     //GET USER LIST ITEMS
     private void getUserListItems() {
+        Log.v(TAG, "GET USER LIST ITEMS CALLED");
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonArrayRequest userListRequest;
         String itemRequesturl;
@@ -269,6 +273,7 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             queue.add(userListRequest);
         }
         else { //IF USER IS NOT LOGGED IN
+            mItemList.clear();
             itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
             for(int i=0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
@@ -300,6 +305,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
 
+                                    //Get item details for UNDO
+                                    activeItemPosition = position;
+                                    mCurrentItem = mItemList.get(position);
+
                                     //What happens when item is swiped offscreen
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
@@ -311,58 +320,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                                     } else {
                                         //TODO: remove item from list in DB
                                     }
-                                    Log.v("FAB Y BEFOREBEFORE: ", String.valueOf(mFab.getY()));
-
-                                    SnackbarManager.show(
-                                            //also includes duration: SHORT, LONG, INDEFINITE,
-                                            Snackbar.with(mContext)
-                                                    .text("Item deleted") //text to display
-                                                    .actionColor(getResources().getColor(R.color.colorSecondary)) //action colour
-                                                    .actionLabel("undo".toUpperCase())
-                                                    .actionListener(new ActionClickListener() {
-                                                        @Override
-                                                        public void onActionClicked(Snackbar snackbar) {
-                                                            //TODO: store deleted item position + deleted item
-                                                        }
-                                                    }) //action button’s listener
-                                                    .eventListener(new EventListener() {
-                                                        Interpolator interpolator = new MaterialInterpolator();
-
-                                                        @Override
-                                                        public void onShow(Snackbar snackbar) {
-                                                            Log.v("FAB Y SHOW: ", String.valueOf(mFab.getY()));
-
-                                                            TranslateAnimation tsa = new TranslateAnimation(0,0,0, -snackbar.getHeight());
-                                                            tsa.setInterpolator(interpolator);
-                                                            tsa.setFillAfter(true);
-                                                            tsa.setFillEnabled(true);
-                                                            tsa.setDuration(300);
-
-                                                            mFab.startAnimation(tsa);
-                                                        }
-
-                                                        @Override
-                                                        public void onShown(Snackbar snackbar) {
-                                                        }
-
-                                                        @Override
-                                                        public void onDismiss(Snackbar snackbar) {
-
-                                                            TranslateAnimation tsa2 = new TranslateAnimation(0,0,-snackbar.getHeight(),0);
-                                                            tsa2.setInterpolator(interpolator);
-                                                            tsa2.setFillAfter(true);
-                                                            tsa2.setFillEnabled(true);
-                                                            tsa2.setStartOffset(100);
-                                                            tsa2.setDuration(300);
-
-                                                            mFab.startAnimation(tsa2);
-                                                        }
-
-                                                        @Override
-                                                        public void onDismissed(Snackbar snackbar) {
-                                                        }
-                                                    }) //event listener
-                                            , MainActivity.this);
+                                    //Snackbar message
+                                    showSnackbar();
 
                                 }
                             }
@@ -381,9 +340,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
                         builder.setItems(R.array.listItem_choices, mDialogListener);
                         AlertDialog dialog = builder.create();
                         dialog.show();
-
+                        //Get item details for photo upload
                         activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
+                        Log.v("ONITEMCLICK, ACTIVE ITEM: ", String.valueOf(position));
                     }
                 }));
     } //initRecyclerView
@@ -419,8 +379,66 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         @Override
         public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
             //Log.v("HI", "ON TOUCH EVENT CALLED");
+
         }
     }
+
+    public void showSnackbar(){
+        SnackbarManager.show(
+                //also includes duration: SHORT, LONG, INDEFINITE,
+                Snackbar.with(mContext)
+                        .text("Item deleted") //text to display
+                        .actionColor(getResources().getColor(R.color.colorSecondary))
+                        .actionLabel("undo".toUpperCase())
+                        .actionListener(new ActionClickListener() {
+                            @Override
+                            public void onActionClicked(Snackbar snackbar) {
+                                //TODO: re-add item to list
+                                mItemList.add(0, mCurrentItem);
+                                Log.v("CURRENT ITEM ADDED: ", mCurrentItem.getItemName());
+                                mFeedAdapter.notifyItemInserted(0);
+                                mFeedAdapter.notifyItemRangeChanged(activeItemPosition, 1);
+                                mFeedAdapter.notifyItemChanged(0);
+                                mLayoutManager.scrollToPosition(0);
+                                mFab.show();
+                            }
+                        }) //action button’s listener
+                        .eventListener(new EventListener() {
+                            Interpolator interpolator = new MaterialInterpolator();
+                            @Override
+                            public void onShow(Snackbar snackbar) {
+                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
+                                        -snackbar.getHeight());
+                                tsa.setInterpolator(interpolator);
+                                tsa.setFillAfter(true);
+                                tsa.setFillEnabled(true);
+                                tsa.setDuration(300);
+                                mFab.startAnimation(tsa);
+                            }
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                            }
+                            @Override
+                            public void onDismiss(Snackbar snackbar) {
+                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
+                                        -snackbar.getHeight(), 0);
+                                tsa2.setInterpolator(interpolator);
+                                tsa2.setFillAfter(true);
+                                tsa2.setFillEnabled(true);
+                                tsa2.setStartOffset(100);
+                                tsa2.setDuration(300);
+                                mFab.startAnimation(tsa2);
+                            }
+                            @Override
+                            public void onDismissed(Snackbar snackbar) {
+                                //TODO: delete item from DB
+                                //mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
+
+                            }
+                        }) //event listener
+                , MainActivity.this);
+    } //showSnackbar
+
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
@@ -511,6 +529,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         Log.v("RESULTCODE: ", (String.valueOf(resultCode)));
 
         if(resultCode == RESULT_OK) {
+            photoToBeUploaded = true;
+
             if(requestCode == PhotoConstants.PICK_PHOTO_REQUEST) {
                 Log.v("RESULTCODE OK ", (String.valueOf(resultCode)));
                 if(data == null) {
@@ -525,11 +545,10 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             //TODO: Check file size
             if(mCurrentUser.isLoggedIn()) {
                 startPhotoUpload();
-
             } else {
-                //Load Login Fragment
+                //Load accountFragment
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.overlay_fragment_container,loginFragment).commit();
+                        .add(R.id.overlay_fragment_container, accountFragment).commit();
                 mFrameLayout.setClickable(true);
                 getSupportActionBar().hide();
             }
@@ -557,8 +576,8 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         mFrameLayout.setClickable(true);
         getSupportActionBar().hide();
 
-    }
-    //When New User fills out sign up (save data locally)
+    } //startUploadPhoto
+
     @Override
     public void UserCreated(String userData) {
         try {
@@ -568,8 +587,6 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
             mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
             //TODO: set user token
-//            Log.v(TAG, mCurrentUser.getUserName());
-//            Log.v(TAG,mCurrentUser.getUserID());
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
         }
@@ -600,7 +617,14 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onTermsClicked() {
         //Start UploadFragment and Upload photo
-        startPhotoUpload();
+        //TODO: if there is a photo to upload, do it: if not: go back to MainActivity
+        if(photoToBeUploaded){
+            startPhotoUpload();
+            photoToBeUploaded = false;
+        } else{
+            //TODO: loggedInConfirmation + remove
+            removeFragment(termsFragment, false);
+        }
     } //onTermsClicked
 
     @Override
@@ -616,55 +640,53 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
     @Override
     public void onUploadFinish() {
         //Refresh user list + remove item that has just been uploaded
+        photoToBeUploaded = false;
         //TODO: do I still need this?
         getUserListItems();
         //mItemList.remove(activeItemPosition);
         mFeedAdapter.notifyDataSetChanged();
-
         //Show upload message for limited time
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getSupportFragmentManager().beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .remove(uploadFragment)
-                        .commit();
-            }
-        }, 2800);
-
-        //Delay action bar and ability to click MainFeed
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFrameLayout.setClickable(false);
-                getSupportActionBar().show();
-            }
-        }, 3000);
+        removeFragment(uploadFragment, true);
 
     } //onUploadFinish
 
     @Override
     public void onCancelStart() {
+        getUserListItems();
         //Remove cancelFragment after set period
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getSupportFragmentManager().beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .remove(cancelFragment)
-                        .commit();
-            }
-        }, 2800);
-
-        //Delay action bar and ability to click MainActivity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFrameLayout.setClickable(false);
-                getSupportActionBar().show();
-            }
-        }, 3000);
+        removeFragment(cancelFragment, true);
     } //onCancelStart
+
+
+    //REMOVE FRAGMENT HELPER
+    public void removeFragment(final Fragment f, boolean delay){
+        if(delay){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getSupportFragmentManager().beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .remove(f)
+                            .commit();
+                }
+            }, 2800);
+            //Delay action bar and ability to click MainActivity
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mFrameLayout.setClickable(false);
+                    getSupportActionBar().show();
+                }
+            }, 3000);
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .remove(f)
+                    .commit();
+            mFrameLayout.setClickable(true);
+            getSupportActionBar().hide();
+        }
+    } //removeFragment
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -677,21 +699,19 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
         updateMenuTitles();
         return true;
         //return super.onCreateOptionsMenu(menu);
-    }
+    } //onCreateOptionsMenu
 
     private void updateMenuTitles(){
         MenuItem logOut = menu.findItem(R.id.logout);
         MenuItem logIn = menu.findItem(R.id.login);
         if(mCurrentUser.isLoggedIn()){
-            Log.v(TAG, "YOU ARE LOGGED IN");
             logOut.setVisible(true);
             logIn.setVisible(false);
         } else {
             logOut.setVisible(false);
             logIn.setVisible(true);
-            Log.v(TAG, "YOU ARE NOT LOGGED IN");
         }
-    }
+    } //updateMenuTitles
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -714,5 +734,5 @@ public class MainActivity extends ActionBarActivity implements LoginFragment.Log
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-}
+    } //onOptionsItemsSelected
+} //MainActivity
