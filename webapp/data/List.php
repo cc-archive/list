@@ -428,7 +428,7 @@ class UserList {
             $res = $adodb->Execute($q);
             $user = new UserList();
             $foo = $user->getUserInfo($email);
-        } (Exception $e) {
+        } catch (Exception $e) {
 
             http_response_code(500);                
 
