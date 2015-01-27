@@ -2,7 +2,7 @@
 
   /* The List powered by Creative Commons
 
-     Copyright (C) 2014 Creative Commons
+     Copyright (C) 2014, 2015 Creative Commons
 
      based on:
 
