@@ -438,6 +438,8 @@ class UserList {
 
     static function getUserSession ($userid) {
 
+        global $adodb;
+
         try {
         
             $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
