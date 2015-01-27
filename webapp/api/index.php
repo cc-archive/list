@@ -175,7 +175,7 @@ with('/api/users', function () {
 
             // Now let's make a session for the user
 
-            $userid = $foo['userid'];
+            $userid = $foo['id'];
 
             $session = $user->getUserSession($userid);
 
