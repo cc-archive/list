@@ -440,17 +440,13 @@ class UserList {
 
         global $adodb;
 
-        try {
-        
-            $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
-            $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-            $row = $adodb->CacheGetRow(1, $query);
+        $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
+        $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+        $row = $adodb->CacheGetRow(1, $query);
 
-            return $row;
+        return $row;
 
-        }
-
-        catch (Exception $e) {
+        if (count($row) == 0) {
 
             $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
 
