@@ -185,9 +185,6 @@ public class UploadFragment extends Fragment {
                             getString(R.string.upload_failed_text));
                     mIcon.setImageResource(R.drawable.confirm_x);
 
-//                requestMethods.showErrorDialog(mContext,
-//                        mContext.getString(R.string.error_title),
-//                        mContext.getString(R.string.error_message));
             }
         }) {
             @Override

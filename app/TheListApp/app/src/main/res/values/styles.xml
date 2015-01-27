@@ -93,6 +93,7 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
         <item name="android:layout_below">@+id/confirm_title</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:textColor">@color/secondary_text_default_material_dark</item>
     </style>
