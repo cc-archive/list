@@ -419,7 +419,7 @@ class UserList {
 
             try {
         
-                $query = "SELECT key FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
+                $query = "SELECT skey FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
                 $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
                 $row = $adodb->CacheGetRow(1, $query);
 
