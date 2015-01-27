@@ -23,6 +23,7 @@ package org.creativecommons.thelist.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
         inflater = LayoutInflater.from(context);
     }
 
-
     @Override
     public FeedViewholder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View view = inflater.inflate(R.layout.list_item_main, viewGroup, false);
@@ -60,12 +60,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
         //Getting Data for the row
         MainListItem l = listItems.get(position);
 
-        //TODO: Check this works?
-        holder.relativeLayout.setVisibility(View.VISIBLE);
-
+        holder.itemView.setVisibility(View.VISIBLE);
         holder.nameLabel.setText(l.getItemName());
+        Log.v("NAME LABEL", String.valueOf(l.getItemName()));
         holder.makerLabel.setText("requested by " + l.getMakerName());
         holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+
+        holder.itemView.setTag(l);
 
     }
 

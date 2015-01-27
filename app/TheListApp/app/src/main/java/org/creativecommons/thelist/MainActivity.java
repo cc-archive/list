@@ -304,6 +304,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                 for (int position : reverseSortedPositions) {
                                     // TODO: this is temp solution for preventing blinking item onDismiss
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
+                                    Log.v("Checking: ", mLayoutManager.findViewByPosition(position).toString());
 
                                     //Get item details for UNDO
                                     activeItemPosition = position;
@@ -343,7 +344,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                         //Get item details for photo upload
                         activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
-                        Log.v("ONITEMCLICK, ACTIVE ITEM: ", String.valueOf(position));
                     }
                 }));
     } //initRecyclerView
@@ -385,7 +385,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
     public void showSnackbar(){
         SnackbarManager.show(
-                //also includes duration: SHORT, LONG, INDEFINITE,
+                //also includes duration: SHORT, LONG, INDEFINITE
                 Snackbar.with(mContext)
                         .text("Item deleted") //text to display
                         .actionColor(getResources().getColor(R.color.colorSecondary))
@@ -394,11 +394,16 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
                                 //TODO: re-add item to list
+
+
+
+                                //What happens when item is swiped offscreen
                                 mItemList.add(0, mCurrentItem);
-                                Log.v("CURRENT ITEM ADDED: ", mCurrentItem.getItemName());
                                 mFeedAdapter.notifyItemInserted(0);
+
                                 mFeedAdapter.notifyItemRangeChanged(activeItemPosition, 1);
-                                mFeedAdapter.notifyItemChanged(0);
+                                mLayoutManager.findViewByPosition(0).setVisibility(View.VISIBLE);
+                                Log.v("Checking3: ", String.valueOf(mLayoutManager.findViewByPosition(0).getVisibility()));
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }
@@ -431,7 +436,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                //TODO: delete item from DB
+                                //TODO: delete item from user’s list
                                 //mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
 
                             }
