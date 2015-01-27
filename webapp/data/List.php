@@ -419,7 +419,7 @@ class UserList {
 
             try {
         
-                $query = "SELECT skey FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
+                $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
                 $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
                 $row = $adodb->CacheGetRow(1, $query);
 
@@ -439,7 +439,9 @@ class UserList {
                 $adodb->qstr(date("Y-m-d H:i:s"))
                 ));
 
-                return $key;
+                $foo = array($key, $userid);
+
+                return $foo;
               
             }
 
