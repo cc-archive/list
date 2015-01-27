@@ -429,7 +429,7 @@ class UserList {
 
             catch (Exception $e) {
 
-                $query = "INSERT INTO UserSessions (userid, key, session_start) VALUES (%s,%s, %s)";
+                $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
 
                 $key = md5(uniqid(rand(), true));
 
