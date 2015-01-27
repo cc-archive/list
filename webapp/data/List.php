@@ -407,36 +407,42 @@ class UserList {
     static function getUserInfo($email) {
 
         global $adodb;
+
         $query = 'SELECT * FROM Users WHERE lower(email) = lower(' . $adodb->qstr($email) . ') LIMIT 1';
 
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
         $row = $adodb->CacheGetRow(1, $query);
 
-        try {
+        if ($row) {
+
+            $userid = $row['userid'];
+
+            try {
         
-            $query = 'SELECT key FROM UserSessions WHERE userid = ' . $adodb->qstr($row['userid']);
-            $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-            $row = $adodb->CacheGetRow(1, $query);
+                $query = 'SELECT key FROM UserSessions WHERE userid = ' . $adodb->qstr($userid);
+                $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+                $row = $adodb->CacheGetRow(1, $query);
 
-            return $row;
+                return $row;
 
-        } catch {
+            } catch {
 
-            $query = "INSERT INTO UserSessions (userid, key, session_start) VALUES (%s,%s, %s)";
+                $query = "INSERT INTO UserSessions (userid, key, session_start) VALUES (%s,%s, %s)";
 
-            $key = md5(uniqid(rand(), true));
+                $key = md5(uniqid(rand(), true));
 
-            $res = $adodb->Execute(sprintf($query,
-            $adodb->qstr($row['userid']),
-            $adodb->qstr($key),
-            $adodb->qstr(date("Y-m-d H:i:s"))
-            ));
+                $res = $adodb->Execute(sprintf($query,
+                $adodb->qstr($userid),
+                $adodb->qstr($key),
+                $adodb->qstr(date("Y-m-d H:i:s"))
+                ));
 
-            return $key;
+                return $key;
               
+            }
+
         }
        
-
     }
 
         
