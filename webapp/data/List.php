@@ -415,7 +415,7 @@ class UserList {
 
         if ($row) {
 
-            $userid = $row['userid'];
+            $userid = $row['id'];
 
             try {
         
