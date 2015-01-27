@@ -179,9 +179,8 @@ with('/api/users', function () {
 
             $session = $user->getUserSession($userid);
 
-            $result = array($session, $userid);
-
-            return $result;
+            $output = json_encode($session, JSON_PRETTY_PRINT);
+            echo $output;
             
         }
 
