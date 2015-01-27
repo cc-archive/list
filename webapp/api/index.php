@@ -179,8 +179,8 @@ with('/api/users', function () {
                 $foo = $user->getUserInfo($email);
 
             } catch (Exception $e) {
-                echo "There was an error";
-                header('Content-Type: text/plain');
+
+                http_response_code(401);
                 exit;
             }
         }
