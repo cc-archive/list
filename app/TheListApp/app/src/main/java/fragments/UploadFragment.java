@@ -48,6 +48,7 @@ import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,13 +70,6 @@ public class UploadFragment extends Fragment {
     //Interface with Activity
     UploadListener mCallback;
 
-    //TODO: remove once error codes exist
-    public enum STATUS {
-        CANCEL,
-        SUCCESS,
-        FAILURE
-    }
-
     public interface UploadListener {
         public void onUploadFinish();
     }
@@ -93,7 +87,7 @@ public class UploadFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_upload, container, false);
-    }
+    } //onCreateView
 
     @Override
     public void onResume() {
@@ -107,12 +101,16 @@ public class UploadFragment extends Fragment {
         mProgressLayout = (RelativeLayout)getView().findViewById(R.id.upload_loading);
         mResultMessage = (RelativeLayout)getView().findViewById(R.id.result_message);
 
-
         mTitle = (TextView)getView().findViewById(R.id.confirm_title);
         mText = (TextView)getView().findViewById(R.id.item_text);
         mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
-        uploadPhoto();
+        if(requestMethods.isNetworkAvailable(mContext)){
+            uploadPhoto();
+        } else {
+            displayNetworkFailMessage();
+            mCallback.onUploadFinish();
+        }
     } //onResume
 
     @Override
@@ -153,48 +151,87 @@ public class UploadFragment extends Fragment {
 
         String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + itemID;
 
-        //Get Photo as Base64 encoded String
-        final String photoFile = requestMethods.createUploadPhotoObject(uri);
+        //Test file size
+        if(testFileSize(uri) > 8){
+            displayFileSizeFailMessage();
+        } else {
+            //Get Photo as Base64 encoded String
+            final String photoFile = requestMethods.createUploadPhotoObject(uri);
 
-        //Upload Photo
-        StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //Get Response
-                        Log.v("PHOTO UPLOADED RESPONES: ", response.toString());
-                        //TODO: add conditions? What happens when photo upload fails?
+            //Upload Photo
+            StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //Get Response
+                            Log.v("PHOTO UPLOADED RESPONES: ", response);
+                            //TODO: add conditions? What happens when photo upload fails?
 
-                        addConfirmText(getString(R.string.upload_success_title),
-                                getString(R.string.upload_success_text));
-                        mIcon.setImageResource(R.drawable.confirm_checkmark);
-
-                        //Hide progress bar and show result of upload attempt
-                        mProgressLayout.setVisibility(View.GONE);
-                        mResultMessage.setVisibility(View.VISIBLE);
-                        //Send notice to activity (will execute timed close of this fragment)
-                        mCallback.onUploadFinish();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v(TAG, "THERE WAS AN ERROR IN THE VOLLEY UPLOAD ATTEMPT");
+                            displaySuccessMessage();
+                            //Send notice to activity (will execute timed close of this fragment)
+                            mCallback.onUploadFinish();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.v(TAG, "THERE WAS AN ERROR IN THE VOLLEY UPLOAD ATTEMPT");
                     //TODO: add switch for all possible error codes
+                    displayFailMessage();
+                    mCallback.onUploadFinish();
 
-                    addConfirmText(getString(R.string.upload_failed_title),
-                            getString(R.string.upload_failed_text));
-                    mIcon.setImageResource(R.drawable.confirm_x);
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                    return params;
+                }
+            };
+            queue.add(uploadPhotoRequest);
 
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
-                return params;
-            }
-        };
-        queue.add(uploadPhotoRequest);
+        }
     } //uploadPhoto
+
+    //Check file size for upload
+    public long testFileSize(Uri uri){
+        File photo = new File(uri.getPath());
+        long size = photo.length()/(1024*1024);
+        return size;
+    }
+
+    //DISPLAY MESSAGES
+    public void displaySuccessMessage(){
+        addConfirmText(getString(R.string.upload_success_title),
+                getString(R.string.upload_success_text));
+        mIcon.setImageResource(R.drawable.confirm_checkmark);
+        //Hide progress bar and show result of upload attempt
+        mProgressLayout.setVisibility(View.GONE);
+        mResultMessage.setVisibility(View.VISIBLE);
+    }
+
+    public void displayFailMessage(){
+        addConfirmText(getString(R.string.upload_failed_title),
+                getString(R.string.upload_failed_text));
+        mIcon.setImageResource(R.drawable.confirm_x);
+        mProgressLayout.setVisibility(View.GONE);
+        mResultMessage.setVisibility(View.VISIBLE);
+    }
+
+    public void displayNetworkFailMessage(){
+        addConfirmText(getString(R.string.upload_failed_title_network),
+                getString(R.string.upload_failed_text_network));
+        mIcon.setImageResource(R.drawable.confirm_x);
+        mProgressLayout.setVisibility(View.GONE);
+        mResultMessage.setVisibility(View.VISIBLE);
+    }
+
+    public void displayFileSizeFailMessage(){
+        addConfirmText(getString(R.string.upload_failed_title_filesize),
+                getString(R.string.upload_failed_text_filesize));
+        mIcon.setImageResource(R.drawable.confirm_x);
+        mProgressLayout.setVisibility(View.GONE);
+        mResultMessage.setVisibility(View.VISIBLE);
+    }
 
 } //UploadFragment

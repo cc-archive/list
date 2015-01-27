@@ -53,6 +53,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -75,7 +76,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -124,7 +124,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
     private boolean photoToBeUploaded;
 
-
     // --------------------------------------------------------
 
     @Override
@@ -139,6 +138,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+
+        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
+        instance.setAppOptOut(true);
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
@@ -178,7 +180,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(mItemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
-        mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
+        mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -214,7 +216,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        Collections.reverse(mItemList);
+        //Collections.reverse(mItemList);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
@@ -258,7 +260,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                         }
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        Collections.reverse(mItemList);
+                        //Collections.reverse(mItemList);
                         mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -516,7 +518,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 //Check if external storage is available
                 private boolean isExternalStorageAvailable() {
                     String state = Environment.getExternalStorageState();
-
                     if (state.equals(Environment.MEDIA_MOUNTED)) {
                         return true;
                     }
@@ -547,7 +548,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
             Log.i(TAG,"Media URI:" + mMediaUri);
 
-            //TODO: Check file size
             if(mCurrentUser.isLoggedIn()) {
                 startPhotoUpload();
             } else {
@@ -580,7 +580,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 .replace(R.id.overlay_fragment_container,uploadFragment).commit();
         mFrameLayout.setClickable(true);
         getSupportActionBar().hide();
-
     } //startUploadPhoto
 
     @Override
@@ -606,8 +605,14 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     public void UserLoggedIn(String userData) {
         //Create menu again (update login to logout)
         invalidateOptionsMenu();
-        //Start UploadFragment and Upload photo
-        startPhotoUpload();
+        if(photoToBeUploaded){
+            //Start UploadFragment and Upload photo
+            startPhotoUpload();
+        } else {
+            //TODO: login confirmation
+            removeFragment(accountFragment, true);
+        }
+
     } //UserLoggedIn
 
     @Override
@@ -646,9 +651,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     public void onUploadFinish() {
         //Refresh user list + remove item that has just been uploaded
         photoToBeUploaded = false;
-        //TODO: do I still need this?
+
         getUserListItems();
-        //mItemList.remove(activeItemPosition);
         mFeedAdapter.notifyDataSetChanged();
         //Show upload message for limited time
         removeFragment(uploadFragment, true);
@@ -688,7 +692,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .remove(f)
                     .commit();
-            mFrameLayout.setClickable(true);
+            mFrameLayout.setClickable(false);
             getSupportActionBar().hide();
         }
     } //removeFragment
@@ -725,8 +729,10 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.login:
-                Intent loginIntent = new Intent(MainActivity.this, AccountActivity.class);
-                startActivity(loginIntent);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.overlay_fragment_container, accountFragment).commit();
+                mFrameLayout.setClickable(true);
+                getSupportActionBar().hide();
                 return true;
             case R.id.logout:
                 mCurrentUser.logOut();

@@ -24,25 +24,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
+import fragments.AccountFragment;
 import fragments.ExplainerFragment;
 
 
-public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener {
+public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment.LoginClickListener {
     public static final String TAG = StartActivity.class.getSimpleName();
     ListUser mCurrentUser;
     protected Button mStartButton;
@@ -50,10 +50,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected TextView mTermsLink;
     protected Context mContext;
     protected SharedPreferencesMethods sharedPreferencesMethods;
+    protected FrameLayout mFrameLayout;
 
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
-
+    AccountFragment accountFragment = new AccountFragment();
 
     // ---------------------------------------------------------------------------------
 
@@ -62,18 +63,19 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         mContext = this;
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+
 
         GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
         instance.setAppOptOut(true);
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName(TAG);
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Create sharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences
@@ -88,6 +90,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         }
 
         //UI Elements
+        mFrameLayout = (FrameLayout)findViewById(R.id.fragment_container);
         mStartButton = (Button) findViewById(R.id.startButton);
         mAccountButton = (Button) findViewById(R.id.accountButton);
         mTermsLink = (TextView) findViewById(R.id.cc_logo_label);
@@ -105,8 +108,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StartActivity.this, AccountActivity.class);
-                startActivity(intent);
+                getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .add(R.id.fragment_container,accountFragment)
+                        .commit();
+                mFrameLayout.setClickable(true);
             }
         });
 
@@ -122,6 +128,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragment_container,explainerFragment)
                         .commit();
+                mFrameLayout.setClickable(true);
+
             }
         }); //StartButton ClickListener
 
@@ -134,11 +142,36 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     }
 
     @Override
+    public void UserLoggedIn(String userData) {
+        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void UserCreated(String userData) {
+        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void CancelUpload() {
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .remove(accountFragment)
+                .commit();
+        mFrameLayout.setClickable(false);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_start, menu);
         return true;
-    }
+    } //onCreateOptionsMenu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -146,12 +179,10 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-}
+    } //onOptionsItemSelected
+} //StartActivity

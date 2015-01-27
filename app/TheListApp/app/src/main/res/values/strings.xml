@@ -105,7 +105,11 @@
     <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
     <string name="upload_success_title">Upload Success!</string>
     <string name="upload_failed_title">Upload Failed</string>
+    <string name="upload_failed_title_network">There may be a problem with your connection!</string>
+    <string name="upload_failed_title_filesize">Oops! This file is too big.</string>
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
+    <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
+    <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
     <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
 
     <!-- Fragment Callback Exception Messages -->

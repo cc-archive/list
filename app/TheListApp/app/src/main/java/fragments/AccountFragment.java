@@ -106,6 +106,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try {
             mCallback = (LoginClickListener) activity;
         } catch(ClassCastException e) {

@@ -89,7 +89,7 @@ public class AccountActivity extends ActionBarActivity {
                 }
                 else {
                     //TODO: Login User + save to sharedPreferences
-                    mCurrentUser.logIn(mEmail, mPassword, mContext, "randomActivity");
+                    //mCurrentUser.logIn(mEmail, mPassword, mContext);
 
                     //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences
                     //2. Login now and pass the data to MainActivity to set things
