@@ -428,7 +428,12 @@ class UserList {
             $res = $adodb->Execute($q);
             $user = new UserList();
             $foo = $user->getUserInfo($email);
+        } (Exception $e) {
+
+            http_response_code(500);                
+
         }
+
     }
 
     static function getUserSession ($userid) {
