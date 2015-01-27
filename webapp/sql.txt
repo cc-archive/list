@@ -1,6 +1,20 @@
 drop table if exists Users;
 drop table if exists UserList;
 drop table if exists Photos;
+drop table if exists UserSessions;
+drop table if exists HowToPopularity;
+
+CREATE TABLE UserSessions (
+id int(11) NOT NULL auto_increment,
+key varchar(32) NOT NULL,
+session_start TIMESTAMP,
+userid int(11) NOT NULL
+);
+
+CREATE TABLE HowToPopularity (
+id int(11) NOT NULL auto_increment,
+listitem int(11) NOT NULL
+);
 
 CREATE TABLE Users (
 email VARCHAR(255) NOT NULL,
