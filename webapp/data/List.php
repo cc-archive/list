@@ -413,41 +413,54 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
         $row = $adodb->CacheGetRow(1, $query);
 
-        if ($row) {
-
-            $userid = $row['id'];
-
-            try {
-        
-                $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
-                $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-                $row = $adodb->CacheGetRow(1, $query);
-
-                return $row;
-
-            }
-
-            catch (Exception $e) {
-
-                $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
-
-                $key = md5(uniqid(rand(), true));
-
-                $res = $adodb->Execute(sprintf($query,
-                $adodb->qstr($userid),
-                $adodb->qstr($key),
-                $adodb->qstr(date("Y-m-d H:i:s"))
-                ));
-
-                $foo = array($key, $userid);
-
-                return $foo;
-              
-            }
-
-        }
-       
+        return $row;
     }
 
+    static function makeUser ($email) {
+
+       global $adodb;
+
+
+       $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
+            , $adodb->qstr($email));
+
+        try {
+            $res = $adodb->Execute($q);
+            $user = new UserList();
+            $foo = $user->getUserInfo($email);
+        }
+    }
+
+    static function getUserSession ($userid) {
+
+        try {
         
+            $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
+            $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+            $row = $adodb->CacheGetRow(1, $query);
+
+            return $row;
+
+        }
+
+        catch (Exception $e) {
+
+            $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
+
+            $key = md5(uniqid(rand(), true));
+
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($key),
+            $adodb->qstr(date("Y-m-d H:i:s"))
+            ));
+
+            $foo = array($key, $userid);
+
+            return $foo;
+              
+        }
+
+    }
+               
 }

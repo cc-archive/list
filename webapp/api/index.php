@@ -160,32 +160,36 @@ with('/api/users', function () {
 
         $result = curl_exec($curl);
 
-        $user = new UserList();
+        if ($result) {     // if the user exists in CAS
 
-        $foo = $user->getUserInfo($result);
+            $user = new UserList();
 
-        if (count($foo) == 0) {
+            $foo = $user->getUserInfo($result); // get the userID, etc
 
-            global $adodb;
+            if (count($foo) == 0) {  // first time on The List
 
-            $email = $request->param('username');
+                $user->makeUser($result); // make a User
 
-            $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
-            , $adodb->qstr($email));
-
-            try {
-                $res = $adodb->Execute($q);
-                $user = new UserList();
-                $foo = $user->getUserInfo($email);
-
-            } catch (Exception $e) {
-
-                http_response_code(401);
-                exit;
+                $foo = $user->getUserInfo($result); // now get the userID
             }
+
+            // Now let's make a session for the user
+
+            $userid = $foo['userid'];
+
+            $session = $user->getUserSession($userid);
+
+            $result = array($session, $userid);
+
+            return $result;
+            
         }
 
-        echo json_encode($foo, JSON_PRETTY_PRINT);
+        else { // invalid user
+
+            http_response_code(401);                
+
+        }
 
         curl_close($curl);
 
