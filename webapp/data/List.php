@@ -419,13 +419,15 @@ class UserList {
 
             try {
         
-                $query = 'SELECT key FROM UserSessions WHERE userid = ' . $adodb->qstr($userid);
+                $query = "SELECT key FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
                 $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
                 $row = $adodb->CacheGetRow(1, $query);
 
                 return $row;
 
-            } catch {
+            }
+
+            catch (Exception $e) {
 
                 $query = "INSERT INTO UserSessions (userid, key, session_start) VALUES (%s,%s, %s)";
 
