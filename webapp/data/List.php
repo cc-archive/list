@@ -444,8 +444,6 @@ class UserList {
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
         $row = $adodb->CacheGetRow(1, $query);
 
-        return $row;
-
         if (count($row) == 0) {
 
             $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
@@ -462,7 +460,12 @@ class UserList {
 
             return $foo;
               
+        } else {
+
+            return $row;
+
         }
+        
 
     }
                
