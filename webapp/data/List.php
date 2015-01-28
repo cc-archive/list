@@ -486,7 +486,7 @@ class UserList {
 
         $check = $list->getUserSession ($userid);
 
-        if ($skey == $check) {
+        if ($skey == $check['skey']) {
 
             $query = "DELETE from UserList where userid = %s and listid = %s";
 
