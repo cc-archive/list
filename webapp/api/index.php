@@ -235,7 +235,6 @@ with('/api/userlist/delete', function() {
         $userid = $request->userid;
         $listitem = $request->id;      
         $skey = $request->param('skey');
-        $skey = base64_decode($skey);
 
         $list = new UserList();
 
