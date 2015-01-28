@@ -70,7 +70,7 @@ ADDED from AndroidManifest.xml:26:9
 		ADDED from AndroidManifest.xml:28:13
 	android:name
 		ADDED from AndroidManifest.xml:27:13
-activity#org.creativecommons.thelist.AccountActivity
+activity#org.creativecommons.thelist.misc.AccountActivity
 ADDED from AndroidManifest.xml:31:9
 	android:label
 		ADDED from AndroidManifest.xml:33:13

@@ -52,7 +52,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="20dp">
 
-        <!--TODO: make smaller images bigger (because camera button will not be in 1.0)-->
         <ImageButton
             android:id="@+id/YesButton"
             android:layout_width="fill_parent"
@@ -63,6 +62,7 @@
             android:src="@drawable/btn_checkmark"
             android:layout_gravity="center_vertical" />
 
+        <!--TODO: re-add Camera Button (if this is functionality we want)-->
         <ImageButton
             android:id="@+id/CameraButton"
             android:layout_width="wrap_content"

@@ -8,7 +8,6 @@
     android:padding="20dp"
     tools:context="fragments.ExplainerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

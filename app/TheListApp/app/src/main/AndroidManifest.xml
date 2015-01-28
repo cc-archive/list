@@ -29,7 +29,7 @@
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
         <activity
-            android:name=".AccountActivity"
+            android:name=".misc.AccountActivity"
             android:label="@string/title_activity_account" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

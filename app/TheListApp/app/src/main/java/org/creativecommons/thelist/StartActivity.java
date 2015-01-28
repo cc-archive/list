@@ -120,7 +120,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             mTermsLink.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
-        //TODO: finish explainer fragment
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

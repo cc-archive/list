@@ -151,7 +151,7 @@ public class ListUser {
                             requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
-                            Log.v(TAG, response);
+                            Log.v("THIS IS THE RESPONSE FOR LOGIN: ", response);
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
@@ -178,6 +178,8 @@ public class ListUser {
                                 listener.UserLoggedIn("hey logged in");
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
+                                //TODO: add proper error message
+
                             }
                         }
                     }
@@ -310,7 +312,7 @@ public class ListUser {
                 requestMethods.showErrorDialog(mContext,
                         mContext.getString(R.string.error_title),
                         mContext.getString(R.string.error_message));
-                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
+                Log.v("ERROR ADDING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
             }
         });
         queue.add(postItemRequest);
@@ -321,7 +323,6 @@ public class ListUser {
     public void removeItemFromUserList(final String itemID){
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        //TODO: session token? + REMOVE ITEM CORRECT URL
         String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
 
         StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
@@ -340,7 +341,7 @@ public class ListUser {
                 requestMethods.showErrorDialog(mContext,
                         mContext.getString(R.string.error_title),
                         mContext.getString(R.string.error_message));
-                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
+                Log.v("ERROR DELETING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
             }
         });
         queue.add(deleteItemRequest);

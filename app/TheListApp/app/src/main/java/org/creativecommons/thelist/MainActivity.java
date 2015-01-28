@@ -252,7 +252,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
                                     mItemList.add(listItem);
                                 } else {
-                                    //TODO: Does THIS WORK?
                                    continue;
                                 }
                             } catch (JSONException e) {
@@ -304,7 +303,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    // TODO: this is temp solution for preventing blinking item onDismiss
+                                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
                                     Log.v("Checking: ", mLayoutManager.findViewByPosition(position).toString());
 
@@ -395,17 +394,13 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                         .actionListener(new ActionClickListener() {
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
-                                //TODO: re-add item to list
-
-
+                                /*NOTE: item does not need to be re-added here because it is only
+                                removed when the snackbar is actually dismissed*/
 
                                 //What happens when item is swiped offscreen
                                 mItemList.add(0, mCurrentItem);
                                 mFeedAdapter.notifyItemInserted(0);
-
                                 mFeedAdapter.notifyItemRangeChanged(activeItemPosition, 1);
-                                mLayoutManager.findViewByPosition(0).setVisibility(View.VISIBLE);
-                                Log.v("Checking3: ", String.valueOf(mLayoutManager.findViewByPosition(0).getVisibility()));
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }
@@ -627,12 +622,11 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     @Override
     public void onTermsClicked() {
         //Start UploadFragment and Upload photo
-        //TODO: if there is a photo to upload, do it: if not: go back to MainActivity
         if(photoToBeUploaded){
             startPhotoUpload();
             photoToBeUploaded = false;
         } else{
-            //TODO: loggedInConfirmation + remove
+            //TODO: confirm user has beeen logged in
             removeFragment(termsFragment, false);
         }
     } //onTermsClicked

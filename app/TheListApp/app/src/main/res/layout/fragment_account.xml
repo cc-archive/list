@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:id="@+id/login_fields"
-        android:windowSoftInputMode="stateVisible|adjustPan"
+        android:windowSoftInputMode="stateVisible|adjustResize"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="10dp">
 
@@ -106,6 +106,7 @@
             android:id="@+id/emailLoginField"
             android:inputType="textEmailAddress"
             android:hint="@string/email_hint"
+            android:imeOptions="actionNext"
             android:layout_below="@+id/hiddenField"/>
 
         <EditText
@@ -114,6 +115,7 @@
             android:id="@+id/passwordLoginField"
             android:inputType="textPassword"
             android:hint="@string/password_hint"
+            android:imeOptions="actionNext"
             android:layout_below="@+id/emailLoginField"
             android:layout_marginBottom="10dp" />
 

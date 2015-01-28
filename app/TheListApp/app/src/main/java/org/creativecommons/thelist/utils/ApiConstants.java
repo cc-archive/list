@@ -22,7 +22,7 @@ package org.creativecommons.thelist.utils;
 public final class ApiConstants {
 
     //User Object
-    public static final String USER_ID = "id";
+    public static final String USER_ID = "userid";
     public static final String USER_NAME = "name";
     public static final String USER_ITEMS = "items";
     public static final String USER_CATEGORIES = "categories";
@@ -59,6 +59,7 @@ public final class ApiConstants {
     public static final String PHOTO_USER_ID = "userID";
     public static final String PHOTO_BYTE_ARRAY = "photo";
     public static final String POST_PHOTO_KEY = "filedata";
+    public static final String USER_TOKEN = "skey";
 
     //Creative Commons API
     public static final String URL = "https://thelist.creativecommons.org/api";

@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist;
+package org.creativecommons.thelist.misc;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -29,6 +29,7 @@ import android.widget.EditText;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
