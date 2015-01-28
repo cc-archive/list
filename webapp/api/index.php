@@ -243,7 +243,7 @@ with('/api/userlist/delete', function() {
 
         $output = json_encode($response, JSON_PRETTY_PRINT);
         echo $output;
-    }
+    });
 
 });
 
