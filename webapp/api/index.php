@@ -228,6 +228,25 @@ with('/api/makers', function () {
 
 });
 
+with('/api/userlist/delete', function() {
+
+    respond('POST', '/[:userid]/[:id]', function ($request, $response) {
+
+        $userid = $request->userid;
+        $listitem = $request->id;      
+        $skey = $request->param('skey');
+        $skey = base64_decode($skey);
+
+        $list = new UserList();
+
+        $response = $list->deleteItem($userid, $listitem,$skey);
+
+        $output = json_encode($response, JSON_PRETTY_PRINT);
+        echo $output;
+    }
+
+});
+
 with('/api/userlist', function () {
 
     respond('GET', '/[:id]', function ($request, $response) {
