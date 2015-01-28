@@ -482,7 +482,9 @@ class UserList {
 
         global $adodb;
 
-        $check = getUserSession ($userid);
+        $list = new UserList();
+
+        $check = $list->getUserSession ($userid);
 
         if ($skey == $check) {
 
