@@ -456,7 +456,15 @@ class UserList {
             $adodb->qstr(date("Y-m-d H:i:s"))
             ));
 
+            
+
             $foo = array($key, $userid);
+
+            foreach ( $foo as $k=>$v )
+                {
+                    $array[$k] ['userid'] = $array[$k] ['id'];
+                    unset($array[$k]['userid']);
+                }
 
             return $foo;
               
@@ -468,5 +476,44 @@ class UserList {
         
 
     }
+
+
+    static function deleteItem ($userid, $listid, $skey) {
+
+        global adodb;
+
+        $check = getUserSession ($userid);
+
+        if ($skey == $check) {
+
+            $query = "DELETE from UserList where userid = %s and listid = %s";
+
+            try {
+            
+                $res = $adodb->Execute(sprintf($query,
+                $adodb->qstr($userid),
+                $adodb->qstr($listid)
+                ));
+
+                return $listid;
+
+            } catch (Exception $e) {
+
+                http_response_code(400);
+
+            }
+            
+
+        }
+
+        else {
+
+            http_response_code(403);
+            
+        }
+
+    }
+
+    
                
 }
