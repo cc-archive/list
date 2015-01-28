@@ -480,7 +480,7 @@ class UserList {
 
     static function deleteItem ($userid, $listid, $skey) {
 
-        global adodb;
+        global $adodb;
 
         $check = getUserSession ($userid);
 
