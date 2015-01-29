@@ -2,7 +2,7 @@
 
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    based on:
 
@@ -132,23 +132,34 @@ class UserList {
 
         global $adodb;
 
-        $query = "INSERT INTO UserList (userid, listid, complete) VALUES (%s,%s,0)";
+        $query = "SELECT userid, listid from UserList WHERE userid=? and listid=?";
+        $params = array();
+        $params[] = $userid;
+        $params[] = $listitem;
+        
+        $res = $adodb->CacheGetAll(5, $query, $params);
 
-        try {
-            $res = $adodb->Execute(sprintf($query,
-            $adodb->qstr($userid),
-            $adodb->qstr($listitem)
-            ));
+        if (count($res) == 0) {
 
-            $adodb->CacheFlush();
-            
-        } catch (Exception $e) {
-            
-            //echo $e;
+            $query = "INSERT INTO UserList (userid, listid, complete) VALUES (%s,%s,0)";
 
-            // echo "There was an error";
+            try {
+                $res = $adodb->Execute(sprintf($query,
+                $adodb->qstr($userid),
+                $adodb->qstr($listitem)
+                ));
+
+                $adodb->CacheFlush();
             
-            return null;
+            } catch (Exception $e) {
+            
+                //echo $e;
+
+                // echo "There was an error";
+            
+                return null;
+            }
+
         }
 
     }
