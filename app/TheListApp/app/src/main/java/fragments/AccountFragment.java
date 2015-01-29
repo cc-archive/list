@@ -106,6 +106,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try {
             mCallback = (LoginClickListener) activity;
         } catch(ClassCastException e) {
@@ -286,13 +287,11 @@ public class AccountFragment extends Fragment {
         queue.add(newUserRequest);
     } //createNewUser
 
-    //TODO: I THINK THIS BREAKS STUFF
-    //Hide soft keyboard input when activity is removed from stack
     @Override
     public void onPause() {
         super.onPause();
 
-        //TODO: get this to work, but also test on devices first?
+        //TODO: SOFT KEYBOARD INSANITY: get this to work, but also test on devices first?
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }

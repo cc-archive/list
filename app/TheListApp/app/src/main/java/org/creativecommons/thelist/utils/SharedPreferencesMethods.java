@@ -47,6 +47,7 @@ public class SharedPreferencesMethods {
     public static final String CATEGORY_PREFERENCE_KEY = "category";
     public static final String LIST_ITEM_PREFERENCE_KEY = "item";
     public static final String USER_ID_PREFERENCE_KEY = "id";
+    public static final String USER_TOKEN_PREFERENCE_KEY = "skey";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.434932";
 
@@ -81,8 +82,28 @@ public class SharedPreferencesMethods {
     //Get User ID from SharedPreferences
     public String getUserId(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
-        return userID;
+        if(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)){
+            String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
+            return userID;
+        } else {
+            return null;
+        }
+    }
+
+    public int getUserItemCount(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY)){
+            String listOfValues = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
+
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(listOfValues);
+            JsonArray array = element.getAsJsonArray();
+            int size = array.size();
+            return size;
+        } else{
+            return 0;
+        }
     }
 
     //Remove single key in Preferences
@@ -90,6 +111,30 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove(key);
+        editor.apply();
+    }
+
+    //Remove single value in Preferences
+    public void RemoveUserItemPreference(String itemID) {
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        String listOfValues = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
+        Log.v("ITEM ID: ", itemID);
+        //Convert from String to Array
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(listOfValues);
+        JsonArray array = element.getAsJsonArray();
+        Log.v("ARRAY FROM SHARED PREF: ", array.toString());
+
+        for (int i = 0; i < array.size(); i++) {
+            String singleItem = array.get(i).getAsString();
+            if (singleItem.equals(itemID)) {
+                Log.v("ITEM TO REMOVE IS: ", singleItem);
+                array.remove(i);
+            }
+        }
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(LIST_ITEM_PREFERENCE_KEY, array.toString());
         editor.apply();
     }
 
@@ -168,6 +213,12 @@ public class SharedPreferencesMethods {
         }
 
         return new JSONArray(catIds);
+    }
+
+    public String RetrieveUserToken(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        String token = sharedPref.getString(USER_TOKEN_PREFERENCE_KEY, null);
+        return token;
     }
 
     //Retrieve User Item Preference

@@ -25,6 +25,11 @@
     <string name="error_title">Error</string>
     <string name="error_message">There was an error getting data</string>
 
+    <string name="error_network_title">Oops!</string>
+    <string name="error_network_message">Seems like you might not be connected to the internet.
+        Check your connection and try again.</string>
+
+
     <!-- Empty Labels -->
     <string name="empty_feed_label">No items in your picks.</string>
 
@@ -42,15 +47,17 @@
 
     <!-- Onboarding Explainers -->
     <string-array name="onboarding_explainers">
+        <item>The List is a collaborative project to build a global collection of images that anyone can use</item>
         <item>Photos you share with The List will be available for any person or organization to
             use, as long as they give you credit</item>
-        <item>Youll be helping creators tell their stories – on Wikipedia, social media, in the
+        <item>You’ll be helping creators tell their stories – on Wikipedia, social media, in the
             news, or in campaigns.\n\nTogether were building a commons of creativity and knowledge
             for everyone</item>
     </string-array>
 
     <!-- Onboarding Button Text -->
     <string-array name="onboarding_button_text">
+        <item>Sounds good</item>
         <item>I like getting credit</item>
         <item>Cool, let’s go</item>
     </string-array>
@@ -105,7 +112,11 @@
     <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
     <string name="upload_success_title">Upload Success!</string>
     <string name="upload_failed_title">Upload Failed</string>
+    <string name="upload_failed_title_network">There may be a problem with your connection!</string>
+    <string name="upload_failed_title_filesize">Oops! This file is too big.</string>
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
+    <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
+    <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
     <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
 
     <!-- Fragment Callback Exception Messages -->

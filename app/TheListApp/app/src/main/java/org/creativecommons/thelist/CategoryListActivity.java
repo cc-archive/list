@@ -177,8 +177,14 @@ public class CategoryListActivity extends ActionBarActivity {
                             (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
                 }
                 //Navigate to Random Activity
-                Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-                startActivity(intent);
+                //TODO: make category list activity into a fragment so there is no need for this
+                if(!(mCurrentUser.isLoggedIn()) && sharedPreferencesMethods.getUserItemCount()<3){
+                    Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(CategoryListActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     } //onCreate

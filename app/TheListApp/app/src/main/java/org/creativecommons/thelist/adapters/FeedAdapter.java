@@ -20,10 +20,8 @@
 
 package org.creativecommons.thelist.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,26 +29,26 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
 
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder> {
     private LayoutInflater inflater;
-    private MainActivity mainActivity;
+    //private MainActivity mainActivity;
     private List<MainListItem> listItems; //Collections.emptyList()
 
-    public FeedAdapter(Context context, List<MainListItem> listItems, Activity activity) {
-        this.mainActivity = (MainActivity) activity;
+    public FeedAdapter(Context context, List<MainListItem> listItems) {
+        //this.mainActivity = (MainActivity) activity;
         this.listItems = listItems;
+//        Collections.reverse(this.listItems);
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public FeedViewholder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View view = inflater.inflate(R.layout.list_item_main, viewGroup, false);
-
+        //Collections.reverse(this.listItems);
         FeedViewholder holder = new FeedViewholder(view);
         return holder;
     }
@@ -59,15 +57,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
     public void onBindViewHolder(FeedViewholder holder, int position) {
         //Getting Data for the row
         MainListItem l = listItems.get(position);
-
         holder.itemView.setVisibility(View.VISIBLE);
         holder.nameLabel.setText(l.getItemName());
-        Log.v("NAME LABEL", String.valueOf(l.getItemName()));
+//        Log.v("NAME LABEL", String.valueOf(l.getItemName()));
         holder.makerLabel.setText("requested by " + l.getMakerName());
         holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
 
         holder.itemView.setTag(l);
-
     }
 
     @Override

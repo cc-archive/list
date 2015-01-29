@@ -53,6 +53,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -108,7 +109,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.ItemDecoration mItemDecoration;
+    //private RecyclerView.ItemDecoration mItemDecoration;
     private List<MainListItem> mItemList = new ArrayList<>();
 
     //UI Elements
@@ -124,7 +125,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
     private boolean photoToBeUploaded;
 
-
     // --------------------------------------------------------
 
     @Override
@@ -139,6 +139,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+
+        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
+        instance.setAppOptOut(true);
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
@@ -174,24 +177,27 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mItemDecoration =
+        RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        mRecyclerView.addItemDecoration(mItemDecoration);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
-        mFeedAdapter = new FeedAdapter(mContext, mItemList, MainActivity.this);
+        Log.v("Creating", "A new feed adapter");
+        mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         initRecyclerView();
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
-        if(requestMethods.isNetworkAvailable(mContext)) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            getUserListItems();
-        }
-        else {
-            Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
-        }
+//        if(requestMethods.isNetworkAvailable(mContext)) {
+//            mProgressBar.setVisibility(View.VISIBLE);
+//            Log.v("Get user", "On create IS network available");
+//            getUserListItems();
+//        }
+//        else {
+            //TODO This is always useful, move to getuserlists
+//            Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
+//        }
     } //onCreate
 
     @Override
@@ -199,10 +205,16 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         super.onResume();
         Log.v("ON RESUME ", "IS BEING CALLED");
         if(mCurrentUser.isLoggedIn()){
+            Log.v("Get user", "On resume");
             getUserListItems();
         } else {
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            mFeedAdapter.notifyDataSetChanged();
+            if(mItemList.size() == 0){
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                getUserListItems();
+            } else {
+                mFeedAdapter.notifyDataSetChanged();
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
         }
     } //onResume
 
@@ -214,14 +226,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        Collections.reverse(mItemList);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
 
     //GET USER LIST ITEMS
     private void getUserListItems() {
-        Log.v(TAG, "GET USER LIST ITEMS CALLED");
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonArrayRequest userListRequest;
         String itemRequesturl;
@@ -229,14 +239,14 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
-            Log.v("HELLO", "this user is logged in");
+            //Log.v("HELLO", "this user is logged in");
             itemRequesturl = ApiConstants.GET_USER_LIST + userID;
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        //Log.v("RESPONSE", response.toString());
+                        Log.v("Get user list RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
@@ -249,16 +259,24 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
                                     listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
                                     mItemList.add(listItem);
+                                } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
+                                    //TODO: Does this work? (add error items to the top)
+                                    MainListItem listItem = new MainListItem();
+                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
+                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
+                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
+                                    listItem.setError(true);
+                                    mItemList.add(0, listItem);
+
                                 } else {
-                                    //TODO: Does THIS WORK?
                                    continue;
                                 }
                             } catch (JSONException e) {
                                 Log.v(TAG, e.getMessage());
                             }
                         }
-                        mProgressBar.setVisibility(View.INVISIBLE);
                         Collections.reverse(mItemList);
+                        mProgressBar.setVisibility(View.INVISIBLE);
                         mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -287,12 +305,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                     Log.v(TAG,e.getMessage());
                 }
                 mItemList.add(listItem);
-                //Log.v("HELLO ITEMS", mItemList.toString());
+                Log.v("HELLO ITEMS", mItemList.toString());
             }
+            Collections.reverse(mItemList);
             mFeedAdapter.notifyDataSetChanged();
         }
     } //getUserListItems
-
 
     private void initRecyclerView(){
         SwipeDismissRecyclerViewTouchListener touchListener =
@@ -302,9 +320,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    // TODO: this is temp solution for preventing blinking item onDismiss
+                                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-                                    Log.v("Checking: ", mLayoutManager.findViewByPosition(position).toString());
 
                                     //Get item details for UNDO
                                     activeItemPosition = position;
@@ -314,16 +331,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
                                     mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
-                                    //TODO: remove item from user list
 
-                                    if(!mCurrentUser.isLoggedIn()){
-
-                                    } else {
-                                        //TODO: remove item from list in DB
-                                    }
                                     //Snackbar message
                                     showSnackbar();
-
                                 }
                             }
                         });
@@ -381,7 +391,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             //Log.v("HI", "ON TOUCH EVENT CALLED");
 
         }
-    }
+    } //RecyclerItemClickListener
 
     public void showSnackbar(){
         SnackbarManager.show(
@@ -393,17 +403,13 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                         .actionListener(new ActionClickListener() {
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
-                                //TODO: re-add item to list
-
-
+                                /*NOTE: item does not need to be re-added here because it is only
+                                removed when the snackbar is actually dismissed*/
 
                                 //What happens when item is swiped offscreen
                                 mItemList.add(0, mCurrentItem);
                                 mFeedAdapter.notifyItemInserted(0);
-
                                 mFeedAdapter.notifyItemRangeChanged(activeItemPosition, 1);
-                                mLayoutManager.findViewByPosition(0).setVisibility(View.VISIBLE);
-                                Log.v("Checking3: ", String.valueOf(mLayoutManager.findViewByPosition(0).getVisibility()));
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }
@@ -436,14 +442,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                //TODO: delete item from user’s list
-                                //mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
-
+                                //TODO: delete item from user’s list in DB (that’s all this should do!)
+                                mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
                             }
                         }) //event listener
                 , MainActivity.this);
     } //showSnackbar
-
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
@@ -516,7 +520,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 //Check if external storage is available
                 private boolean isExternalStorageAvailable() {
                     String state = Environment.getExternalStorageState();
-
                     if (state.equals(Environment.MEDIA_MOUNTED)) {
                         return true;
                     }
@@ -547,7 +550,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
             Log.i(TAG,"Media URI:" + mMediaUri);
 
-            //TODO: Check file size
             if(mCurrentUser.isLoggedIn()) {
                 startPhotoUpload();
             } else {
@@ -580,7 +582,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 .replace(R.id.overlay_fragment_container,uploadFragment).commit();
         mFrameLayout.setClickable(true);
         getSupportActionBar().hide();
-
     } //startUploadPhoto
 
     @Override
@@ -606,8 +607,14 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     public void UserLoggedIn(String userData) {
         //Create menu again (update login to logout)
         invalidateOptionsMenu();
-        //Start UploadFragment and Upload photo
-        startPhotoUpload();
+        if(photoToBeUploaded){
+            //Start UploadFragment and Upload photo
+            startPhotoUpload();
+        } else {
+            //TODO: login confirmation
+            removeFragment(accountFragment, true);
+        }
+
     } //UserLoggedIn
 
     @Override
@@ -622,12 +629,11 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     @Override
     public void onTermsClicked() {
         //Start UploadFragment and Upload photo
-        //TODO: if there is a photo to upload, do it: if not: go back to MainActivity
         if(photoToBeUploaded){
             startPhotoUpload();
             photoToBeUploaded = false;
         } else{
-            //TODO: loggedInConfirmation + remove
+            //TODO: confirm user has beeen logged in
             removeFragment(termsFragment, false);
         }
     } //onTermsClicked
@@ -646,9 +652,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     public void onUploadFinish() {
         //Refresh user list + remove item that has just been uploaded
         photoToBeUploaded = false;
-        //TODO: do I still need this?
+
         getUserListItems();
-        //mItemList.remove(activeItemPosition);
         mFeedAdapter.notifyDataSetChanged();
         //Show upload message for limited time
         removeFragment(uploadFragment, true);
@@ -688,7 +693,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .remove(f)
                     .commit();
-            mFrameLayout.setClickable(true);
+            mFrameLayout.setClickable(false);
             getSupportActionBar().hide();
         }
     } //removeFragment
@@ -709,6 +714,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     private void updateMenuTitles(){
         MenuItem logOut = menu.findItem(R.id.logout);
         MenuItem logIn = menu.findItem(R.id.login);
+        //TODO: turn this back on
         if(mCurrentUser.isLoggedIn()){
             logOut.setVisible(true);
             logIn.setVisible(false);
@@ -725,8 +731,10 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.login:
-                Intent loginIntent = new Intent(MainActivity.this, AccountActivity.class);
-                startActivity(loginIntent);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.overlay_fragment_container, accountFragment).commit();
+                mFrameLayout.setClickable(true);
+                getSupportActionBar().hide();
                 return true;
             case R.id.logout:
                 mCurrentUser.logOut();

@@ -8,11 +8,14 @@
     android:layout_gravity="bottom"
     tools:context="org.creativecommons.thelist.RandomActivity">
 
-    <TextView
+    <Button
         style="@style/flat_button_light"
-        android:text="@string/cancel_button_label"
+        android:text="@string/action_done"
+        android:visibility="invisible"
+        android:layout_marginTop="0dp"
+        android:textColor="@color/secondary_text_material_light"
         android:id="@+id/doneButton"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
@@ -52,7 +55,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="20dp">
 
-        <!--TODO: make smaller images bigger (because camera button will not be in 1.0)-->
         <ImageButton
             android:id="@+id/YesButton"
             android:layout_width="fill_parent"
@@ -63,6 +65,7 @@
             android:src="@drawable/btn_checkmark"
             android:layout_gravity="center_vertical" />
 
+        <!--TODO: re-add Camera Button (if this is functionality we want)-->
         <ImageButton
             android:id="@+id/CameraButton"
             android:layout_width="wrap_content"

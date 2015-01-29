@@ -33,7 +33,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.RandomActivity;
 import org.creativecommons.thelist.StartActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +61,6 @@ public class ListUser {
     }
 
     public ListUser() {
-
     }
 
     public ListUser(String name, String id) {
@@ -77,10 +75,10 @@ public class ListUser {
     }
 
     public boolean isLoggedIn() {
-        //TODO: Check if User is logged in
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
+        //TODO: what if this fail?
         logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
                 && sharedPreferencesMethods.getUserId() != null;
 
@@ -140,7 +138,6 @@ public class ListUser {
     public void logIn(final String username, final String password, final AccountFragment.LoginClickListener listener) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
-        //Login User
 
         StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -152,18 +149,20 @@ public class ListUser {
                             requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
-                            Log.v(TAG, response);
+                            Log.v("THIS IS THE RESPONSE FOR LOGIN: ", response);
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
-                                Log.v("THIS IS LOGIN USER ID", userID);
+                                String skey = res.getString(ApiConstants.USER_TOKEN);
 
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
-                                        (sharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
+                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
+                                sharedPreferencesMethods.SaveSharedPreference
+                                        (SharedPreferencesMethods.USER_TOKEN_PREFERENCE_KEY, skey);
 
-                                //TODO: Save session token in sharedPreferences
-                                //TODO: Get any list item preferences and add them to userlist
+
+                                //TODO: Save session token in sharedPreferences (googleAM may handle this)
                                 //Add items chosen before login to userlist
                                 //TODO: also add category preferences
                                 JSONArray listItemPref;
@@ -180,6 +179,8 @@ public class ListUser {
                                 listener.UserLoggedIn("hey logged in");
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
+                                //TODO: add proper error message
+
                             }
                         }
                     }
@@ -204,78 +205,77 @@ public class ListUser {
         queue.add(logInUserRequest);
     }
 
-    public void logIn(final String username, final String password, final Context mContext, final String intentCase) {
-        RequestQueue queue = Volley.newRequestQueue(mContext);
-        String url = ApiConstants.LOGIN_USER;
-        //Login User
-
-        StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //Get Response
-                        if(response == null || response.equals("null")) {
-                            Log.v("RESPONSE IS NULL IF YOU ARE HERE", response);
-                            requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
-                                    "Sure you got your email/password combo right?");
-                        } else {
-                            Log.v(TAG, response);
-                            try {
-                                JSONObject res = new JSONObject(response);
-                                userID = res.getString(ApiConstants.USER_ID);
-                                Log.v("THIS IS LOGIN USER ID", userID);
-
-                                //Save userID in sharedPreferences
-                                sharedPreferencesMethods.SaveSharedPreference
-                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
-                                                userID);
-
-                                //TODO: Save session token in sharedPreferences
-                                //TODO: Get any list item preferences and add them to userlist
-                                //Add items chosen before login to userlist
-                                //TODO: also add category preferences
-                                JSONArray listItemPref = sharedPreferencesMethods
-                                        .RetrieveUserItemPreference();
-
-                                if (listItemPref != null && listItemPref.length() > 0) {
-                                    Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
-                                    for (int i = 0; i < listItemPref.length(); i++) {
-                                        Log.v("ITEMS", "ARE BEING ADDED");
-                                        addItemToUserList(listItemPref.getString(i));
-                                    }
-                                } else {
-                                    if (intentCase == "randomActivity") {
-                                        Intent intent = new Intent(mContext, RandomActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        mContext.startActivity(intent);
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                Log.v(TAG,e.getMessage());
-                            }
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v(TAG, "THERE WAS AN ERROR");
-                requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.error_title),
-                        mContext.getString(R.string.error_message));
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", username);
-                params.put(ApiConstants.USER_PASSWORD, password);
-
-                return params;
-            }
-        };
-        queue.add(logInUserRequest);
-    }
+//    public void logIn(final String username, final String password, final Context mContext, final String intentCase) {
+//        RequestQueue queue = Volley.newRequestQueue(mContext);
+//        String url = ApiConstants.LOGIN_USER;
+//        //Login User
+//
+//        StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        //Get Response
+//                        if(response == null || response.equals("null")) {
+//                            Log.v("RESPONSE IS NULL IF YOU ARE HERE", response);
+//                            requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
+//                                    "Sure you got your email/password combo right?");
+//                        } else {
+//                            Log.v(TAG, response);
+//                            try {
+//                                JSONObject res = new JSONObject(response);
+//                                userID = res.getString(ApiConstants.USER_ID);
+//                                Log.v("THIS IS LOGIN USER ID", userID);
+//
+//                                //Save userID in sharedPreferences
+//                                sharedPreferencesMethods.SaveSharedPreference
+//                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY,
+//                                                userID);
+//
+//                                //TODO: Save session token in sharedPreferences (googleAM may handle this)
+//                                //Add items chosen before login to userlist
+//                                //TODO: also add category preferences
+//                                JSONArray listItemPref = sharedPreferencesMethods
+//                                        .RetrieveUserItemPreference();
+//
+//                                if (listItemPref != null && listItemPref.length() > 0) {
+//                                    Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
+//                                    for (int i = 0; i < listItemPref.length(); i++) {
+//                                        Log.v("ITEMS", "ARE BEING ADDED");
+//                                        addItemToUserList(listItemPref.getString(i));
+//                                    }
+//                                } else {
+//                                    if (intentCase == "randomActivity") {
+//                                        Intent intent = new Intent(mContext, MainActivity.class);
+//                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                        mContext.startActivity(intent);
+//                                    }
+//                                }
+//                            } catch (JSONException e) {
+//                                Log.v(TAG,e.getMessage());
+//                            }
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.v(TAG, "THERE WAS AN ERROR");
+//                requestMethods.showErrorDialog(mContext,
+//                        mContext.getString(R.string.error_title),
+//                        mContext.getString(R.string.error_message));
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = new HashMap<String, String>();
+//                params.put("username", username);
+//                params.put(ApiConstants.USER_PASSWORD, password);
+//
+//                return params;
+//            }
+//        };
+//        queue.add(logInUserRequest);
+//    }
 
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
@@ -313,7 +313,7 @@ public class ListUser {
                 requestMethods.showErrorDialog(mContext,
                         mContext.getString(R.string.error_title),
                         mContext.getString(R.string.error_message));
-                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
+                Log.v("ERROR ADDING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
             }
         });
         queue.add(postItemRequest);
@@ -324,29 +324,43 @@ public class ListUser {
     public void removeItemFromUserList(final String itemID){
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        //TODO: session token? + REMOVE ITEM CORRECT URL
-        String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
+        if(!logInState){
+            //If not logged in, remove item from sharedPreferences
+            sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 
-        StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //get Response
-                        Log.v("Response: ", response);
-                        Log.v(TAG,"AN ITEM IS BEING REMOVED");
-                        //TODO: do something with response?
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-                //TODO: Add “not successful“ toast
-                requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.error_title),
-                        mContext.getString(R.string.error_message));
-                Log.v("HELLO", "THIS IS THE ERROR BEING DISPLAYED");
-            }
-        });
-        queue.add(deleteItemRequest);
+        } else { //If logged in, remove from DB
+            String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
+            final String skey = sharedPreferencesMethods.RetrieveUserToken();
+
+            StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //get Response
+                            Log.v("Response: ", response);
+                            Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                            //TODO: do something with response?
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //TODO: Add “not successful“ toast
+                    requestMethods.showErrorDialog(mContext,
+                            mContext.getString(R.string.error_title),
+                            mContext.getString(R.string.error_message));
+                    Log.v("ERROR DELETING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(ApiConstants.USER_TOKEN, skey);
+
+                    return params;
+                }
+            };
+            queue.add(deleteItemRequest);
+        }
     } //removeItemFromUserList
 
 } //ListUser

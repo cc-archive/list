@@ -4,7 +4,7 @@
     style="@style/layout_main"
     android:weightSum="5"
     android:orientation="vertical"
-    tools:context="org.creativecommons.thelist.AccountActivity">
+    tools:context="org.creativecommons.thelist.misc.AccountActivity">
 
     <TextView
         android:layout_width="match_parent"

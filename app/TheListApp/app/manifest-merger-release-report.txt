@@ -27,50 +27,56 @@ ADDED from AndroidManifest.xml:7:5
 		ADDED from AndroidManifest.xml:7:22
 application
 ADDED from AndroidManifest.xml:9:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
-MERGED from com.android.support:support-v4:21.0.3:16:5
-MERGED from com.google.android.gms:play-services:6.5.87:20:5
+MERGED from com.google.android.gms:play-services-base:6.5.87:20:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
-	android:label
+MERGED from com.nispok:snackbar:2.7.4:10:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.melnykov:floatingactionbutton:1.1.0:12:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
+	android:screenOrientation
 		ADDED from AndroidManifest.xml:13:9
+	android:label
+		ADDED from AndroidManifest.xml:14:9
 	android:allowBackup
 		ADDED from AndroidManifest.xml:11:9
 	android:icon
 		ADDED from AndroidManifest.xml:12:9
 	android:theme
-		ADDED from AndroidManifest.xml:14:9
+		ADDED from AndroidManifest.xml:15:9
 	android:name
 		ADDED from AndroidManifest.xml:10:9
 activity#org.creativecommons.thelist.MainActivity
-ADDED from AndroidManifest.xml:15:9
+ADDED from AndroidManifest.xml:16:9
 	android:label
-		ADDED from AndroidManifest.xml:17:13
-	android:theme
 		ADDED from AndroidManifest.xml:18:13
 	android:name
-		ADDED from AndroidManifest.xml:16:13
+		ADDED from AndroidManifest.xml:17:13
 activity#org.creativecommons.thelist.CategoryListActivity
 ADDED from AndroidManifest.xml:20:9
 	android:noHistory
 		ADDED from AndroidManifest.xml:23:13
 	android:label
 		ADDED from AndroidManifest.xml:22:13
-	android:theme
-		ADDED from AndroidManifest.xml:24:13
 	android:name
 		ADDED from AndroidManifest.xml:21:13
 activity#org.creativecommons.thelist.RandomActivity
-ADDED from AndroidManifest.xml:26:9
+ADDED from AndroidManifest.xml:25:9
 	android:noHistory
-		ADDED from AndroidManifest.xml:29:13
-	android:label
 		ADDED from AndroidManifest.xml:28:13
-	android:name
+	android:label
 		ADDED from AndroidManifest.xml:27:13
-activity#org.creativecommons.thelist.AccountActivity
+	android:theme
+		ADDED from AndroidManifest.xml:29:13
+	android:name
+		ADDED from AndroidManifest.xml:26:13
+activity#org.creativecommons.thelist.misc.AccountActivity
 ADDED from AndroidManifest.xml:31:9
 	android:label
 		ADDED from AndroidManifest.xml:33:13
@@ -83,11 +89,13 @@ ADDED from AndroidManifest.xml:34:13
 	android:value
 		ADDED from AndroidManifest.xml:36:17
 activity#org.creativecommons.thelist.StartActivity
-ADDED from AndroidManifest.xml:39:9
+ADDED from AndroidManifest.xml:38:9
 	android:label
+		ADDED from AndroidManifest.xml:40:13
+	android:theme
 		ADDED from AndroidManifest.xml:41:13
 	android:name
-		ADDED from AndroidManifest.xml:40:13
+		ADDED from AndroidManifest.xml:39:13
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:42:13
 action#android.intent.action.MAIN
@@ -95,22 +103,28 @@ ADDED from AndroidManifest.xml:43:17
 	android:name
 		ADDED from AndroidManifest.xml:43:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:45:17
+ADDED from AndroidManifest.xml:44:17
 	android:name
-		ADDED from AndroidManifest.xml:45:27
+		ADDED from AndroidManifest.xml:44:27
 meta-data#com.google.android.gms.analytics.globalConfigResource
-ADDED from AndroidManifest.xml:50:9
+ADDED from AndroidManifest.xml:49:9
 	android:resource
 		ADDED from AndroidManifest.xml:51:13
 	android:name
-		ADDED from AndroidManifest.xml:50:20
+		ADDED from AndroidManifest.xml:50:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
+MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.google.android.gms:play-services-base:6.5.87:18:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
-MERGED from com.google.android.gms:play-services:6.5.87:18:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.nispok:snackbar:2.7.4:6:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.melnykov:floatingactionbutton:1.1.0:8:5
 MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 	android:targetSdkVersion
@@ -120,13 +134,15 @@ MERGED from com.android.support:support-v4:21.0.3:15:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 meta-data#com.google.android.gms.version
-ADDED from com.google.android.gms:play-services:6.5.87:21:9
+ADDED from com.google.android.gms:play-services-base:6.5.87:21:9
 	android:name
-		ADDED from com.google.android.gms:play-services:6.5.87:22:13
+		ADDED from com.google.android.gms:play-services-base:6.5.87:22:13
 	android:value
-		ADDED from com.google.android.gms:play-services:6.5.87:23:13
+		ADDED from com.google.android.gms:play-services-base:6.5.87:23:13
 activity#android.support.v7.widget.TestActivity
 ADDED from com.android.support:recyclerview-v7:21.0.3:18:9
+MERGED from com.android.support:recyclerview-v7:21.0.3:18:9
+MERGED from com.android.support:recyclerview-v7:21.0.3:18:9
 	android:label
 		ADDED from com.android.support:recyclerview-v7:21.0.3:18:19
 	android:name
