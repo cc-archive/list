@@ -39,6 +39,7 @@ import org.json.JSONObject;
 public class MainListItem {
     private String itemName, makerName;
     private String itemID;
+    private boolean error;
     private RequestMethods requestMethods;
     private Context mContext;
     private MainActivity mainActivity;
@@ -51,6 +52,7 @@ public class MainListItem {
         this.itemID = itemID;
         this.itemName = name;
         this.makerName = maker;
+        this.error =  false;
     }
 
     public String getItemID() {
@@ -75,6 +77,10 @@ public class MainListItem {
 
     public void setMakerName(String maker) {
         this.makerName = maker;
+    }
+
+    public void setError(boolean bol){
+        this.error = bol;
     }
 
     public void setRequestMethods(RequestMethods rm) {
@@ -104,6 +110,7 @@ public class MainListItem {
                         setItemName(jsonObject.getString(ApiConstants.ITEM_NAME));
                         setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
+                        Log.v("ITEM ADDED NAME: ", getItemName());
                         completed = true;
                         mainActivity.CheckComplete();
                     } catch (JSONException e) {

@@ -205,6 +205,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         } else {
             mRecyclerView.setVisibility(View.INVISIBLE);
             mFeedAdapter.notifyDataSetChanged();
+            //getUserListItems();
         }
     } //onResume
 
@@ -231,14 +232,14 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
-            Log.v("HELLO", "this user is logged in");
+            //Log.v("HELLO", "this user is logged in");
             itemRequesturl = ApiConstants.GET_USER_LIST + userID;
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        //Log.v("RESPONSE", response.toString());
+                        Log.v("RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
@@ -251,6 +252,15 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
                                     listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
                                     mItemList.add(listItem);
+                                } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
+                                    //TODO: Does this work? (add error items to the top)
+                                    MainListItem listItem = new MainListItem();
+                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
+                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
+                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
+                                    listItem.setError(true);
+                                    mItemList.add(0, listItem);
+
                                 } else {
                                    continue;
                                 }
@@ -288,12 +298,11 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                     Log.v(TAG,e.getMessage());
                 }
                 mItemList.add(listItem);
-                //Log.v("HELLO ITEMS", mItemList.toString());
+                Log.v("HELLO ITEMS", mItemList.toString());
             }
             mFeedAdapter.notifyDataSetChanged();
         }
     } //getUserListItems
-
 
     private void initRecyclerView(){
         SwipeDismissRecyclerViewTouchListener touchListener =
@@ -305,7 +314,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                 for (int position : reverseSortedPositions) {
                                     // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-                                    Log.v("Checking: ", mLayoutManager.findViewByPosition(position).toString());
 
                                     //Get item details for UNDO
                                     activeItemPosition = position;
@@ -315,16 +323,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     mItemList.remove(position);
                                     mFeedAdapter.notifyItemRemoved(position);
                                     mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
-                                    //TODO: remove item from user list
 
-                                    if(!mCurrentUser.isLoggedIn()){
-
-                                    } else {
-                                        //TODO: remove item from list in DB
-                                    }
                                     //Snackbar message
                                     showSnackbar();
-
                                 }
                             }
                         });
@@ -434,8 +435,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             @Override
                             public void onDismissed(Snackbar snackbar) {
                                 //TODO: delete item from user’s list
-                                //mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
-
+                                mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
+                                getUserListItems();
                             }
                         }) //event listener
                 , MainActivity.this);
@@ -707,13 +708,14 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     private void updateMenuTitles(){
         MenuItem logOut = menu.findItem(R.id.logout);
         MenuItem logIn = menu.findItem(R.id.login);
-        if(mCurrentUser.isLoggedIn()){
-            logOut.setVisible(true);
-            logIn.setVisible(false);
-        } else {
-            logOut.setVisible(false);
-            logIn.setVisible(true);
-        }
+        //TODO: turn this back on
+//        if(mCurrentUser.isLoggedIn()){
+//            logOut.setVisible(true);
+//            logIn.setVisible(false);
+//        } else {
+//            logOut.setVisible(false);
+//            logIn.setVisible(true);
+//        }
     } //updateMenuTitles
 
     @Override

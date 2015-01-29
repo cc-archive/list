@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist.adapters;
+package org.creativecommons.thelist.misc;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.adapters.MainListItem;
 
 import java.util.List;
 

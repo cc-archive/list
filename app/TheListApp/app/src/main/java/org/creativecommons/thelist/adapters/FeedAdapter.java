@@ -44,7 +44,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
         //this.mainActivity = (MainActivity) activity;
         this.listItems = listItems;
         inflater = LayoutInflater.from(context);
-
     }
 
     @Override

@@ -133,6 +133,7 @@ public class RandomActivity extends Activity {
                         mItemList.add(listItem);
                     //or if user is not logged in…
                     } else {
+                        Log.v("NON-LOGGED IN, ADDED ITEM ID: ", mItemID);
                         //Create list for non-existent user
                         MainListItem listItem = new MainListItem();
                         listItem.setItemID(mItemID);
@@ -166,14 +167,18 @@ public class RandomActivity extends Activity {
                             try {
                                 userItemList.add(0, oldItemArray.getString(i));
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.v(TAG, e.getMessage());
                             }
                         }
-
+                        Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());
                         //Save Array as String to sharedPreferences
                         sharedPreferencesMethods.SaveSharedPreference
                                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                         userItemList.toString());
+
+                        String sharedPref = sharedPreferencesMethods.RetrieveSharedPreference
+                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
+                        Log.v("ALL ITEMS IN USER PREF", sharedPref);
 
                         //Start MainActivity
                         Intent intent = new Intent(mContext, MainActivity.class);

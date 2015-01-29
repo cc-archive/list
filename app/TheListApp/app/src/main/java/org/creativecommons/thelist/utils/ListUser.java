@@ -61,7 +61,6 @@ public class ListUser {
     }
 
     public ListUser() {
-
     }
 
     public ListUser(String name, String id) {
@@ -76,10 +75,10 @@ public class ListUser {
     }
 
     public boolean isLoggedIn() {
-        //TODO: Check if User is logged in
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
+        //TODO: what if this fail?
         logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
                 && sharedPreferencesMethods.getUserId() != null;
 
@@ -155,11 +154,15 @@ public class ListUser {
                             try {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
+                                String skey = res.getString(ApiConstants.USER_TOKEN);
                                 Log.v("THIS IS LOGIN USER ID", userID);
 
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
-                                        (sharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
+                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
+                                sharedPreferencesMethods.SaveSharedPreference
+                                        (SharedPreferencesMethods.USER_TOKEN_PREFERENCE_KEY, skey);
+
 
                                 //TODO: Save session token in sharedPreferences (googleAM may handle this)
                                 //Add items chosen before login to userlist
@@ -323,28 +326,43 @@ public class ListUser {
     public void removeItemFromUserList(final String itemID){
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
+        if(!logInState){
+            //TODO: remove item from sharedPreferences (use String ID to remove the string)
+            sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 
-        StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //get Response
-                        Log.v("Response: ", response);
-                        Log.v(TAG,"AN ITEM IS BEING REMOVED");
-                        //TODO: do something with response?
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse (VolleyError error){
-                //TODO: Add “not successful“ toast
-                requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.error_title),
-                        mContext.getString(R.string.error_message));
-                Log.v("ERROR DELETING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
-            }
-        });
-        queue.add(deleteItemRequest);
+        } else {
+            String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
+            final String skey = sharedPreferencesMethods.RetrieveUserToken();
+
+            StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //get Response
+                            Log.v("Response: ", response);
+                            Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                            //TODO: do something with response?
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //TODO: Add “not successful“ toast
+                    requestMethods.showErrorDialog(mContext,
+                            mContext.getString(R.string.error_title),
+                            mContext.getString(R.string.error_message));
+                    Log.v("ERROR DELETING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(ApiConstants.USER_TOKEN, skey);
+
+                    return params;
+                }
+            };
+            queue.add(deleteItemRequest);
+        }
     } //removeItemFromUserList
 
 } //ListUser
