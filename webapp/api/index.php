@@ -160,32 +160,35 @@ with('/api/users', function () {
 
         $result = curl_exec($curl);
 
-        $user = new UserList();
+        if ($result) {     // if the user exists in CAS
 
-        $foo = $user->getUserInfo($result);
+            $user = new UserList();
 
-        if (count($foo) == 0) {
+            $foo = $user->getUserInfo($result); // get the userID, etc
 
-            global $adodb;
+            if (count($foo) == 0) {  // first time on The List
 
-            $email = $request->param('username');
+                $user->makeUser($result); // make a User
 
-            $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
-            , $adodb->qstr($email));
-
-            try {
-                $res = $adodb->Execute($q);
-                $user = new UserList();
-                $foo = $user->getUserInfo($email);
-
-            } catch (Exception $e) {
-                echo "There was an error";
-                header('Content-Type: text/plain');
-                exit;
+                $foo = $user->getUserInfo($result); // now get the userID
             }
+
+            // Now let's make a session for the user
+
+            $userid = $foo['id'];
+
+            $session = $user->getUserSession($userid);
+
+            $output = json_encode($session, JSON_PRETTY_PRINT);
+            echo $output;
+            
         }
 
-        echo json_encode($foo, JSON_PRETTY_PRINT);
+        else { // invalid user
+
+            http_response_code(401);                
+
+        }
 
         curl_close($curl);
 
@@ -221,6 +224,24 @@ with('/api/makers', function () {
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
 
+    });
+
+});
+
+with('/api/userlist/delete', function() {
+
+    respond('POST', '/[:userid]/[:id]', function ($request, $response) {
+
+        $userid = $request->userid;
+        $listitem = $request->id;      
+        $skey = $request->param('skey');
+
+        $list = new UserList();
+
+        $response = $list->deleteItem($userid, $listitem,$skey);
+
+        $output = json_encode($response, JSON_PRETTY_PRINT);
+        echo $output;
     });
 
 });
