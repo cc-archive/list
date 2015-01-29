@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryLight"
+    android:background="@android:color/white"
     android:weightSum="6"
     android:padding="20dp"
     tools:context="fragments.ExplainerFragment">

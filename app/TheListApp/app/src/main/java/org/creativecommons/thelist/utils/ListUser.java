@@ -138,7 +138,6 @@ public class ListUser {
     public void logIn(final String username, final String password, final AccountFragment.LoginClickListener listener) {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
-        //Login User
 
         StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -155,7 +154,6 @@ public class ListUser {
                                 JSONObject res = new JSONObject(response);
                                 userID = res.getString(ApiConstants.USER_ID);
                                 String skey = res.getString(ApiConstants.USER_TOKEN);
-                                Log.v("THIS IS LOGIN USER ID", userID);
 
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
@@ -327,10 +325,10 @@ public class ListUser {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
         if(!logInState){
-            //TODO: remove item from sharedPreferences (use String ID to remove the string)
+            //If not logged in, remove item from sharedPreferences
             sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 
-        } else {
+        } else { //If logged in, remove from DB
             String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
             final String skey = sharedPreferencesMethods.RetrieveUserToken();
 

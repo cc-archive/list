@@ -38,12 +38,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -79,11 +76,11 @@ public class UploadFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName("Confirm Fragment");
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName("Confirm Fragment");
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_upload, container, false);
@@ -146,9 +143,6 @@ public class UploadFragment extends Fragment {
 
         SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
 
-        Log.v("SHARED PREF", sharedPreferencesMethods.getUserId());
-        Log.v("LISTUSER", mCurrentUser.getUserID());
-
         String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + itemID;
 
         //Test file size
@@ -178,7 +172,6 @@ public class UploadFragment extends Fragment {
                     //TODO: add switch for all possible error codes
                     displayFailMessage();
                     mCallback.onUploadFinish();
-
                 }
             }) {
                 @Override

@@ -8,11 +8,14 @@
     android:layout_gravity="bottom"
     tools:context="org.creativecommons.thelist.RandomActivity">
 
-    <TextView
+    <Button
         style="@style/flat_button_light"
-        android:text="@string/cancel_button_label"
+        android:text="@string/action_done"
+        android:visibility="invisible"
+        android:layout_marginTop="0dp"
+        android:textColor="@color/secondary_text_material_light"
         android:id="@+id/doneButton"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"

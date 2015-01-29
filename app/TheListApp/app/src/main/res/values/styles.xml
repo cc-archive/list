@@ -51,6 +51,7 @@
 
     <!--Input Fields-->
     <style name="input_fields" parent="@style/EditTextStyle">
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
         <item name="android:textColorHint">@color/primary_text_disabled_material_dark</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

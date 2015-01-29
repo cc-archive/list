@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,12 +38,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -69,9 +67,6 @@ public class RandomActivity extends Activity {
     String mItemName;
     String mItemID;
 
-    //PUT request (if user is logged in)
-    protected JSONObject mPutResponse;
-
     //Handle Data
     private List<MainListItem> mItemList;
     //private ArrayList<String> mItemsViewed = new ArrayList<String>();
@@ -79,9 +74,9 @@ public class RandomActivity extends Activity {
     //UI Elements
     TextView mTextView;
     ProgressBar mProgressBar;
+    Button mDoneButton;
 
     //Shared variables
-    int itemAddedCount;
     int itemPositionCount = 0;
 
     @Override
@@ -93,77 +88,85 @@ public class RandomActivity extends Activity {
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
+//        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName(TAG);
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
-
-        mItemList = new ArrayList<MainListItem>();
+        mItemList = new ArrayList<>();
         mTextView = (TextView) findViewById(R.id.item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mDoneButton = (Button) findViewById(R.id.doneButton);
 
         //Picker Buttons
-        ImageButton YesButton = (ImageButton) findViewById(R.id.YesButton);
-        ImageButton NoButton = (ImageButton) findViewById(R.id.NoButton);
-        ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
+        ImageButton yesButton = (ImageButton) findViewById(R.id.YesButton);
+        ImageButton noButton = (ImageButton) findViewById(R.id.NoButton);
+        //TODO: add camera functionality?
+        //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
         if(requestMethods.isNetworkAvailable(mContext)) {
             mProgressBar.setVisibility(View.VISIBLE);
             getRandomItemRequest();
 
             //Yes Button Listener
-            YesButton.setOnClickListener(new View.OnClickListener() {
+            yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Log.v("THIS IS ITEMLIST", mItemList.toString());
+                    //Add items to ItemList
+                    MainListItem listItem = new MainListItem();
+                    listItem.setItemID(mItemID);
+                    listItem.setItemName(mItemName);
+                    listItem.setMakerName(mMakerName);
+                    mItemList.add(listItem);
 
-                    //Once yes has been hit 3 times, forward to
-                    //If User is logged in…
-                    if(mCurrentUser.isLoggedIn()) {
+                    //Toast: Confirm List Item has been added
+                    final Toast toast = Toast.makeText(RandomActivity.this,
+                            "Added to Your List", Toast.LENGTH_SHORT);
+                    toast.show();
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            toast.cancel();
+                        }
+                    }, 1000);
+
+                    //If logged in, add item to user’s list right away
+                    if (mCurrentUser.isLoggedIn()) {
                         Log.v("LOGGED IN", "user is logged in");
                         //Add to UserList
-                        mCurrentUser.addItemToUserList(mItemID); //includes confirmation toast
-
-                        //Add items to ItemList
-                        MainListItem listItem = new MainListItem();
-                        listItem.setItemID(mItemID);
-                        listItem.setItemName(mItemName);
-                        listItem.setMakerName(mMakerName);
-                        mItemList.add(listItem);
-                    //or if user is not logged in…
-                    } else {
-                        Log.v("NON-LOGGED IN, ADDED ITEM ID: ", mItemID);
-                        //Create list for non-existent user
-                        MainListItem listItem = new MainListItem();
-                        listItem.setItemID(mItemID);
-                        listItem.setItemName(mItemName);
-                        listItem.setMakerName(mMakerName);
-                        mItemList.add(listItem);
-
-                        //Toast: Confirm List Item has been added
-                        final Toast toast = Toast.makeText(RandomActivity.this,
-                                "Added to Your List", Toast.LENGTH_SHORT);
-                        toast.show();
-                        new android.os.Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                toast.cancel();
-                            }
-                        }, 1500);
+                        mCurrentUser.addItemToUserList(mItemID); //NB: includes confirmation toast
                     }
-                    //If mItemList has less than 3 items
-                    if(mItemList.size() < 3) {
-                        //Show me a new item
-                        updateView();
-                    //otherwise: save the items to shared preferences and go to new task
-                    } else {
-                        //Get array of selected item IDS
+                    //Display a new item
+                    updateView();
+                    //show doneButton if user has selected at least 3 items
+                    if (mItemList.size() == 3) { //once it has 3 items
+                        mDoneButton.setVisibility(View.VISIBLE);
+                    }
+                } //OnClick
+            }); //YesButton.setOnClickListener
+
+            //No Button Functionality
+            noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateView();
+                    if(mItemList.size() >= 7 && mDoneButton.getVisibility() == View.INVISIBLE){
+                        mDoneButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            //Done Button Functionality
+            mDoneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Get array of selected item IDS
+                    if(!mCurrentUser.isLoggedIn()){
                         List<String> userItemList = requestMethods.getItemIds(mItemList);
                         JSONArray oldItemArray = sharedPreferencesMethods.RetrieveUserItemPreference();
                         //Log.v(TAG,mItemList.toString());
-
-                        for(int i=0; i < oldItemArray.length(); i++) {
+                        for (int i = 0; i < oldItemArray.length(); i++) {
                             try {
                                 userItemList.add(0, oldItemArray.getString(i));
                             } catch (JSONException e) {
@@ -179,37 +182,17 @@ public class RandomActivity extends Activity {
                         String sharedPref = sharedPreferencesMethods.RetrieveSharedPreference
                                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
                         Log.v("ALL ITEMS IN USER PREF", sharedPref);
-
-                        //Start MainActivity
-                        Intent intent = new Intent(mContext, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
                     }
-                } //OnClick
-            }); //YesButton.setOnClickListener
-
-            //No Button Functionality
-            NoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updateView();
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
-            });
-
-            //TODO: Camera Intent, (possibly remove if user is not logged in)
-            //Camera Button Functionality
-//            CameraButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
-        } else {
-            //Display network error
+            }); //Done Button
+        } else { //Display network error
             requestMethods.showErrorDialog(mContext,
-                    getString(R.string.error_title),
-                    getString(R.string.error_message));
+                    getString(R.string.error_network_title),
+                    getString(R.string.error_network_message));
             //Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
         }
     } //onCreate

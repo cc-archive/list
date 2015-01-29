@@ -81,7 +81,7 @@ public final class ApiConstants {
     public static final String ADD_ITEM = URL + "/userlist/";
     //DELETE Item from User List (+ ID, +ItemID)
     //TODO: update with real info
-    public static final String REMOVE_ITEM = URL + "/userlist/";
+    public static final String REMOVE_ITEM = URL + "/userlist/delete/";
     //POST photo (+ ID, + ItemID)
     public static final String ADD_PHOTO = URL + "/photos/";
     //POST login (+ email and password)

@@ -11,7 +11,7 @@
 
     <style name="ListTheme" parent="ListThemeBase">
         <item name="android:buttonStyle">@style/raised_button</item>
-        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="android:editTextStyle">@style/input_fields</item>
     </style>
 
     <style name="ListThemeNoActionBar" parent="ListTheme">

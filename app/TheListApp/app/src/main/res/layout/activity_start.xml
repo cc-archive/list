@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_margin="16dp"
+        android:layout_margin="30dp"
         android:orientation="vertical"
         android:weightSum="5"
         tools:context="org.creativecommons.thelist.StartActivity">
@@ -27,12 +27,15 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="130dp" />
+                android:layout_marginTop="130dp"
+                android:layout_marginBottom="20dp"/>
 
+            <!--TODO: MAKE UP TAGLINE-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="The List is a collaborative project to build a global collection of images that anyone can use"
+                android:visibility="gone"
+                android:text="Some kind of tagline"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:id="@+id/intro"
                 android:gravity="center"

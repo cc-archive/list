@@ -76,6 +76,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -108,7 +109,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.ItemDecoration mItemDecoration;
+    //private RecyclerView.ItemDecoration mItemDecoration;
     private List<MainListItem> mItemList = new ArrayList<>();
 
     //UI Elements
@@ -176,10 +177,11 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mItemDecoration =
+        RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        mRecyclerView.addItemDecoration(mItemDecoration);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
+        Log.v("Creating", "A new feed adapter");
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -187,13 +189,15 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         initRecyclerView();
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
-        if(requestMethods.isNetworkAvailable(mContext)) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            getUserListItems();
-        }
-        else {
-            Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
-        }
+//        if(requestMethods.isNetworkAvailable(mContext)) {
+//            mProgressBar.setVisibility(View.VISIBLE);
+//            Log.v("Get user", "On create IS network available");
+//            getUserListItems();
+//        }
+//        else {
+            //TODO This is always useful, move to getuserlists
+//            Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
+//        }
     } //onCreate
 
     @Override
@@ -201,11 +205,16 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         super.onResume();
         Log.v("ON RESUME ", "IS BEING CALLED");
         if(mCurrentUser.isLoggedIn()){
+            Log.v("Get user", "On resume");
             getUserListItems();
         } else {
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            mFeedAdapter.notifyDataSetChanged();
-            //getUserListItems();
+            if(mItemList.size() == 0){
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                getUserListItems();
+            } else {
+                mFeedAdapter.notifyDataSetChanged();
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
         }
     } //onResume
 
@@ -217,14 +226,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        //Collections.reverse(mItemList);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
 
     //GET USER LIST ITEMS
     private void getUserListItems() {
-        Log.v(TAG, "GET USER LIST ITEMS CALLED");
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonArrayRequest userListRequest;
         String itemRequesturl;
@@ -239,7 +246,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("RESPONSE", response.toString());
+                        Log.v("Get user list RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
@@ -268,8 +275,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                 Log.v(TAG, e.getMessage());
                             }
                         }
+                        Collections.reverse(mItemList);
                         mProgressBar.setVisibility(View.INVISIBLE);
-                        //Collections.reverse(mItemList);
                         mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -300,6 +307,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 mItemList.add(listItem);
                 Log.v("HELLO ITEMS", mItemList.toString());
             }
+            Collections.reverse(mItemList);
             mFeedAdapter.notifyDataSetChanged();
         }
     } //getUserListItems
@@ -383,7 +391,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             //Log.v("HI", "ON TOUCH EVENT CALLED");
 
         }
-    }
+    } //RecyclerItemClickListener
 
     public void showSnackbar(){
         SnackbarManager.show(
@@ -434,14 +442,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                //TODO: delete item from user’s list
+                                //TODO: delete item from user’s list in DB (that’s all this should do!)
                                 mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
-                                getUserListItems();
                             }
                         }) //event listener
                 , MainActivity.this);
     } //showSnackbar
-
 
     //DIALOG FOR LIST ITEM ACTION
     public DialogInterface.OnClickListener mDialogListener =
@@ -709,13 +715,13 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         MenuItem logOut = menu.findItem(R.id.logout);
         MenuItem logIn = menu.findItem(R.id.login);
         //TODO: turn this back on
-//        if(mCurrentUser.isLoggedIn()){
-//            logOut.setVisible(true);
-//            logIn.setVisible(false);
-//        } else {
-//            logOut.setVisible(false);
-//            logIn.setVisible(true);
-//        }
+        if(mCurrentUser.isLoggedIn()){
+            logOut.setVisible(true);
+            logIn.setVisible(false);
+        } else {
+            logOut.setVisible(false);
+            logIn.setVisible(true);
+        }
     } //updateMenuTitles
 
     @Override
