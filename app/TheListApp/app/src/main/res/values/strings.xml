@@ -131,5 +131,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_done">DONE</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_login_bundle_key">isMenuLogin</string>
+    <string name="account_menu_login_label">Login to your CCID</string>
 
 </resources>

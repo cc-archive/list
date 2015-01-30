@@ -95,7 +95,7 @@ public class RandomActivity extends Activity {
 //        t.send(new HitBuilders.AppViewBuilder().build());
 
         mItemList = new ArrayList<>();
-        mTextView = (TextView) findViewById(R.id.item_text);
+        mTextView = (TextView) findViewById(R.id.account_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mDoneButton = (Button) findViewById(R.id.doneButton);
 

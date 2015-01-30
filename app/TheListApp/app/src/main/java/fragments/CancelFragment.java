@@ -56,6 +56,9 @@ public class CancelFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+
+
         mCallback.onCancelStart();
     }
 

@@ -37,7 +37,7 @@
         android:layout_alignParentEnd="false">
 
         <TextView
-            android:id="@+id/item_text"
+            android:id="@+id/account_text"
             android:textSize="35sp"
             android:textStyle="normal"
             android:maxLines="5"

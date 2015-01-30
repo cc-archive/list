@@ -109,7 +109,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    //private RecyclerView.ItemDecoration mItemDecoration;
     private List<MainListItem> mItemList = new ArrayList<>();
 
     //UI Elements
@@ -123,7 +122,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     UploadFragment uploadFragment = new UploadFragment();
     CancelFragment cancelFragment = new CancelFragment();
 
+    //Checks
     private boolean photoToBeUploaded;
+    private boolean menuLogin;
 
     // --------------------------------------------------------
 
@@ -134,6 +135,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         mContext = this;
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         requestMethods = new RequestMethods(mContext);
+        menuLogin = false;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -165,6 +167,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setEnabled(false);
+        mFab.setVisibility(View.GONE);
+        mFab.hide();
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +190,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         initRecyclerView();
 
         //If Network Connection is available, get User’s Items (API, or local if not logged in)
@@ -203,15 +207,25 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     @Override
     public void onResume() {
         super.onResume();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFab.setEnabled(true);
+            }
+        }, 500);
+
         Log.v("ON RESUME ", "IS BEING CALLED");
         if(mCurrentUser.isLoggedIn()){
             Log.v("Get user", "On resume");
             getUserListItems();
         } else {
             if(mItemList.size() == 0){
+                Log.v("THERE ARE NO ITEMS: ", "Annd not logged in");
                 mRecyclerView.setVisibility(View.INVISIBLE);
                 getUserListItems();
             } else {
+                Log.v("THERE ARE ITEMS: ", "Annd not logged in");
                 mFeedAdapter.notifyDataSetChanged();
                 mRecyclerView.setVisibility(View.VISIBLE);
             }
@@ -226,6 +240,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
+        mFab.show();
+        mFab.setVisibility(View.VISIBLE);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
@@ -236,17 +252,17 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         JsonArrayRequest userListRequest;
         String itemRequesturl;
         JSONArray itemIds;
-
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
             //Log.v("HELLO", "this user is logged in");
             itemRequesturl = ApiConstants.GET_USER_LIST + userID;
+            Log.v("URL FOR USERLIST ITEMS: ", itemRequesturl);
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("Get user list RESPONSE", response.toString());
+                        Log.v("Get USER LIST RESPONSE", response.toString());
                         mItemList.clear();
 
                         for(int i=0; i < response.length(); i++) {
@@ -277,6 +293,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                         }
                         Collections.reverse(mItemList);
                         mProgressBar.setVisibility(View.INVISIBLE);
+                        mFab.show();
+                        mFab.setVisibility(View.VISIBLE);
                         mFeedAdapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
@@ -431,6 +449,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismiss(Snackbar snackbar) {
+                                //Pause touch input
+
                                 TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
                                         -snackbar.getHeight(), 0);
                                 tsa2.setInterpolator(interpolator);
@@ -553,6 +573,10 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             if(mCurrentUser.isLoggedIn()) {
                 startPhotoUpload();
             } else {
+                Bundle b = new Bundle();
+                b.putSerializable(getString(R.string.menu_login_bundle_key), menuLogin);
+                accountFragment.setArguments(b);
+
                 //Load accountFragment
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.overlay_fragment_container, accountFragment).commit();
@@ -605,6 +629,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
     @Override
     public void UserLoggedIn(String userData) {
+        menuLogin = false;
         //Create menu again (update login to logout)
         invalidateOptionsMenu();
         if(photoToBeUploaded){
@@ -618,13 +643,19 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     } //UserLoggedIn
 
     @Override
-    public void CancelUpload() {
-        //Show cancelledFragment
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container, cancelFragment)
-                .commit();
-    } //CancelUpload
+    public void CancelLogin() {
+        if(menuLogin){
+            removeFragment(accountFragment, false);
+            menuLogin = false;
+        } else {
+            //Show cancelledFragment
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(R.id.overlay_fragment_container, cancelFragment)
+                    .commit();
+        }
+
+    } //CancelLogin
 
     @Override
     public void onTermsClicked() {
@@ -633,7 +664,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             startPhotoUpload();
             photoToBeUploaded = false;
         } else{
-            //TODO: confirm user has beeen logged in
+            //TODO: confirm user has been logged in
             removeFragment(termsFragment, false);
         }
     } //onTermsClicked
@@ -667,7 +698,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         removeFragment(cancelFragment, true);
     } //onCancelStart
 
-
     //REMOVE FRAGMENT HELPER
     public void removeFragment(final Fragment f, boolean delay){
         if(delay){
@@ -694,7 +724,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                     .remove(f)
                     .commit();
             mFrameLayout.setClickable(false);
-            getSupportActionBar().hide();
+            getSupportActionBar().show();
         }
     } //removeFragment
 
@@ -731,6 +761,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.login:
+                menuLogin = true;
+
+                Bundle b = new Bundle();
+                b.putSerializable(getString(R.string.menu_login_bundle_key), menuLogin);
+                accountFragment.setArguments(b);
+
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.overlay_fragment_container, accountFragment).commit();
                 mFrameLayout.setClickable(true);

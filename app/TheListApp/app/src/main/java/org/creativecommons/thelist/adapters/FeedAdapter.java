@@ -39,9 +39,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
     private List<MainListItem> listItems; //Collections.emptyList()
 
     public FeedAdapter(Context context, List<MainListItem> listItems) {
-        //this.mainActivity = (MainActivity) activity;
         this.listItems = listItems;
-//        Collections.reverse(this.listItems);
         inflater = LayoutInflater.from(context);
     }
 

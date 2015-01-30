@@ -41,12 +41,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
+import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -100,7 +98,7 @@ public class AccountFragment extends Fragment {
     public interface LoginClickListener {
         public void UserLoggedIn(String userData);
         public void UserCreated(String userData);
-        public void CancelUpload();
+        public void CancelLogin();
     }
 
     @Override
@@ -120,11 +118,11 @@ public class AccountFragment extends Fragment {
         Bundle savedInstanceState) {
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName("Login Fragment");
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName("Login Fragment");
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
@@ -159,6 +157,17 @@ public class AccountFragment extends Fragment {
         mLoginButton = (Button)getView().findViewById(R.id.loginButton);
         mNewAccount = (TextView)getView().findViewById(R.id.newAccount);
 
+        //If MainActivity calls the fragment, check if menu is being called
+        if(getActivity().getClass().getSimpleName().equals(MainActivity.class.getSimpleName())){
+            Bundle b = getArguments();
+            Boolean menuLogin = (Boolean)b.getSerializable(getString(R.string.menu_login_bundle_key));
+
+            if(menuLogin){
+                //Change Title Text
+                TextView accountTitle = (TextView) getView().findViewById(R.id.account_title);
+                accountTitle.setText(mContext.getString(R.string.account_menu_login_label));
+            }
+        }
 
         //Create New Account
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -229,7 +238,7 @@ public class AccountFragment extends Fragment {
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.CancelUpload();
+                mCallback.CancelLogin();
             }
         });
 

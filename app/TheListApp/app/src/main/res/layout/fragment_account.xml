@@ -35,13 +35,13 @@
         android:layout_marginBottom="20dp">
     <TextView
         android:text="@string/login_fragment_title"
-        android:id="@+id/confirm_title"
+        android:id="@+id/account_title"
         style="@style/fragment_title" />
     <TextView
         style="@style/fragment_text"
         android:text="@string/login_fragment_text"
-        android:id="@+id/item_text"
-        android:layout_below="@+id/confirm_title"
+        android:id="@+id/account_text"
+        android:layout_below="@+id/account_title"
         android:textColor="@color/primary_text_default_material_dark" />
     </RelativeLayout>
 
