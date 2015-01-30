@@ -278,7 +278,7 @@ class UserList {
         $params[] = (int) $offset;
 
         try {
-            $res = $adodb->CacheGetAll(15, $query, $params);
+            $res = $adodb->CacheGetAll(1, $query, $params);
 
         } catch (Exception $e) {
 
@@ -467,19 +467,13 @@ class UserList {
             $adodb->qstr(date("Y-m-d H:i:s"))
             ));          
 
-            $foo = array($key, $userid);
+            $foo = array(array("skey", $key), array("userid", $userid));
 
         } else {
 
-            $foo = array($row['skey'], $row['userid']);
+            $foo = array(array("skey", $row['skey']), array("userid", $row['userid']));
 
         }
-
-        foreach ( $foo as $k=>$v )
-            {
-                $array[$k] ['userid'] = $array[$k] ['id'];
-                unset($array[$k]['userid']);
-            }
 
         return $foo;        
 
