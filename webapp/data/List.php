@@ -465,26 +465,23 @@ class UserList {
             $adodb->qstr($userid),
             $adodb->qstr($key),
             $adodb->qstr(date("Y-m-d H:i:s"))
-            ));
-
-            
+            ));          
 
             $foo = array($key, $userid);
 
-            foreach ( $foo as $k=>$v )
-                {
-                    $array[$k] ['userid'] = $array[$k] ['id'];
-                    unset($array[$k]['userid']);
-                }
-
-            return $foo;
-              
         } else {
 
-            return $row;
+            $foo = array($row['skey'], $row['userid']);
 
         }
-        
+
+        foreach ( $foo as $k=>$v )
+            {
+                $array[$k] ['userid'] = $array[$k] ['id'];
+                unset($array[$k]['userid']);
+            }
+
+        return $foo;        
 
     }
 
