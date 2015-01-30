@@ -133,5 +133,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_login_bundle_key">isMenuLogin</string>
     <string name="account_menu_login_label">Login to your CCID</string>
+    <string name="login_error_exception_title">Our bad!</string>
+    <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
 
 </resources>

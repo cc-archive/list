@@ -21,19 +21,17 @@ package org.creativecommons.thelist;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -66,9 +64,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mCurrentUser = new ListUser(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
 
+        Log.v(TAG, "STARTACTIVITY ON CREATE");
 
-        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
-        instance.setAppOptOut(true);
+
+//        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
+//        instance.setAppOptOut(true);
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
@@ -78,15 +78,18 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Create sharedPreferences
-        SharedPreferences sharedPref = mContext.getSharedPreferences
-                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+//        SharedPreferences sharedPref = mContext.getSharedPreferences
+//                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         //TODO: Check if user token is valid, redirect to MainActivity if yes
         if(mCurrentUser.isLoggedIn()) {
+            Log.v(TAG, "START: USER IS LOGGED IN");
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+        } else {
+            Log.v(TAG, "START: USER IS NOT LOGGED IN");
         }
 
         //UI Elements

@@ -151,7 +151,7 @@ public class RandomActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     updateView();
-                    if(mItemList.size() >= 7 && mDoneButton.getVisibility() == View.INVISIBLE){
+                    if(itemPositionCount >= 7 && mDoneButton.getVisibility() == View.INVISIBLE){
                         mDoneButton.setVisibility(View.VISIBLE);
                     }
                 }

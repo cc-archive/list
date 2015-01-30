@@ -30,11 +30,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.ListApplication;
 
 public class ExplainerFragment extends Fragment {
     public static final String TAG = ExplainerFragment.class.getSimpleName();
@@ -65,11 +61,11 @@ public class ExplainerFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName("Explainer Fragment");
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName("Explainer Fragment");
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_explainer, container, false);

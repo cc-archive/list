@@ -175,22 +175,23 @@ public class ListUser {
                                         addItemToUserList(listItemPref.getString(i));
                                     }
                                 }
-
-                                listener.UserLoggedIn("hey logged in");
+                                //pass userID to the activity
+                                listener.UserLoggedIn(userID);
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
                                 //TODO: add proper error message
-
+                                requestMethods.showErrorDialog(mContext, mContext.getString
+                                        (R.string.login_error_exception_title),
+                                        mContext.getString(R.string.login_error_exception_message));
                             }
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v(TAG, "THERE WAS AN ERROR");
                 requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.error_title),
-                        mContext.getString(R.string.error_message));
+                        mContext.getString(R.string.login_error_title),
+                        mContext.getString(R.string.login_error_message));
             }
         }) {
             @Override

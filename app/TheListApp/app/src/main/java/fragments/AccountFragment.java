@@ -44,6 +44,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.StartActivity;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -162,13 +163,14 @@ public class AccountFragment extends Fragment {
             Bundle b = getArguments();
             Boolean menuLogin = (Boolean)b.getSerializable(getString(R.string.menu_login_bundle_key));
 
-            if(menuLogin){
+            if(menuLogin || getActivity().getClass().getSimpleName()
+                    .equals(StartActivity.class.getSimpleName())){
                 //Change Title Text
                 TextView accountTitle = (TextView) getView().findViewById(R.id.account_title);
                 accountTitle.setText(mContext.getString(R.string.account_menu_login_label));
             }
         }
-
+        //TODO: update this: no username: also we only need 2 fields total and just switch out the buttons DUH
         //Create New Account
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +179,6 @@ public class AccountFragment extends Fragment {
                 mUsername = mUsernameField.getText().toString().trim();
                 mPassword = mPasswordField.getText().toString().trim();
                 mEmail = mEmailField.getText().toString().trim();
-
                 //Create account
                 if (mUsername.isEmpty() || mPassword.isEmpty() || mEmail.isEmpty()) {
                     //Show error

@@ -53,7 +53,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -137,13 +136,15 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         requestMethods = new RequestMethods(mContext);
         menuLogin = false;
 
+        Log.v(TAG, "MAINACTIVITY ON CREATE");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
 
-        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
-        instance.setAppOptOut(true);
+//        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
+//        instance.setAppOptOut(true);
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
@@ -208,6 +209,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     public void onResume() {
         super.onResume();
 
+        Log.v(TAG, "MAINACTIVITY ON RESUME");
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -215,7 +218,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
         }, 500);
 
-        Log.v("ON RESUME ", "IS BEING CALLED");
         if(mCurrentUser.isLoggedIn()){
             Log.v("Get user", "On resume");
             getUserListItems();
@@ -255,7 +257,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         //IF USER IS LOGGED IN
         if(mCurrentUser.isLoggedIn()) {
             //Log.v("HELLO", "this user is logged in");
-            itemRequesturl = ApiConstants.GET_USER_LIST + userID;
+            itemRequesturl = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
             Log.v("URL FOR USERLIST ITEMS: ", itemRequesturl);
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
@@ -344,11 +346,12 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     //Get item details for UNDO
                                     activeItemPosition = position;
                                     mCurrentItem = mItemList.get(position);
-
+                                    mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
                                     //What happens when item is swiped offscreen
-                                    mItemList.remove(position);
-                                    mFeedAdapter.notifyItemRemoved(position);
-                                    mFeedAdapter.notifyItemRangeChanged(position, mItemList.size());
+                                    //mItemList.remove(position);
+                                    mItemList.remove(mCurrentItem);
+                                    mFeedAdapter.notifyItemRemoved(activeItemPosition);
+                                    mFeedAdapter.notifyItemRangeChanged(activeItemPosition, mItemList.size());
 
                                     //Snackbar message
                                     showSnackbar();
@@ -449,6 +452,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismiss(Snackbar snackbar) {
+                                //TODO: delete item from user’s list in DB (that’s all this should do!)
+//                                mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
+
                                 //Pause touch input
 
                                 TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
@@ -462,8 +468,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                //TODO: delete item from user’s list in DB (that’s all this should do!)
-                                mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
                             }
                         }) //event listener
                 , MainActivity.this);
@@ -615,7 +619,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             //TODO: get user password as well
             mCurrentUserObject = new JSONObject(userData);
             mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
-            mCurrentUser.setUserName(mCurrentUserObject.getString(ApiConstants.USER_NAME));
             //TODO: set user token
         } catch (JSONException e) {
             Log.v(TAG,e.getMessage());
@@ -629,6 +632,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
     @Override
     public void UserLoggedIn(String userData) {
+        //Set user ID
+        mCurrentUser.setUserID(userData);
+
         menuLogin = false;
         //Create menu again (update login to logout)
         invalidateOptionsMenu();
@@ -639,7 +645,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             //TODO: login confirmation
             removeFragment(accountFragment, true);
         }
-
     } //UserLoggedIn
 
     @Override
