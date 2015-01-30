@@ -467,11 +467,11 @@ class UserList {
             $adodb->qstr(date("Y-m-d H:i:s"))
             ));          
 
-            $foo = array(array("skey", $key), array("userid", $userid));
+            $foo = array("skey" => $key, "userid" => $userid);
 
         } else {
 
-            $foo = array(array("skey", $row['skey']), array("userid", $row['userid']));
+            $foo = array("skey" => $row['skey'], "userid" => $row['userid']);
 
         }
 
