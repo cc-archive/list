@@ -994,7 +994,6 @@ INSERT into List (makerid, title) values (7, "Saurolophus");
 INSERT into List (makerid, title) values (7, "Sauropelta");
 INSERT into List (makerid, title) values (7, "Saurophaganax");
 INSERT into List (makerid, title) values (7, "Saurornithoides");
-");
 INSERT into List (makerid, title) values (7, "Scelidosaurus");
 INSERT into List (makerid, title) values (7, "Scutellosaurus");
 INSERT into List (makerid, title) values (7, "Secernosaurus");
