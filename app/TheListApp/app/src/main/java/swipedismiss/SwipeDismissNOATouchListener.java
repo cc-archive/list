@@ -191,7 +191,7 @@ public class SwipeDismissNOATouchListener implements View.OnTouchListener {
                     mSwiping = true;
                     mView.getParent().requestDisallowInterceptTouchEvent(true);
 
-                    // Cancel listview's touch
+                    // CancelLogin listview's touch
                     MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
                             (motionEvent.getActionIndex() << MotionEvent.ACTION_POINTER_INDEX_SHIFT));

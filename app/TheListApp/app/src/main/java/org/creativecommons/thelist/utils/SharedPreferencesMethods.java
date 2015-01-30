@@ -49,7 +49,7 @@ public class SharedPreferencesMethods {
     public static final String USER_ID_PREFERENCE_KEY = "id";
     public static final String USER_TOKEN_PREFERENCE_KEY = "skey";
 
-    public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.434932";
+    public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
     //Add username, id, session token, category preferences, user item preferences
 
@@ -59,6 +59,7 @@ public class SharedPreferencesMethods {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.apply();
+        Log.v("ADDED AND SAVED ITEM ID: ", value);
     }
 
     //RetrieveSharedPreference
@@ -118,7 +119,7 @@ public class SharedPreferencesMethods {
     public void RemoveUserItemPreference(String itemID) {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         String listOfValues = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
-        Log.v("ITEM ID: ", itemID);
+        Log.v("REMOVE ITEM ID: ", itemID);
         //Convert from String to Array
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(listOfValues);

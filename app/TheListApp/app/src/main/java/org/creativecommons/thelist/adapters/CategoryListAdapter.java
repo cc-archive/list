@@ -83,7 +83,8 @@ public class CategoryListAdapter extends BaseAdapter {
         //Item Name
         holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
         //Item Background Color
-        if(colours[position] != null){
+
+        if(position < 5){
             holder.checkableLayout.setBackgroundColor(Color.parseColor(colours[position]));
         } else {
             holder.checkableLayout.setBackgroundColor(activity.getResources().getColor(R.color.category_default));

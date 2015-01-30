@@ -157,7 +157,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     }
 
     @Override
-    public void CancelUpload() {
+    public void CancelLogin() {
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .remove(accountFragment)

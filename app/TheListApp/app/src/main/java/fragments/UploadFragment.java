@@ -98,8 +98,8 @@ public class UploadFragment extends Fragment {
         mProgressLayout = (RelativeLayout)getView().findViewById(R.id.upload_loading);
         mResultMessage = (RelativeLayout)getView().findViewById(R.id.result_message);
 
-        mTitle = (TextView)getView().findViewById(R.id.confirm_title);
-        mText = (TextView)getView().findViewById(R.id.item_text);
+        mTitle = (TextView)getView().findViewById(R.id.account_title);
+        mText = (TextView)getView().findViewById(R.id.account_text);
         mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
         if(requestMethods.isNetworkAvailable(mContext)){

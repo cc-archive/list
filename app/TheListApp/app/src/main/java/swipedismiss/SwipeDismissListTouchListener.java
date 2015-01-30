@@ -269,7 +269,7 @@
 //                    mSwiping = true;
 //                    mListView.requestDisallowInterceptTouchEvent(true);
 //
-//                    // Cancel ListView's touch (un-highlighting the item)
+//                    // CancelLogin ListView's touch (un-highlighting the item)
 //                    MotionEvent cancelEvent = MotionEvent.obtain(motionEvent);
 //                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL |
 //                            (motionEvent.getActionIndex()
