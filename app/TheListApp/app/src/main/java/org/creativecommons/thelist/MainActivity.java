@@ -46,6 +46,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -114,6 +115,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
     protected FrameLayout mFrameLayout;
+    protected TextView mEmptyView;
 
     //Fragments
     AccountFragment accountFragment = new AccountFragment();
@@ -166,6 +168,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
+        mEmptyView = (TextView) findViewById(R.id.empty_list_label);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setEnabled(false);
@@ -209,8 +212,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     public void onResume() {
         super.onResume();
 
-        Log.v(TAG, "MAINACTIVITY ON RESUME");
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -219,8 +220,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         }, 500);
 
         if(mCurrentUser.isLoggedIn()){
-            Log.v("Get user", "On resume");
             getUserListItems();
+
         } else {
             if(mItemList.size() == 0){
                 Log.v("THERE ARE NO ITEMS: ", "Annd not logged in");
@@ -285,7 +286,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                     listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
                                     listItem.setError(true);
                                     mItemList.add(0, listItem);
-
                                 } else {
                                    continue;
                                 }
@@ -293,11 +293,21 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                 Log.v(TAG, e.getMessage());
                             }
                         }
-                        Collections.reverse(mItemList);
                         mProgressBar.setVisibility(View.INVISIBLE);
                         mFab.show();
                         mFab.setVisibility(View.VISIBLE);
-                        mFeedAdapter.notifyDataSetChanged();
+
+                        if(mItemList.size() == 0){
+                            //TODO: show textView
+                            mEmptyView.setVisibility(View.VISIBLE);
+
+                        } else {
+                            //TODO: hide textView
+                            mEmptyView.setVisibility(View.GONE);
+                            Collections.reverse(mItemList);
+                            mFeedAdapter.notifyDataSetChanged();
+                        }
+
                     }
                 }, new Response.ErrorListener() {
                 @Override
@@ -312,23 +322,33 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         }
         else { //IF USER IS NOT LOGGED IN
             mItemList.clear();
+            mEmptyView.setVisibility(View.GONE);
+
             itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
-            for(int i=0; i < itemIds.length(); i++) {
+
+            if (!(itemIds.length() == 0)) {
+                for (int i = 0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
                     MainListItem listItem = new MainListItem();
-                try {
-                    listItem.setItemID(String.valueOf(itemIds.getInt(i)));
-                    listItem.setRequestMethods(requestMethods);
-                    listItem.setMainActivity(MainActivity.this);
-                    listItem.createNewUserListItem();
-                } catch (JSONException e) {
-                    Log.v(TAG,e.getMessage());
+                    try {
+                        listItem.setItemID(String.valueOf(itemIds.getInt(i)));
+                        listItem.setRequestMethods(requestMethods);
+                        listItem.setMainActivity(MainActivity.this);
+                        listItem.createNewUserListItem();
+                    } catch (JSONException e) {
+                        Log.v(TAG, e.getMessage());
+                    }
+                    mItemList.add(listItem);
+                    Log.v("HELLO ITEMS", mItemList.toString());
                 }
-                mItemList.add(listItem);
-                Log.v("HELLO ITEMS", mItemList.toString());
+                Collections.reverse(mItemList);
+                mFeedAdapter.notifyDataSetChanged();
+            } else {
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mEmptyView.setVisibility(View.VISIBLE);
+                mFab.show();
+                mFab.setVisibility(View.VISIBLE);
             }
-            Collections.reverse(mItemList);
-            mFeedAdapter.notifyDataSetChanged();
         }
     } //getUserListItems
 
