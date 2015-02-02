@@ -35,8 +35,9 @@ import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder> {
     private LayoutInflater inflater;
-    //private MainActivity mainActivity;
     private List<MainListItem> listItems; //Collections.emptyList()
+    private static final int DEFAULT_VIEW = 1;
+    public static final int ERROR_VIEW = 0;
 
     public FeedAdapter(Context context, List<MainListItem> listItems) {
         this.listItems = listItems;
@@ -44,29 +45,47 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
     }
 
     @Override
+    public int getItemCount() {
+        return listItems.size();
+    }
+
+    @Override
+    public int getItemViewType(int position){
+        MainListItem l = listItems.get(position);
+        if(l.getError()){
+            return ERROR_VIEW;
+        } else {
+            return DEFAULT_VIEW;
+        }
+    }
+
+    @Override
     public FeedViewholder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View view = inflater.inflate(R.layout.list_item_main, viewGroup, false);
-        //Collections.reverse(this.listItems);
         FeedViewholder holder = new FeedViewholder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(FeedViewholder holder, int position) {
+
         //Getting Data for the row
         MainListItem l = listItems.get(position);
         holder.itemView.setVisibility(View.VISIBLE);
         holder.nameLabel.setText(l.getItemName());
-//        Log.v("NAME LABEL", String.valueOf(l.getItemName()));
+        //Log.v("NAME LABEL", String.valueOf(l.getItemName()));
         holder.makerLabel.setText("requested by " + l.getMakerName());
-        holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
 
+        //Set unique view for different ViewTypes
+        switch(getItemViewType(position)){
+            case DEFAULT_VIEW:
+                holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+                break;
+            case ERROR_VIEW:
+                holder.iconImageView.setImageResource(R.drawable.ic_error_red_24dp);
+                break;
+        }
         holder.itemView.setTag(l);
-    }
-
-    @Override
-    public int getItemCount() {
-        return listItems.size();
     }
 
     public class FeedViewholder extends RecyclerView.ViewHolder {

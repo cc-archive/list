@@ -318,7 +318,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         }
         return false;
     }
-
+    //TODO: does this have anything to do with stuff?
     class PendingDismissData implements Comparable<PendingDismissData> {
         public int position;
         public View view;
@@ -370,7 +370,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                         lp.height = originalHeight;
                         pendingDismiss.view.setLayoutParams(lp);
                     }
-
+                    Log.v("THESE ARE DISMISSES: ", mPendingDismisses.toString());
                     mPendingDismisses.clear();
                 }
             }

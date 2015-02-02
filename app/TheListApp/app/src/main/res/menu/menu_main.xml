@@ -10,4 +10,6 @@
         android:orderInCategory="200" compat:showAsAction="never" />
     <item android:id="@+id/pick_categories" android:title="@string/pick_categories_menu_label"
         android:orderInCategory="300" compat:showAsAction="never"/>
+    <item android:id="@+id/about_theapp" android:title="@string/about_theapp_menu_label"
+        android:orderInCategory="400" compat:showAsAction="never"/>
 </menu>

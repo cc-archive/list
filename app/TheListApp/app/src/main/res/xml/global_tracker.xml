@@ -11,6 +11,9 @@
 <!-- how often the dispatcher should fire -->
 <integer name="ga_dispatchPeriod">30</integer>
 
+<!-- catch and report uncaught exceptions from the app -->
+<bool name="ga_reportUncaughtExceptions">true</bool>
+
 <!-- Treat events as test events and don't send to google -->
 <bool name="ga_dryRun">true</bool>
 
@@ -21,7 +24,6 @@
 <screenName name="org.creativecommons.thelist.RandomActivity">Random Item Suggestions Activity</screenName>
 <screenName name="org.creativecommons.thelist.CategoryListActivity">Category List Activity</screenName>
 <screenName name="org.creativecommons.thelist.StartActivity">Start Activity</screenName>
-<screenName name="org.creativecommons.thelist.misc.AccountActivity">Account Activity</screenName>
 
 <!--  The following value should be replaced with correct property id. -->
 <string name="ga_trackingId">UA-57679207-1</string>

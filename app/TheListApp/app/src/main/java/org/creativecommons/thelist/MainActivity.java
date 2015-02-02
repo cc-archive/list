@@ -102,6 +102,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
     protected JSONObject mCurrentUserObject;
     protected MainListItem mCurrentItem;
     protected int activeItemPosition;
+    protected MainListItem mLastDismissedItem;
+    protected int lastDismissedItemPosition;
     protected String userID;
     protected Uri mMediaUri;
 
@@ -362,16 +364,15 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                 for (int position : reverseSortedPositions) {
                                     // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-
                                     //Get item details for UNDO
-                                    activeItemPosition = position;
-                                    mCurrentItem = mItemList.get(position);
-                                    mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
-                                    //What happens when item is swiped offscreen
-                                    //mItemList.remove(position);
-                                    mItemList.remove(mCurrentItem);
-                                    mFeedAdapter.notifyItemRemoved(activeItemPosition);
-                                    mFeedAdapter.notifyItemRangeChanged(activeItemPosition, mItemList.size());
+//                                    lastDismissedItemPosition = position;
+//                                    mLastDismissedItem = mItemList.get(position);
+//                                    //What happens when item is swiped offscreen
+//                                    //mItemList.remove(position);
+//                                    mItemList.remove(mLastDismissedItem);
+//                                    mFeedAdapter.notifyItemRemoved(lastDismissedItemPosition);
+//                                    mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, mItemList.size());
+//                                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
 
                                     //Snackbar message
                                     showSnackbar();
@@ -448,9 +449,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                                 removed when the snackbar is actually dismissed*/
 
                                 //What happens when item is swiped offscreen
-                                mItemList.add(0, mCurrentItem);
+                                mItemList.add(0, mLastDismissedItem);
                                 mFeedAdapter.notifyItemInserted(0);
-                                mFeedAdapter.notifyItemRangeChanged(activeItemPosition, 1);
+                                mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, 1);
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }
@@ -472,10 +473,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                             }
                             @Override
                             public void onDismiss(Snackbar snackbar) {
-                                //TODO: delete item from user’s list in DB (that’s all this should do!)
-//                                mCurrentUser.removeItemFromUserList(mCurrentItem.getItemID());
-
-                                //Pause touch input
 
                                 TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
                                         -snackbar.getHeight(), 0);
@@ -804,6 +801,9 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
                 startActivity(pickCategoriesIntent);
+                return true;
+            case R.id.about_theapp:
+                //TODO: go to scrollview of app things
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

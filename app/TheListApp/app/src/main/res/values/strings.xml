@@ -135,5 +135,6 @@
     <string name="account_menu_login_label">Login to your CCID</string>
     <string name="login_error_exception_title">Our bad!</string>
     <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
+    <string name="about_theapp_menu_label">About the app</string>
 
 </resources>

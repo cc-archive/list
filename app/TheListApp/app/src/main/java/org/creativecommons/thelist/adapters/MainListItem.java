@@ -79,6 +79,10 @@ public class MainListItem {
         this.makerName = maker;
     }
 
+    public boolean getError(){
+        return error;
+    }
+
     public void setError(boolean bol){
         this.error = bol;
     }
