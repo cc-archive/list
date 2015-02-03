@@ -4,7 +4,7 @@
     style="@style/layout_main"
     android:weightSum="5"
     android:orientation="vertical"
-    tools:context="org.creativecommons.thelist.AccountActivity">
+    tools:context="org.creativecommons.thelist.AuthenticatorActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/emailLoginField"
+            android:id="@+id/accountName"
             android:inputType="textEmailAddress"
             android:hint="@string/email_hint" />
 
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/passwordLoginField"
+            android:id="@+id/accountPassword"
             android:inputType="textPassword"
             android:hint="@string/password_hint"
             android:layout_below="@+id/emailLoginField"/>
@@ -61,6 +61,7 @@
             android:gravity="center" />
     </RelativeLayout>
 </LinearLayout>
+
 
 
 

@@ -76,7 +76,7 @@ ADDED from AndroidManifest.xml:25:9
 		ADDED from AndroidManifest.xml:29:13
 	android:name
 		ADDED from AndroidManifest.xml:26:13
-activity#org.creativecommons.thelist.misc.AccountActivity
+activity#org.creativecommons.thelist.AccountActivity
 ADDED from AndroidManifest.xml:31:9
 	android:label
 		ADDED from AndroidManifest.xml:33:13

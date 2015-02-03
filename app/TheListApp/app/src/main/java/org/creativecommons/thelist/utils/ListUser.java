@@ -47,6 +47,7 @@ public class ListUser {
     public static final String TAG = ListUser.class.getSimpleName();
     private String userName;
     private String userID;
+    private String sessionToken;
     private boolean logInState;
     private Context mContext;
     private RequestMethods requestMethods;
@@ -100,7 +101,6 @@ public class ListUser {
 
     public String getUserID() {
         //TODO: actually get ID
-
         userID = sharedPreferencesMethods.getUserId();
         //See if sharedPreference methods contains userID
         //If yes: get and return userID; else: return null
@@ -115,6 +115,18 @@ public class ListUser {
     //TODO: might not need with sharedPreferences
     public void setUserID(String id) {
         this.userID = id;
+    }
+
+    public String getSessionToken(){
+        //TODO: actually get sessionToken
+        //sessionToken = //TODO: GET SESION TOKEN;
+
+        //TODO: IF THERE IS NO SESSION TOKEN? WILL THE AUTHENTICATOR DO THIS?
+        return sessionToken;
+    }
+
+    public void setSessionToken(String token){
+        sessionToken = token;
     }
 
     public void logOut() {

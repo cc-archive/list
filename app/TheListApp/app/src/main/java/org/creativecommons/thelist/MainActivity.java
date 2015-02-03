@@ -31,7 +31,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -187,7 +186,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);

@@ -24,11 +24,9 @@
     <string name="error_external_storage">There was a problem accessing your device\’s external storage</string>
     <string name="error_title">Error</string>
     <string name="error_message">There was an error getting data</string>
-
     <string name="error_network_title">Oops!</string>
     <string name="error_network_message">Seems like you might not be connected to the internet.
         Check your connection and try again.</string>
-
 
     <!-- Empty Labels -->
     <string name="empty_feed_label">No items in your picks.</string>
@@ -136,5 +134,8 @@
     <string name="login_error_exception_title">Our bad!</string>
     <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
     <string name="about_theapp_menu_label">About the app</string>
+    <string name="title_activity_account_authenticator">AccountAuthenticator</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_main1">Main1</string>
 
 </resources>
