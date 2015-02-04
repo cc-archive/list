@@ -15,9 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.AccountGeneral;
+import org.creativecommons.thelist.authentication.AccountGeneral;
 
-import static org.creativecommons.thelist.utils.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
 
 public class Main1 extends Activity {
@@ -95,7 +95,7 @@ public class Main1 extends Activity {
                 try {
                     Bundle bnd = future.getResult();
                     showMessage("Account was created");
-                    Log.d("udinic", "AddNewAccount Bundle is " + bnd);
+                    Log.d("THE LIST", "AddNewAccount Bundle is " + bnd);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -151,7 +151,7 @@ public class Main1 extends Activity {
 
                     final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
                     showMessage((authtoken != null) ? "SUCCESS!\ntoken: " + authtoken : "FAIL");
-                    Log.d("udinic", "GetToken Bundle is " + bnd);
+                    Log.d("THE LIST", "GetToken Bundle is " + bnd);
                 } catch (Exception e) {
                     e.printStackTrace();
                     showMessage(e.getMessage());

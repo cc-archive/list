@@ -1,10 +1,10 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.authentication;
 
 public class AccountGeneral {
     /**
      * Account type id
      */
-    public static final String ACCOUNT_TYPE = "org.creativecommons.ccid";
+    public static final String ACCOUNT_TYPE = "org.creativecommons.thelist";
 
     /**
      * Account name

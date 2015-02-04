@@ -9,17 +9,10 @@
  language governing permissions and limitations under the License.
  */
 
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.authentication;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
 
-public class ListAuthenticatorService extends Service {
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        ListAuthenticator authenticator = new ListAuthenticator(this);
-        return authenticator.getIBinder();
-    }
+public interface ServerAuthenticate {
+    public String userSignUp(final String name, final String email, final String pass, String authType) throws Exception;
+    public String userSignIn(final String user, final String pass, String authType) throws Exception;
 }

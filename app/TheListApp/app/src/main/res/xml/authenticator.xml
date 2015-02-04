@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="com.udinic.auth_example"
+    android:accountType="org.creativecommons.thelist"
     android:icon="@drawable/terms_logo"
     android:smallIcon="@drawable/terms_logo"
     android:label="CCID (The List)"/>

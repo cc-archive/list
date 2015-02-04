@@ -14,16 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.creativecommons.thelist.utils.AccountGeneral;
+import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
-import static org.creativecommons.thelist.utils.AccountGeneral.sServerAuthenticate;
+import static org.creativecommons.thelist.authentication.AccountGeneral.sServerAuthenticate;
 
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     private RequestMethods requestMethods;
     private SharedPreferencesMethods sharedPreferencesMethods;
+    //private ListUser mCurrentUser;
     Context mContext;
 
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
@@ -50,7 +52,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         mAccountManager = AccountManager.get(getBaseContext());
 
         //UI Elements
-        Button loginButton = (Button) findViewById(R.id.loginButton);
+        final Button loginButton = (Button) findViewById(R.id.loginButton);
+        final Button signUpButton = (Button) findViewById(R.id.signUpButton);
         final EditText accountNameField = (EditText)findViewById(R.id.accountName);
         final EditText accountPasswordField = (EditText)findViewById(R.id.accountPassword);
 
@@ -65,51 +68,62 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
 
         //On login button click
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String accountName = accountNameField.getText().toString().trim();
                 String accountPassword = accountPasswordField.getText().toString().trim();
 
-                if(accountName.isEmpty() || accountPassword.isEmpty()) {
+                if (accountName.isEmpty() || accountPassword.isEmpty()) {
                     requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
-                }
-                else {
+                } else {
                     //TODO: Login User + save to sharedPreferences
                     submit();
                 }
             }
         });
-            //I want to create an account --> send user to SignUpActivity
-//            findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    // Since there can only be one AuthenticatorActivity, we call the sign up activity, get his results,
-//                    // and return them in setAccountAuthenticatorResult(). See finishLogin().
-//                    Intent signup = new Intent(getBaseContext(), SignUpActivity.class);
-//                    signup.putExtras(getIntent().getExtras());
-//                    startActivityForResult(signup, REQ_SIGNUP);
-//                }
-//            });
+
+
+        //I want to create an account --> send user to SignUpActivity
+        findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: hide loginButton and show signUpButton
+                loginButton.setVisibility(View.GONE);
+                signUpButton.setVisibility(View.VISIBLE);
+            }
+        });
 
     } //OnCreate
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        // The sign up activity returned that the user has successfully created an account
-//        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-//            finishLogin(data);
-//        } else
-//            super.onActivityResult(requestCode, resultCode, data);
-//    }
 
     public void submit() {
         final String userName = ((EditText) findViewById(R.id.accountName)).getText().toString();
         final String userPass = ((EditText) findViewById(R.id.accountPassword)).getText().toString();
         final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
+        ListUser mCurrentUser = new ListUser(mContext);
+        String authtoken = null;
+        Bundle data = new Bundle();
+
+        try {
+            authtoken = mCurrentUser.userSignIn(userName, userPass, mAuthTokenType);
+
+            data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+            data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+            data.putString(PARAM_USER_PASS, userPass);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final Intent res = new Intent();
+        res.putExtras(data);
+
+
+        //TODO: REPLACE FROM HERE.
         new AsyncTask<Void, Void, Intent>() {
             @Override
             protected Intent doInBackground(Void... params) {

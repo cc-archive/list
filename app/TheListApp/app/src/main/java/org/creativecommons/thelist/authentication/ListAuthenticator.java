@@ -9,7 +9,7 @@
  language governing permissions and limitations under the License.
  */
 
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.authentication;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -24,9 +24,12 @@ import android.util.Log;
 
 import org.creativecommons.thelist.AuthenticatorActivity;
 
-import static org.creativecommons.thelist.utils.AccountGeneral.sServerAuthenticate;
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-import static org.creativecommons.thelist.utils.AccountGeneral.*;
+import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
+import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
+import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+import static org.creativecommons.thelist.authentication.AccountGeneral.sServerAuthenticate;
 
 public class ListAuthenticator extends AbstractAccountAuthenticator {
     private String TAG = "ListAuthenticator";
@@ -39,8 +42,11 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
         this.mContext = context;
     }
 
+    //Add account to your android device
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+        Log.d("THE LIST", TAG + "> addAccount");
+
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
@@ -52,6 +58,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
         return bundle;
     }
 
+    //Request AuthToken
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         Log.d("THE LIST", TAG + "> getAuthToken");

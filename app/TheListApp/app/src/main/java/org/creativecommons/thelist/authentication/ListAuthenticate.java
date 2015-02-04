@@ -9,7 +9,7 @@
  language governing permissions and limitations under the License.
  */
 
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.authentication;
 
 import android.util.Log;
 
@@ -34,7 +34,7 @@ public class ListAuthenticate implements ServerAuthenticate {
     @Override
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
         //TODO: update URL
-        String url = ApiConstants.REGISTER_USER;
+        String url = "https://api.parse.com/1/users";
 
         //Type of Request
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -77,7 +77,7 @@ public class ListAuthenticate implements ServerAuthenticate {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         //TODO: UPDATE URL
-        String url = ApiConstants.LOGIN_USER;
+        String url = "https://api.parse.com/1/login";
 
         String query = null;
         try {
@@ -127,11 +127,11 @@ public class ListAuthenticate implements ServerAuthenticate {
         private String firstName;
         private String lastName;
         private String username;
-        //private String phone;
-        //private String objectId;
+        private String phone;
+        private String objectId;
         public String sessionToken;
-        //private String gravatarId;
-        //private String avatarUrl;
+        private String gravatarId;
+        private String avatarUrl;
 
 
         public String getFirstName() {
@@ -158,21 +158,21 @@ public class ListAuthenticate implements ServerAuthenticate {
             this.username = username;
         }
 
-//        public String getPhone() {
-//            return phone;
-//        }
+        public String getPhone() {
+            return phone;
+        }
 
-//        public void setPhone(String phone) {
-//            this.phone = phone;
-//        }
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
 
-//        public String getObjectId() {
-//            return objectId;
-//        }
-//
-//        public void setObjectId(String objectId) {
-//            this.objectId = objectId;
-//        }
+        public String getObjectId() {
+            return objectId;
+        }
+
+        public void setObjectId(String objectId) {
+            this.objectId = objectId;
+        }
 
         public String getSessionToken() {
             return sessionToken;
@@ -182,20 +182,20 @@ public class ListAuthenticate implements ServerAuthenticate {
             this.sessionToken = sessionToken;
         }
 
-//        public String getGravatarId() {
-//            return gravatarId;
-//        }
-//
-//        public void setGravatarId(String gravatarId) {
-//            this.gravatarId = gravatarId;
-//        }
-//
-//        public String getAvatarUrl() {
-//            return avatarUrl;
-//        }
-//
-//        public void setAvatarUrl(String avatarUrl) {
-//            this.avatarUrl = avatarUrl;
-//        }
+        public String getGravatarId() {
+            return gravatarId;
+        }
+
+        public void setGravatarId(String gravatarId) {
+            this.gravatarId = gravatarId;
+        }
+
+        public String getAvatarUrl() {
+            return avatarUrl;
+        }
+
+        public void setAvatarUrl(String avatarUrl) {
+            this.avatarUrl = avatarUrl;
+        }
     }
 } //ListAuthenticate
