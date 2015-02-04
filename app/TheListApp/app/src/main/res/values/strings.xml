@@ -138,5 +138,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main1">Main1</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="ccid_account_label">CCID (The List)</string>
 
 </resources>

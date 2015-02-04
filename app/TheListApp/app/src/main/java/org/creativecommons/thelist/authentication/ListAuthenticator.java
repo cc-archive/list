@@ -22,14 +22,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.creativecommons.thelist.AuthenticatorActivity;
-
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
-import static org.creativecommons.thelist.authentication.AccountGeneral.sServerAuthenticate;
 
 public class ListAuthenticator extends AbstractAccountAuthenticator {
     private String TAG = "ListAuthenticator";
@@ -48,9 +45,9 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
         Log.d("THE LIST", TAG + "> addAccount");
 
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, accountType);
-        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
+        intent.putExtra(AccountGeneral.ARG_ACCOUNT_TYPE, accountType);
+        intent.putExtra(AccountGeneral.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT, true);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 
         final Bundle bundle = new Bundle();
@@ -84,7 +81,8 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
             if (password != null) {
                 try {
                     Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
-                    authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                    //TODO: If the token is empty, go request a token
+                    //authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -105,9 +103,9 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
         // an intent to display our AuthenticatorActivity.
         final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, account.type);
-        intent.putExtra(AuthenticatorActivity.ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_NAME, account.name);
+        intent.putExtra(AccountGeneral.ARG_ACCOUNT_TYPE, account.type);
+        intent.putExtra(AccountGeneral.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(AccountGeneral.ARG_ACCOUNT_NAME, account.name);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;

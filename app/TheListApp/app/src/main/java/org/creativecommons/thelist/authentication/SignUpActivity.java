@@ -12,10 +12,9 @@ import android.widget.Toast;
 
 import org.creativecommons.thelist.R;
 
-import static org.creativecommons.thelist.AuthenticatorActivity.ARG_ACCOUNT_TYPE;
-import static org.creativecommons.thelist.AuthenticatorActivity.KEY_ERROR_MESSAGE;
-import static org.creativecommons.thelist.AuthenticatorActivity.PARAM_USER_PASS;
-import static org.creativecommons.thelist.authentication.AccountGeneral.sServerAuthenticate;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_TYPE;
+import static org.creativecommons.thelist.authentication.AccountGeneral.KEY_ERROR_MESSAGE;
+import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
 
 public class SignUpActivity extends Activity {
 
@@ -63,7 +62,7 @@ public class SignUpActivity extends Activity {
                 String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = sServerAuthenticate.userSignUp(name, accountName, accountPassword, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
+                    //authtoken = sServerAuthenticate.userSignUp(name, accountName, accountPassword, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS);
 
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);

@@ -371,7 +371,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 //                                    mItemList.remove(mLastDismissedItem);
 //                                    mFeedAdapter.notifyItemRemoved(lastDismissedItemPosition);
 //                                    mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, mItemList.size());
-//                                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
+                                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
 
                                     //Snackbar message
                                     showSnackbar();

@@ -19,9 +19,11 @@
 
 package org.creativecommons.thelist.utils;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,6 +43,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fragments.LoginFragment;
 
 public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
@@ -154,11 +158,12 @@ public class ListUser implements ServerAuthenticate {
         mContext.startActivity(intent);
     }
 
+
+
     @Override
-    public String userSignIn(final String user, final String pass, String authType) throws Exception {
+    public void userSignIn(final String email, final String pass, String authType, final String accountType, final LoginFragment.AuthListener listener) throws Exception {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
-        //Bundle data = new Bundle();
 
         StringRequest userSignInRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -180,11 +185,19 @@ public class ListUser implements ServerAuthenticate {
                                 sharedPreferencesMethods.SaveSharedPreference
                                         (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
                                 //Add items chosen before login to userlist
-                                addSavedItemsToUserList();
                                 //TODO: also add category preferences
-                                //pass userID to the activity
-                                //TODO: figure out if this is still needed
-                                //listener.UserLoggedIn(userID);
+                                addSavedItemsToUserList();
+
+                                Bundle userData = new Bundle();
+
+                                userData.putString(AccountManager.KEY_ACCOUNT_NAME, email);
+                                userData.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                                userData.putString(AccountManager.KEY_AUTHTOKEN, sessionToken);
+                                userData.putString(PARAM_USER_PASS, pass);
+
+                                //pass userData to the activity
+                                listener.onUserSignedIn(userData);
+
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
                                 //TODO: add proper error message
@@ -205,26 +218,20 @@ public class ListUser implements ServerAuthenticate {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("username", user);
+                params.put("username", email);
                 params.put(ApiConstants.USER_PASSWORD, pass);
 
                 return params;
             }
         };
         queue.add(userSignInRequest);
-        return sessionToken;
     }
-
 
     @Override
-    public String userSignUp(String name, String email, String pass, String authType) throws Exception {
+    public void userSignUp(String email, String pass, String authType, final LoginFragment.AuthListener listener) throws Exception {
+        //TODO: actually register user
 
-
-
-
-        return null;
     }
-
 
 
 //    public void logIn(final String username, final String password, final AccountFragment.LoginClickListener listener) {

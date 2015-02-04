@@ -3,4 +3,4 @@
     android:accountType="org.creativecommons.thelist"
     android:icon="@drawable/terms_logo"
     android:smallIcon="@drawable/terms_logo"
-    android:label="CCID (The List)"/>
+    android:label="@string/ccid_account_label"/>

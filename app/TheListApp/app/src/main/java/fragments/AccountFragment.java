@@ -205,7 +205,7 @@ public class AccountFragment extends Fragment {
                             mContext.getString(R.string.login_error_title),
                             mContext.getString(R.string.login_error_message));
                 } else {
-                    mCurrentUser.logIn(mLoginEmail, mLoginPassword, mCallback);
+                    //mCurrentUser.logIn(mLoginEmail, mLoginPassword, mCallback);
                 }
             }
         });

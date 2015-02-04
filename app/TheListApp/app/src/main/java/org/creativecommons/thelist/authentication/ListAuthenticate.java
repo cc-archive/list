@@ -30,8 +30,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class ListAuthenticate implements ServerAuthenticate {
-    @Override
+public class ListAuthenticate{
     public String userSignUp(String name, String email, String pass, String authType) throws Exception {
         //TODO: update URL
         String url = "https://api.parse.com/1/users";
@@ -71,7 +70,6 @@ public class ListAuthenticate implements ServerAuthenticate {
         return authtoken;
     }
 
-    @Override
     public String userSignIn(String user, String pass, String authType) throws Exception {
         Log.d("THE LIST", "userSignIn");
 

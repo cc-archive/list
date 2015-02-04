@@ -46,7 +46,7 @@
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
         <activity
-            android:name=".AuthenticatorActivity"
+            android:name=".authentication.AuthenticatorActivity"
             android:label="@string/title_activity_account_authenticator" >
         </activity>
         <activity
@@ -77,6 +77,10 @@
         <activity
             android:name=".authentication.SignUpActivity"
             android:label="@string/title_activity_sign_up" >
+        </activity>
+        <activity
+            android:name=".authentication.AccountAuthenticatorActivity"
+            android:label="@string/title_activity_account_authenticator" >
         </activity>
     </application>
 
