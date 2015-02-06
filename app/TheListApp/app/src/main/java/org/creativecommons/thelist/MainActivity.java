@@ -80,10 +80,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import fragments.AccountFragment;
-import fragments.CancelFragment;
-import fragments.TermsFragment;
-import fragments.UploadFragment;
+import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.fragments.CancelFragment;
+import org.creativecommons.thelist.fragments.TermsFragment;
+import org.creativecommons.thelist.fragments.UploadFragment;
 import swipedismiss.SwipeDismissRecyclerViewTouchListener;
 
 

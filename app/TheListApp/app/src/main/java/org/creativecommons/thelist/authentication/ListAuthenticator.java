@@ -22,11 +22,20 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY;
 import static org.creativecommons.thelist.authentication.AccountGeneral.AUTHTOKEN_TYPE_READ_ONLY_LABEL;
+import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.decryptString;
+import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.keys;
+
 
 public class ListAuthenticator extends AbstractAccountAuthenticator {
     private String TAG = "ListAuthenticator";
@@ -77,17 +86,40 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
 
         // Lets give another try to authenticate the user
         if (TextUtils.isEmpty(authToken)) {
-            final String password = am.getPassword(account);
-            if (password != null) {
-                try {
-                    Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
-                    //TODO: If the token is empty, go request a token
-                    //authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            final String encryptedPass = am.getPassword(account);
+            final String password;
+            final AesCbcWithIntegrity.CipherTextIvMac civ;
+            final AesCbcWithIntegrity.SecretKeys key;
+            //TODO: decrypt password
+            SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
+            String keyStr = sharedPref.getKey();
+            try {
+                //TODO: convert password string to cipher
+                civ = new AesCbcWithIntegrity.CipherTextIvMac(encryptedPass);
+                key = keys(keyStr);
+                password = decryptString(civ, key);
+
+                //password = decryptString(encryptedPass, key);
+                //Log.v("")
+
+                if (password != null) {
+                    try {
+                        Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
+                        //TODO: If the token is empty, go request a token
+                        //authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
+
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-        }
+        } //If authtoken is empty, go get one.
 
         // If we get an authToken - we return it
         if (!TextUtils.isEmpty(authToken)) {

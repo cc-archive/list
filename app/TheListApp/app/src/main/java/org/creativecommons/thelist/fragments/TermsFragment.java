@@ -1,3 +1,4 @@
+
 /* The List powered by Creative Commons
 
    Copyright (C) 2014 Creative Commons
@@ -17,43 +18,40 @@
 
 */
 
-package fragments;
-
+package org.creativecommons.thelist.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.utils.RequestMethods;
 
-public class ExplainerFragment extends Fragment {
-    public static final String TAG = ExplainerFragment.class.getSimpleName();
+public class TermsFragment extends Fragment {
+    public static final String TAG = TermsFragment.class.getSimpleName();
+    RequestMethods requestMethods = new RequestMethods(getActivity());
+//    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+//    ListUser mCurrentUser = new ListUser();
 
     protected Button mNextButton;
-    protected TextView mTextView;
-    protected ImageView mImageView;
-    protected int count;
-
-    //Text/Image Resources
-    String[] explainerText;
-    String[] explainerButtonText;
+    protected CheckBox mCheckBox;
+    protected TextView mLearnMoreButton;
+    protected TextView mCancelButton;
 
     //Interface with Activity
-    OnClickListener mCallback;
+    TermsClickListener mCallback;
 
     //LISTENER
-    public interface OnClickListener {
-        public void onNextClicked();
-    }
-
-    public ExplainerFragment() {
-        // Required empty public constructor
+    public interface TermsClickListener {
+        public void onTermsClicked();
+        public void onTermsCancelled();
     }
 
     @Override
@@ -64,58 +62,57 @@ public class ExplainerFragment extends Fragment {
 //        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
 //                ListApplication.TrackerName.GLOBAL_TRACKER);
 //
-//        t.setScreenName("Explainer Fragment");
+//        t.setScreenName("Terms Fragment");
 //        t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_explainer, container, false);
+        return inflater.inflate(R.layout.fragment_terms, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        mCheckBox = (CheckBox)getView().findViewById(R.id.checkBox);
         mNextButton = (Button)getView().findViewById(R.id.nextButton);
-        mTextView = (TextView)getView().findViewById(R.id.explainer_text);
-        mImageView = (ImageView)getView().findViewById(R.id.explainer_image);
+        mCancelButton = (TextView)getView().findViewById(R.id.cancelButton);
+        mLearnMoreButton = (TextView)getView().findViewById(R.id.learnMoreButton);
 
-        explainerText = getActivity().getResources().getStringArray
-                (R.array.onboarding_explainers);
-        explainerButtonText = getActivity().getResources().getStringArray
-                (R.array.onboarding_button_text);
-
-        //TODO: if clickCount < array.length(), show next item in array else, send onNextClicked()
-        count = 0;
-        //Get the first explainer (at [0])
-        setExplainerContent();
+        mCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCheckBox.isChecked()) {
+                    mNextButton.setVisibility(View.VISIBLE);
+                } else {
+                    mNextButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(count < explainerText.length) {
-                    setExplainerContent();
-                } else {
-                    mCallback.onNextClicked();
-                }
+                mCallback.onTermsClicked();
             }
         });
-    }
 
-    public void setExplainerContent(){
-        //Set Image/Text Resources
-        int id = getResources().getIdentifier("explainer" + String.valueOf(count + 1), "drawable",
-                getActivity().getPackageName());
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onTermsCancelled();
+            }
+        });
 
-        mImageView.setImageResource(id);
-        mTextView.setText(explainerText[count]);
-        mNextButton.setText(explainerButtonText[count]);
-        count ++;
+        if(mLearnMoreButton != null){
+            mLearnMoreButton.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallback = (OnClickListener) activity;
+            mCallback = (TermsClickListener) activity;
         } catch(ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + activity.getString(R.string.terms_callback_exception_message));
@@ -127,5 +124,4 @@ public class ExplainerFragment extends Fragment {
         super.onDetach();
         mCallback = null;
     }
-
 }

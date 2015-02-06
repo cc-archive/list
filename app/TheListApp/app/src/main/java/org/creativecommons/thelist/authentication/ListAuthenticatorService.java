@@ -19,7 +19,6 @@ public class ListAuthenticatorService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-
         ListAuthenticator authenticator = new ListAuthenticator(this);
         return authenticator.getIBinder();
     }

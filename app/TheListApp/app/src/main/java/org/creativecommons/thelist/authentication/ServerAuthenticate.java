@@ -11,10 +11,10 @@
 
 package org.creativecommons.thelist.authentication;
 
-import fragments.LoginFragment;
+import org.creativecommons.thelist.utils.ListUser;
 
 public interface ServerAuthenticate {
-    public void userSignUp(final String email, final String pass, String authType, LoginFragment.AuthListener listener) throws Exception;
+    public void userSignUp(final String email, final String pass, String authType, ListUser.VolleyCallback callback) throws Exception;
     //TODO: include signupclicklistener as parameter
-    public void userSignIn(final String email, final String pass, String authType, String accountType, LoginFragment.AuthListener listener) throws Exception;
+    public void userSignIn(final String email, final String pass, String authType, String accountType, ListUser.VolleyCallback callback) throws Exception;
 }

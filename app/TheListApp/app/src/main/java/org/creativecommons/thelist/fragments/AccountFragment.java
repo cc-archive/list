@@ -17,7 +17,7 @@
 
 */
 
-package fragments;
+package org.creativecommons.thelist.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -251,9 +251,9 @@ public class AccountFragment extends Fragment {
         String url = ApiConstants.REGISTER_USER;
 
         //Combine login data with user preferences
-        JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject();
+        //JSONObject categoryListObject = sharedPreferencesMethods.createCategoryListObject();
         //Log.v(TAG,categoryListObject.toString());
-        JSONObject userItemObject = sharedPreferencesMethods.createUserItemsObject();
+        //JSONObject userItemObject = sharedPreferencesMethods.createUserItemsObject();
         //Log.v(TAG,userItemObject.toString());
 
         final JSONObject userObject = new JSONObject();

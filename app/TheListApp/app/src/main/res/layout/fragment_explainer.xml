@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:weightSum="6"
     android:padding="20dp"
-    tools:context="fragments.ExplainerFragment">
+    tools:context="org.creativecommons.thelist.fragments.ExplainerFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

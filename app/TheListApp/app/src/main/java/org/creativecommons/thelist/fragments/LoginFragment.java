@@ -1,4 +1,4 @@
-package fragments;
+package org.creativecommons.thelist.fragments;
 
 
 import android.accounts.AccountManager;
@@ -21,11 +21,14 @@ import org.creativecommons.thelist.utils.RequestMethods;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_TYPE;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
+import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends android.support.v4.app.Fragment {
+
     private RequestMethods requestMethods;
     Context mContext;
 
@@ -33,8 +36,9 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     private AccountManager mAccountManager;
     private String mAuthTokenType;
 
-    //Interface with Activity
+    //Interface with Activity + ListUser
     public AuthListener mCallback;
+    public ListUser.VolleyCallback callback;
 
     // --------------------------------------------------------
 
@@ -59,7 +63,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             throw new ClassCastException(activity.toString()
                     + activity.getString(R.string.login_callback_exception_message));
         }
-    }
+    } //onAttach
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +77,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         super.onResume();
         mContext = getActivity();
         requestMethods = new RequestMethods(mContext);
+        mAccountManager = AccountManager.get(getActivity().getBaseContext());
 
 
         //Get account information
@@ -95,8 +100,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String accountName = accountNameField.getText().toString().trim();
-                String accountPassword = accountPasswordField.getText().toString().trim();
+                final String accountName = accountNameField.getText().toString().trim();
+                final String accountPassword = accountPasswordField.getText().toString().trim();
                 final String accountType = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
                 if (accountName.isEmpty() || accountPassword.isEmpty()) {
@@ -106,7 +111,22 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                     //TODO: Login User + save to sharedPreferences
                     ListUser mCurrentUser = new ListUser(mContext);
                     try {
-                        mCurrentUser.userSignIn(accountName, accountPassword, mAuthTokenType, accountType, mCallback);
+                        mCurrentUser.userSignIn(accountName, accountPassword, mAuthTokenType, accountType,
+                                new ListUser.VolleyCallback() {
+                                    @Override
+                                    public void onSuccess(String authtoken) {
+                                        //TODO: authtoken stuff
+                                        Bundle data = new Bundle();
+
+                                        data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
+                                        data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                                        data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                                        data.putString(PARAM_USER_PASS, accountPassword);
+
+                                        //Create Bundle to create Account
+                                        mCallback.onUserSignedIn(data);
+                                    }
+                                });
                     } catch (Exception e) {
                         Log.d("LoginFragment", e.getMessage());
                         //data.putString(KEY_ERROR_MESSAGE, e.getMessage());
@@ -138,14 +158,20 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                             getString(R.string.login_error_message));
                 } else {
                     //TODO: Login User + save to sharedPreferences
-                    ListUser mCurrentUser = new ListUser();
+                    ListUser mCurrentUser = new ListUser(mContext);
                     try {
-                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, mCallback);
+                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.VolleyCallback() {
+                            @Override
+                            public void onSuccess(String authtoken) {
+                                //TODO: fill this in to create user
+                            }
+                        });
                     } catch (Exception e) {
                         Log.d("LoginFragment", e.getMessage());
                     }
                 }
             }
         });
-    }
-}
+    }//onResume
+
+}//LoginFragment

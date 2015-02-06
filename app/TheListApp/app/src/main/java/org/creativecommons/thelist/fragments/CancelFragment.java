@@ -17,7 +17,7 @@
 
 */
 
-package fragments;
+package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;

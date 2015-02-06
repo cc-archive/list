@@ -36,8 +36,8 @@ import android.widget.TextView;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
-import fragments.AccountFragment;
-import fragments.ExplainerFragment;
+import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.fragments.ExplainerFragment;
 
 
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment.LoginClickListener {

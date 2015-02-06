@@ -36,12 +36,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
@@ -245,42 +243,42 @@ public class CategoryListActivity extends ActionBarActivity {
     } //getCategoriesRequest
 
     //PUT REQUEST: Add category preferences to DB
-    private void storeCategoriesRequest() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String userID = mCurrentUser.getUserID();
-        //Genymotion Emulator
-        //TODO: FIX URL
-        String url = "" + userID;
-
-        //Create Object to send
-        JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject();
-        //Log.v(TAG, UserCategoriesObject.toString());
-
-        //Volley Request
-        JsonObjectRequest putCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
-                UserCategoriesObject,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //TODO: Check response code + display error
-                        //if(responseCode != 200), get response data + show error
-
-                        //Handle Data
-                        mPutResponse = response;
-                        //Log.v(TAG, mPutResponse.toString());
-                        //mProgressBar.setVisibility(View.INVISIBLE);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                requestMethods.showErrorDialog(mContext,
-                        getString(R.string.error_title),
-                        getString(R.string.error_message));
-            }
-        });
-        queue.add(putCategoriesRequest);
-    } //storeCategoriesRequest
+//    private void storeCategoriesRequest() {
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//        String userID = mCurrentUser.getUserID();
+//        //Genymotion Emulator
+//        //TODO: FIX URL
+//        String url = "" + userID;
+//
+//        //Create Object to send
+//        //JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject();
+//        //Log.v(TAG, UserCategoriesObject.toString());
+//
+//        //Volley Request
+//        JsonObjectRequest putCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
+//                UserCategoriesObject,
+//                new Response.Listener<JSONObject>() {
+//
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        //TODO: Check response code + display error
+//                        //if(responseCode != 200), get response data + show error
+//
+//                        //Handle Data
+//                        mPutResponse = response;
+//                        //Log.v(TAG, mPutResponse.toString());
+//                        //mProgressBar.setVisibility(View.INVISIBLE);
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                requestMethods.showErrorDialog(mContext,
+//                        getString(R.string.error_title),
+//                        getString(R.string.error_message));
+//            }
+//        });
+//        queue.add(putCategoriesRequest);
+//    } //storeCategoriesRequest
 
 
     @Override

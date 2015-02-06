@@ -1,5 +1,7 @@
 package org.creativecommons.thelist.authentication;
 
+import org.creativecommons.thelist.misc.ListAuthenticate;
+
 public class AccountGeneral {
     /**
      * Account type id

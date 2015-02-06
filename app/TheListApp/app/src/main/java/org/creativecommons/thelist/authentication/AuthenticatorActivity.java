@@ -13,20 +13,26 @@ import android.widget.FrameLayout;
 
 import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.utils.SharedPreferencesMethods;
+import org.creativecommons.thelist.fragments.LoginFragment;
 
-import fragments.LoginFragment;
-import static org.creativecommons.thelist.authentication.AccountGeneral.*;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
+import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
+import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.encrypt;
+import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.generateKey;
 
 
 public class AuthenticatorActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity implements LoginFragment.AuthListener {
-    private RequestMethods requestMethods;
-    private SharedPreferencesMethods sharedPreferencesMethods;
+    //private RequestMethods requestMethods;
+    //private SharedPreferencesMethods sharedPreferencesMethods;
     //private ListUser mCurrentUser;
     Context mContext;
 
-    private final int REQ_SIGNUP = 1;
+    //private final int REQ_SIGNUP = 1;
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;
@@ -83,9 +89,23 @@ public class AuthenticatorActivity extends org.creativecommons.thelist.authentic
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             //TODO: encrypt password!
+            //Generate Key
+            AesCbcWithIntegrity.SecretKeys key;
+            try {
+                key = generateKey();
+                AesCbcWithIntegrity.CipherTextIvMac cryptoPass = encrypt(accountPassword, key);
 
-            mAccountManager.addAccountExplicitly(account, accountPassword, null);
-            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+                //Create new account
+                mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
+                mAccountManager.setAuthToken(account, authtokenType, authtoken);
+
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+
         } else {
             Log.d("THE LIST", TAG + "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);

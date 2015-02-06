@@ -19,11 +19,9 @@
 
 package org.creativecommons.thelist.utils;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -44,19 +42,17 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import fragments.LoginFragment;
-
 public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
-    private String userName;
+
+    private RequestMethods requestMethods;
+    private SharedPreferencesMethods sharedPreferencesMethods;
+
+    private  String userName;
     private String userID;
     private String sessionToken;
     private boolean logInState;
     private Context mContext;
-    private RequestMethods requestMethods;
-    private SharedPreferencesMethods sharedPreferencesMethods;
-    //private ArrayList<MainListItem> userItems;
-    //private ArrayList<MainListItem> userCategories;
 
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
@@ -72,9 +68,6 @@ public class ListUser implements ServerAuthenticate {
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
     }
 
-    public ListUser() {
-    }
-
     public ListUser(String name, String id) {
         this.userName = name;
         this.userID = id;
@@ -82,7 +75,7 @@ public class ListUser implements ServerAuthenticate {
     }
 
     public boolean isUser() {
-        //TODO: Check if User exists
+        //TODO: Check if User account exists in AccountManager
         return false;
     }
 
@@ -102,7 +95,7 @@ public class ListUser implements ServerAuthenticate {
     }
 
     public void setUserName(String name) {
-        this.userName = name;
+        //this.userName = name;
     }
 
     //TODO: get rid of this eventually
@@ -110,8 +103,8 @@ public class ListUser implements ServerAuthenticate {
         logInState = bol;
     }
 
+    //TODO: move to sharedPreferenceMethods
     public String getUserID() {
-        //TODO: actually get ID
         userID = sharedPreferencesMethods.getUserId();
         //See if sharedPreference methods contains userID
         //If yes: get and return userID; else: return null
@@ -128,23 +121,20 @@ public class ListUser implements ServerAuthenticate {
         this.userID = id;
     }
 
-    public String getSessionToken(){
-        //TODO: actually get sessionToken
-        //sessionToken = //TODO: GET SESION TOKEN;
-
-        //TODO: IF THERE IS NO SESSION TOKEN? WILL THE AUTHENTICATOR DO THIS?
-        return sessionToken;
-    }
+//    public String getSessionToken(){
+//        //TODO: actually get sessionToken
+//        //sessionToken = //TODO: GET SESION TOKEN;
+//
+//        //TODO: IF THERE IS NO SESSION TOKEN? WILL THE AUTHENTICATOR DO THIS?
+//        return sessionToken;
+//    }
 
     public void setSessionToken(String token){
         sessionToken = token;
     }
 
     public void logOut() {
-        //TODO: Figure out what logOut even means…
-        //LogOut User
-        //Destroy session token?
-        userName = null;
+        //TODO; invalidateSessionToken?
         userID = null;
         logInState = false;
 
@@ -158,10 +148,12 @@ public class ListUser implements ServerAuthenticate {
         mContext.startActivity(intent);
     }
 
-
+    public interface VolleyCallback{
+        void onSuccess(String authtoken);
+    }
 
     @Override
-    public void userSignIn(final String email, final String pass, String authType, final String accountType, final LoginFragment.AuthListener listener) throws Exception {
+    public void userSignIn(final String email, final String pass, String authType, final String accountType, final VolleyCallback callback){
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
 
@@ -181,22 +173,17 @@ public class ListUser implements ServerAuthenticate {
                                 //TODO: remove when endpoints work without ID
                                 userID = res.getString(ApiConstants.USER_ID);
                                 sessionToken = res.getString(ApiConstants.USER_TOKEN);
+
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
                                         (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
+
                                 //Add items chosen before login to userlist
                                 //TODO: also add category preferences
                                 addSavedItemsToUserList();
 
-                                Bundle userData = new Bundle();
-
-                                userData.putString(AccountManager.KEY_ACCOUNT_NAME, email);
-                                userData.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                                userData.putString(AccountManager.KEY_AUTHTOKEN, sessionToken);
-                                userData.putString(PARAM_USER_PASS, pass);
-
-                                //pass userData to the activity
-                                listener.onUserSignedIn(userData);
+                                //pass authtoken back to activity
+                                callback.onSuccess(sessionToken);
 
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
@@ -220,15 +207,14 @@ public class ListUser implements ServerAuthenticate {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("username", email);
                 params.put(ApiConstants.USER_PASSWORD, pass);
-
                 return params;
             }
         };
         queue.add(userSignInRequest);
-    }
+    } //userSignIn
 
     @Override
-    public void userSignUp(String email, String pass, String authType, final LoginFragment.AuthListener listener) throws Exception {
+    public void userSignUp(String email, String pass, String authType, final VolleyCallback callback) throws Exception {
         //TODO: actually register user
 
     }
@@ -334,17 +320,19 @@ public class ListUser implements ServerAuthenticate {
 
         //TODO: session token will know which user this is?
         String url = ApiConstants.ADD_ITEM + getUserID() + "/" + itemID;
+        int mStatusCode;
 
         //Add single item to user list
         StringRequest postItemRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         //get Response
                         Log.v("Response: ", response);
                         Log.v(TAG,"AN ITEM IS BEING ADDED");
-                        //TODO: do something with response?
                         //TODO: on success remove the item from the sharedPreferences
+                        sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 
                         //Toast: Confirm List Item has been added
                         final Toast toast = Toast.makeText(mContext,
@@ -382,7 +370,7 @@ public class ListUser implements ServerAuthenticate {
 
         } else { //If logged in, remove from DB
             String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
-            final String skey = sharedPreferencesMethods.RetrieveUserToken();
+            final String skey = sharedPreferencesMethods.getUserToken();
 
             StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {

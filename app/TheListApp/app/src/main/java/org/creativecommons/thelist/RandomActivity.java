@@ -179,7 +179,7 @@ public class RandomActivity extends Activity {
                                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                         userItemList.toString());
 
-                        String sharedPref = sharedPreferencesMethods.RetrieveSharedPreference
+                        String sharedPref = sharedPreferencesMethods.RetrieveSharedPreferenceList
                                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
                         Log.v("ALL ITEMS IN USER PREF", sharedPref);
                     }
