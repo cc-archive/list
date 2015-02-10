@@ -51,16 +51,28 @@ public class SharedPreferencesMethods {
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
 
+    //----------------------------------------------------------
+    //SAVE PREFERENCES
+    //----------------------------------------------------------
+
     //Save Any Preference
     public void SaveSharedPreference (String key, String value){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.apply();
-        Log.v("ADDED AND SAVED ITEM ID: ", value);
+        Log.v("ADDED AND SAVED ITEM: ", value);
     }
 
-    public void SaveKey(String key){
+    public void saveUserID(String id){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(USER_ID_PREFERENCE_KEY, id);
+        editor.apply();
+        Log.v("ADDED AND SAVED ITEM: ", id);
+    }
+
+    public void saveKey(String key){
         SaveSharedPreference(USER_KEY, key);
     }
 
@@ -76,13 +88,6 @@ public class SharedPreferencesMethods {
             return null;
         }
     } //getKey
-
-    //TODO: get rid of this: getAuthToken to replace
-    public String getUserToken(){
-        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        String token = sharedPref.getString(USER_TOKEN_PREFERENCE_KEY, null);
-        return token;
-    } //getUserToken
 
     //Get User ID from SharedPreferences
     public String getUserId(){
@@ -122,16 +127,20 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         String value = sharedPref.getString(key, null);
 
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(value);
-        JsonArray array = element.getAsJsonArray();
+        if(value != null){
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(value);
+            JsonArray array = element.getAsJsonArray();
 
-        //Make usable as JSONArray
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < array.size(); i++) {
-            list.add(array.get(i).getAsString());
+            //Make usable as JSONArray
+            List<String> list = new ArrayList<String>();
+            for (int i = 0; i < array.size(); i++) {
+                list.add(array.get(i).getAsString());
+            }
+            return new JSONArray(list);
+        } else {
+            return null;
         }
-        return new JSONArray(list);
     } //RetrieveSharedPreferenceList
 
     public JSONArray RetrieveCategorySharedPreference (){
@@ -152,13 +161,13 @@ public class SharedPreferencesMethods {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove(key);
         editor.apply();
-    }
+    } //ClearSharedPreference
 
     //Clear Temporary Preferences (CAT + ITEMS)
     public void ClearTempPreferences(){
         ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
         ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
-    }
+    } //ClearTempPreferences
 
     //Clear all sharedPreferences
     //TODO: add other keys like session token
@@ -169,7 +178,7 @@ public class SharedPreferencesMethods {
         //TODO: remove once getAuthToken replaces this
         ClearSharedPreference(USER_TOKEN_PREFERENCE_KEY);
         ClearSharedPreference(USER_ID_PREFERENCE_KEY);
-    }
+    } //Clearall
 
     //Remove single value in Preferences
     public void RemoveUserItemPreference(String itemID) {
@@ -180,7 +189,7 @@ public class SharedPreferencesMethods {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(listOfValues);
         JsonArray array = element.getAsJsonArray();
-        Log.v("ARRAY FROM SHARED PREF: ", array.toString());
+        Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
 
         for (int i = 0; i < array.size(); i++) {
             String singleItem = array.get(i).getAsString();

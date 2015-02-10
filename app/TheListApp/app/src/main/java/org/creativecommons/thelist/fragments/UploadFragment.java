@@ -93,7 +93,7 @@ public class UploadFragment extends Fragment {
         mContext = getActivity();
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         requestMethods = new RequestMethods(mContext);
-        mCurrentUser = new ListUser(mContext);
+        mCurrentUser = new ListUser(getActivity());
 
         mProgressLayout = (RelativeLayout)getView().findViewById(R.id.upload_loading);
         mResultMessage = (RelativeLayout)getView().findViewById(R.id.result_message);
@@ -141,8 +141,6 @@ public class UploadFragment extends Fragment {
         String itemID = (String)b.getSerializable(getString(R.string.item_id_bundle_key));
         Uri uri = Uri.parse((String) b.getSerializable(getString(R.string.uri_bundle_key)));
 
-        SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
-
         String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + itemID;
 
         //Test file size
@@ -158,7 +156,7 @@ public class UploadFragment extends Fragment {
                         @Override
                         public void onResponse(String response) {
                             //Get Response
-                            Log.v("PHOTO UPLOADED RESPONES: ", response);
+                            Log.v(TAG, "Photo response: " + response);
                             //TODO: add conditions? What happens when photo upload fails?
 
                             displaySuccessMessage();

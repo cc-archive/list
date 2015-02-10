@@ -67,6 +67,7 @@ import org.creativecommons.thelist.fragments.CancelFragment;
 import org.creativecommons.thelist.fragments.TermsFragment;
 import org.creativecommons.thelist.fragments.UploadFragment;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
+import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
@@ -85,11 +86,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import swipedismiss.SwipeDismissRecyclerViewTouchListener;
 
-
-public class MainActivity extends ActionBarActivity implements AccountFragment.LoginClickListener,
-        TermsFragment.TermsClickListener, UploadFragment.UploadListener, CancelFragment.CancelListener {
+public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener, CancelFragment.CancelListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
     private Menu menu;
@@ -220,9 +218,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 mFab.setEnabled(true);
             }
         }, 500);
-        String auth = mCurrentUser.getAuthed(this);
 
-        if(!(auth.equals(ListUser.TEMP_USER))) { //if this is not a temp user
+        if(mCurrentUser.isTempUser()) { //if this is not a temp user
             getUserListItems();
             Log.v("NOT A TEMP: ", "legit user");
 
@@ -261,10 +258,8 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         String itemRequesturl;
         JSONArray itemIds;
 
-        String auth = mCurrentUser.getAuthed(this);
-
         //IF USER IS LOGGED IN
-        if(!(auth.equals(ListUser.TEMP_USER))) {
+        if(!(mCurrentUser.isTempUser())) {
             Log.v("HELLO", "this user is logged in");
             itemRequesturl = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
 
@@ -596,7 +591,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
             Log.i(TAG,"Media URI:" + mMediaUri);
 
-            if(!(mCurrentUser.getAuthed(MainActivity.this).equals(ListUser.TEMP_USER))) {
+            if(!(mCurrentUser.isTempUser())) {
                 startPhotoUpload();
             } else {
                 Bundle b = new Bundle();
@@ -771,7 +766,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         MenuItem logOut = menu.findItem(R.id.logout);
         MenuItem logIn = menu.findItem(R.id.login);
         //TODO: turn this back on
-        if(!(mCurrentUser.getAuthed(MainActivity.this).equals(ListUser.TEMP_USER))){
+        if(!(mCurrentUser.isTempUser())){
             logOut.setVisible(true);
             logIn.setVisible(false);
         } else {

@@ -155,7 +155,7 @@ public class CategoryListActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 //If logged in, put to user profile, else create sharedPreference
-                if((mCurrentUser.getAuthed(CategoryListActivity.this).equals(ListUser.TEMP_USER))) {
+                if((mCurrentUser.isTempUser())) {
                     Log.v(TAG, "User is logged in so no preferences are being saved");
                     //storeCategoriesRequest();
                 } else {
@@ -176,8 +176,7 @@ public class CategoryListActivity extends ActionBarActivity {
                 }
                 //Navigate to Random Activity
                 //TODO: make category list activity into a fragment so there is no need for this
-                if((mCurrentUser.getAuthed(CategoryListActivity.this).equals(ListUser.TEMP_USER))
-                        && sharedPreferencesMethods.getUserItemCount() < 3){
+                if(mCurrentUser.isTempUser() && sharedPreferencesMethods.getUserItemCount() < 3){
                     Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
                     startActivity(intent);
                 } else {

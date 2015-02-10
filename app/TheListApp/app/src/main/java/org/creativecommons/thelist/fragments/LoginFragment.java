@@ -91,6 +91,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         }
 
         //UI Elements
+        final Button cancelButton = (Button) getView().findViewById(R.id.cancelButton);
         final Button loginButton = (Button) getView().findViewById(R.id.loginButton);
         final Button signUpButton = (Button) getView().findViewById(R.id.signUpButton);
         final EditText accountEmailField = (EditText)getView().findViewById(R.id.accountName);
@@ -108,7 +109,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                     requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
                 } else {
-                    ListUser mCurrentUser = new ListUser(mContext);
+                    ListUser mCurrentUser = new ListUser(getActivity());
                     try {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.VolleyCallback() {
@@ -134,17 +135,26 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        //I want to create an account --> show user Sign Up Button
-        getView().findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
+        //TODO: hide loginButton and show signUpButton
+        //Actually I need an account --> show user Sign Up Button
+//        getView().findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                //loginButton.setVisibility(View.GONE);
+//                //signUpButton.setVisibility(View.VISIBLE);
+//            }
+//        });
+
+        //Cancel Activity
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: hide loginButton and show signUpButton
-                loginButton.setVisibility(View.GONE);
-                signUpButton.setVisibility(View.VISIBLE);
+                mCallback.onCancelLogin();
             }
         });
 
-        //Try Sign Up on Click
+        //TODO: do when we have register user
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +167,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                             getString(R.string.login_error_message));
                 } else {
                     //TODO: Login User + save to sharedPreferences
-                    ListUser mCurrentUser = new ListUser(mContext);
+                    ListUser mCurrentUser = new ListUser(getActivity());
                     try {
                         mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.VolleyCallback() {
                             @Override

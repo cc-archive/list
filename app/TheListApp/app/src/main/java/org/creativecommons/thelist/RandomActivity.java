@@ -132,7 +132,7 @@ public class RandomActivity extends Activity {
                     }, 1000);
 
                     //If logged in, add item to user’s list right away
-                    if (!(mCurrentUser.getAuthed(RandomActivity.this).equals(ListUser.TEMP_USER))) {
+                    if (!(mCurrentUser.isTempUser())) {
                         Log.v("LOGGED IN", "user is logged in");
                         //Add to UserList
                         mCurrentUser.addItemToUserList(mItemID); //NB: includes confirmation toast
@@ -162,15 +162,17 @@ public class RandomActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     //Get array of selected item IDS
-                    if((mCurrentUser.getAuthed(RandomActivity.this).equals(ListUser.TEMP_USER))){
+                    if(mCurrentUser.isTempUser()){
                         List<String> userItemList = requestMethods.getItemIds(mItemList);
+
                         JSONArray oldItemArray = sharedPreferencesMethods.RetrieveUserItemPreference();
-                        //Log.v(TAG,mItemList.toString());
-                        for (int i = 0; i < oldItemArray.length(); i++) {
-                            try {
-                                userItemList.add(0, oldItemArray.getString(i));
-                            } catch (JSONException e) {
-                                Log.v(TAG, e.getMessage());
+                        if(oldItemArray != null) {
+                            for (int i = 0; i < oldItemArray.length(); i++) {
+                                try {
+                                    userItemList.add(0, oldItemArray.getString(i));
+                                } catch (JSONException e) {
+                                    Log.v(TAG, e.getMessage());
+                                }
                             }
                         }
                         Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package swipedismiss;
+package org.creativecommons.thelist.swipedismiss;
 
 import android.app.ListActivity;
 import android.app.ListFragment;

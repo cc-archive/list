@@ -68,7 +68,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         mContext = this;
-        mCurrentUser = new ListUser(mContext);
+        mCurrentUser = new ListUser(StartActivity.this);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -90,7 +90,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         //TODO: Check if user token is valid, redirect to MainActivity if yes
-        if(!(mCurrentUser.getAuthed(StartActivity.this).equals(ListUser.TEMP_USER))) {
+        if(!(mCurrentUser.isTempUser())) {
             Log.v(TAG, "START: USER IS LOGGED IN");
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

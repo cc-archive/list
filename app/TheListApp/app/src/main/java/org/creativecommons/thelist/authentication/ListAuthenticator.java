@@ -16,12 +16,14 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.accounts.NetworkErrorException;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.creativecommons.thelist.AccountActivity;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
@@ -41,13 +43,20 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.key
 public class ListAuthenticator extends AbstractAccountAuthenticator {
     private String TAG = "ListAuthenticator";
     private final Context mContext;
+    private Activity activity;
     private String authToken;
 
-    public ListAuthenticator(Context context) {
-        super(context);
+    public ListAuthenticator(Activity activity) {
+        super(activity);
 
         // I hate you! Google - set mContext as protected! (TODO: Laugh at this…again)
-        this.mContext = context;
+        this.mContext = activity;
+        this.activity = activity;
+    }
+
+    public ListAuthenticator(Context mc){
+        super(mc);
+        this.mContext = mc;
     }
 
     //Add account to your android device
@@ -55,7 +64,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
         Log.d("THE LIST", TAG + "> addAccount");
 
-        final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        final Intent intent = new Intent(mContext, AccountActivity.class);
         intent.putExtra(AccountGeneral.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(AccountGeneral.ARG_AUTH_TYPE, authTokenType);
         intent.putExtra(AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT, true);
@@ -105,7 +114,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
                     try {
                         Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
                         //TODO: If the token is empty, go request a token
-                        ListUser mCurrentUser = new ListUser(mContext);
+                        ListUser mCurrentUser = new ListUser(activity);
                         mCurrentUser.userSignIn(account.name,password, authTokenType, new ListUser.VolleyCallback() {
                             @Override
                             public void onSuccess(String userToken) {
@@ -138,7 +147,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
         // If we get here, then we couldn't access the user's password - so we
         // need to re-prompt them for their credentials. We do that by creating
         // an intent to display our AuthenticatorActivity.
-        final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+        final Intent intent = new Intent(mContext, AccountActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(AccountGeneral.ARG_ACCOUNT_TYPE, account.type);
         intent.putExtra(AccountGeneral.ARG_AUTH_TYPE, authTokenType);

@@ -1,155 +1,142 @@
-/* The List powered by Creative Commons
-
-   Copyright (C) 2014 Creative Commons
-
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU Affero General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU Affero General Public License for more details.
-
-   You should have received a copy of the GNU Affero General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
 package org.creativecommons.thelist;
 
-import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
+import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.fragments.LoginFragment;
+import org.creativecommons.thelist.fragments.TermsFragment;
 
-import org.creativecommons.thelist.utils.ListApplication;
-import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.utils.SharedPreferencesMethods;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
+import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
+import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.encrypt;
+import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.generateKey;
 
 
-public class AccountActivity extends AccountAuthenticatorActivity {
-    public static final String TAG = AccountActivity.class.getSimpleName();
-    protected Context mContext;
+public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity implements LoginFragment.AuthListener {
+    private final String TAG = this.getClass().getSimpleName();
+    Context mContext;
+    //private final int REQ_SIGNUP = 1;
+    private AccountManager mAccountManager;
+    private String mAuthTokenType;
 
-    //Request Methods
-    RequestMethods requestMethods;
-    SharedPreferencesMethods sharedPreferencesMethods;
-    ListUser mCurrentUser;// = new ListUser(mContext);
 
     //UI Elements
-    protected EditText mEmailLoginField;
-    protected EditText mPasswordLoginField;
-    protected Button mLoginButton;
-    //protected ProgressBar mProgressBar;
-    String mPassword;
-    String mEmail;
+    FrameLayout mFrameLayout;
+
+    //Fragments
+    AccountFragment accountFragment = new AccountFragment();
+    TermsFragment termsFragment = new TermsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        mContext = AccountActivity.this;
-        SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
-        requestMethods = new RequestMethods(this);
+        mContext = this;
+        mAccountManager = AccountManager.get(getBaseContext());
 
-        //Google Analytics Tracker
-        Tracker t = ((ListApplication) AccountActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
+        //UI Elements
+        mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
 
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+        //Get account information (intent is coming from ListAuthenticator…always call AuthToken)
+        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+        if (mAuthTokenType == null)
+            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
-        sharedPref.ClearAllSharedPreferences();
+        //Prepopulate accountName if it exists…I think
+        if (accountName != null) {
+            ((EditText) findViewById(R.id.accountName)).setText(accountName);
+        }
 
-        mCurrentUser = new ListUser(mContext);
+        //auto load loginFragment
+        LoginFragment loginFragment = new LoginFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container,loginFragment)
+                .commit();
+                mFrameLayout.setClickable(true);
+    } //OnCreate
 
-        mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
-        mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
-        mLoginButton = (Button)findViewById(R.id.loginButton);
+    @Override
+    public void onUserSignedIn(Bundle userData) {
+        final Intent res = new Intent();
+        res.putExtras(userData);
+        finishLogin(res);
+    } //onUserSignedIn
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mEmail = mEmailLoginField.getText().toString().trim();
-                mPassword = mPasswordLoginField.getText().toString().trim();
 
-                if(mPassword.isEmpty() || mEmail.isEmpty()) {
-                    requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
-                            getString(R.string.login_error_message));
-                }
-                else {
-                    //TODO: Login User + save to sharedPreferences
-                    //mCurrentUser.logIn(mEmail, mPassword, mContext);
 
-                    //1. pass it to the activity let MainActivity login and set CurrentUser/sharedPreferences
-                    //2. Login now and pass the data to MainActivity to set things
-                    //3. Set sharedPreferences in login() and retrieve them in MainActivity
+    //Pass bundle constructed on request success
+    private void finishLogin(Intent intent) {
+        Log.d("THE LIST", TAG + "> finishLogin");
 
-//                    if(mCurrentUser.isLoggedIn()) {
-//                        Intent intent = new Intent(mContext, RandomActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(intent);
-//                    }
-                }
+        String accountEmail = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        final Account account = new Account(accountEmail, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+
+        if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+            Log.d("THE LIST", TAG + "> finishLogin > addAccountExplicitly");
+            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authtokenType = mAuthTokenType;
+
+            // Creating the account on the device and setting the auth token we got
+            // (Not setting the auth token will cause another call to the server to authenticate the user)
+
+            //Generate Key
+            AesCbcWithIntegrity.SecretKeys key;
+            try {
+                key = generateKey();
+                AesCbcWithIntegrity.CipherTextIvMac cryptoPass = encrypt(accountPassword, key);
+
+                //Create new account
+                mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
+                mAccountManager.setAuthToken(account, authtokenType, authtoken);
+
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-        });
 
-    } //onCreate
+        } else {
+            Log.d("THE LIST", TAG + "> finishLogin > setPassword");
+            mAccountManager.setPassword(account, accountPassword);
+        }
 
-//    private void createNewUser() {
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//        //Genymotion Emulator
-//        String url = "http://10.0.3.2:3000/api/user";
-//
-//        //Android Default Emulator
-//        //String url = "http://10.0.2.2:3000/api/user";
-//
-//        //Data to be sent
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put(ApiConstants.USER_NAME, mUsername);
-//        params.put(ApiConstants.USER_EMAIL,mEmail);
-//        params.put(ApiConstants.USER_PASSWORD,mPassword);
-//
-//        JsonObjectRequest newUserRequest = new JsonObjectRequest(url, new JSONObject(params),
-//                new Response.Listener<JSONObject>() {
-//
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            //Handle Data
-//                            mUserData = response.getJSONObject(ApiConstants.RESPONSE_CONTENT);
-//
-//                            //mProgressBar.setVisibility(View.INVISIBLE);
-//                            //TODO: Update UI
-//
-//                        } catch (JSONException e) {
-//                            Log.e(TAG, e.getMessage());
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse (VolleyError error){
-//                requestMethods.updateDisplayForError();
-//            }
-//        });
-//        queue.add(newUserRequest);
-//    }
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
+        finish();
+    } //finishLogin
+
+    @Override
+    public void onCancelLogin() {
+        //TODO: If there are items in sharedPref head to MainActivity, if not: take to StartActivity?)
+        //TODO: put extra: this was a cancelled login so activity can act
+        Intent returnIntent = new Intent();
+        setResult(RESULT_CANCELED);
+        finish();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_account, menu);
+        getMenuInflater().inflate(R.menu.menu_account_authenticator, menu);
         return true;
     }
 
@@ -161,10 +148,10 @@ public class AccountActivity extends AccountAuthenticatorActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        if (id == R.id.action_settings) {
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
-}//AccountActivity
+} //AuthenticatorActivity

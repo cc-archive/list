@@ -58,24 +58,25 @@ public class ListUser implements ServerAuthenticate {
 
     private RequestMethods requestMethods;
     private SharedPreferencesMethods sharedPreferencesMethods;
-    //private AccountManager accountManager;
-
-    private boolean tempUser;
-    private  String userName;
-    private String userID;
-    private String sessionToken;
     private Context mContext;
+    private Activity mActivity;
 
-    public ListUser(Context mc) {
+    //TODO: clean up if unecessary
+    //private AccountManager accountManager;
+    //private boolean tempUser;
+    //private  String userName;
+    private String userID;
+    //private String sessionToken;
+
+    public ListUser(Context mc){
         mContext = mc;
-        requestMethods = new RequestMethods(mContext);
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
-        //accountManager = AccountManager.get(mContext);
     }
 
-    public ListUser(String name, String id) {
-        this.userName = name;
-        this.userID = id;
+    public ListUser(Activity a) {
+        mActivity = a;
+        mContext = a;
+        requestMethods = new RequestMethods(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
     }
 
     public boolean isTempUser() {
@@ -85,74 +86,19 @@ public class ListUser implements ServerAuthenticate {
 
         if(!(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) ||
                 sharedPreferencesMethods.getUserId() == null) {
-            tempUser = true;
+            return true;
         } else {
-            tempUser = false;
+            return false;
         }
-        return tempUser;
     } //isTempUser
 
-    public String getAuthed(Activity a) {
-
-        //IF TEMP USER
-        if(isTempUser()){
-           return TEMP_USER;
-        } else {
-            //ELSE
-            AccountManager am = AccountManager.get(mContext);
-            Account availableAccounts[] = am.getAccounts();
-            Account account;
-
-            if (availableAccounts.length > 0) {
-                account = availableAccounts[0];
-
-                AccountManagerFuture<Bundle> future = am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, a, null, null);
-
-                try {
-                    Bundle bundle = future.getResult();
-                    String auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                    return auth;
-                } catch (OperationCanceledException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AuthenticatorException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-        return null;
+    public void setUserID(String id) {
+        sharedPreferencesMethods.saveUserID(id);
+        this.userID = id;
     }
 
-    @Deprecated
-    public boolean isLoggedIn() {
-        SharedPreferences sharedPref = mContext.getSharedPreferences
-                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-
-        //TODO: what if this fail?
-        tempUser = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
-                && sharedPreferencesMethods.getUserId() != null;
-
-        return tempUser;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String name) {
-        //this.userName = name;
-    }
-
-    //TODO: get rid of this eventually
-    public void setTempUser(boolean bol) {
-        tempUser = bol;
-    }
-
-    //TODO: move to sharedPreferenceMethods
     public String getUserID() {
-        userID = sharedPreferencesMethods.getUserId();
+        String userID = sharedPreferencesMethods.getUserId();
         //See if sharedPreference methods contains userID
         //If yes: get and return userID; else: return null
         if (userID == null) {
@@ -161,31 +107,68 @@ public class ListUser implements ServerAuthenticate {
         } else {
             return userID;
         }
+    } //getUserID
+
+    public String getSessionToken() {
+        AccountManager am = AccountManager.get(mContext);
+        Account availableAccounts[] = am.getAccounts();
+        Account account;
+        String auth = null;
+
+        if (availableAccounts.length > 0) {
+            account = availableAccounts[0];
+
+            AccountManagerFuture<Bundle> future = am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity, null, null);
+
+            try {
+                Bundle bundle = future.getResult();
+                auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                Log.v("THIS IS TRYCATCH AUTH: ", auth);
+            } catch (OperationCanceledException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (AuthenticatorException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.v("THIS IS AUTH: ", auth);
+        return auth;
     }
 
-    //TODO: might not need with sharedPreferences
-    public void setUserID(String id) {
-        this.userID = id;
+    //If you are a user, get a session token
+    public String getAuthed() {
+        //IF TEMP USER
+        if (isTempUser()) {
+            Log.v("getAuthed", "this is a temp user");
+            return TEMP_USER;
+        } else {
+            Log.v("getAuthed", "this is a registered user");
+            return getSessionToken();
+        }
     }
 
-//    public String getSessionToken(){
-//        //TODO: actually get sessionToken
-//        //sessionToken = //TODO: GET SESION TOKEN;
+//    @Deprecated
+//    public boolean isLoggedIn() {
+//        SharedPreferences sharedPref = mContext.getSharedPreferences
+//                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 //
-//        //TODO: IF THERE IS NO SESSION TOKEN? WILL THE AUTHENTICATOR DO THIS?
-//        return sessionToken;
+//        //TODO: what if this fail?
+//        tempUser = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
+//                && sharedPreferencesMethods.getUserId() != null;
+//
+//        return tempUser;
 //    }
 
-    public void setSessionToken(String token){
-        sessionToken = token;
-    }
+    //TODO: move to sharedPreferenceMethods
 
     public void logOut() {
         //TODO; invalidateSessionToken?
-        userID = null;
-        tempUser = false;
+        AccountManager am = AccountManager.get(mContext);
+        am.invalidateAuthToken(AccountGeneral.ACCOUNT_TYPE, getSessionToken());
 
         //Clear all sharedPreferences
+        //TODO:this is just userID, new user profile data will need to be cleared if added
         sharedPreferencesMethods.ClearAllSharedPreferences();
 
         //TODO: take you back to startActivity?
@@ -195,6 +178,7 @@ public class ListUser implements ServerAuthenticate {
         mContext.startActivity(intent);
     }
 
+    //Callback for account signin/login
     public interface VolleyCallback{
         void onSuccess(String authtoken);
     }
@@ -210,16 +194,16 @@ public class ListUser implements ServerAuthenticate {
                     public void onResponse(String response) {
                         //Get Response
                         if(response == null || response.equals("null")) {
-                            Log.v("RESPONSE IS NULL IF YOU ARE HERE", response);
+                            Log.v("RESPONSE NULL HERE: ", response);
                             requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
-                            Log.v("THIS IS THE RESPONSE FOR LOGIN: ", response);
+                            Log.v("RESPONSE FOR LOGIN: ", response);
                             try {
                                 JSONObject res = new JSONObject(response);
                                 //TODO: remove when endpoints work without ID
-                                userID = res.getString(ApiConstants.USER_ID);
-                                sessionToken = res.getString(ApiConstants.USER_TOKEN);
+                                String userID = res.getString(ApiConstants.USER_ID);
+                                String sessionToken = res.getString(ApiConstants.USER_TOKEN);
 
                                 //Save userID in sharedPreferences
                                 sharedPreferencesMethods.SaveSharedPreference
@@ -272,7 +256,7 @@ public class ListUser implements ServerAuthenticate {
 
         try{
             if (listItemPref != null && listItemPref.length() > 0) {
-                Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
+                Log.v("LIST ITEM PREF: ", listItemPref.toString());
                 for (int i = 0; i < listItemPref.length(); i++) {
                     Log.v("ITEMS", "ARE BEING ADDED");
                     addItemToUserList(listItemPref.getString(i));
@@ -285,7 +269,7 @@ public class ListUser implements ServerAuthenticate {
 
     //Add all categories to userlist
     public void addSavedCategoriesToUserAccount(){
-
+        //TODO: make request when endpoint is available
     }
 
     //Add SINGLE random item to user list
@@ -294,7 +278,6 @@ public class ListUser implements ServerAuthenticate {
 
         //TODO: session token will know which user this is?
         String url = ApiConstants.ADD_ITEM + getUserID() + "/" + itemID;
-        int mStatusCode;
 
         //Add single item to user list
         StringRequest postItemRequest = new StringRequest(Request.Method.POST, url,
@@ -338,13 +321,13 @@ public class ListUser implements ServerAuthenticate {
     public void removeItemFromUserList(final String itemID){
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        if(!tempUser){
+        if(isTempUser()){
             //If not logged in, remove item from sharedPreferences
             sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 
         } else { //If logged in, remove from DB
             String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
-            final String skey = sharedPreferencesMethods.getUserToken();
+            final String sessionToken = getSessionToken();
 
             StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
@@ -359,10 +342,10 @@ public class ListUser implements ServerAuthenticate {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     //TODO: Add “not successful“ toast
+                    Log.d("Delete Item Failed: ", error.getMessage());
                     requestMethods.showErrorDialog(mContext,
                             mContext.getString(R.string.error_title),
                             mContext.getString(R.string.error_message));
-                    Log.v("ERROR DELETING AN ITEM: ", "THIS IS THE ERROR BEING DISPLAYED");
                 }
             }) {
                 @Override

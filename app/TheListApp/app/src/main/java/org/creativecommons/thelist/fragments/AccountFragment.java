@@ -41,11 +41,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.StartActivity;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -119,11 +122,11 @@ public class AccountFragment extends Fragment {
         Bundle savedInstanceState) {
 
         //Google Analytics Tracker
-//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName("Login Fragment");
-//        t.send(new HitBuilders.AppViewBuilder().build());
+        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName("Login Fragment");
+        t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
@@ -133,7 +136,7 @@ public class AccountFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mContext = getActivity();
-        mCurrentUser = new ListUser(mContext);
+        mCurrentUser = new ListUser(getActivity());
 
         //SignUp/Login Layouts
         mSignUpFields = (RelativeLayout)getView().findViewById(R.id.signup_section);
