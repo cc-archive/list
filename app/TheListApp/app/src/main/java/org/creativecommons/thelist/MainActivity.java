@@ -31,6 +31,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -61,6 +62,10 @@ import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.fragments.CancelFragment;
+import org.creativecommons.thelist.fragments.TermsFragment;
+import org.creativecommons.thelist.fragments.UploadFragment;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.DividerItemDecoration;
@@ -80,10 +85,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.creativecommons.thelist.fragments.AccountFragment;
-import org.creativecommons.thelist.fragments.CancelFragment;
-import org.creativecommons.thelist.fragments.TermsFragment;
-import org.creativecommons.thelist.fragments.UploadFragment;
 import swipedismiss.SwipeDismissRecyclerViewTouchListener;
 
 
@@ -156,16 +157,17 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 //        t.setScreenName(TAG);
 //        t.send(new HitBuilders.AppViewBuilder().build());
 
+        //TODO: clean this up: should not need this anymore
         //Check if user is logged in
-        userID = sharedPreferencesMethods.getUserId();
-        if(userID == null) {
-            mCurrentUser.setLogInState(false);
-            Log.v("YO" + TAG, "NOT LOGGED IN");
-        } else {
-            mCurrentUser.setLogInState(true);
-            mCurrentUser.setUserID(userID);
-            Log.v("YO " + TAG, "LOGGED IN");
-        }
+//        userID = sharedPreferencesMethods.getUserId();
+//        if(userID == null) {
+//            mCurrentUser.setTempUser(true);
+//            Log.v("YO" + TAG, "NOT LOGGED IN");
+//        } else {
+//            mCurrentUser.setTempUser(false);
+//            mCurrentUser.setUserID(userID);
+//            Log.v("YO " + TAG, "LOGGED IN");
+//        }
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
@@ -186,12 +188,11 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
 
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
-        //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
-        Log.v("Creating", "A new feed adapter");
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -219,11 +220,14 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                 mFab.setEnabled(true);
             }
         }, 500);
+        String auth = mCurrentUser.getAuthed(this);
 
-        if(mCurrentUser.isLoggedIn()){
+        if(!(auth.equals(ListUser.TEMP_USER))) { //if this is not a temp user
             getUserListItems();
+            Log.v("NOT A TEMP: ", "legit user");
 
-        } else {
+        } else { //if user is a temp
+            Log.v("I R A TEMP: ", "not logged in");
             if(mItemList.size() == 0){
                 Log.v("THERE ARE NO ITEMS: ", "Annd not logged in");
                 mRecyclerView.setVisibility(View.INVISIBLE);
@@ -256,11 +260,13 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         JsonArrayRequest userListRequest;
         String itemRequesturl;
         JSONArray itemIds;
+
+        String auth = mCurrentUser.getAuthed(this);
+
         //IF USER IS LOGGED IN
-        if(mCurrentUser.isLoggedIn()) {
-            //Log.v("HELLO", "this user is logged in");
+        if(!(auth.equals(ListUser.TEMP_USER))) {
+            Log.v("HELLO", "this user is logged in");
             itemRequesturl = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
-            Log.v("URL FOR USERLIST ITEMS: ", itemRequesturl);
 
             userListRequest = new JsonArrayRequest(itemRequesturl,
                 new Response.Listener<JSONArray>() {
@@ -321,7 +327,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             });
             queue.add(userListRequest);
         }
-        else { //IF USER IS NOT LOGGED IN
+        else { //IF USER IS A TEMP
             mItemList.clear();
             mEmptyView.setVisibility(View.GONE);
 
@@ -590,7 +596,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
             }
             Log.i(TAG,"Media URI:" + mMediaUri);
 
-            if(mCurrentUser.isLoggedIn()) {
+            if(!(mCurrentUser.getAuthed(MainActivity.this).equals(ListUser.TEMP_USER))) {
                 startPhotoUpload();
             } else {
                 Bundle b = new Bundle();
@@ -675,7 +681,6 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
                     .replace(R.id.overlay_fragment_container, cancelFragment)
                     .commit();
         }
-
     } //CancelLogin
 
     @Override
@@ -766,7 +771,7 @@ public class MainActivity extends ActionBarActivity implements AccountFragment.L
         MenuItem logOut = menu.findItem(R.id.logout);
         MenuItem logIn = menu.findItem(R.id.login);
         //TODO: turn this back on
-        if(mCurrentUser.isLoggedIn()){
+        if(!(mCurrentUser.getAuthed(MainActivity.this).equals(ListUser.TEMP_USER))){
             logOut.setVisible(true);
             logIn.setVisible(false);
         } else {

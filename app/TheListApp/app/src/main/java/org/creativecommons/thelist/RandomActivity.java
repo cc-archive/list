@@ -132,7 +132,7 @@ public class RandomActivity extends Activity {
                     }, 1000);
 
                     //If logged in, add item to user’s list right away
-                    if (mCurrentUser.isLoggedIn()) {
+                    if (!(mCurrentUser.getAuthed(RandomActivity.this).equals(ListUser.TEMP_USER))) {
                         Log.v("LOGGED IN", "user is logged in");
                         //Add to UserList
                         mCurrentUser.addItemToUserList(mItemID); //NB: includes confirmation toast
@@ -162,7 +162,7 @@ public class RandomActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     //Get array of selected item IDS
-                    if(!mCurrentUser.isLoggedIn()){
+                    if((mCurrentUser.getAuthed(RandomActivity.this).equals(ListUser.TEMP_USER))){
                         List<String> userItemList = requestMethods.getItemIds(mItemList);
                         JSONArray oldItemArray = sharedPreferencesMethods.RetrieveUserItemPreference();
                         //Log.v(TAG,mItemList.toString());

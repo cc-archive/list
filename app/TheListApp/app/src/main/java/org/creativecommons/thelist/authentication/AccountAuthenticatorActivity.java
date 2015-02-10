@@ -1,10 +1,3 @@
-package org.creativecommons.thelist.authentication;
-
-import android.accounts.AccountAuthenticatorResponse;
-import android.accounts.AccountManager;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-
 /*
  * Copyright (C) 2009 The Android Open Source Project
  *
@@ -34,6 +27,15 @@ import android.support.v4.app.FragmentActivity;
  * is never set or if it is set to null then error {@link AccountManager#ERROR_CODE_CANCELED}
  * will be called on the response.
  */
+
+package org.creativecommons.thelist.authentication;
+
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+
+
 public class AccountAuthenticatorActivity extends FragmentActivity {
     private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
     private Bundle mResultBundle = null;

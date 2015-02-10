@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.io.UnsupportedEncodingException;
@@ -40,6 +41,7 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.key
 public class ListAuthenticator extends AbstractAccountAuthenticator {
     private String TAG = "ListAuthenticator";
     private final Context mContext;
+    private String authToken;
 
     public ListAuthenticator(Context context) {
         super(context);
@@ -80,7 +82,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
         // Extract the username and password from the Account Manager, and ask
         // the server for an appropriate AuthToken.
         final AccountManager am = AccountManager.get(mContext);
-        String authToken = am.peekAuthToken(account, authTokenType);
+        authToken = am.peekAuthToken(account, authTokenType);
 
         Log.d("THE LIST", TAG + "> peekAuthToken returned - " + authToken);
 
@@ -99,14 +101,17 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
                 key = keys(keyStr);
                 password = decryptString(civ, key);
 
-                //password = decryptString(encryptedPass, key);
-                //Log.v("")
-
                 if (password != null) {
                     try {
                         Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
                         //TODO: If the token is empty, go request a token
-                        //authToken = sServerAuthenticate.userSignIn(account.name, password, authTokenType);
+                        ListUser mCurrentUser = new ListUser(mContext);
+                        mCurrentUser.userSignIn(account.name,password, authTokenType, new ListUser.VolleyCallback() {
+                            @Override
+                            public void onSuccess(String userToken) {
+                                authToken = userToken;
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

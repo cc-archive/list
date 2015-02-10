@@ -19,6 +19,7 @@
 
 package org.creativecommons.thelist;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,14 +31,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
-import org.creativecommons.thelist.fragments.AccountFragment;
-import org.creativecommons.thelist.fragments.ExplainerFragment;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
+import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
 
 
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment.LoginClickListener {
@@ -48,6 +53,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected TextView mTermsLink;
     protected Context mContext;
     protected SharedPreferencesMethods sharedPreferencesMethods;
+    private AccountManager mAccountManager;
+    private String mAuthTokenType;
     protected FrameLayout mFrameLayout;
 
     //Fragment
@@ -63,6 +70,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mContext = this;
         mCurrentUser = new ListUser(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mAccountManager = AccountManager.get(getBaseContext());
 
         Log.v(TAG, "STARTACTIVITY ON CREATE");
 
@@ -82,7 +90,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         //TODO: Check if user token is valid, redirect to MainActivity if yes
-        if(mCurrentUser.isLoggedIn()) {
+        if(!(mCurrentUser.getAuthed(StartActivity.this).equals(ListUser.TEMP_USER))) {
             Log.v(TAG, "START: USER IS LOGGED IN");
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -90,6 +98,16 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             startActivity(intent);
         } else {
             Log.v(TAG, "START: USER IS NOT LOGGED IN");
+        }
+
+        //Get account information
+        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+        if (mAuthTokenType == null)
+            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
+        if (accountName != null) {
+            ((EditText) findViewById(R.id.accountName)).setText(accountName);
         }
 
         //UI Elements
@@ -111,11 +129,19 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .add(R.id.fragment_container,accountFragment)
-                        .commit();
-                mFrameLayout.setClickable(true);
+                //TODO: request token
+                //Look for authtoken, if it exists move to MainActivity
+
+                //If not: try to get it (check for accounts, use account to login)
+
+                //If not, take to Authenticator Activity
+
+
+//                getSupportFragmentManager().beginTransaction()
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                        .add(R.id.fragment_container,accountFragment)
+//                        .commit();
+//                mFrameLayout.setClickable(true);
             }
         });
 

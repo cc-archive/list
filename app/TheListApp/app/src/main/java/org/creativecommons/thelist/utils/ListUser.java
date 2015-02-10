@@ -19,9 +19,16 @@
 
 package org.creativecommons.thelist.utils;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,60 +41,100 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.StartActivity;
+import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ServerAuthenticate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
+    public static final String TEMP_USER = "temp";
+
 
     private RequestMethods requestMethods;
     private SharedPreferencesMethods sharedPreferencesMethods;
+    //private AccountManager accountManager;
 
+    private boolean tempUser;
     private  String userName;
     private String userID;
     private String sessionToken;
-    private boolean logInState;
     private Context mContext;
-
-    public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
-    public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
-    public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
-    public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
-
-    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
-    public static final String PARAM_USER_PASS = "USER_PASS";
 
     public ListUser(Context mc) {
         mContext = mc;
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        //accountManager = AccountManager.get(mContext);
     }
 
     public ListUser(String name, String id) {
         this.userName = name;
         this.userID = id;
-        this.logInState = false;
     }
 
-    public boolean isUser() {
+    public boolean isTempUser() {
         //TODO: Check if User account exists in AccountManager
-        return false;
+        SharedPreferences sharedPref = mContext.getSharedPreferences
+                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(!(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) ||
+                sharedPreferencesMethods.getUserId() == null) {
+            tempUser = true;
+        } else {
+            tempUser = false;
+        }
+        return tempUser;
+    } //isTempUser
+
+    public String getAuthed(Activity a) {
+
+        //IF TEMP USER
+        if(isTempUser()){
+           return TEMP_USER;
+        } else {
+            //ELSE
+            AccountManager am = AccountManager.get(mContext);
+            Account availableAccounts[] = am.getAccounts();
+            Account account;
+
+            if (availableAccounts.length > 0) {
+                account = availableAccounts[0];
+
+                AccountManagerFuture<Bundle> future = am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, a, null, null);
+
+                try {
+                    Bundle bundle = future.getResult();
+                    String auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                    return auth;
+                } catch (OperationCanceledException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        return null;
     }
 
+    @Deprecated
     public boolean isLoggedIn() {
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         //TODO: what if this fail?
-        logInState = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
+        tempUser = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
                 && sharedPreferencesMethods.getUserId() != null;
 
-        return logInState;
+        return tempUser;
     }
 
     public String getUserName() {
@@ -99,8 +146,8 @@ public class ListUser implements ServerAuthenticate {
     }
 
     //TODO: get rid of this eventually
-    public void setLogInState(boolean bol) {
-        logInState = bol;
+    public void setTempUser(boolean bol) {
+        tempUser = bol;
     }
 
     //TODO: move to sharedPreferenceMethods
@@ -136,7 +183,7 @@ public class ListUser implements ServerAuthenticate {
     public void logOut() {
         //TODO; invalidateSessionToken?
         userID = null;
-        logInState = false;
+        tempUser = false;
 
         //Clear all sharedPreferences
         sharedPreferencesMethods.ClearAllSharedPreferences();
@@ -153,7 +200,7 @@ public class ListUser implements ServerAuthenticate {
     }
 
     @Override
-    public void userSignIn(final String email, final String pass, String authType, final String accountType, final VolleyCallback callback){
+    public void userSignIn(final String email, final String pass, String authType, final VolleyCallback callback){
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
 
@@ -216,80 +263,7 @@ public class ListUser implements ServerAuthenticate {
     @Override
     public void userSignUp(String email, String pass, String authType, final VolleyCallback callback) throws Exception {
         //TODO: actually register user
-
     }
-
-
-//    public void logIn(final String username, final String password, final AccountFragment.LoginClickListener listener) {
-//        RequestQueue queue = Volley.newRequestQueue(mContext);
-//        String url = ApiConstants.LOGIN_USER;
-//
-//        StringRequest logInUserRequest = new StringRequest(Request.Method.POST, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        //Get Response
-//                        if(response == null || response.equals("null")) {
-//                            Log.v("RESPONSE IS NULL IF YOU ARE HERE", response);
-//                            requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
-//                                    "Sure you got your email/password combo right?");
-//                        } else {
-//                            Log.v("THIS IS THE RESPONSE FOR LOGIN: ", response);
-//                            try {
-//                                JSONObject res = new JSONObject(response);
-//                                userID = res.getString(ApiConstants.USER_ID);
-//                                String skey = res.getString(ApiConstants.USER_TOKEN);
-//
-//                                //Save userID in sharedPreferences
-//                                sharedPreferencesMethods.SaveSharedPreference
-//                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
-//                                sharedPreferencesMethods.SaveSharedPreference
-//                                        (SharedPreferencesMethods.USER_TOKEN_PREFERENCE_KEY, skey);
-//
-//
-//                                //TODO: Save session token in sharedPreferences (googleAM may handle this)
-//                                //Add items chosen before login to userlist
-//                                //TODO: also add category preferences
-//                                JSONArray listItemPref;
-//                                listItemPref = sharedPreferencesMethods.RetrieveUserItemPreference();
-//
-//                                if (listItemPref != null && listItemPref.length() > 0) {
-//                                    Log.v("HEY THERE LIST ITEM PREF: ", listItemPref.toString());
-//                                    for (int i = 0; i < listItemPref.length(); i++) {
-//                                        Log.v("ITEMS", "ARE BEING ADDED");
-//                                        addItemToUserList(listItemPref.getString(i));
-//                                    }
-//                                }
-//                                //pass userID to the activity
-//                                listener.UserLoggedIn(userID);
-//                            } catch (JSONException e) {
-//                                Log.v(TAG,e.getMessage());
-//                                //TODO: add proper error message
-//                                requestMethods.showErrorDialog(mContext, mContext.getString
-//                                        (R.string.login_error_exception_title),
-//                                        mContext.getString(R.string.login_error_exception_message));
-//                            }
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                requestMethods.showErrorDialog(mContext,
-//                        mContext.getString(R.string.login_error_title),
-//                        mContext.getString(R.string.login_error_message));
-//            }
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() {
-//                Map<String, String> params = new HashMap<String, String>();
-//                params.put("username", username);
-//                params.put(ApiConstants.USER_PASSWORD, password);
-//
-//                return params;
-//            }
-//        };
-//        queue.add(logInUserRequest);
-//    }
 
     //Add all list items to userlist
     public void addSavedItemsToUserList(){
@@ -364,7 +338,7 @@ public class ListUser implements ServerAuthenticate {
     public void removeItemFromUserList(final String itemID){
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
-        if(!logInState){
+        if(!tempUser){
             //If not logged in, remove item from sharedPreferences
             sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 

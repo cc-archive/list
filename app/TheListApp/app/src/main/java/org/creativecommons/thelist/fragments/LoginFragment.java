@@ -93,32 +93,31 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         //UI Elements
         final Button loginButton = (Button) getView().findViewById(R.id.loginButton);
         final Button signUpButton = (Button) getView().findViewById(R.id.signUpButton);
-        final EditText accountNameField = (EditText)getView().findViewById(R.id.accountName);
+        final EditText accountEmailField = (EditText)getView().findViewById(R.id.accountName);
         final EditText accountPasswordField = (EditText)getView().findViewById(R.id.accountPassword);
 
         //Try Login on Click
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String accountName = accountNameField.getText().toString().trim();
+                final String accountEmail = accountEmailField.getText().toString().trim();
                 final String accountPassword = accountPasswordField.getText().toString().trim();
                 final String accountType = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
-                if (accountName.isEmpty() || accountPassword.isEmpty()) {
+                if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
                     requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
                 } else {
-                    //TODO: Login User + save to sharedPreferences
                     ListUser mCurrentUser = new ListUser(mContext);
                     try {
-                        mCurrentUser.userSignIn(accountName, accountPassword, mAuthTokenType, accountType,
+                        mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.VolleyCallback() {
                                     @Override
                                     public void onSuccess(String authtoken) {
                                         //TODO: authtoken stuff
                                         Bundle data = new Bundle();
 
-                                        data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
+                                        data.putString(AccountManager.KEY_ACCOUNT_NAME, accountEmail);
                                         data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                                         data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
                                         data.putString(PARAM_USER_PASS, accountPassword);
@@ -150,7 +149,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 //TODO:userSignUp
-                String accountEmail = accountNameField.getText().toString().trim();
+                String accountEmail = accountEmailField.getText().toString().trim();
                 String accountPassword = accountPasswordField.getText().toString().trim();
 
                 if (accountEmail.isEmpty() || accountPassword.isEmpty()) {

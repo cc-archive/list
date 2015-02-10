@@ -95,7 +95,6 @@ public class SharedPreferencesMethods {
         }
     } //getUserId
 
-
     //Non-logged in user
     public int getUserItemCount(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);

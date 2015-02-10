@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import org.creativecommons.thelist.MainActivity;
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.StartActivity;
 import org.creativecommons.thelist.fragments.LoginFragment;
 
 import java.io.UnsupportedEncodingException;
@@ -27,13 +27,9 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.gen
 
 
 public class AuthenticatorActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity implements LoginFragment.AuthListener {
-    //private RequestMethods requestMethods;
-    //private SharedPreferencesMethods sharedPreferencesMethods;
-    //private ListUser mCurrentUser;
     Context mContext;
 
     //private final int REQ_SIGNUP = 1;
-
     private AccountManager mAccountManager;
     private String mAuthTokenType;
 
@@ -77,9 +73,9 @@ public class AuthenticatorActivity extends org.creativecommons.thelist.authentic
     private void finishLogin(Intent intent) {
         Log.d("THE LIST", TAG + "> finishLogin");
 
-        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        String accountEmail = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
+        final Account account = new Account(accountEmail, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
             Log.d("THE LIST", TAG + "> finishLogin > addAccountExplicitly");
@@ -88,7 +84,7 @@ public class AuthenticatorActivity extends org.creativecommons.thelist.authentic
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
-            //TODO: encrypt password!
+
             //Generate Key
             AesCbcWithIntegrity.SecretKeys key;
             try {
@@ -116,38 +112,10 @@ public class AuthenticatorActivity extends org.creativecommons.thelist.authentic
         finish();
     } //finishLogin
 
-//    public void submit() {
-//        final String userName = ((EditText) findViewById(R.id.accountName)).getText().toString();
-//        final String userPass = ((EditText) findViewById(R.id.accountPassword)).getText().toString();
-//        final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-//
-//        ListUser mCurrentUser = new ListUser(mContext);
-//        String authtoken;
-//        Bundle data = new Bundle();
-//
-//        try {
-//            mCurrentUser.userSignIn(userName, userPass, mAuthTokenType,);
-//
-//            data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-//            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-//            data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-//            data.putString(PARAM_USER_PASS, userPass);
-//
-//        } catch (Exception e) {
-//            data.putString(KEY_ERROR_MESSAGE, e.getMessage());
-//        }
-//
-//        final Intent res = new Intent();
-//        res.putExtras(data);
-//
-//        finishLogin(res);
-//    }
-
-
     @Override
     public void onCancelLogin() {
         //TODO: If there are items in sharedPref head to MainActivity, if not: take to StartActivity?)
-        Intent intent = new Intent(AuthenticatorActivity.this, MainActivity.class);
+        Intent intent = new Intent(AuthenticatorActivity.this, StartActivity.class);
         startActivity(intent);
     }
 
