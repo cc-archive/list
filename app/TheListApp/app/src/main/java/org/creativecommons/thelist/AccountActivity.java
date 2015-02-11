@@ -13,9 +13,9 @@ import android.widget.FrameLayout;
 
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
-import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.LoginFragment;
 import org.creativecommons.thelist.fragments.TermsFragment;
+import org.creativecommons.thelist.utils.ListUser;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -28,19 +28,22 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.enc
 import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.generateKey;
 
 
-public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity implements LoginFragment.AuthListener {
+public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity
+        implements LoginFragment.AuthListener, TermsFragment.TermsClickListener {
     private final String TAG = this.getClass().getSimpleName();
     Context mContext;
     //private final int REQ_SIGNUP = 1;
     private AccountManager mAccountManager;
     private String mAuthTokenType;
+    private ListUser mCurrentUser;
 
+    private Bundle newUserBundle;
 
     //UI Elements
     FrameLayout mFrameLayout;
 
     //Fragments
-    AccountFragment accountFragment = new AccountFragment();
+    //TODO: user sign in flow
     TermsFragment termsFragment = new TermsFragment();
 
     @Override
@@ -49,6 +52,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         setContentView(R.layout.activity_account);
         mContext = this;
         mAccountManager = AccountManager.get(getBaseContext());
+        mCurrentUser = new ListUser(mContext);
 
         //UI Elements
         mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
@@ -78,8 +82,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         res.putExtras(userData);
         finishLogin(res);
     } //onUserSignedIn
-
-
 
     //Pass bundle constructed on request success
     private void finishLogin(Intent intent) {
@@ -127,11 +129,39 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     public void onCancelLogin() {
         //TODO: If there are items in sharedPref head to MainActivity, if not: take to StartActivity?)
         //TODO: put extra: this was a cancelled login so activity can act
-        Intent returnIntent = new Intent();
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    @Override
+    public void onTermsClicked() {
+        //Start UploadFragment and Upload photo
+        //Sign in User and
+//        String email;
+//        String password;
+//        String authType;
+//
+//        mCurrentUser.userSignUp();
+//
+//        final Intent res = new Intent();
+//        res.putExtras(userData);
+//        finishLogin(res);
+
+    } //onTermsClicked
+
+    @Override
+    public void onTermsCancelled() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    @Override
+    public void onUserSignedUp(Bundle userData) {
+        //T
+        newUserBundle = userData;
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

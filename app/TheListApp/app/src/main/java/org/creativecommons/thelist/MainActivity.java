@@ -64,7 +64,6 @@ import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.CancelFragment;
-import org.creativecommons.thelist.fragments.TermsFragment;
 import org.creativecommons.thelist.fragments.UploadFragment;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
@@ -97,7 +96,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser = new ListUser(this);
 
-    protected JSONObject mCurrentUserObject;
     protected MainListItem mCurrentItem;
     protected int activeItemPosition;
     protected MainListItem mLastDismissedItem;
@@ -119,7 +117,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
     //Fragments
     AccountFragment accountFragment = new AccountFragment();
-    TermsFragment termsFragment = new TermsFragment();
     UploadFragment uploadFragment = new UploadFragment();
     CancelFragment cancelFragment = new CancelFragment();
 
@@ -147,25 +144,13 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
 //        instance.setAppOptOut(true);
-
-        //Google Analytics Tracker
+//
+//        //Google Analytics Tracker
 //        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
 //                ListApplication.TrackerName.GLOBAL_TRACKER);
 //
 //        t.setScreenName(TAG);
 //        t.send(new HitBuilders.AppViewBuilder().build());
-
-        //TODO: clean this up: should not need this anymore
-        //Check if user is logged in
-//        userID = sharedPreferencesMethods.getUserId();
-//        if(userID == null) {
-//            mCurrentUser.setTempUser(true);
-//            Log.v("YO" + TAG, "NOT LOGGED IN");
-//        } else {
-//            mCurrentUser.setTempUser(false);
-//            mCurrentUser.setUserID(userID);
-//            Log.v("YO " + TAG, "LOGGED IN");
-//        }
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
@@ -195,22 +180,14 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         initRecyclerView();
-
-        //If Network Connection is available, get User’s Items (API, or local if not logged in)
-//        if(requestMethods.isNetworkAvailable(mContext)) {
-//            mProgressBar.setVisibility(View.VISIBLE);
-//            Log.v("Get user", "On create IS network available");
-//            getUserListItems();
-//        }
-//        else {
-            //TODO This is always useful, move to getuserlists
-//            Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
-//        }
     } //onCreate
 
     @Override
     public void onResume() {
         super.onResume();
+
+        //Update menu for login/logout options
+        invalidateOptionsMenu();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -219,7 +196,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             }
         }, 500);
 
-        if(mCurrentUser.isTempUser()) { //if this is not a temp user
+        if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
             getUserListItems();
             Log.v("NOT A TEMP: ", "legit user");
 
@@ -365,13 +342,13 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                                     // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
                                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
                                     //Get item details for UNDO
-//                                    lastDismissedItemPosition = position;
-//                                    mLastDismissedItem = mItemList.get(position);
-//                                    //What happens when item is swiped offscreen
-//                                    //mItemList.remove(position);
-//                                    mItemList.remove(mLastDismissedItem);
-//                                    mFeedAdapter.notifyItemRemoved(lastDismissedItemPosition);
-//                                    mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, mItemList.size());
+                                    lastDismissedItemPosition = position;
+                                    mLastDismissedItem = mItemList.get(position);
+
+                                    //What happens when item is swiped offscreen
+                                    mItemList.remove(mLastDismissedItem);
+                                    mFeedAdapter.notifyItemRemoved(lastDismissedItemPosition);
+                                    mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, mItemList.size());
                                     mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
 
                                     //Snackbar message
@@ -576,132 +553,67 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.v("RESULTCODE: ", (String.valueOf(resultCode)));
+        switch(requestCode){
+            case PhotoConstants.PICK_PHOTO_REQUEST:
+            case PhotoConstants.TAKE_PHOTO_REQUEST:
+                if(resultCode == RESULT_OK) {
+                    photoToBeUploaded = true;
 
-        if(resultCode == RESULT_OK) {
-            photoToBeUploaded = true;
+                    Log.v("RESULTCODE OK ", (String.valueOf(resultCode)));
+                    if(data == null) {
+                        Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        mMediaUri = data.getData();
+                    }
+                    Log.i(TAG,"Media URI:" + mMediaUri);
 
-            if(requestCode == PhotoConstants.PICK_PHOTO_REQUEST) {
-                Log.v("RESULTCODE OK ", (String.valueOf(resultCode)));
-                if(data == null) {
-                    Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+                    //TODO: make sure for sure auth will exist for this to happen
+                    //Add photo to the Gallery (listen for broadcast and let gallery take action)
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    mediaScanIntent.setData(mMediaUri);
+                    sendBroadcast(mediaScanIntent);
+
+                    startPhotoUpload();
+                } //RESULT OK
+                else if(resultCode != RESULT_CANCELED) { //result cancelled
+                    Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    mMediaUri = data.getData();
-                }
-            }
-            Log.i(TAG,"Media URI:" + mMediaUri);
-
-            if(!(mCurrentUser.isTempUser())) {
-                startPhotoUpload();
-            } else {
-                Bundle b = new Bundle();
-                b.putSerializable(getString(R.string.menu_login_bundle_key), menuLogin);
-                accountFragment.setArguments(b);
-
-                //Load accountFragment
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.overlay_fragment_container, accountFragment).commit();
-                mFrameLayout.setClickable(true);
-                getSupportActionBar().hide();
-            }
-            //Add photo to the Gallery (listen for broadcast and let gallery take action)
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            mediaScanIntent.setData(mMediaUri);
-            sendBroadcast(mediaScanIntent);
-        }
-        else if(resultCode != RESULT_CANCELED) {
-            Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
-        }
+                break;
+        } //switch
     } //onActivityResult
 
     //Start UploadFragment and upload photo
     public void startPhotoUpload(){
-        Bundle b = new Bundle();
-        b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
-        b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
-        uploadFragment.setArguments(b);
+        Log.d(TAG, "Starting photo upload");
+        mCurrentUser.getSessionToken(new ListUser.VolleyCallback() {
+            @Override
+            public void onSuccess(String authtoken) {
+                Log.d("THIS IS AUTH IN SPU", authtoken);
 
-        //Load Upload Fragment
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container,uploadFragment).commit();
-        mFrameLayout.setClickable(true);
-        getSupportActionBar().hide();
+                Bundle b = new Bundle();
+                b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
+                b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
+                b.putSerializable(getString(R.string.token_bundle_key), authtoken);
+                uploadFragment.setArguments(b);
+
+                //Load Upload Fragment
+                getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .replace(R.id.overlay_fragment_container,uploadFragment).commit();
+                mFrameLayout.setClickable(true);
+                getSupportActionBar().hide();
+            }
+        });
     } //startUploadPhoto
 
-    @Override
-    public void UserCreated(String userData) {
-        try {
-            //Set current user data
-            //TODO: get user password as well
-            mCurrentUserObject = new JSONObject(userData);
-            mCurrentUser.setUserID(mCurrentUserObject.getString(ApiConstants.USER_ID));
-            //TODO: set user token
-        } catch (JSONException e) {
-            Log.v(TAG,e.getMessage());
-        }
-        //Start terms fragment (must agree to terms before account is created)
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container, termsFragment)
-                .commit();
-    } //UserCreated
+    //TODO: create new check for this (invalidate when photo is uploaded?)
 
-    @Override
-    public void UserLoggedIn(String userData) {
-        //Set user ID
-        mCurrentUser.setUserID(userData);
-
-        menuLogin = false;
-        //Create menu again (update login to logout)
-        invalidateOptionsMenu();
-        if(photoToBeUploaded){
-            //Start UploadFragment and Upload photo
-            startPhotoUpload();
-        } else {
-            //TODO: login confirmation
-            removeFragment(accountFragment, true);
-        }
-    } //UserLoggedIn
-
-    @Override
-    public void CancelLogin() {
-        if(menuLogin){
-            removeFragment(accountFragment, false);
-            menuLogin = false;
-        } else {
-            //Show cancelledFragment
-            getSupportFragmentManager().beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .replace(R.id.overlay_fragment_container, cancelFragment)
-                    .commit();
-        }
-    } //CancelLogin
-
-    @Override
-    public void onTermsClicked() {
-        //Start UploadFragment and Upload photo
-        if(photoToBeUploaded){
-            startPhotoUpload();
-            photoToBeUploaded = false;
-        } else{
-            //TODO: confirm user has been logged in
-            removeFragment(termsFragment, false);
-        }
-    } //onTermsClicked
-
-    @Override
-    public void onTermsCancelled() {
-        //Show cancelledFragment
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.overlay_fragment_container, cancelFragment)
-                .commit();
-    }
 
     //When UploadFragment has gotten response from server
     @Override
     public void onUploadFinish() {
+        Log.d(TAG, "On Upload Finish");
         //Refresh user list + remove item that has just been uploaded
         photoToBeUploaded = false;
 
@@ -714,6 +626,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
     @Override
     public void onCancelStart() {
+        Log.d(TAG, "On Cancel Start");
         getUserListItems();
         //Remove cancelFragment after set period
         removeFragment(cancelFragment, true);

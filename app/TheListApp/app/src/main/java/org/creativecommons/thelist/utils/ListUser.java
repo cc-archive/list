@@ -21,6 +21,7 @@ package org.creativecommons.thelist.utils;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
@@ -55,14 +56,14 @@ public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
     public static final String TEMP_USER = "temp";
 
-
     private RequestMethods requestMethods;
     private SharedPreferencesMethods sharedPreferencesMethods;
     private Context mContext;
     private Activity mActivity;
+    private String auth;
 
     //TODO: clean up if unecessary
-    //private AccountManager accountManager;
+    private AccountManager am;
     //private boolean tempUser;
     //private  String userName;
     private String userID;
@@ -77,6 +78,7 @@ public class ListUser implements ServerAuthenticate {
         mContext = a;
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        am = AccountManager.get(mContext);
     }
 
     public boolean isTempUser() {
@@ -109,63 +111,47 @@ public class ListUser implements ServerAuthenticate {
         }
     } //getUserID
 
-    public String getSessionToken() {
-        AccountManager am = AccountManager.get(mContext);
+    //GetAuthToken
+    public void getSessionToken(final VolleyCallback callback) {
+        Log.d(TAG, "Getting session token");
+        //sessionComplete = false;
         Account availableAccounts[] = am.getAccounts();
         Account account;
-        String auth = null;
 
         if (availableAccounts.length > 0) {
             account = availableAccounts[0];
-
-            AccountManagerFuture<Bundle> future = am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity, null, null);
-
-            try {
-                Bundle bundle = future.getResult();
-                auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                Log.v("THIS IS TRYCATCH AUTH: ", auth);
-            } catch (OperationCanceledException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (AuthenticatorException e) {
-                e.printStackTrace();
-            }
+            am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
+                    new AccountManagerCallback<Bundle>() {
+                        @Override
+                        public void run(AccountManagerFuture<Bundle> future) {
+                            try {
+                                Bundle bundle = future.getResult();
+                                auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                                Log.v("THIS IS TRYCATCH AUTH: ", auth);
+                                callback.onSuccess(auth);
+                            } catch (OperationCanceledException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (AuthenticatorException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, null);
         }
         Log.v("THIS IS AUTH: ", auth);
-        return auth;
-    }
+    } //getSessionToken
 
-    //If you are a user, get a session token
-    public String getAuthed() {
-        //IF TEMP USER
-        if (isTempUser()) {
-            Log.v("getAuthed", "this is a temp user");
-            return TEMP_USER;
-        } else {
-            Log.v("getAuthed", "this is a registered user");
-            return getSessionToken();
-        }
-    }
 
-//    @Deprecated
-//    public boolean isLoggedIn() {
-//        SharedPreferences sharedPref = mContext.getSharedPreferences
-//                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-//
-//        //TODO: what if this fail?
-//        tempUser = sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)
-//                && sharedPreferencesMethods.getUserId() != null;
-//
-//        return tempUser;
-//    }
-
-    //TODO: move to sharedPreferenceMethods
+    //TODO: move to sharedPreferenceMethods?
 
     public void logOut() {
         //TODO; invalidateSessionToken?
-        AccountManager am = AccountManager.get(mContext);
-        am.invalidateAuthToken(AccountGeneral.ACCOUNT_TYPE, getSessionToken());
+        Account availableAccounts[] = am.getAccounts();
+
+        am.invalidateAuthToken(AccountGeneral.ACCOUNT_TYPE,
+                am.peekAuthToken(availableAccounts[0],
+                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
 
         //Clear all sharedPreferences
         //TODO:this is just userID, new user profile data will need to be cleared if added
@@ -319,6 +305,7 @@ public class ListUser implements ServerAuthenticate {
     //REMOVE SINGLE item from user list
     //TODO: FILL IN WITH REAL API INFO
     public void removeItemFromUserList(final String itemID){
+
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
         if(isTempUser()){
@@ -327,7 +314,14 @@ public class ListUser implements ServerAuthenticate {
 
         } else { //If logged in, remove from DB
             String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
-            final String sessionToken = getSessionToken();
+
+            //Get sessionToken
+            getSessionToken(new VolleyCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    auth = authtoken;
+                }
+            });
 
             StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
@@ -352,7 +346,8 @@ public class ListUser implements ServerAuthenticate {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
                     //TODO: get sessionToken from AccountManager
-                    params.put(ApiConstants.USER_TOKEN, sessionToken);
+
+                    params.put(ApiConstants.USER_TOKEN, auth);
 
                     return params;
                 }

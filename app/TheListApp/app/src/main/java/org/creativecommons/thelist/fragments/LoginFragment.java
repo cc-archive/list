@@ -33,19 +33,17 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     Context mContext;
 
     private final int REQ_SIGNUP = 1;
-    private AccountManager mAccountManager;
     private String mAuthTokenType;
 
     //Interface with Activity + ListUser
     public AuthListener mCallback;
-    public ListUser.VolleyCallback callback;
 
     // --------------------------------------------------------
 
     //LISTENERS
     public interface AuthListener {
         public void onUserSignedIn(Bundle userData);
-        //public void onUserSignedUp(Bundle userData);
+        public void onUserSignedUp(Bundle userData);
         public void onCancelLogin();
     }
 
@@ -77,11 +75,10 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         super.onResume();
         mContext = getActivity();
         requestMethods = new RequestMethods(mContext);
-        mAccountManager = AccountManager.get(getActivity().getBaseContext());
-
 
         //Get account information
         String accountName = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+        final String accountType = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
         mAuthTokenType = getActivity().getIntent().getStringExtra(ARG_AUTH_TYPE);
         if (mAuthTokenType == null)
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
@@ -103,7 +100,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             public void onClick(View v) {
                 final String accountEmail = accountEmailField.getText().toString().trim();
                 final String accountPassword = accountPasswordField.getText().toString().trim();
-                final String accountType = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
 
                 if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
                     requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
@@ -159,8 +155,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 //TODO:userSignUp
-                String accountEmail = accountEmailField.getText().toString().trim();
-                String accountPassword = accountPasswordField.getText().toString().trim();
+                final String accountEmail = accountEmailField.getText().toString().trim();
+                final String accountPassword = accountPasswordField.getText().toString().trim();
 
                 if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
                     requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
@@ -173,6 +169,15 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                             @Override
                             public void onSuccess(String authtoken) {
                                 //TODO: fill this in to create user
+
+                                Bundle data = new Bundle();
+
+                                data.putString(AccountManager.KEY_ACCOUNT_NAME, accountEmail);
+                                data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                                data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                                data.putString(PARAM_USER_PASS, accountPassword);
+
+                                mCallback.onUserSignedUp(data);
                             }
                         });
                     } catch (Exception e) {

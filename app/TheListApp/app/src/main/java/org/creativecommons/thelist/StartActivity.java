@@ -22,6 +22,7 @@ package org.creativecommons.thelist;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -74,7 +75,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
         Log.v(TAG, "STARTACTIVITY ON CREATE");
 
-
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
 //        instance.setAppOptOut(true);
 
@@ -86,8 +86,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Create sharedPreferences
-//        SharedPreferences sharedPref = mContext.getSharedPreferences
-//                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mContext.getSharedPreferences
+                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         //TODO: Check if user token is valid, redirect to MainActivity if yes
         if(!(mCurrentUser.isTempUser())) {
@@ -130,18 +130,12 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             @Override
             public void onClick(View v) {
                 //TODO: request token
-                //Look for authtoken, if it exists move to MainActivity
-
-                //If not: try to get it (check for accounts, use account to login)
-
-                //If not, take to Authenticator Activity
-
-
-//                getSupportFragmentManager().beginTransaction()
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                        .add(R.id.fragment_container,accountFragment)
-//                        .commit();
-//                mFrameLayout.setClickable(true);
+                mCurrentUser.getSessionToken(new ListUser.VolleyCallback() {
+                    @Override
+                    public void onSuccess(String authtoken) {
+                        Log.d(TAG, "Got an authtoken");
+                    }
+                });
             }
         });
 

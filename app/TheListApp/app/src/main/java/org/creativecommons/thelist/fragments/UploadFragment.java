@@ -140,8 +140,7 @@ public class UploadFragment extends Fragment {
         Bundle b = getArguments();
         String itemID = (String)b.getSerializable(getString(R.string.item_id_bundle_key));
         Uri uri = Uri.parse((String) b.getSerializable(getString(R.string.uri_bundle_key)));
-
-        String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + itemID;
+        final String token = (String)b.getSerializable(getString(R.string.token_bundle_key));
 
         //Test file size
         if(testFileSize(uri) > 8){
@@ -149,6 +148,7 @@ public class UploadFragment extends Fragment {
         } else {
             //Get Photo as Base64 encoded String
             final String photoFile = requestMethods.createUploadPhotoObject(uri);
+            String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + itemID;
 
             //Upload Photo
             StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
@@ -176,6 +176,7 @@ public class UploadFragment extends Fragment {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                    params.put(ApiConstants.USER_TOKEN, token);
                     return params;
                 }
             };
