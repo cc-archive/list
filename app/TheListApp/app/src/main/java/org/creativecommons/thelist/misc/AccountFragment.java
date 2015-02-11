@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist.fragments;
+package org.creativecommons.thelist.misc;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,9 +44,9 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import org.creativecommons.thelist.MainActivity;
+import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.StartActivity;
+import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;

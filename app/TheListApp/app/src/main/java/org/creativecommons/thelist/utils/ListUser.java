@@ -41,7 +41,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.StartActivity;
+import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ServerAuthenticate;
 import org.json.JSONArray;
@@ -54,23 +54,23 @@ import java.util.Map;
 
 public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
-    public static final String TEMP_USER = "temp";
+    //public static final String TEMP_USER = "temp";
 
     private RequestMethods requestMethods;
     private SharedPreferencesMethods sharedPreferencesMethods;
     private Context mContext;
     private Activity mActivity;
-    private String auth;
 
     //TODO: clean up if unecessary
     private AccountManager am;
-    //private boolean tempUser;
-    //private  String userName;
-    private String userID;
-    //private String sessionToken;
+    //private String userID;
+    private String auth;
 
     public ListUser(Context mc){
         mContext = mc;
+        requestMethods = new RequestMethods(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        am = AccountManager.get(mContext);
     }
 
     public ListUser(Activity a) {
@@ -79,6 +79,11 @@ public class ListUser implements ServerAuthenticate {
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         am = AccountManager.get(mContext);
+    }
+
+    //Callback for account signin/login
+    public interface AuthCallback {
+        void onSuccess(String authtoken);
     }
 
     public boolean isTempUser() {
@@ -94,10 +99,9 @@ public class ListUser implements ServerAuthenticate {
         }
     } //isTempUser
 
-    public void setUserID(String id) {
-        sharedPreferencesMethods.saveUserID(id);
-        this.userID = id;
-    }
+//    public void setUserID(String id) {
+//        sharedPreferencesMethods.saveUserID(id);
+//    }
 
     public String getUserID() {
         String userID = sharedPreferencesMethods.getUserId();
@@ -111,14 +115,24 @@ public class ListUser implements ServerAuthenticate {
         }
     } //getUserID
 
-    //GetAuthToken
-    public void getSessionToken(final VolleyCallback callback) {
+
+    public void getAuthed(final AuthCallback callback){
         Log.d(TAG, "Getting session token");
         //sessionComplete = false;
-        Account availableAccounts[] = am.getAccounts();
-        Account account;
 
-        if (availableAccounts.length > 0) {
+        if(isTempUser()){
+            addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.v("AUTH FROM NEW ACCOUNT: ", auth);
+                    callback.onSuccess(auth);
+                }
+            });
+
+        } else {
+            Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+            Account account;
+
             account = availableAccounts[0];
             am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
                     new AccountManagerCallback<Bundle>() {
@@ -127,7 +141,7 @@ public class ListUser implements ServerAuthenticate {
                             try {
                                 Bundle bundle = future.getResult();
                                 auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                                Log.v("THIS IS TRYCATCH AUTH: ", auth);
+                                Log.v("AUTH FROM OLD ACCOUNT: ", auth);
                                 callback.onSuccess(auth);
                             } catch (OperationCanceledException e) {
                                 e.printStackTrace();
@@ -139,21 +153,40 @@ public class ListUser implements ServerAuthenticate {
                         }
                     }, null);
         }
-        Log.v("THIS IS AUTH: ", auth);
-    } //getSessionToken
+    } //GetAuthed
+
+    //Just get the token (assumes pre-existing CCID account)
+    public void getToken(final AuthCallback callback) {
+        Log.d(TAG, "Getting session token");
+        //sessionComplete = false;
+        Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+        Account account;
+        account = availableAccounts[0];
+
+        am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
+                new AccountManagerCallback<Bundle>() {
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        try {
+                            Bundle bundle = future.getResult();
+                            auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                            Log.v("THIS IS TRYCATCH AUTH: ", auth);
+                            callback.onSuccess(auth);
+                        } catch (OperationCanceledException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (AuthenticatorException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, null);
+    } //getToken
 
 
     //TODO: move to sharedPreferenceMethods?
-
     public void logOut() {
-        //TODO; invalidateSessionToken?
-        Account availableAccounts[] = am.getAccounts();
-
-        am.invalidateAuthToken(AccountGeneral.ACCOUNT_TYPE,
-                am.peekAuthToken(availableAccounts[0],
-                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS));
-
-        //Clear all sharedPreferences
+        //Clear session-relevant sharedPreferences
         //TODO:this is just userID, new user profile data will need to be cleared if added
         sharedPreferencesMethods.ClearAllSharedPreferences();
 
@@ -164,13 +197,8 @@ public class ListUser implements ServerAuthenticate {
         mContext.startActivity(intent);
     }
 
-    //Callback for account signin/login
-    public interface VolleyCallback{
-        void onSuccess(String authtoken);
-    }
-
     @Override
-    public void userSignIn(final String email, final String pass, String authType, final VolleyCallback callback){
+    public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
 
@@ -192,6 +220,7 @@ public class ListUser implements ServerAuthenticate {
                                 String sessionToken = res.getString(ApiConstants.USER_TOKEN);
 
                                 //Save userID in sharedPreferences
+                                Log.d(TAG, "USER SIGN IN: setting userid: " + userID);
                                 sharedPreferencesMethods.SaveSharedPreference
                                         (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
 
@@ -231,7 +260,7 @@ public class ListUser implements ServerAuthenticate {
     } //userSignIn
 
     @Override
-    public void userSignUp(String email, String pass, String authType, final VolleyCallback callback) throws Exception {
+    public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
         //TODO: actually register user
     }
 
@@ -316,7 +345,7 @@ public class ListUser implements ServerAuthenticate {
             String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
 
             //Get sessionToken
-            getSessionToken(new VolleyCallback() {
+            getToken(new AuthCallback() {
                 @Override
                 public void onSuccess(String authtoken) {
                     auth = authtoken;
@@ -355,5 +384,23 @@ public class ListUser implements ServerAuthenticate {
             queue.add(deleteItemRequest);
         }
     } //removeItemFromUserList
+
+    private void addNewAccount(String accountType, String authTokenType, final AuthCallback callback) {
+        //Activity activity = new AccountActivity();
+
+        final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType, null, null, mActivity, new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle bnd = future.getResult();
+                    Log.d("THE LIST", "AddNewAccount Bundle is " + bnd);
+                    callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
+
+                } catch (Exception e) {
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        }, null);
+    }
 
 } //ListUser

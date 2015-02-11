@@ -1,4 +1,4 @@
-package org.creativecommons.thelist;
+package org.creativecommons.thelist.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.fragments.LoginFragment;
@@ -36,15 +37,14 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     private AccountManager mAccountManager;
     private String mAuthTokenType;
     private ListUser mCurrentUser;
-
     private Bundle newUserBundle;
 
     //UI Elements
     FrameLayout mFrameLayout;
 
     //Fragments
-    //TODO: user sign in flow
-    TermsFragment termsFragment = new TermsFragment();
+    //TODO: agree to terms
+    //TermsFragment termsFragment = new TermsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +130,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         //TODO: If there are items in sharedPref head to MainActivity, if not: take to StartActivity?)
         //TODO: put extra: this was a cancelled login so activity can act
         setResult(RESULT_CANCELED);
-        finish();
+        finish(); //this should take you to previous activity
     }
 
     @Override
@@ -157,7 +157,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
     @Override
     public void onUserSignedUp(Bundle userData) {
-        //T
+        //TODO: do something with bundle when user agrees to terms
         newUserBundle = userData;
 
     }

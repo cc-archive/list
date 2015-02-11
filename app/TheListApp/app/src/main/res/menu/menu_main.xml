@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:compat="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.creativecommons.thelist.MainActivity">
+    tools:context="org.creativecommons.thelist.activities.MainActivity">
     <!--<item android:id="@+id/action_random" android:title="@string/action_random_label"-->
         <!--android:orderInCategory="100" compat:showAsAction="ifRoom" />-->
     <item android:id="@+id/logout" android:title="@string/log_out_menu_label"

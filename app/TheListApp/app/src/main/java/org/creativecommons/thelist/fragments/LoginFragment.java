@@ -1,5 +1,23 @@
-package org.creativecommons.thelist.fragments;
+/* The List powered by Creative Commons
 
+   Copyright (C) 2014 Creative Commons
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+package org.creativecommons.thelist.fragments;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -22,7 +40,6 @@ import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCO
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_TYPE;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
 import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,7 +125,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                     ListUser mCurrentUser = new ListUser(getActivity());
                     try {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
-                                new ListUser.VolleyCallback() {
+                                new ListUser.AuthCallback() {
                                     @Override
                                     public void onSuccess(String authtoken) {
                                         //TODO: authtoken stuff
@@ -165,7 +182,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                     //TODO: Login User + save to sharedPreferences
                     ListUser mCurrentUser = new ListUser(getActivity());
                     try {
-                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.VolleyCallback() {
+                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.AuthCallback() {
                             @Override
                             public void onSuccess(String authtoken) {
                                 //TODO: fill this in to create user

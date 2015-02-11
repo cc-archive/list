@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist;
+package org.creativecommons.thelist.activities;
 
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -32,18 +32,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
-
-import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
-import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
 
 
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment.LoginClickListener {
@@ -73,6 +69,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         mAccountManager = AccountManager.get(getBaseContext());
 
+
+
         Log.v(TAG, "STARTACTIVITY ON CREATE");
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
@@ -89,6 +87,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
+
         //TODO: Check if user token is valid, redirect to MainActivity if yes
         if(!(mCurrentUser.isTempUser())) {
             Log.v(TAG, "START: USER IS LOGGED IN");
@@ -98,16 +97,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             startActivity(intent);
         } else {
             Log.v(TAG, "START: USER IS NOT LOGGED IN");
-        }
-
-        //Get account information
-        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
-        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
-        if (mAuthTokenType == null)
-            mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
-        if (accountName != null) {
-            ((EditText) findViewById(R.id.accountName)).setText(accountName);
         }
 
         //UI Elements
@@ -127,13 +116,19 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         });
 
         mAccountButton.setOnClickListener(new View.OnClickListener() {
+            //TODO: implement addAccount in case user has never signed in before
+
             @Override
             public void onClick(View v) {
-                //TODO: request token
-                mCurrentUser.getSessionToken(new ListUser.VolleyCallback() {
+                mCurrentUser.getToken(new ListUser.AuthCallback() {
                     @Override
                     public void onSuccess(String authtoken) {
                         Log.d(TAG, "Got an authtoken");
+
+                        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     }
                 });
             }
@@ -156,6 +151,18 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         }); //StartButton ClickListener
 
     } //OnCreate
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        //If explainer is still there, get rid of it
+        Log.d(TAG, "On Resume, removing Fragment");
+        getSupportFragmentManager().beginTransaction()
+                .remove(explainerFragment)
+                .commit();
+        mFrameLayout.setClickable(false);
+        Log.d(TAG, "On Resume, removed Fragment");
+    }
 
     @Override
     public void onNextClicked() {

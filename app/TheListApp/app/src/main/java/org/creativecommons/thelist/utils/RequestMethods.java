@@ -41,8 +41,8 @@ public final class RequestMethods {
     }
 
     //Check if thar be internets
-    public boolean isNetworkAvailable(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+    public boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(mContext.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
         boolean isAvailable = false;
@@ -50,6 +50,11 @@ public final class RequestMethods {
             isAvailable = true;
         }
         return isAvailable;
+    }
+
+    //Generic Toast Builder
+    public void showToast(Context context, String title, String message){
+
     }
 
     //Generic Error Dialog Builder

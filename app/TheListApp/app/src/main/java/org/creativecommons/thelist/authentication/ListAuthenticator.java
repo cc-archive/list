@@ -23,7 +23,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.creativecommons.thelist.AccountActivity;
+import org.creativecommons.thelist.activities.AccountActivity;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
@@ -101,38 +101,41 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
             final String password;
             final AesCbcWithIntegrity.CipherTextIvMac civ;
             final AesCbcWithIntegrity.SecretKeys key;
-            //TODO: decrypt password
+
             SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
             String keyStr = sharedPref.getKey();
-            try {
-                //TODO: convert password string to cipher
-                civ = new AesCbcWithIntegrity.CipherTextIvMac(encryptedPass);
-                key = keys(keyStr);
-                password = decryptString(civ, key);
 
-                if (password != null) {
-                    try {
-                        Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
-                        //TODO: If the token is empty, go request a token
-                        ListUser mCurrentUser = new ListUser(activity);
-                        mCurrentUser.userSignIn(account.name,password, authTokenType, new ListUser.VolleyCallback() {
-                            @Override
-                            public void onSuccess(String userToken) {
-                                authToken = userToken;
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            if(!keyStr.isEmpty()) { //is there is a key available
+                try {
+                    civ = new AesCbcWithIntegrity.CipherTextIvMac(encryptedPass);
+                    key = keys(keyStr);
+                    password = decryptString(civ, key);
+
+                    if (password != null) {
+                        try {
+                            Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
+                            //TODO: If the token is empty, go request a token
+                            ListUser mCurrentUser = new ListUser(activity);
+                            mCurrentUser.userSignIn(account.name, password, authTokenType, new ListUser.AuthCallback() {
+                                @Override
+                                public void onSuccess(String userToken) {
+                                    authToken = userToken;
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (GeneralSecurityException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
+
         } //If authtoken is empty, go get one.
 
         // If we get an authToken - we return it

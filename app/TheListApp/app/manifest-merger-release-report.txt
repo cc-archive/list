@@ -52,13 +52,13 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 		ADDED from AndroidManifest.xml:15:9
 	android:name
 		ADDED from AndroidManifest.xml:10:9
-activity#org.creativecommons.thelist.MainActivity
+activity#org.creativecommons.thelist.activities.MainActivity
 ADDED from AndroidManifest.xml:16:9
 	android:label
 		ADDED from AndroidManifest.xml:18:13
 	android:name
 		ADDED from AndroidManifest.xml:17:13
-activity#org.creativecommons.thelist.CategoryListActivity
+activity#org.creativecommons.thelist.activities.CategoryListActivity
 ADDED from AndroidManifest.xml:20:9
 	android:noHistory
 		ADDED from AndroidManifest.xml:23:13
@@ -66,7 +66,7 @@ ADDED from AndroidManifest.xml:20:9
 		ADDED from AndroidManifest.xml:22:13
 	android:name
 		ADDED from AndroidManifest.xml:21:13
-activity#org.creativecommons.thelist.RandomActivity
+activity#org.creativecommons.thelist.activities.RandomActivity
 ADDED from AndroidManifest.xml:25:9
 	android:noHistory
 		ADDED from AndroidManifest.xml:28:13
@@ -88,7 +88,7 @@ ADDED from AndroidManifest.xml:34:13
 		ADDED from AndroidManifest.xml:35:17
 	android:value
 		ADDED from AndroidManifest.xml:36:17
-activity#org.creativecommons.thelist.StartActivity
+activity#org.creativecommons.thelist.activities.StartActivity
 ADDED from AndroidManifest.xml:38:9
 	android:label
 		ADDED from AndroidManifest.xml:40:13

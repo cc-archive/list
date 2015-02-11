@@ -19,16 +19,16 @@
         android:screenOrientation="portrait"
         android:theme="@style/ListTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".CategoryListActivity"
+            android:name=".activities.CategoryListActivity"
             android:label="@string/title_activity_category_list"
             android:noHistory="true" >
         </activity>
         <activity
-            android:name=".RandomActivity"
+            android:name=".activities.RandomActivity"
             android:label="@string/title_activity_random"
             android:noHistory="true"
             android:theme="@style/ListThemeNoActionBar" >
@@ -38,10 +38,10 @@
             android:label="@string/title_activity_account" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.creativecommons.thelist.StartActivity" />
+                android:value=".activities.StartActivity" />
         </activity>
         <activity
-            android:name=".StartActivity"
+            android:name=".activities.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/ListThemeNoActionBar" >
 
@@ -53,7 +53,7 @@
 
         </activity>
         <activity
-            android:name=".AccountActivity"
+            android:name=".activities.AccountActivity"
             android:label="@string/title_activity_account_authenticator" >
         </activity>
         <activity

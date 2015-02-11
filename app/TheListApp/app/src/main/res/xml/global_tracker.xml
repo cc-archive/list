@@ -20,10 +20,10 @@
 <integer name="ga_sessionTimeout">300</integer>
 
 <!-- The screen names that will appear in reports -->
-<screenName name="org.creativecommons.thelist.MainActivity">Main Feed Activity</screenName>
-<screenName name="org.creativecommons.thelist.RandomActivity">Random Item Suggestions Activity</screenName>
-<screenName name="org.creativecommons.thelist.CategoryListActivity">Category List Activity</screenName>
-<screenName name="org.creativecommons.thelist.StartActivity">Start Activity</screenName>
+<screenName name="org.creativecommons.thelist.activities.MainActivity">Main Feed Activity</screenName>
+<screenName name="org.creativecommons.thelist.activities.RandomActivity">Random Item Suggestions Activity</screenName>
+<screenName name="org.creativecommons.thelist.activities.CategoryListActivity">Category List Activity</screenName>
+<screenName name="org.creativecommons.thelist.activities.StartActivity">Start Activity</screenName>
 
 <!--  The following value should be replaced with correct property id. -->
 <string name="ga_trackingId">UA-57679207-1</string>

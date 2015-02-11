@@ -50,7 +50,6 @@ public class SharedPreferencesMethods {
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
-
     //----------------------------------------------------------
     //SAVE PREFERENCES
     //----------------------------------------------------------
@@ -73,7 +72,7 @@ public class SharedPreferencesMethods {
     }
 
     public void saveKey(String key){
-        SaveSharedPreference(USER_KEY, key);
+        SaveSharedPreference(USER_KEY + getUserId(), key);
     }
 
     //----------------------------------------------------------
@@ -83,7 +82,7 @@ public class SharedPreferencesMethods {
     public String getKey(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         if(sharedPref.contains(SharedPreferencesMethods.USER_KEY)){
-            return sharedPref.getString(USER_KEY, null);
+            return sharedPref.getString(USER_KEY + getUserId(), null);
         } else {
             return null;
         }
@@ -174,7 +173,6 @@ public class SharedPreferencesMethods {
     public void ClearAllSharedPreferences() {
         ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
         ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
-        ClearSharedPreference(USER_KEY);
         //TODO: remove once getAuthToken replaces this
         ClearSharedPreference(USER_TOKEN_PREFERENCE_KEY);
         ClearSharedPreference(USER_ID_PREFERENCE_KEY);

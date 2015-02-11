@@ -28,7 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.creativecommons.thelist.MainActivity;
+import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.RequestMethods;

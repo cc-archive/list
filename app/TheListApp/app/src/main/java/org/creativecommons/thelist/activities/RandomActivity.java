@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist;
+package org.creativecommons.thelist.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +39,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
@@ -57,8 +58,7 @@ public class RandomActivity extends Activity {
     //Helper Methods
     RequestMethods requestMethods;
     SharedPreferencesMethods sharedPreferencesMethods;
-    //SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
-    ListUser mCurrentUser = new ListUser(this);
+    ListUser mCurrentUser;
 
     //GET Request
     protected JSONArray mRandomItemData;
@@ -86,6 +86,7 @@ public class RandomActivity extends Activity {
         mContext = this;
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mCurrentUser = new ListUser(mContext);
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
@@ -105,7 +106,7 @@ public class RandomActivity extends Activity {
         //TODO: add camera functionality?
         //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
-        if(requestMethods.isNetworkAvailable(mContext)) {
+        if(requestMethods.isNetworkAvailable()) {
             mProgressBar.setVisibility(View.VISIBLE);
             getRandomItemRequest();
 

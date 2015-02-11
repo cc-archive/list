@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist;
+package org.creativecommons.thelist.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +42,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -59,9 +60,9 @@ import java.util.List;
 public class CategoryListActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     //Helper Methods
-    RequestMethods requestMethods = new RequestMethods(this);
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(this);
-    ListUser mCurrentUser = new ListUser(this);
+    RequestMethods requestMethods;
+    SharedPreferencesMethods sharedPreferencesMethods;
+    ListUser mCurrentUser;
 
     protected Context mContext;
 
@@ -87,6 +88,10 @@ public class CategoryListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
         mContext = this;
+        requestMethods = new RequestMethods(mContext);
+        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mCurrentUser = new ListUser(mContext);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -141,7 +146,7 @@ public class CategoryListActivity extends ActionBarActivity {
         });
 
         //If Network Connection is available, Execute getDataTask
-        if(requestMethods.isNetworkAvailable(mContext)) {
+        if(requestMethods.isNetworkAvailable()) {
             //mProgressBar.setVisibility(View.VISIBLE);
             getCategoriesRequest();
         }

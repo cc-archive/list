@@ -17,8 +17,11 @@
 
 */
 
-package org.creativecommons.thelist;
+package org.creativecommons.thelist.activities;
 
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,9 +63,11 @@ import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
+import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
-import org.creativecommons.thelist.fragments.AccountFragment;
+import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.fragments.CancelFragment;
 import org.creativecommons.thelist.fragments.UploadFragment;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
@@ -94,13 +99,12 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     //Request Methods
     RequestMethods requestMethods;
     SharedPreferencesMethods sharedPreferencesMethods;
-    ListUser mCurrentUser = new ListUser(this);
+    ListUser mCurrentUser;
 
     protected MainListItem mCurrentItem;
     protected int activeItemPosition;
     protected MainListItem mLastDismissedItem;
     protected int lastDismissedItemPosition;
-    protected String userID;
     protected Uri mMediaUri;
 
     //RecyclerView
@@ -133,6 +137,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         mContext = this;
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         requestMethods = new RequestMethods(mContext);
+        mCurrentUser = new ListUser(MainActivity.this);
         menuLogin = false;
 
         Log.v(TAG, "MAINACTIVITY ON CREATE");
@@ -195,6 +200,8 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 mFab.setEnabled(true);
             }
         }, 500);
+
+        sharedPreferencesMethods = new SharedPreferencesMethods(this);
 
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
             getUserListItems();
@@ -586,28 +593,61 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     //Start UploadFragment and upload photo
     public void startPhotoUpload(){
         Log.d(TAG, "Starting photo upload");
-        mCurrentUser.getSessionToken(new ListUser.VolleyCallback() {
-            @Override
-            public void onSuccess(String authtoken) {
-                Log.d("THIS IS AUTH IN SPU", authtoken);
 
-                Bundle b = new Bundle();
-                b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
-                b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
-                b.putSerializable(getString(R.string.token_bundle_key), authtoken);
-                uploadFragment.setArguments(b);
+        if(mCurrentUser.isTempUser()){
+            Log.d(TAG, "IS TEMP USER TRYING TO CREATE ACCOUNT");
+            AccountManager am = AccountManager.get(getBaseContext());
 
-                //Load Upload Fragment
-                getSupportFragmentManager().beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .replace(R.id.overlay_fragment_container,uploadFragment).commit();
-                mFrameLayout.setClickable(true);
-                getSupportActionBar().hide();
-            }
-        });
+            final AccountManagerFuture<Bundle> future = am.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS
+                    , null, null, this, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    Log.d(TAG, "IS TEMP USER RETURNING BUNDLE " + future.toString());
+                    try {
+                        Bundle b = future.getResult();
+                        Log.d("THE LIST", "AddNewAccount Bundle is " + b);
+                        b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
+                        b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
+                        b.putSerializable(getString(R.string.token_bundle_key), b.getString(AccountManager.KEY_AUTHTOKEN));
+                        uploadFragment.setArguments(b);
+
+                        //Load Upload Fragment
+                        getSupportFragmentManager().beginTransaction()
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .replace(R.id.overlay_fragment_container,uploadFragment).commit();
+                        mFrameLayout.setClickable(true);
+                        getSupportActionBar().hide();
+
+                    } catch (Exception e) {
+                        Log.d(TAG,"addAccount > " + e.getMessage());
+                    }
+                }
+            }, null);
+        }
+        else {
+            mCurrentUser.getToken(new ListUser.AuthCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d("THIS IS AUTH IN SPU", authtoken);
+
+                    Bundle b = new Bundle();
+                    b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
+                    b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
+                    b.putSerializable(getString(R.string.token_bundle_key), authtoken);
+                    uploadFragment.setArguments(b);
+
+                    //Load Upload Fragment
+                    getSupportFragmentManager().beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .replace(R.id.overlay_fragment_container, uploadFragment).commit();
+                    mFrameLayout.setClickable(true);
+                    getSupportActionBar().hide();
+                }
+            });
+        }
     } //startUploadPhoto
 
-    //TODO: create new check for this (invalidate when photo is uploaded?)
+
 
 
     //When UploadFragment has gotten response from server
@@ -615,6 +655,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     public void onUploadFinish() {
         Log.d(TAG, "On Upload Finish");
         //Refresh user list + remove item that has just been uploaded
+        //TODO: create new check for this (invalidate when photo is uploaded?)
         photoToBeUploaded = false;
 
         getUserListItems();
@@ -695,20 +736,21 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.login:
-                menuLogin = true;
+                menuLogin = true; //TODO: use this to change message?
 
-                Bundle b = new Bundle();
-                b.putSerializable(getString(R.string.menu_login_bundle_key), menuLogin);
-                accountFragment.setArguments(b);
+                //Get authToken
+                mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+                    @Override
+                    public void onSuccess(String authtoken) {
+                        //Login successful!
+                        // (can probably add a welcome message or something when more user info is available)
+                        Toast.makeText(mContext, "Login Successful!", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.overlay_fragment_container, accountFragment).commit();
-                mFrameLayout.setClickable(true);
-                getSupportActionBar().hide();
                 return true;
             case R.id.logout:
-                mCurrentUser.logOut();
-                userID = null;
+                mCurrentUser.logOut(); //delete sharedPreferences and invalidate token
                 return true;
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);

@@ -102,7 +102,7 @@ public class UploadFragment extends Fragment {
         mText = (TextView)getView().findViewById(R.id.account_text);
         mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
-        if(requestMethods.isNetworkAvailable(mContext)){
+        if(requestMethods.isNetworkAvailable()){
             uploadPhoto();
         } else {
             displayNetworkFailMessage();
