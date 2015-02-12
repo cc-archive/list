@@ -141,5 +141,6 @@
     <string name="ccid_account_label">CCID (The List)</string>
     <string name="title_activity_crypto_example">CryptoExample</string>
     <string name="token_bundle_key">sessionToken</string>
+    <string name="switch_accounts_menu_label">Switch Accounts</string>
 
 </resources>

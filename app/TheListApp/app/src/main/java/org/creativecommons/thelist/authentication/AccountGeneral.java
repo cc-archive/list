@@ -1,13 +1,11 @@
 package org.creativecommons.thelist.authentication;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 
 public class AccountGeneral {
     Context mContext;
     AccountManager mAccountManager;
-    String authtoken;
 
     public AccountGeneral(){
     }
@@ -28,6 +26,11 @@ public class AccountGeneral {
     public static final String ACCOUNT_NAME = "CCID";
 
     /**
+     * User Data Keys
+     */
+    public static final String USER_ID = "userid";
+
+    /**
      * Auth token types
      */
     public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
@@ -46,26 +49,5 @@ public class AccountGeneral {
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
     public static final String PARAM_USER_PASS = "USER_PASS";
-
-    public void getToken(){
-        final Account availableAccounts[] = mAccountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-
-        //final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(availableAccounts[0], authTokenType, null, this, null, null);
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Bundle bnd = future.getResult();
-//                    authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
-//                    Log.d("udinic", "GetToken Bundle is " + bnd);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//
-//        return authtoken;
-    } //getToken
 
 }//AccountGeneral

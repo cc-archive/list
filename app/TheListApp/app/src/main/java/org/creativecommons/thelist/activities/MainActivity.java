@@ -312,7 +312,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
             itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
 
-            if (!(itemIds.length() == 0)) {
+            if (itemIds != null || !(itemIds.length() == 0)) {
                 for (int i = 0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
                     MainListItem listItem = new MainListItem();

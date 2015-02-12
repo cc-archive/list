@@ -91,8 +91,13 @@ public class ListUser implements ServerAuthenticate {
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-        if(!(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) ||
-                sharedPreferencesMethods.getUserId() == null) {
+        //Check if userid exists
+
+        //if it doesn’t try to get it from accountManager
+
+        //if it still doesn’t exist:
+
+        if(!(sharedPreferencesMethods.getUserId() == null)) {
             return true;
         } else {
             return false;
@@ -104,16 +109,30 @@ public class ListUser implements ServerAuthenticate {
 //    }
 
     public String getUserID() {
-        String userID = sharedPreferencesMethods.getUserId();
-        //See if sharedPreference methods contains userID
-        //If yes: get and return userID; else: return null
-        if (userID == null) {
-            Log.v(TAG, "You don’t got no userID, man");
-            return null;
-        } else {
-            return userID;
-        }
+        return sharedPreferencesMethods.getUserId();
     } //getUserID
+
+    public String getUserIDFromAccount(Account ac){
+        return am.getUserData(ac, AccountGeneral.USER_ID);
+    }
+
+    public Account getAccount(String id){
+        Account matchingAccount = null;
+        Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+
+        //Check if account matches ID
+        String userID = sharedPreferencesMethods.getUserId();
+
+        for(Account currentAccount: availableAccounts){
+            String testID = getUserIDFromAccount(currentAccount);
+
+            if(testID == id) {
+                matchingAccount = currentAccount;
+                break;
+            }
+        }
+        return matchingAccount;
+    }
 
 
     public void getAuthed(final AuthCallback callback){

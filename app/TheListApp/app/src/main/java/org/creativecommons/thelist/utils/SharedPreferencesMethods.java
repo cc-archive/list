@@ -19,6 +19,7 @@
 
 package org.creativecommons.thelist.utils;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -36,9 +37,11 @@ public class SharedPreferencesMethods {
     public static final String TAG = SharedPreferencesMethods.class.getSimpleName();
 
     protected Context mContext;
+    protected AccountManager am;
 
     public SharedPreferencesMethods(Context context) {
         mContext = context;
+        am = AccountManager.get(mContext);
     }
 
     //SharedPreferences Constants
@@ -91,12 +94,21 @@ public class SharedPreferencesMethods {
     //Get User ID from SharedPreferences
     public String getUserId(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        if(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)){
+
+        if(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) {
             String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
-            return userID;
-        } else {
-            return null;
+            if(userID == null){
+                return userID;
+            }
         }
+
+        //TODO: Check for userID in accountManager
+
+
+
+        //return null if nothing is found
+        return null;
+
     } //getUserId
 
     //Non-logged in user
@@ -124,19 +136,25 @@ public class SharedPreferencesMethods {
     //RetrieveSharedPreferenceList (generic)
     public JSONArray RetrieveSharedPreferenceList(String key){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        String value = sharedPref.getString(key, null);
 
-        if(value != null){
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(value);
-            JsonArray array = element.getAsJsonArray();
+        if(sharedPref.contains(key)){
+            String value = sharedPref.getString(key, null);
 
-            //Make usable as JSONArray
-            List<String> list = new ArrayList<String>();
-            for (int i = 0; i < array.size(); i++) {
-                list.add(array.get(i).getAsString());
+            if(value != null){
+                JsonParser parser = new JsonParser();
+                JsonElement element = parser.parse(value);
+                JsonArray array = element.getAsJsonArray();
+
+                //Make usable as JSONArray
+                List<String> list = new ArrayList<String>();
+                for (int i = 0; i < array.size(); i++) {
+                    list.add(array.get(i).getAsString());
+                }
+                return new JSONArray(list);
+            } else {
+                return null;
             }
-            return new JSONArray(list);
+
         } else {
             return null;
         }
@@ -169,11 +187,10 @@ public class SharedPreferencesMethods {
     } //ClearTempPreferences
 
     //Clear all sharedPreferences
-    //TODO: add other keys like session token
+    @Deprecated
     public void ClearAllSharedPreferences() {
         ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
         ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
-        //TODO: remove once getAuthToken replaces this
         ClearSharedPreference(USER_TOKEN_PREFERENCE_KEY);
         ClearSharedPreference(USER_ID_PREFERENCE_KEY);
     } //Clearall
@@ -200,5 +217,7 @@ public class SharedPreferencesMethods {
         editor.putString(LIST_ITEM_PREFERENCE_KEY, array.toString());
         editor.apply();
     } //RemoveUserItemPreference
+
+    //TODO: RemoveCategoryItemPreference
 
 } //SharedPreferenceMethods
