@@ -19,9 +19,6 @@
 
 package org.creativecommons.thelist.activities;
 
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -67,9 +64,9 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.fragments.CancelFragment;
 import org.creativecommons.thelist.fragments.UploadFragment;
+import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -191,6 +188,11 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     @Override
     public void onResume() {
         super.onResume();
+
+//        if(photoToBeUploaded && !(mCurrentUser.isTempUser())){
+//            //Load Upload Fragment
+//
+//        }
 
         //Update menu for login/logout options
         invalidateOptionsMenu();
@@ -381,6 +383,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                         //Get item details for photo upload
                         activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
+                        Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
                     }
                 }));
     } //initRecyclerView
@@ -597,39 +600,44 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
         if(mCurrentUser.isTempUser()){
             Log.d(TAG, "IS TEMP USER TRYING TO CREATE ACCOUNT");
-            AccountManager am = AccountManager.get(getBaseContext());
 
-            final AccountManagerFuture<Bundle> future = am.addAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS
-                    , null, null, this, new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(AccountManagerFuture<Bundle> future) {
-                    Log.d(TAG, "IS TEMP USER RETURNING BUNDLE " + future.toString());
-                    try {
-                        Bundle b = future.getResult();
-                        Log.d("THE LIST", "AddNewAccount Bundle is " + b);
-                        b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
-                        b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
-                        b.putSerializable(getString(R.string.token_bundle_key), b.getString(AccountManager.KEY_AUTHTOKEN));
-                        uploadFragment.setArguments(b);
+            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                        @Override
+                        public void onSuccess(String authtoken) {
+                            Log.d(TAG, "IS TEMP USER RETURNING BUNDLE ");
+                            try {
 
-                        //Load Upload Fragment
-                        getSupportFragmentManager().beginTransaction()
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .replace(R.id.overlay_fragment_container,uploadFragment).commit();
-                        mFrameLayout.setClickable(true);
-                        getSupportActionBar().hide();
+                                Bundle b = new Bundle();
+                                Log.d("THE LIST", "AddNewAccount Bundle is " + b);
+                                b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
+                                b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
+                                b.putSerializable(getString(R.string.token_bundle_key), authtoken);
+                                uploadFragment.setArguments(b);
+                                Log.d(TAG, "uploadFragment setting arguments");
 
-                    } catch (Exception e) {
-                        Log.d(TAG,"addAccount > " + e.getMessage());
-                    }
-                }
-            }, null);
+                                //Load Upload Fragment
+                                getSupportFragmentManager().beginTransaction()
+                                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                        .add(R.id.overlay_fragment_container,uploadFragment).commit();
+                                mFrameLayout.setClickable(true);
+                                getSupportActionBar().hide();
+                                Log.d(TAG, "uploadFragment put in fragment container");
+
+                            } catch (Exception e) {
+                                Log.d(TAG,"addAccount > " + e.getMessage());
+                            }
+                        }
+                    });
+
+
         }
         else {
             mCurrentUser.getToken(new ListUser.AuthCallback() {
                 @Override
                 public void onSuccess(String authtoken) {
                     Log.d("THIS IS AUTH IN SPU", authtoken);
+                    Log.d("USER ID: ", mCurrentUser.getUserID());
 
                     Bundle b = new Bundle();
                     b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
@@ -640,7 +648,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                     //Load Upload Fragment
                     getSupportFragmentManager().beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                            .replace(R.id.overlay_fragment_container, uploadFragment).commit();
+                            .add(R.id.overlay_fragment_container, uploadFragment).commit();
                     mFrameLayout.setClickable(true);
                     getSupportActionBar().hide();
                 }

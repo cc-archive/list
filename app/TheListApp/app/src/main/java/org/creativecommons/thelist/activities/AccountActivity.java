@@ -110,6 +110,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
                 mAccountManager.setAuthToken(account, authtokenType, authtoken);
                 mAccountManager.setUserData(account, AccountGeneral.USER_ID, mCurrentUser.getUserID());
+                Log.v("FINISH LOGIN ", "token: " + authtoken);
 
                 //Save Key for later use
                 SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);

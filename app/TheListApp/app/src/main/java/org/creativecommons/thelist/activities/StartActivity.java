@@ -103,7 +103,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
-        });
+        }); //startButton
 
         //“I already have an account”
         mAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +139,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                     });
                 }
             }
-        });
+        }); //accountButon
 
         if(mTermsLink != null){
             mTermsLink.setMovementMethod(LinkMovementMethod.getInstance());
