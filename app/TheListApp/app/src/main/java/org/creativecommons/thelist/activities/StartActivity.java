@@ -88,18 +88,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-
-        //TODO: Check if user token is valid, redirect to MainActivity if yes
-        if(!(mCurrentUser.isTempUser())) {
-            Log.v(TAG, "START: USER IS LOGGED IN");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else {
-            Log.v(TAG, "START: USER IS NOT LOGGED IN");
-        }
-
         //UI Elements
         mFrameLayout = (FrameLayout)findViewById(R.id.fragment_container);
         mStartButton = (Button) findViewById(R.id.startButton);
@@ -130,7 +118,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         @Override
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "I have an account > Got an authtoken");
-
+                            //TODO: is this actually needed?
                             Intent intent = new Intent(StartActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -142,7 +130,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         @Override
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
-
+                            //TODO: is this actually needed?
                             Intent intent = new Intent(StartActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -172,6 +160,18 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onResume(){
         super.onResume();
+
+        //TODO: Check if user token is valid, redirect to MainActivity if yes
+        if(!(mCurrentUser.isTempUser())) {
+            Log.v(TAG, "START: USER IS LOGGED IN");
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else {
+            Log.v(TAG, "START: USER IS NOT LOGGED IN");
+        }
+
         //If explainer is still there, get rid of it
         Log.d(TAG, "On Resume, removing Fragment");
         getSupportFragmentManager().beginTransaction()
