@@ -48,7 +48,6 @@ public class SharedPreferencesMethods {
     public static final String CATEGORY_PREFERENCE_KEY = "category";
     public static final String LIST_ITEM_PREFERENCE_KEY = "item";
     public static final String USER_ID_PREFERENCE_KEY = "id";
-    public static final String USER_TOKEN_PREFERENCE_KEY = "skey";
     public static final String USER_KEY = "ekey.#j1ldkf9dj3jf9";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
@@ -184,7 +183,6 @@ public class SharedPreferencesMethods {
     public void ClearAllSharedPreferences() {
         ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
         ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
-        ClearSharedPreference(USER_TOKEN_PREFERENCE_KEY);
         ClearSharedPreference(USER_ID_PREFERENCE_KEY);
     } //Clearall
 

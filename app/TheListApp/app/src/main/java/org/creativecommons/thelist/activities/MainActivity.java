@@ -125,6 +125,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     CancelFragment cancelFragment = new CancelFragment();
 
     //Checks
+    //TODO: check if still needed
     private boolean photoToBeUploaded;
     private boolean menuLogin;
 
@@ -239,6 +240,8 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         JsonArrayRequest userListRequest;
         String itemRequesturl;
         JSONArray itemIds;
+
+        //TODO: network available check
 
         //IF USER IS LOGGED IN
         if(!(mCurrentUser.isTempUser())) {
@@ -749,6 +752,17 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 return true;
             case R.id.about_theapp:
                 //TODO: go to scrollview of app things
+                return true;
+            case R.id.remove_accounts:
+                sharedPreferencesMethods.ClearAllSharedPreferences();
+                Log.d(TAG, "REMOVE ACCOUNTS CALLED");
+                mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                    @Override
+                    public void onSuccess(String authtoken) {
+                        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                        startActivity(startIntent);
+                    }
+                });
                 return true;
             //case R.id.logout:
                 //mCurrentUser.logOut();

@@ -142,6 +142,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         @Override
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
+
+                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                         }
                     });
                 }
@@ -160,10 +165,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         .add(R.id.fragment_container,explainerFragment)
                         .commit();
                 mFrameLayout.setClickable(true);
-
             }
         }); //StartButton ClickListener
-
     } //OnCreate
 
     @Override

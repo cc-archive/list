@@ -263,6 +263,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     final int downPosition = mDownPosition;
                     ++mDismissAnimationRefCount;
 
+                    //TODO: add animation lock
 //                    synchronized (mAnimationLock){
 //                        if(mAnimatedViews.contains(downView)){
 //                            break;

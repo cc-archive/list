@@ -95,7 +95,7 @@ public class ListUser implements ServerAuthenticate {
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-        //Check if userid exists
+        //Check if userid exists in
 
         //if it doesn’t try to get it from accountManager
 
@@ -284,6 +284,18 @@ public class ListUser implements ServerAuthenticate {
                     Log.d("CREATE NEW ACCOUNT ", "got authtoken: " + authtoken);
                 }
             });
+        }
+    }
+
+    public void removeAccounts(final AuthCallback callback){
+        Account[] availableAccounts = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+        for(Account account:availableAccounts){
+            am.removeAccount(account, new AccountManagerCallback<Boolean>() {
+                @Override
+                public void run(AccountManagerFuture<Boolean> future) {
+                    callback.onSuccess("removedAccounts");
+                }
+            }, null);
         }
     }
 
