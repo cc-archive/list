@@ -157,7 +157,6 @@ public class ListUser implements ServerAuthenticate {
             });
 
         } else {
-            //TODO:
             Account account = getAccount(getUserID());
 
             am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
@@ -187,9 +186,8 @@ public class ListUser implements ServerAuthenticate {
     public void getToken(final AuthCallback callback) {
         Log.d(TAG, "Getting session token");
         //sessionComplete = false;
-        Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-        Account account;
-        account = availableAccounts[0];
+        //TODO: match userID to account with the same userID store in AccountManager
+        Account account = getAccount(getUserID());
 
         am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
                 new AccountManagerCallback<Bundle>() {
@@ -263,15 +261,12 @@ public class ListUser implements ServerAuthenticate {
                 }
             }).create();
             mAlertDialog.show();
-
         }
     } //showAccountPicker
 
     private final class CancelOnClickListener implements
             DialogInterface.OnClickListener {
         public void onClick(DialogInterface dialog, int which) {
-            Toast.makeText(mContext, "Cancel selected, activity continues",
-                    Toast.LENGTH_LONG).show();
             mAlertDialog.dismiss();
         }
     }

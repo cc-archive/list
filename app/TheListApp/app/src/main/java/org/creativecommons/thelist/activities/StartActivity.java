@@ -19,6 +19,7 @@
 
 package org.creativecommons.thelist.activities;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.fragments.LoginFragment;
 import org.creativecommons.thelist.misc.AccountFragment;
@@ -51,7 +53,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected TextView mTermsLink;
     protected Context mContext;
     protected SharedPreferencesMethods sharedPreferencesMethods;
-    private AccountManager mAccountManager;
+    private AccountManager am;
     private String mAuthTokenType;
     protected FrameLayout mFrameLayout;
 
@@ -68,7 +70,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mContext = this;
         mCurrentUser = new ListUser(StartActivity.this);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
-        mAccountManager = AccountManager.get(getBaseContext());
+        am = AccountManager.get(getBaseContext());
 
         Log.v(TAG, "STARTACTIVITY ON CREATE");
 
@@ -104,6 +106,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mAccountButton = (Button) findViewById(R.id.accountButton);
         mTermsLink = (TextView) findViewById(R.id.cc_logo_label);
 
+        //“I’m new to the list”
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,22 +117,34 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             }
         });
 
+        //“I already have an account”
         mAccountButton.setOnClickListener(new View.OnClickListener() {
-            //TODO: implement addAccount in case user has never signed in before
-
+            //If you have accounts > show picker; if not, show login
             @Override
             public void onClick(View v) {
-                mCurrentUser.getToken(new ListUser.AuthCallback() {
-                    @Override
-                    public void onSuccess(String authtoken) {
-                        Log.d(TAG, "Got an authtoken");
+                Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
-                        Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-                });
+                //TODO: switch getAuthed: login to first account if there if only one, if there is more than more go to accountPicker
+                if(availableAccounts.length > 1){
+                    mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
+                        @Override
+                        public void onSuccess(String authtoken) {
+                            Log.d(TAG, "I have an account > Got an authtoken");
+
+                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+                        @Override
+                        public void onSuccess(String authtoken) {
+                            Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
+                        }
+                    });
+                }
             }
         });
 
