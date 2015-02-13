@@ -113,7 +113,6 @@ public class ListUser implements ServerAuthenticate {
 //    }
 
     public String getUserID() {
-
         return sharedPreferencesMethods.getUserId();
     } //getUserID
 
@@ -131,9 +130,14 @@ public class ListUser implements ServerAuthenticate {
         for(Account currentAccount: availableAccounts){
             String testID = getUserIDFromAccount(currentAccount);
 
-            if(testID == id) {
+            if(testID.equals(userID)) {
+                Log.v("GREAT", "SUCCESS");
                 matchingAccount = currentAccount;
                 break;
+            } else {
+                Log.v("CurrentAccount", currentAccount.toString());
+                Log.v("TestID", testID);
+                Log.v("UserID", userID);
             }
         }
         return matchingAccount;
@@ -321,8 +325,7 @@ public class ListUser implements ServerAuthenticate {
 
                                 //Save userID in sharedPreferences
                                 Log.d(TAG, "USER SIGN IN: setting userid: " + userID);
-                                sharedPreferencesMethods.SaveSharedPreference
-                                        (SharedPreferencesMethods.USER_ID_PREFERENCE_KEY, userID);
+                                sharedPreferencesMethods.saveUserID(userID);
 
                                 //Add items chosen before login to userlist
                                 //TODO: also add category preferences
@@ -496,7 +499,8 @@ public class ListUser implements ServerAuthenticate {
                     callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
                 } catch (Exception e) {
-                    Log.d(TAG, e.getMessage());
+                    e.printStackTrace();
+                    //Log.d(TAG, e.getMessage());
                 }
             }
         }, null);

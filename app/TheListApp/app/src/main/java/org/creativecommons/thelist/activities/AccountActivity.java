@@ -136,7 +136,8 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     public void onCancelLogin() {
         //TODO: If there are items in sharedPref head to MainActivity, if not: take to StartActivity?)
         //TODO: put extra: this was a cancelled login so activity can act
-        //setResult(RESULT_CANCELED);
+        setAccountAuthenticatorResult(null);
+        setResult(RESULT_CANCELED, null);
         finish(); //this should take you to previous activity
     }
 
@@ -158,7 +159,8 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
     @Override
     public void onTermsCancelled() {
-        setResult(RESULT_CANCELED);
+        setAccountAuthenticatorResult(null);
+        setResult(RESULT_CANCELED, null);
         finish();
     }
 
