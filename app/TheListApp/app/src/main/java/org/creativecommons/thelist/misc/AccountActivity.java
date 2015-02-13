@@ -73,8 +73,6 @@ public class AccountActivity extends AccountAuthenticatorActivity {
 
         //----------------------------------------------------
 
-        sharedPreferencesMethods.ClearAllSharedPreferences();
-
         mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
         mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
         mLoginButton = (Button)findViewById(R.id.loginButton);

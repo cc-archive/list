@@ -58,8 +58,8 @@ import org.json.JSONObject;
 
 public class AccountFragment extends Fragment {
     public static final String TAG = AccountFragment.class.getSimpleName();
-    RequestMethods requestMethods = new RequestMethods(getActivity());
-    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+    RequestMethods requestMethods;
+    SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser;
     Context mContext;
 
@@ -137,6 +137,8 @@ public class AccountFragment extends Fragment {
         super.onResume();
         mContext = getActivity();
         mCurrentUser = new ListUser(getActivity());
+        sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+        requestMethods = new RequestMethods(getActivity());
 
         //SignUp/Login Layouts
         mSignUpFields = (RelativeLayout)getView().findViewById(R.id.signup_section);

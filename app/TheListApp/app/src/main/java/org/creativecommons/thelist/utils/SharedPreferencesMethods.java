@@ -97,17 +97,10 @@ public class SharedPreferencesMethods {
 
         if(sharedPref.contains(SharedPreferencesMethods.USER_ID_PREFERENCE_KEY)) {
             String userID = sharedPref.getString(USER_ID_PREFERENCE_KEY, null);
-            if(userID == null){
-                return userID;
-            }
+            return userID;
+        } else {
+            return null;
         }
-
-        //TODO: Check for userID in accountManager
-
-
-
-        //return null if nothing is found
-        return null;
 
     } //getUserId
 
@@ -187,7 +180,7 @@ public class SharedPreferencesMethods {
     } //ClearTempPreferences
 
     //Clear all sharedPreferences
-    @Deprecated
+
     public void ClearAllSharedPreferences() {
         ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
         ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);

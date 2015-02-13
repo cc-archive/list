@@ -4,10 +4,12 @@
     tools:context="org.creativecommons.thelist.activities.MainActivity">
     <!--<item android:id="@+id/action_random" android:title="@string/action_random_label"-->
         <!--android:orderInCategory="100" compat:showAsAction="ifRoom" />-->
-    <!--<item android:id="@+id/logout" android:title="@string/log_out_menu_label"-->
-        <!--android:orderInCategory="400" compat:showAsAction="never" />-->
     <!--<item android:id="@+id/login" android:title="@string/login_menu_label"-->
         <!--android:orderInCategory="200" compat:showAsAction="never" />-->
+    <!--<item android:id="@+id/logout" android:title="@string/log_out_menu_label"-->
+        <!--android:orderInCategory="400" compat:showAsAction="never" />-->
+    <!--<item android:id="@+id/add_account" android:title="@string/add_account_menu_label"-->
+        <!--android:orderInCategory="300" compat:showAsAction="never" />-->
     <item android:id="@+id/pick_categories" android:title="@string/pick_categories_menu_label"
         android:orderInCategory="100" compat:showAsAction="never"/>
     <item android:id="@+id/switch_accounts" android:title="@string/switch_accounts_menu_label"

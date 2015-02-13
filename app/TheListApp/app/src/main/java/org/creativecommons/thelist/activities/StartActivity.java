@@ -36,8 +36,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
+import org.creativecommons.thelist.fragments.LoginFragment;
+import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
@@ -56,7 +57,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
-    AccountFragment accountFragment = new AccountFragment();
+    LoginFragment loginFragment = new LoginFragment();
 
     // ---------------------------------------------------------------------------------
 
@@ -68,8 +69,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mCurrentUser = new ListUser(StartActivity.this);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
         mAccountManager = AccountManager.get(getBaseContext());
-
-
 
         Log.v(TAG, "STARTACTIVITY ON CREATE");
 
@@ -190,7 +189,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     public void CancelLogin() {
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .remove(accountFragment)
+                .remove(loginFragment)
                 .commit();
         mFrameLayout.setClickable(false);
     }

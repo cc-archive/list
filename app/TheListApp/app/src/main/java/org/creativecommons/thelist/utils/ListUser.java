@@ -26,11 +26,14 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -65,6 +68,7 @@ public class ListUser implements ServerAuthenticate {
     private AccountManager am;
     //private String userID;
     private String auth;
+    public AlertDialog mAlertDialog;
 
     public ListUser(Context mc){
         mContext = mc;
@@ -97,7 +101,7 @@ public class ListUser implements ServerAuthenticate {
 
         //if it still doesn’t exist:
 
-        if(!(sharedPreferencesMethods.getUserId() == null)) {
+        if(sharedPreferencesMethods.getUserId() == null) {
             return true;
         } else {
             return false;
@@ -109,6 +113,7 @@ public class ListUser implements ServerAuthenticate {
 //    }
 
     public String getUserID() {
+
         return sharedPreferencesMethods.getUserId();
     } //getUserID
 
@@ -134,7 +139,10 @@ public class ListUser implements ServerAuthenticate {
         return matchingAccount;
     }
 
-
+    /**
+     * Get auth token for existing account, if the account doesn’t exist, create new CCID account
+     * You must already have a valid ID
+     */
     public void getAuthed(final AuthCallback callback){
         Log.d(TAG, "Getting session token");
         //sessionComplete = false;
@@ -149,10 +157,9 @@ public class ListUser implements ServerAuthenticate {
             });
 
         } else {
-            Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-            Account account;
+            //TODO:
+            Account account = getAccount(getUserID());
 
-            account = availableAccounts[0];
             am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
                     new AccountManagerCallback<Bundle>() {
                         @Override
@@ -174,7 +181,9 @@ public class ListUser implements ServerAuthenticate {
         }
     } //GetAuthed
 
-    //Just get the token (assumes pre-existing CCID account)
+    /**
+     * Get auth token for existing account (assumes pre-existing account)
+     */
     public void getToken(final AuthCallback callback) {
         Log.d(TAG, "Getting session token");
         //sessionComplete = false;
@@ -202,11 +211,88 @@ public class ListUser implements ServerAuthenticate {
                 }, null);
     } //getToken
 
+    /**
+     * Show all the accounts registered on the account manager. Request an auth token upon user select.
+     *
+     */
+    public void showAccountPicker(final AuthCallback callback) {
+        //@param final boolean invalidate, final String authTokenType // mInvalidate = invalidate;
+        final Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
-    //TODO: move to sharedPreferenceMethods?
+        if (availableAccounts.length == 0) {
+            //TODO: Show other dialog to add account
+            Toast.makeText(mContext, "No accounts", Toast.LENGTH_SHORT).show();
+        } else {
+            String name[] = new String[availableAccounts.length];
+            for (int i = 0; i < availableAccounts.length; i++) {
+                name[i] = availableAccounts[i].name;
+            }
+
+            // Account picker
+            mAlertDialog = new AlertDialog.Builder(mContext).setTitle("Pick Account").setCancelable(true)
+                    .setPositiveButton("Add New", new OkOnClickListener())
+                    .setNegativeButton("Cancel", new CancelOnClickListener())
+                    .setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, name),
+                            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+//                    if(invalidate)
+//                        invalidateAuthToken(availableAccounts[which], authTokenType);
+//                    else
+//                        getExistingAccountAuthToken(availableAccounts[which], authTokenType);
+
+                    am.getAuthToken(availableAccounts[which], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
+                            new AccountManagerCallback<Bundle>() {
+                                @Override
+                                public void run(AccountManagerFuture<Bundle> future) {
+                                    try {
+                                        Bundle bundle = future.getResult();
+                                        auth = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                                        Log.v("THIS IS TRYCATCH AUTH: ", auth);
+                                        callback.onSuccess(auth);
+                                    } catch (OperationCanceledException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (AuthenticatorException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, null);
+                }
+            }).create();
+            mAlertDialog.show();
+
+        }
+    } //showAccountPicker
+
+    private final class CancelOnClickListener implements
+            DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int which) {
+            Toast.makeText(mContext, "Cancel selected, activity continues",
+                    Toast.LENGTH_LONG).show();
+            mAlertDialog.dismiss();
+        }
+    }
+
+    private final class OkOnClickListener implements
+            DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int which) {
+            addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d("CREATE NEW ACCOUNT ", "got authtoken: " + authtoken);
+                }
+            });
+        }
+    }
+
+
+    //TODO: do we need this?
     public void logOut() {
         //Clear session-relevant sharedPreferences
-        //TODO:this is just userID, new user profile data will need to be cleared if added
+        //TODO:this is just userid, new user profile data will need to be cleared if added
         sharedPreferencesMethods.ClearAllSharedPreferences();
 
         //TODO: take you back to startActivity?
@@ -404,8 +490,7 @@ public class ListUser implements ServerAuthenticate {
         }
     } //removeItemFromUserList
 
-    private void addNewAccount(String accountType, String authTokenType, final AuthCallback callback) {
-        //Activity activity = new AccountActivity();
+    public void addNewAccount(String accountType, String authTokenType, final AuthCallback callback) {
 
         final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType, null, null, mActivity, new AccountManagerCallback<Bundle>() {
             @Override

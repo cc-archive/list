@@ -201,8 +201,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             }
         }, 500);
 
-        sharedPreferencesMethods = new SharedPreferencesMethods(this);
-
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
             getUserListItems();
             Log.v("NOT A TEMP: ", "legit user");
@@ -647,9 +645,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         }
     } //startUploadPhoto
 
-
-
-
     //When UploadFragment has gotten response from server
     @Override
     public void onUploadFinish() {
@@ -711,23 +706,27 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         this.menu = menu;
 
         //Make login or logout visible based on login status
-        updateMenuTitles();
+        //TODO: update when createAccount is possible
+        //updateMenuTitles();
         return true;
         //return super.onCreateOptionsMenu(menu);
     } //onCreateOptionsMenu
 
-    private void updateMenuTitles(){
-        MenuItem logOut = menu.findItem(R.id.logout);
-        MenuItem logIn = menu.findItem(R.id.login);
+    //private void updateMenuTitles(){
+        //MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
+        //MenuItem createAccount = menu.findItem(R.id.login);
+        //MenuItem logOut = menu.findItem(R.id.logout);
         //TODO: turn this back on
-        if(!(mCurrentUser.isTempUser())){
-            logOut.setVisible(true);
-            logIn.setVisible(false);
-        } else {
-            logOut.setVisible(false);
-            logIn.setVisible(true);
-        }
-    } //updateMenuTitles
+        //if(!(mCurrentUser.isTempUser())){
+            //logOut.setVisible(true);
+            //switchAccounts.setVisible(true);
+            //createAccount.setVisible(false);
+        //} else {
+            //logOut.setVisible(false);
+            //switchAccounts.setVisible(false);
+            //createAccount.setVisible(true);
+        //}
+    //} //updateMenuTitles
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -735,22 +734,14 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
-            case R.id.login:
-                menuLogin = true; //TODO: use this to change message?
-
-                //Get authToken
-                mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+            case R.id.switch_accounts:
+                //TODO: bring up account picker dialog w/ new option
+                mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
                     @Override
                     public void onSuccess(String authtoken) {
-                        //Login successful!
-                        // (can probably add a welcome message or something when more user info is available)
-                        Toast.makeText(mContext, "Login Successful!", Toast.LENGTH_SHORT).show();
+                        Log.d("ACCOUNT PICKER ", "got authtoken: " + authtoken);
                     }
                 });
-
-                return true;
-            case R.id.logout:
-                mCurrentUser.logOut(); //delete sharedPreferences and invalidate token
                 return true;
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
@@ -759,6 +750,9 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             case R.id.about_theapp:
                 //TODO: go to scrollview of app things
                 return true;
+            //case R.id.logout:
+                //mCurrentUser.logOut();
+                //return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
