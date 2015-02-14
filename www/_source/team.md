@@ -38,8 +38,3 @@ Technical Director at Playground Inc. Human being.
 
 Software Engineer at Playground Inc.
 
-## Elliot Harmon
-
-<img class="float-left" width="200" src="/img/elliot.jpg" />
-
-Communications manager at Creative Commons. Loves music, poetry, and vegetables, in any order.
