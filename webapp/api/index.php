@@ -2,7 +2,7 @@
 
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014, 2015 Creative Commons
+   Copyright (C) 2014 Creative Commons
 
    based on:
 
@@ -35,7 +35,7 @@ header('Access-Control-Allow-Origin: https://thelist.creativecommons.org/');
 header('Access-Control-Max-Age: 3628800');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
-with('/api/list/category', function () {
+with('/api/category', function () {
 
     respond('GET', '/?', function ($request, $response) {
 
@@ -66,7 +66,7 @@ with('/api/list/category', function () {
 });
 
 
-with('/api/list/items', function () {
+with('/api/items', function () {
 
     respond('GET', '/?', function ($request, $response) {
 
@@ -102,7 +102,7 @@ with('/api/list/items', function () {
 
 });
 
-with('/api/user/photos', function () {
+with('/api/photos', function () {
 
     respond('POST', '/[:userid]/[:id]', function ($request, $response) {
 
@@ -138,9 +138,9 @@ with('/api/user/photos', function () {
 
 });
 
-with('/api/user/login', function () {
+with('/api/users', function () {
 
-    respond('POST', '/', function ($request, $response) {
+    respond('POST', '/login', function ($request, $response) {
 
         $url = 'https://login.creativecommons.org/x.php';
         $fields = array(
@@ -228,7 +228,7 @@ with('/api/makers', function () {
 
 });
 
-with('/api/user/list/delete', function() {
+with('/api/userlist/delete', function() {
 
     respond('POST', '/[:userid]/[:id]', function ($request, $response) {
 
@@ -246,7 +246,7 @@ with('/api/user/list/delete', function() {
 
 });
 
-with('/api/user/list', function () {
+with('/api/userlist', function () {
 
     respond('GET', '/[:id]', function ($request, $response) {
 
