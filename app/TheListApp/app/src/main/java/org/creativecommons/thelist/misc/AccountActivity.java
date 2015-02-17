@@ -41,8 +41,6 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 public class AccountActivity extends AccountAuthenticatorActivity {
     public static final String TAG = AccountActivity.class.getSimpleName();
     protected Context mContext;
-
-    //Request Methods
     RequestMethods requestMethods;
     SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser;

@@ -56,8 +56,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class AccountFragment extends Fragment {
-    public static final String TAG = AccountFragment.class.getSimpleName();
+public class AccountFragment_old extends Fragment {
+    public static final String TAG = AccountFragment_old.class.getSimpleName();
     RequestMethods requestMethods;
     SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser;
@@ -129,7 +129,7 @@ public class AccountFragment extends Fragment {
         t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        return inflater.inflate(R.layout.fragment_account_old, container, false);
     }
 
     @Override

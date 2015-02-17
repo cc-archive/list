@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/fragment_layout_main"
     android:orientation="vertical"
-    tools:context="org.creativecommons.thelist.misc.AccountFragment">
+    style="@style/fragment_layout_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <TextView
+    <Button
         style="@style/flat_button_dark"
         android:text="@string/cancel_button_label"
         android:id="@+id/cancelButton"
@@ -33,103 +34,73 @@
         android:id="@+id/section_text"
         android:paddingTop="20dp"
         android:layout_marginBottom="20dp">
-    <TextView
-        android:text="@string/login_fragment_title"
-        android:id="@+id/account_title"
-        style="@style/fragment_title" />
-    <TextView
-        style="@style/fragment_text"
-        android:text="@string/login_fragment_text"
-        android:id="@+id/account_text"
-        android:layout_below="@+id/account_title"
-        android:textColor="@color/primary_text_default_material_dark" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:visibility="gone"
-        android:id="@+id/signup_section">
-
-        <EditText
-            style="@style/input_fields"
-            android:id="@+id/nameField"
-            android:hint="@string/full_name_hint"/>
-
-        <EditText
-            style="@style/input_fields"
-            android:id="@+id/emailField"
-            android:inputType="textEmailAddress"
-            android:hint="@string/email_hint"
-            android:layout_below="@+id/nameField"/>
-
-        <EditText
-            style="@style/input_fields"
-            android:ems="10"
-            android:id="@+id/passwordField"
-            android:inputType="textPassword"
-            android:hint="@string/password_hint"
-            android:layout_below="@+id/emailField" />
-
-        <Button
-            style="@style/raised_button"
-            android:layout_width="match_parent"
-            android:text="@string/signUpButton_label"
-            android:id="@+id/signUpButton"
-            android:layout_below="@+id/passwordField"/>
-
         <TextView
-            style="@style/clickable_text"
-            android:text="@string/existing_account_text"
-            android:id="@+id/existingAccount"
-            android:layout_below="@id/signUpButton"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:id="@+id/login_fields"
-        android:windowSoftInputMode="stateVisible|adjustResize"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="10dp">
-
-        <EditText
-            style="@style/input_fields"
-            android:hint="@string/email_hint"
-            android:visibility="gone"
-            android:id="@+id/hiddenField"/>
-
-        <EditText
-            style="@style/input_fields"
-            android:id="@+id/emailLoginField"
-            android:inputType="textEmailAddress"
-            android:hint="@string/email_hint"
-            android:imeOptions="actionNext"
-            android:layout_below="@+id/hiddenField"/>
-
-        <EditText
-            style="@style/input_fields"
-            android:ems="10"
-            android:id="@+id/passwordLoginField"
-            android:inputType="textPassword"
-            android:hint="@string/password_hint"
-            android:imeOptions="actionNext"
-            android:layout_below="@+id/emailLoginField"
-            android:layout_marginBottom="10dp" />
-
-        <Button
-            style="@style/raised_button"
-            android:layout_width="match_parent"
-            android:text="@string/login_button_label"
-            android:id="@+id/loginButton"
-            android:layout_below="@+id/passwordLoginField"/>
-
+            android:text="@string/login_fragment_title"
+            android:id="@+id/account_title"
+            style="@style/fragment_title" />
         <TextView
-            style="@style/clickable_text"
-            android:text="@string/new_account_text"
-            android:id="@+id/newAccount"
-            android:layout_below="@+id/loginButton"/>
+            style="@style/fragment_text"
+            android:text="@string/login_fragment_text"
+            android:id="@+id/account_text"
+            android:layout_below="@+id/account_title"
+            android:textColor="@color/primary_text_default_material_dark" />
     </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_fields"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="10dp">
+
+            <!-- Dummy view -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+
+            <EditText android:id="@+id/accountName"
+                style="@style/input_fields"
+                android:hint="@string/email_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"/>
+
+            <EditText android:id="@+id/accountPassword"
+                style="@style/input_fields"
+                android:ems="10"
+                android:layout_below="@+id/accountName"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                android:hint="@string/password_hint"
+                android:layout_marginBottom="10dp"/>
+
+            <Button android:id="@+id/loginButton"
+                style="@style/raised_button"
+                android:layout_width="match_parent"
+                android:text="@string/login_button_label"
+                android:layout_below="@+id/accountPassword"/>
+
+            <!--TODO: fix ime options when sign up is enabled-->
+            <Button android:id="@+id/signUpButton"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/signUpButton_label"
+                android:padding="10dp"/>
+
+            <TextView android:id="@+id/signUp"
+                style="@style/clickable_text"
+                android:gravity="center"
+                android:text="@string/new_account_text"
+                android:layout_below="@+id/loginButton"/>
+        </RelativeLayout>
+    </ScrollView>
+
 </LinearLayout>

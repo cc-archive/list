@@ -86,7 +86,7 @@ public class RandomActivity extends Activity {
         mContext = this;
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
-        mCurrentUser = new ListUser(mContext);
+        mCurrentUser = new ListUser(RandomActivity.this);
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(

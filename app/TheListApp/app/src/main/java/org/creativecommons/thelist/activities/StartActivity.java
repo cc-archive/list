@@ -38,14 +38,14 @@ import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
-import org.creativecommons.thelist.fragments.LoginFragment;
-import org.creativecommons.thelist.misc.AccountFragment;
+import org.creativecommons.thelist.misc.AccountFragment_old;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
-public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment.LoginClickListener {
+public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment_old.LoginClickListener {
     public static final String TAG = StartActivity.class.getSimpleName();
     ListUser mCurrentUser;
     protected Button mStartButton;
@@ -59,7 +59,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
-    LoginFragment loginFragment = new LoginFragment();
+    AccountFragment loginFragment = new AccountFragment();
 
     // ---------------------------------------------------------------------------------
 

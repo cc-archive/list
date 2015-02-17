@@ -6,12 +6,12 @@
     <string name="title_activity_main">Your List</string>
     <string name="title_activity_category_list">Pick Categories</string>
     <string name="title_activity_random">Hit Me</string>
-    <string name="title_activity_login">Login Activity</string>
+    <string name="title_activity_login">Log In</string>
     <string name="title_activity_feed">Feed Activity</string>
     <string name="title_activity_login_fragment">Login Fragment</string>
     <string name="title_activity_explainer">What’s up with the List?</string>
-    <string name="title_activity_account">Log In</string>
-    <string name="title_activity_start">Start Activity</string>
+    <string name="title_activity_account">Add Account</string>
+    <string name="title_activity_start">Start The List</string>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
@@ -134,12 +134,8 @@
     <string name="login_error_exception_title">Our bad!</string>
     <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
     <string name="about_theapp_menu_label">About the app</string>
-    <string name="title_activity_account_authenticator">AccountAuthenticator</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_main1">Main1</string>
-    <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="ccid_account_label">CCID (The List)</string>
-    <string name="title_activity_crypto_example">CryptoExample</string>
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>

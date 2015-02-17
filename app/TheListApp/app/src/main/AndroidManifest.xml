@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.creativecommons.thelist" >
-
+    <!--App Permissions-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,7 +20,22 @@
         android:theme="@style/ListTheme" >
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan|adjustResize">
+        </activity>
+        <activity
+            android:name=".activities.StartActivity"
+            android:label="@string/app_name"
+            android:theme="@style/ListThemeNoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.AccountActivity"
+            android:label="@string/title_activity_account"
+            android:theme="@style/ListThemeNoActionBar">
         </activity>
         <activity
             android:name=".activities.CategoryListActivity"
@@ -33,39 +48,12 @@
             android:noHistory="true"
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
-        <activity
-            android:name=".misc.AccountActivity"
-            android:label="@string/title_activity_account" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.StartActivity" />
-        </activity>
-        <activity
-            android:name=".activities.StartActivity"
-            android:label="@string/app_name"
-            android:theme="@style/ListThemeNoActionBar" >
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-        <activity
-            android:name=".activities.AccountActivity"
-            android:label="@string/title_activity_account_authenticator" >
-        </activity>
-        <activity
-            android:name=".misc.Main1"
-            android:label="@string/title_activity_main1" >
-        </activity>
-
+        <!--Authenticator-->
         <service android:name=".authentication.ListAuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
-
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
@@ -75,15 +63,6 @@
         <meta-data
             android:name="com.google.android.gms.analytics.globalConfigResource"
             android:resource="@xml/global_tracker" />
-
-        <activity
-            android:name=".authentication.AccountAuthenticatorActivity"
-            android:label="@string/title_activity_account_authenticator" >
-        </activity>
-        <activity
-            android:name=".misc.CryptoExample"
-            android:label="@string/title_activity_crypto_example" >
-        </activity>
     </application>
 
 </manifest>

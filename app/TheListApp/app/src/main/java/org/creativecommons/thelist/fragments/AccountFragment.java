@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -44,12 +44,11 @@ import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_US
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends android.support.v4.app.Fragment {
-
+public class AccountFragment extends android.support.v4.app.Fragment {
     private RequestMethods requestMethods;
     Context mContext;
 
-    private final int REQ_SIGNUP = 1;
+    //private final int REQ_SIGNUP = 1;
     private String mAuthTokenType;
 
     //Interface with Activity + ListUser
@@ -64,7 +63,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         public void onCancelLogin();
     }
 
-    public LoginFragment() {
+    public AccountFragment() {
         // Required empty public constructor
     }
 
@@ -84,7 +83,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     @Override

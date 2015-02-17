@@ -66,7 +66,7 @@ import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.CancelFragment;
 import org.creativecommons.thelist.fragments.UploadFragment;
-import org.creativecommons.thelist.misc.AccountFragment;
+import org.creativecommons.thelist.misc.AccountFragment_old;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -92,7 +92,6 @@ import java.util.Map;
 public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener, CancelFragment.CancelListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
-    private Menu menu;
 
     //Request Methods
     RequestMethods requestMethods;
@@ -112,13 +111,14 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     private List<MainListItem> mItemList = new ArrayList<>();
 
     //UI Elements
+    private Menu menu;
     private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
     protected FrameLayout mFrameLayout;
     protected TextView mEmptyView;
 
     //Fragments
-    AccountFragment accountFragment = new AccountFragment();
+    AccountFragment_old accountFragment = new AccountFragment_old();
     UploadFragment uploadFragment = new UploadFragment();
     CancelFragment cancelFragment = new CancelFragment();
 
@@ -189,7 +189,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     @Override
     public void onResume() {
         super.onResume();
-
         //Update menu for login/logout options
         invalidateOptionsMenu();
 
@@ -316,7 +315,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                                             (singleListItem.getString(ApiConstants.ITEM_ID));
                                     mItemList.add(listItem);
                                 } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
-                                    //TODO: Does this work? (add error items to the top)
+                                    //TODO: QA (add error items to the top)
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName
                                             (singleListItem.getString(ApiConstants.ITEM_NAME));
@@ -503,6 +502,15 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                             }
                             @Override
                             public void onDismissed(Snackbar snackbar) {
+                                //TODO: QA
+                                //If no more items
+                                if(mItemList.isEmpty()){
+                                    mEmptyView.setVisibility(View.VISIBLE);
+                                }
+                                //If fab is hidden (bug fix?)
+                                if(!mFab.isVisible()){
+                                    mFab.show();
+                                }
                             }
                         }) //event listener
                 , MainActivity.this);

@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
-import org.creativecommons.thelist.fragments.LoginFragment;
+import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.TermsFragment;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -31,7 +31,7 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.gen
 
 
 public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity
-        implements LoginFragment.AuthListener, TermsFragment.TermsClickListener {
+        implements AccountFragment.AuthListener, TermsFragment.TermsClickListener {
     private final String TAG = this.getClass().getSimpleName();
     Context mContext;
     //private final int REQ_SIGNUP = 1;
@@ -70,7 +70,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         }
 
         //auto load loginFragment
-        LoginFragment loginFragment = new LoginFragment();
+        AccountFragment loginFragment = new AccountFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container,loginFragment)
                 .commit();
