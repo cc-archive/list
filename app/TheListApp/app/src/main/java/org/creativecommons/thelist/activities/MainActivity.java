@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -70,7 +70,6 @@ import org.creativecommons.thelist.misc.AccountFragment;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -84,8 +83,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener, CancelFragment.CancelListener {
@@ -175,9 +176,9 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         //RecyclerView
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.ItemDecoration itemDecoration =
-                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-        mRecyclerView.addItemDecoration(itemDecoration);
+//        RecyclerView.ItemDecoration itemDecoration =
+//                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+//        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
@@ -189,13 +190,12 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     public void onResume() {
         super.onResume();
 
-//        if(photoToBeUploaded && !(mCurrentUser.isTempUser())){
-//            //Load Upload Fragment
-//
-//        }
-
         //Update menu for login/logout options
         invalidateOptionsMenu();
+
+        if(!mFab.isVisible()){
+            mFab.show();
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -205,7 +205,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         }, 500);
 
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
-            getUserListItems();
+            displayUserListItems();
             Log.v("NOT A TEMP: ", "legit user");
 
         } else { //if user is a temp
@@ -213,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             if(mItemList.size() == 0){
                 Log.v("THERE ARE NO ITEMS: ", "Annd not logged in");
                 mRecyclerView.setVisibility(View.INVISIBLE);
-                getUserListItems();
+                displayUserListItems();
             } else {
                 Log.v("THERE ARE ITEMS: ", "Annd not logged in");
                 mFeedAdapter.notifyDataSetChanged();
@@ -222,6 +222,8 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         }
     } //onResume
 
+    //For temp users displayUserListItems:
+    // Checks if all items have been returned from API before displaying list
     public void CheckComplete() {
         Log.v("Check complete", "start");
         for(int i = 0; i < mItemList.size(); i++) {
@@ -237,82 +239,29 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     } //CheckComplete
 
     //GET USER LIST ITEMS
-    private void getUserListItems() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        JsonArrayRequest userListRequest;
-        String itemRequesturl;
+    private void displayUserListItems() {
         JSONArray itemIds;
 
-        //TODO: network available check
-
-        //IF USER IS LOGGED IN
-        if(!(mCurrentUser.isTempUser())) {
+        if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
             Log.v("HELLO", "this user is logged in");
-            itemRequesturl = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
+            if(!(requestMethods.isNetworkAvailable())){
+                requestMethods.showErrorDialog(mContext, getString(R.string.error_network_title),
+                        getString(R.string.error_network_message));
+                return;
+            }
 
-            userListRequest = new JsonArrayRequest(itemRequesturl,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.v("Get USER LIST RESPONSE", response.toString());
-                        mItemList.clear();
-
-                        for(int i=0; i < response.length(); i++) {
-                            try {
-                                JSONObject singleListItem = response.getJSONObject(i);
-                                //Only show items in the user’s list that have not been completed
-                                if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
-                                    MainListItem listItem = new MainListItem();
-                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
-                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
-                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
-                                    mItemList.add(listItem);
-                                } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
-                                    //TODO: Does this work? (add error items to the top)
-                                    MainListItem listItem = new MainListItem();
-                                    listItem.setItemName(singleListItem.getString(ApiConstants.ITEM_NAME));
-                                    listItem.setMakerName(singleListItem.getString(ApiConstants.MAKER_NAME));
-                                    listItem.setItemID(singleListItem.getString(ApiConstants.ITEM_ID));
-                                    listItem.setError(true);
-                                    mItemList.add(0, listItem);
-                                } else {
-                                   continue;
-                                }
-                            } catch (JSONException e) {
-                                Log.v(TAG, e.getMessage());
-                            }
-                        }
-                        mProgressBar.setVisibility(View.INVISIBLE);
-                        mFab.show();
-                        mFab.setVisibility(View.VISIBLE);
-
-                        if(mItemList.size() == 0){
-                            //TODO: show textView
-                            mEmptyView.setVisibility(View.VISIBLE);
-
-                        } else {
-                            //TODO: hide textView
-                            mEmptyView.setVisibility(View.GONE);
-                            Collections.reverse(mItemList);
-                            mFeedAdapter.notifyDataSetChanged();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
+            //Get usertoken to start request
+            mCurrentUser.getToken(new ListUser.AuthCallback() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("error", error.toString());
-                    requestMethods.showErrorDialog(mContext,
-                            getString(R.string.error_title),
-                            getString(R.string.error_message));
+                public void onSuccess(String authtoken) {
+                    requestUserListItems(authtoken);
                 }
             });
-            queue.add(userListRequest);
         }
         else { //IF USER IS A TEMP
             mItemList.clear();
             mEmptyView.setVisibility(View.GONE);
-
+            //Get items selected from SharedPref
             itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
 
             if (itemIds != null || !(itemIds.length() == 0)) {
@@ -339,18 +288,93 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 mFab.setVisibility(View.VISIBLE);
             }
         }
-    } //getUserListItems
+    } //displayUserListItems
+
+    private void requestUserListItems(String authtoken){
+        RequestQueue queue = Volley.newRequestQueue(this);
+        final String auth = authtoken;
+        String url = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
+
+        final JsonArrayRequest userListRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.v("Get USER LIST RESPONSE", response.toString());
+                        mItemList.clear();
+
+                        for(int i=0; i < response.length(); i++) {
+                            try {
+                                JSONObject singleListItem = response.getJSONObject(i);
+                                //Only show items in the user’s list that have not been completed
+                                if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
+                                    MainListItem listItem = new MainListItem();
+                                    listItem.setItemName
+                                            (singleListItem.getString(ApiConstants.ITEM_NAME));
+                                    listItem.setMakerName
+                                            (singleListItem.getString(ApiConstants.MAKER_NAME));
+                                    listItem.setItemID
+                                            (singleListItem.getString(ApiConstants.ITEM_ID));
+                                    mItemList.add(listItem);
+                                } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
+                                    //TODO: Does this work? (add error items to the top)
+                                    MainListItem listItem = new MainListItem();
+                                    listItem.setItemName
+                                            (singleListItem.getString(ApiConstants.ITEM_NAME));
+                                    listItem.setMakerName
+                                            (singleListItem.getString(ApiConstants.MAKER_NAME));
+                                    listItem.setItemID
+                                            (singleListItem.getString(ApiConstants.ITEM_ID));
+                                    listItem.setError(true);
+                                    mItemList.add(0, listItem);
+                                } else {
+                                    continue;
+                                }
+                            } catch (JSONException e) {
+                                Log.v(TAG, e.getMessage());
+                            }
+                        }
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        mFab.show();
+                        mFab.setVisibility(View.VISIBLE);
+
+                        if(mItemList.size() == 0){
+                            //TODO: show textView
+                            mEmptyView.setVisibility(View.VISIBLE);
+
+                        } else {
+                            //TODO: hide textView
+                            mEmptyView.setVisibility(View.GONE);
+                            Collections.reverse(mItemList);
+                            mFeedAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
+                requestMethods.showErrorDialog(mContext,
+                        getString(R.string.error_title),
+                        getString(R.string.error_message));
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(ApiConstants.USER_TOKEN, auth);
+                return params;
+            }
+        };
+        queue.add(userListRequest);
+    } //requestUserListItems
 
     private void initRecyclerView(){
-        SwipeDismissRecyclerViewTouchListener touchListener =
-                new SwipeDismissRecyclerViewTouchListener(
-                        mRecyclerView,
-                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
+                        mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
                             @Override
                             public boolean canDismiss(int position) {
                                 return true;
                             }
-
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
@@ -414,7 +438,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 }
             });
         }
-
         @Override
         public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
             View childView = view.findChildViewUnder(e.getX(), e.getY());
@@ -426,7 +449,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         @Override
         public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
             //Log.v("HI", "ON TOUCH EVENT CALLED");
-
         }
     } //RecyclerItemClickListener
 
@@ -445,9 +467,9 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
                                 //What happens when item is swiped offscreen
                                 mItemList.add(0, mLastDismissedItem);
+                                //re-add item to user’s list in DB
+                                mCurrentUser.addItemToUserList(mLastDismissedItem.getItemID());
                                 mFeedAdapter.notifyDataSetChanged();
-                                //mFeedAdapter.notifyItemInserted(0);
-                                //mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, 1);
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }
@@ -606,16 +628,36 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     public void startPhotoUpload(){
         Log.d(TAG, "Starting photo upload");
 
-        if(mCurrentUser.isTempUser()){
-            Log.d(TAG, "IS TEMP USER TRYING TO CREATE ACCOUNT");
+        if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
+            mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d("THIS IS AUTH IN SPU", authtoken);
+                    Log.d("USER ID: ", mCurrentUser.getUserID());
 
+                    Bundle b = new Bundle();
+                    b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
+                    b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
+                    b.putSerializable(getString(R.string.token_bundle_key), authtoken);
+                    uploadFragment.setArguments(b);
+
+                    //Load Upload Fragment
+                    getSupportFragmentManager().beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .add(R.id.overlay_fragment_container, uploadFragment).commit();
+                    mFrameLayout.setClickable(true);
+                    getSupportActionBar().hide();
+                }
+            });
+        } //not temp user
+        else { //IF IS TEMP USER
+            Log.d(TAG, "IS TEMP USER TRYING TO CREATE ACCOUNT");
             mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
-                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
                         @Override
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "IS TEMP USER RETURNING BUNDLE ");
                             try {
-
                                 Bundle b = new Bundle();
                                 Log.d("THE LIST", "AddNewAccount Bundle is " + b);
                                 b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
@@ -637,30 +679,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                             }
                         }
                     });
-
-
-        }
-        else {
-            mCurrentUser.getToken(new ListUser.AuthCallback() {
-                @Override
-                public void onSuccess(String authtoken) {
-                    Log.d("THIS IS AUTH IN SPU", authtoken);
-                    Log.d("USER ID: ", mCurrentUser.getUserID());
-
-                    Bundle b = new Bundle();
-                    b.putSerializable(getString(R.string.item_id_bundle_key), mCurrentItem.getItemID());
-                    b.putSerializable(getString(R.string.uri_bundle_key), mMediaUri.toString());
-                    b.putSerializable(getString(R.string.token_bundle_key), authtoken);
-                    uploadFragment.setArguments(b);
-
-                    //Load Upload Fragment
-                    getSupportFragmentManager().beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                            .add(R.id.overlay_fragment_container, uploadFragment).commit();
-                    mFrameLayout.setClickable(true);
-                    getSupportActionBar().hide();
-                }
-            });
         }
     } //startUploadPhoto
 
@@ -671,18 +689,18 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         //Refresh user list + remove item that has just been uploaded
         //TODO: create new check for this (invalidate when photo is uploaded?)
         photoToBeUploaded = false;
+        displayUserListItems();
 
-        getUserListItems();
+        //TODO: why does this need to be here?
         mFeedAdapter.notifyDataSetChanged();
         //Show upload message for limited time
         removeFragment(uploadFragment, true);
-
     } //onUploadFinish
 
     @Override
     public void onCancelStart() {
         Log.d(TAG, "On Cancel Start");
-        getUserListItems();
+        displayUserListItems();
         //Remove cancelFragment after set period
         removeFragment(cancelFragment, true);
     } //onCancelStart
@@ -758,7 +776,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
                     @Override
                     public void onSuccess(String authtoken) {
-                        Log.d("ACCOUNT PICKER ", "got authtoken: " + authtoken);
+                        Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > got authtoken: " + authtoken);
                     }
                 });
                 return true;
@@ -771,7 +789,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 return true;
             case R.id.remove_accounts:
                 sharedPreferencesMethods.ClearAllSharedPreferences();
-                Log.d(TAG, "REMOVE ACCOUNTS CALLED");
                 mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
                     @Override
                     public void onSuccess(String authtoken) {
@@ -780,9 +797,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                     }
                 });
                 return true;
-            //case R.id.logout:
-                //mCurrentUser.logOut();
-                //return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

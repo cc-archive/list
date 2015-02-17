@@ -134,6 +134,15 @@ public class UploadFragment extends Fragment {
 
     //Upload Photo to DB
     protected void uploadPhoto() {
+
+          //TODO: handle upload retry
+//        if(!(requestMethods.isNetworkAvailable())){
+//            requestMethods.showErrorDialog(mContext, getString(R.string.error_network_title),
+//                    getString(R.string.error_network_message));
+//            //TODO: networkfail callback to actvitiy? + go to retry upload screen or something?
+//            return;
+//        }
+
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         //Get itemID + Uri from MainActivity
@@ -191,6 +200,10 @@ public class UploadFragment extends Fragment {
         long size = photo.length()/(1024*1024);
         return size;
     }
+
+
+    //DISPLAY RETRY
+    //TODO: add retry button
 
     //DISPLAY MESSAGES
     public void displaySuccessMessage(){
