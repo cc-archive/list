@@ -345,7 +345,12 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         SwipeDismissRecyclerViewTouchListener touchListener =
                 new SwipeDismissRecyclerViewTouchListener(
                         mRecyclerView,
-                        new SwipeDismissRecyclerViewTouchListener.OnDismissCallback() {
+                        new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
                             @Override
                             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
@@ -357,9 +362,11 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
                                     //What happens when item is swiped offscreen
                                     mItemList.remove(mLastDismissedItem);
-                                    mFeedAdapter.notifyItemRemoved(lastDismissedItemPosition);
-                                    mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, mItemList.size());
+                                    //TODO: should this be after snackbar removal?
                                     mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
+
+                                    // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
+                                    mFeedAdapter.notifyDataSetChanged();
 
                                     //Snackbar message
                                     showSnackbar();
@@ -438,8 +445,9 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
                                 //What happens when item is swiped offscreen
                                 mItemList.add(0, mLastDismissedItem);
-                                mFeedAdapter.notifyItemInserted(0);
-                                mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, 1);
+                                mFeedAdapter.notifyDataSetChanged();
+                                //mFeedAdapter.notifyItemInserted(0);
+                                //mFeedAdapter.notifyItemRangeChanged(lastDismissedItemPosition, 1);
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }

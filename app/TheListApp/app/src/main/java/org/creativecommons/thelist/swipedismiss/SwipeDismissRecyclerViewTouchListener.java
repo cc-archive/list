@@ -17,6 +17,7 @@
 package org.creativecommons.thelist.swipedismiss;
 
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -89,7 +90,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     // Fixed properties
     private RecyclerView mRecyclerView;
     //private DismissCallbacks mCallbacks;
-    private OnDismissCallback mCallback;
+    private DismissCallbacks mCallbacks;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 
     // Transient properties
@@ -111,24 +112,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
      * about a successful dismissal of one or more list item positions.
      */
-    public interface OnDismissCallback {
-        /**
-         * Called when the user has indicated they she would like to dismiss one or more list item
-         * positions.
-         *
-         * @param recyclerView               The originating {@link ListView}.
-         * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
-         *                               order for convenience.
-         */
-        void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions);
-    }
-
-//    public interface DismissCallbacks {
-//        /**
-//         * Called to determine whether the given position can be dismissed.
-//         */
-//        boolean canDismiss(int position);
-//
+//    public interface OnDismissCallback {
 //        /**
 //         * Called when the user has indicated they she would like to dismiss one or more list item
 //         * positions.
@@ -140,14 +124,31 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
 //        void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions);
 //    }
 
+    public interface DismissCallbacks {
+        /**
+         * Called to determine whether the given position can be dismissed.
+         */
+        boolean canDismiss(int position);
+
+        /**
+         * Called when the user has indicated they she would like to dismiss one or more list item
+         * positions.
+         *
+         * @param recyclerView               The originating {@link ListView}.
+         * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
+         *                               order for convenience.
+         */
+        void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions);
+    }
+
     /**
      * Constructs a new swipe-to-dismiss touch listener for the given list view.
      *
      * @param recyclerView  The list view whose items should be dismissable.
-     * @param callback The callback to trigger when the user has indicated that she would like to
+     * @param callbacks The callback to trigger when the user has indicated that she would like to
      *                  dismiss one or more list items.
      */
-    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, OnDismissCallback callback) {
+    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -155,7 +156,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         mAnimationTime = recyclerView.getContext().getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
         mRecyclerView = recyclerView;
-        mCallback = callback;
+        mCallbacks = callbacks;
     }
 
     /**
@@ -230,12 +231,39 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 if (mDownView != null) {
                     mDownX = motionEvent.getRawX();
                     mDownPosition = mRecyclerView.getChildPosition(mDownView);
-
-                    mVelocityTracker = VelocityTracker.obtain();
-                    mVelocityTracker.addMovement(motionEvent);
+                    if(mCallbacks.canDismiss(mDownPosition)){
+                        mVelocityTracker = VelocityTracker.obtain();
+                        mVelocityTracker.addMovement(motionEvent);
+                    } else {
+                        mDownView = null;
+                    }
                 }
                 return false;
-            }
+            } //OnTouch
+
+            case MotionEvent.ACTION_CANCEL: {
+                if (mVelocityTracker == null) {
+                    break;
+                }
+
+                if (mDownView != null && mSwiping) {
+                    // cancel
+                    //TODO: DOES THIS WORK
+                    animate(mDownView)
+                            .translationX(0)
+                            .alpha(1)
+                            .setDuration(mAnimationTime)
+                            .setListener(null);
+                }
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
+                mDownX = 0;
+                mDownY = 0;
+                mDownView = null;
+                mDownPosition = ListView.INVALID_POSITION;
+                mSwiping = false;
+                break;
+            } //ACTION_CANCEL
 
             case MotionEvent.ACTION_UP: {
                 if (mVelocityTracker == null) {
@@ -261,15 +289,15 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     // dismiss
                     final View downView = mDownView; // mDownView gets null'd before animation ends
                     final int downPosition = mDownPosition;
-                    ++mDismissAnimationRefCount;
-
+                    //++mDismissAnimationRefCount;
                     //TODO: add animation lock
-//                    synchronized (mAnimationLock){
-//                        if(mAnimatedViews.contains(downView)){
-//                            break;
-//                        }
-//                    }
-
+                    synchronized (mAnimationLock){
+                        if(mAnimatedViews.contains(downView)){
+                            break;
+                        }
+                        ++mDismissAnimationRefCount;
+                        mAnimatedViews.add(downView);
+                    }
 
                     animate(mDownView)
                             .translationX(dismissRight ? mViewWidth : -mViewWidth)
@@ -295,7 +323,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 mDownPosition = ListView.INVALID_POSITION;
                 mSwiping = false;
                 break;
-            }
+            } //ACTION_UP
 
             case MotionEvent.ACTION_MOVE: {
                 if (mVelocityTracker == null || mPaused) {
@@ -358,8 +386,18 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         animator.addListener(new com.nineoldandroids.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
-                --mDismissAnimationRefCount;
-                if (mDismissAnimationRefCount == 0) {
+                //--mDismissAnimationRefCount;
+                //if (mDismissAnimationRefCount == 0) {
+
+                boolean noAnimationLeft;
+                synchronized (mAnimationLock) {
+                    Log.d("ANIMATIONLOCK", "hello");
+                    --mDismissAnimationRefCount;
+                    mAnimatedViews.remove(dismissView);
+                    noAnimationLeft = mDismissAnimationRefCount == 0;
+                }
+
+                if(noAnimationLeft){
                     // No active animations, process all pending dismisses.
                     // Sort by descending position
                     Collections.sort(mPendingDismisses);
@@ -368,7 +406,11 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                     for (int i = mPendingDismisses.size() - 1; i >= 0; i--) {
                         dismissPositions[i] = mPendingDismisses.get(i).position;
                     }
-                    mCallback.onDismiss(mRecyclerView, dismissPositions);
+                    mCallbacks.onDismiss(mRecyclerView, dismissPositions);
+
+                    // Reset mDownPosition to avoid MotionEvent.ACTION_UP trying to start a dismiss
+                    // animation with a stale position TODO: DOES THIS WORK?
+                    mDownPosition = ListView.INVALID_POSITION;
 
                     ViewGroup.LayoutParams lp;
                     for (PendingDismissData pendingDismiss : mPendingDismisses) {
@@ -379,6 +421,13 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                         lp.height = originalHeight;
                         pendingDismiss.view.setLayoutParams(lp);
                     }
+
+                    // Send a cancel event TODO: DOES THIS WORK?
+                    long time = SystemClock.uptimeMillis();
+                    MotionEvent cancelEvent = MotionEvent.obtain(time, time,
+                            MotionEvent.ACTION_CANCEL, 0, 0, 0);
+                    mRecyclerView.dispatchTouchEvent(cancelEvent);
+
                     Log.v("THESE ARE DISMISSES: ", mPendingDismisses.toString());
                     mPendingDismisses.clear();
                 }
