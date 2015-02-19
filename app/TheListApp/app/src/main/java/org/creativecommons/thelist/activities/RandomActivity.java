@@ -193,8 +193,7 @@ public class RandomActivity extends Activity {
                 }
             }); //Done Button
         } else { //Display network error
-            requestMethods.showDialog(mContext,
-                    getString(R.string.error_network_title),
+            requestMethods.showDialog(getString(R.string.error_network_title),
                     getString(R.string.error_network_message));
             //Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
         }
@@ -204,7 +203,7 @@ public class RandomActivity extends Activity {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
-            requestMethods.showDialog(mContext, "Oops", "No data found. Please try again.");
+            requestMethods.showDialog("Oops", "No data found. Please try again.");
         }
         else {
             try {
@@ -254,8 +253,7 @@ public class RandomActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
-                requestMethods.showDialog(mContext,
-                        getString(R.string.error_title),
+                requestMethods.showDialog(getString(R.string.error_title),
                         getString(R.string.error_message));
 
             }

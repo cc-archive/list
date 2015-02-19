@@ -126,8 +126,7 @@ public class MainListItem {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("error", error.toString());
-                requestMethods.showDialog(mContext,
-                        mContext.getString(R.string.error_title),
+                requestMethods.showDialog(mContext.getString(R.string.error_title),
                         mContext.getString(R.string.error_message));
             }
         });

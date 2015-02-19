@@ -826,14 +826,14 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 return true;
             case R.id.remove_accounts:
                 Intent startIntent = new Intent(Settings.ACTION_SETTINGS);
-//                sharedPreferencesMethods.ClearAllSharedPreferences();
-//                mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-//                    @Override
-//                    public void onSuccess(String authtoken) {
-//                        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-//                        startActivity(startIntent);
-//                    }
-//                });
+                sharedPreferencesMethods.ClearAllSharedPreferences();
+                mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                    @Override
+                    public void onSuccess(String authtoken) {
+                        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                        startActivity(startIntent);
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

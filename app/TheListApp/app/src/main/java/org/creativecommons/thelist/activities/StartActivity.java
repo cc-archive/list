@@ -78,7 +78,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         //TODO: check for google analytics opt-in
         //The beta version of this app uses google analytics message
         RequestMethods rqm = new RequestMethods(mContext);
-        rqm.showDialog("Just letting you know!", "The List beta uses Google Analytics help us learn" +
+        rqm.showDialog("Just letting you know!", "The List beta uses Google Analytics help us learn " +
                 "how to make the app better." + "We don’t collect your personal info!");
 
 
