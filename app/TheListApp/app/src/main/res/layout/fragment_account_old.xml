@@ -115,7 +115,7 @@
             android:id="@+id/passwordLoginField"
             android:inputType="textPassword"
             android:hint="@string/password_hint"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:layout_below="@+id/emailLoginField"
             android:layout_marginBottom="10dp" />
 

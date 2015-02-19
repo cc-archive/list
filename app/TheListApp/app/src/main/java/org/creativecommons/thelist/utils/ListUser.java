@@ -110,7 +110,6 @@ public class ListUser implements ServerAuthenticate {
     // ACCOUNT HELPER METHODS
     // --------------------------------------------------------
 
-
     public String getUserIDFromAccount(Account ac){
         return am.getUserData(ac, AccountGeneral.USER_ID);
     } //getUserIDFromAccount
@@ -133,6 +132,11 @@ public class ListUser implements ServerAuthenticate {
         }
         return matchingAccount;
     } //getAccount matching userID
+
+    public int getAccountCount(){
+        Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+        return availableAccounts.length;
+    }
 
     /**
      * Get auth token for existing account, if the account doesn’t exist, create new CCID account
@@ -213,7 +217,14 @@ public class ListUser implements ServerAuthenticate {
 
         if (availableAccounts.length == 0) {
             //TODO: Show other dialog to add account
-            Toast.makeText(mContext, "No accounts", Toast.LENGTH_SHORT).show();
+            addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d(TAG, " > showAccountPicker (no accounts) > addNewAccount, " +
+                            "token received: " + authtoken);
+                }
+            });
         } else {
             String name[] = new String[availableAccounts.length];
             for (int i = 0; i < availableAccounts.length; i++) {
@@ -221,7 +232,8 @@ public class ListUser implements ServerAuthenticate {
             }
 
             // Account picker
-            mAlertDialog = new AlertDialog.Builder(mContext).setTitle("Pick Account").setCancelable(true)
+            mAlertDialog = new AlertDialog.Builder(mContext).setTitle("Pick Account")
+                    .setCancelable(true)
                     .setPositiveButton("Add New", new OkOnClickListener())
                     .setNegativeButton("Cancel", new CancelOnClickListener())
                     .setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, name),

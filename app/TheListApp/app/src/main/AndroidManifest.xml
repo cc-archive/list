@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.creativecommons.thelist" >
-    <!--App Permissions-->
+
+    <!-- App Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,27 +21,27 @@
         android:theme="@style/ListTheme" >
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan|adjustResize">
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".activities.StartActivity"
             android:label="@string/app_name"
-            android:theme="@style/ListThemeNoActionBar" >
+            android:theme="@style/ListTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.AccountActivity"
             android:label="@string/title_activity_account"
-            android:theme="@style/ListThemeNoActionBar">
+            android:theme="@style/ListTheme"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
         </activity>
         <activity
             android:name=".activities.CategoryListActivity"
-            android:label="@string/title_activity_category_list"
-            android:noHistory="true" >
+            android:label="@string/title_activity_category_list" >
         </activity>
         <activity
             android:name=".activities.RandomActivity"
@@ -49,11 +50,12 @@
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
 
-        <!--Authenticator-->
+        <!-- Authenticator -->
         <service android:name=".authentication.ListAuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
@@ -63,6 +65,15 @@
         <meta-data
             android:name="com.google.android.gms.analytics.globalConfigResource"
             android:resource="@xml/global_tracker" />
+
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

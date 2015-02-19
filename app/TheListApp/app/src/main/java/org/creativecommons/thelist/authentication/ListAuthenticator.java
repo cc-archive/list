@@ -114,7 +114,6 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
                     if (password != null) {
                         try {
                             Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
-                            //TODO: If the token is empty, go request a token
                             ListUser mCurrentUser = new ListUser(activity);
                             mCurrentUser.userSignIn(account.name, password, authTokenType, new ListUser.AuthCallback() {
                                 @Override
@@ -126,7 +125,6 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
                             e.printStackTrace();
                         }
                     }
-
                 } catch (InvalidKeyException e) {
                     e.printStackTrace();
                 } catch (GeneralSecurityException e) {

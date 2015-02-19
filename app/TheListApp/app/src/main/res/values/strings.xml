@@ -70,6 +70,37 @@
         <item>#FFC107</item>
     </string-array>
 
+    <!--About the App text-->
+    <string name="about_section1">This app is developed by Creative Commons.\n\n
+        Through The List, organizations will provide lists of locations, people, and events that
+        they need photographs of. And when users are in the right place at the right time, they can
+        claim an item from the list and publish a photograph of it.</string>
+
+    <string name="about_title2">Licensing and Attribution</string>
+    <string name="about_section2">All images created and uploaded using the List can be used and
+        re-used by anyone, so long as they attribute the work of the author. You set your
+        attribution information <a href="https://thelist.creativecommons.org/app">here</a>.
+        The List uses Creative Commons' CC BY "for attribution" license."</string>
+
+    <string name="about_title3">Terms of Service</string>
+    <string name="about_section3">See The List terms of service
+        <a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.</string>
+
+    <string name="about_title4">How to help and file a bug</string>
+    <string name="about_section4">How to help and file a bug: "The List is an open-source project
+        of Creative Commons. Contributions are welcome, from writing code, to filing bugs.
+        Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>."</string>
+
+    <string name="about_title5">Partners</string>
+    <string name="about_section5">The app is created with the generous support of the Knight
+        Foundation, and partners like the Internet Archive</string>
+
+    <string name="about_section6">Creative Commons is a global non-profit, supported by generous
+        donations from people just like you who believe in shared content. Please consider making a
+        donation today.</string>
+
+
+
     <!-- TODO: Insert ascii codes -->
 
     <string name="start_button_label">I’m new to The List</string>
@@ -95,7 +126,7 @@
     <string name="login_fragment_text">Login or Create a Creative Commons account in one click</string>
     <string name="signUpButton_label">CREATE MY ACCOUNT</string>
     <string name="existing_account_text">I already have an account</string>
-    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php"><u>Actually, I need an account</u></a></string>
+    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php">Actually, I need an account</a></string>
 
     <!-- Terms Fragment -->
     <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
@@ -115,7 +146,8 @@
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
     <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
-    <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">Use of this alpha release of The List is subject to these terms and conditions</a></string>
+    <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">
+        Use of this alpha release of The List is subject to these terms and conditions</a></string>
 
     <!-- Fragment Callback Exception Messages -->
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
@@ -139,5 +171,6 @@
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
+    <string name="title_activity_about">About The App</string>
 
 </resources>

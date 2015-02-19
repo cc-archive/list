@@ -81,25 +81,28 @@
                 android:layout_marginBottom="10dp"/>
 
             <Button android:id="@+id/loginButton"
-                style="@style/raised_button"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/login_button_label"
                 android:layout_below="@+id/accountPassword"/>
 
             <!--TODO: fix ime options when sign up is enabled-->
-            <Button android:id="@+id/signUpButton"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/signUpButton_label"
-                android:padding="10dp"/>
+            <!--<Button android:id="@+id/signUpButton"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:text="@string/signUpButton_label"-->
+                <!--android:padding="10dp"/>-->
 
-            <TextView android:id="@+id/signUp"
+            <TextView
                 style="@style/clickable_text"
-                android:gravity="center"
+                android:padding="5dp"
+                android:layout_marginBottom="0dp"
+                android:textColorLink="@color/secondary_text_material_dark"
                 android:text="@string/new_account_text"
-                android:layout_below="@+id/loginButton"/>
+                android:id="@+id/signUp"
+                android:layout_below="@+id/loginButton" />
         </RelativeLayout>
     </ScrollView>
 

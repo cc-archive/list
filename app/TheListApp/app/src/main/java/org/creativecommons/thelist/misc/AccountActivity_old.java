@@ -28,18 +28,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
-public class AccountActivity extends AccountAuthenticatorActivity {
-    public static final String TAG = AccountActivity.class.getSimpleName();
+public class AccountActivity_old extends AccountAuthenticatorActivity {
+    public static final String TAG = AccountActivity_old.class.getSimpleName();
     protected Context mContext;
     RequestMethods requestMethods;
     SharedPreferencesMethods sharedPreferencesMethods;
@@ -53,6 +49,8 @@ public class AccountActivity extends AccountAuthenticatorActivity {
     String mPassword;
     String mEmail;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +61,11 @@ public class AccountActivity extends AccountAuthenticatorActivity {
         mCurrentUser = new ListUser(mContext);
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) AccountActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) AccountActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName(TAG);
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         //----------------------------------------------------
 

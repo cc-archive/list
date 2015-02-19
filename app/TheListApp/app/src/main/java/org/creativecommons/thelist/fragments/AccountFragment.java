@@ -23,13 +23,16 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -82,7 +85,15 @@ public class AccountFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        //create ContextThemeWrapper from the original Activity Context with the custom theme
+//        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.ListTheme);
+//
+//        // clone the inflater using the ContextThemeWrapper
+//        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+//
+//        // Inflate the layout for this fragment
+//        return localInflater.inflate(R.layout.fragment_account, container, false);
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
@@ -109,6 +120,8 @@ public class AccountFragment extends android.support.v4.app.Fragment {
         final Button signUpButton = (Button) getView().findViewById(R.id.signUpButton);
         final EditText accountEmailField = (EditText)getView().findViewById(R.id.accountName);
         final EditText accountPasswordField = (EditText)getView().findViewById(R.id.accountPassword);
+        accountPasswordField.setTypeface(Typeface.DEFAULT);
+        final TextView newAccountButton = (TextView) getView().findViewById(R.id.signUp);
 
         //Try Login on Click
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -147,11 +160,15 @@ public class AccountFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        //TODO: hide loginButton and show signUpButton
         //Actually I need an account --> show user Sign Up Button
-//        getView().findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
+        if(newAccountButton != null) {
+            newAccountButton.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+        //TODO: hide loginButton and show signUpButton
+//        newAccountButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
+//
 //
 //                //loginButton.setVisibility(View.GONE);
 //                //signUpButton.setVisibility(View.VISIBLE);
@@ -167,41 +184,41 @@ public class AccountFragment extends android.support.v4.app.Fragment {
         });
 
         //TODO: do when we have register user
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO:userSignUp
-                final String accountEmail = accountEmailField.getText().toString().trim();
-                final String accountPassword = accountPasswordField.getText().toString().trim();
+//        signUpButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO:userSignUp
+//                final String accountEmail = accountEmailField.getText().toString().trim();
+//                final String accountPassword = accountPasswordField.getText().toString().trim();
+//
+//                if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
+//                    requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
+//                            getString(R.string.login_error_message));
+//                } else {
+//                    //TODO: Login User + save to sharedPreferences
+//                    ListUser mCurrentUser = new ListUser(getActivity());
+//                    try {
+//                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.AuthCallback() {
+//                            @Override
+//                            public void onSuccess(String authtoken) {
+//                                //TODO: fill this in to create user
+//
+//                                Bundle data = new Bundle();
+//
+//                                data.putString(AccountManager.KEY_ACCOUNT_NAME, accountEmail);
+//                                data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+//                                data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+//                                data.putString(PARAM_USER_PASS, accountPassword);
+//
+//                                mCallback.onUserSignedUp(data);
+//                            }
+//                        });
+//                    } catch (Exception e) {
+//                        Log.d("LoginFragment", e.getMessage());
+//                    }
+//                }
+//            }
+//        });
 
-                if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
-                    requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
-                            getString(R.string.login_error_message));
-                } else {
-                    //TODO: Login User + save to sharedPreferences
-                    ListUser mCurrentUser = new ListUser(getActivity());
-                    try {
-                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.AuthCallback() {
-                            @Override
-                            public void onSuccess(String authtoken) {
-                                //TODO: fill this in to create user
-
-                                Bundle data = new Bundle();
-
-                                data.putString(AccountManager.KEY_ACCOUNT_NAME, accountEmail);
-                                data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                                data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                                data.putString(PARAM_USER_PASS, accountPassword);
-
-                                mCallback.onUserSignedUp(data);
-                            }
-                        });
-                    } catch (Exception e) {
-                        Log.d("LoginFragment", e.getMessage());
-                    }
-                }
-            }
-        });
     }//onResume
-
 }//LoginFragment

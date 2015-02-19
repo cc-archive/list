@@ -64,9 +64,9 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.CancelFragment;
 import org.creativecommons.thelist.fragments.UploadFragment;
-import org.creativecommons.thelist.misc.AccountFragment_old;
 import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -89,7 +89,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener, CancelFragment.CancelListener {
+public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener, CancelFragment.CancelListener, AccountFragment.AuthListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
 
@@ -118,7 +118,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     protected TextView mEmptyView;
 
     //Fragments
-    AccountFragment_old accountFragment = new AccountFragment_old();
+    AccountFragment accountFragment = new AccountFragment();
     UploadFragment uploadFragment = new UploadFragment();
     CancelFragment cancelFragment = new CancelFragment();
 
@@ -417,6 +417,21 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                     }
                 }));
     } //initRecyclerView
+
+    @Override
+    public void onUserSignedIn(Bundle userData) {
+
+    }
+
+    @Override
+    public void onUserSignedUp(Bundle userData) {
+
+    }
+
+    @Override
+    public void onCancelLogin() {
+        removeFragment(accountFragment, false);
+    }
 
     //For Swipe to Dismiss
     public interface OnItemClickListener {
@@ -743,6 +758,42 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         }
     } //removeFragment
 
+    //----------------------------------------------
+    //MENU + MENU HELPER METHODS
+    //----------------------------------------------
+
+    private void updateMenuTitles(){
+        MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
+
+        if(mCurrentUser.getAccountCount() > 0){
+            switchAccounts.setTitle("Switch Accounts");
+        } else {
+            switchAccounts.setTitle("Add Account");
+        }
+    } //updateMenuTitles
+
+    private void handleUserAccount(){
+        //TODO: bring up account picker dialog w/ new option
+        if(mCurrentUser.getAccountCount() > 0){
+            mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
+                            "got authtoken: " + authtoken);
+                }
+            });
+        } else {
+            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                    @Override
+                    public void onSuccess(String authtoken) {
+                        Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
+                                "got authtoken: " + authtoken);
+                    }
+                });
+        }
+    } //handleUserAccount
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -750,28 +801,11 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         inflater.inflate(R.menu.menu_main, menu);
         this.menu = menu;
 
-        //Make login or logout visible based on login status
-        //TODO: update when createAccount is possible
-        //updateMenuTitles();
+        //Show add or switch account based on login status + available accounts
+        updateMenuTitles();
         return true;
         //return super.onCreateOptionsMenu(menu);
     } //onCreateOptionsMenu
-
-    //private void updateMenuTitles(){
-        //MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
-        //MenuItem createAccount = menu.findItem(R.id.login);
-        //MenuItem logOut = menu.findItem(R.id.logout);
-        //TODO: turn this back on
-        //if(!(mCurrentUser.isTempUser())){
-            //logOut.setVisible(true);
-            //switchAccounts.setVisible(true);
-            //createAccount.setVisible(false);
-        //} else {
-            //logOut.setVisible(false);
-            //switchAccounts.setVisible(false);
-            //createAccount.setVisible(true);
-        //}
-    //} //updateMenuTitles
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -780,13 +814,13 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.switch_accounts:
-                //TODO: bring up account picker dialog w/ new option
-                mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
-                    @Override
-                    public void onSuccess(String authtoken) {
-                        Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > got authtoken: " + authtoken);
-                    }
-                });
+                //Load Upload Fragment
+                getSupportFragmentManager().beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .add(R.id.overlay_fragment_container,accountFragment).commit();
+                mFrameLayout.setClickable(true);
+                getSupportActionBar().hide();
+                    //handleUserAccount();
                 return true;
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
@@ -794,6 +828,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 return true;
             case R.id.about_theapp:
                 //TODO: go to scrollview of app things
+
                 return true;
             case R.id.remove_accounts:
                 sharedPreferencesMethods.ClearAllSharedPreferences();

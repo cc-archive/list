@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="wrap_content"
+    android:id="@+id/login_fields"
+    android:layout_marginTop="25dp"
+    android:layout_marginBottom="10dp">
+
+    <!-- Dummy view -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
+    <EditText android:id="@+id/accountName"
+        style="@style/input_fields"
+        android:hint="@string/email_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"/>
+
+    <EditText android:id="@+id/accountPassword"
+        style="@style/input_fields"
+        android:ems="10"
+        android:layout_below="@+id/accountName"
+        android:inputType="textPassword"
+        android:imeOptions="actionDone"
+        android:hint="@string/password_hint"
+        android:layout_marginBottom="10dp"/>
+
+    <Button android:id="@+id/loginButton"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/login_button_label"
+        android:layout_below="@+id/accountPassword"/>
+</RelativeLayout>
+
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/fragment_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
