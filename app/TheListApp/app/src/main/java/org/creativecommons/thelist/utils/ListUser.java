@@ -333,7 +333,7 @@ public class ListUser implements ServerAuthenticate {
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
         if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showErrorDialog(mContext, mActivity.getString(R.string.error_network_title),
+            requestMethods.showDialog(mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -347,7 +347,7 @@ public class ListUser implements ServerAuthenticate {
                         //Get Response
                         if(response == null || response.equals("null")) {
                             Log.v("RESPONSE NULL HERE: ", response);
-                            requestMethods.showErrorDialog(mContext, "YOU SHALL NOT PASS",
+                            requestMethods.showDialog("YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
                             Log.v("RESPONSE FOR LOGIN: ", response);
@@ -369,7 +369,7 @@ public class ListUser implements ServerAuthenticate {
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
                                 //TODO: add proper error message
-                                requestMethods.showErrorDialog(mContext, mContext.getString
+                                requestMethods.showDialog(mContext.getString
                                                 (R.string.login_error_exception_title),
                                         mContext.getString(R.string.login_error_exception_message));
                             }
@@ -378,8 +378,7 @@ public class ListUser implements ServerAuthenticate {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                requestMethods.showErrorDialog(mContext,
-                        mContext.getString(R.string.login_error_title),
+                requestMethods.showDialog(mContext.getString(R.string.login_error_title),
                         mContext.getString(R.string.login_error_message));
             }
         }) {
@@ -398,7 +397,7 @@ public class ListUser implements ServerAuthenticate {
     @Override
     public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
         if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showErrorDialog(mContext, mActivity.getString(R.string.error_network_title),
+            requestMethods.showDialog(mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -445,7 +444,7 @@ public class ListUser implements ServerAuthenticate {
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
         if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showErrorDialog(mContext, mActivity.getString(R.string.error_network_title),
+            requestMethods.showDialog(mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -486,8 +485,7 @@ public class ListUser implements ServerAuthenticate {
                     @Override
                     public void onErrorResponse (VolleyError error){
                         //TODO: Add “not successful“ toast
-                        requestMethods.showErrorDialog(mContext,
-                                mContext.getString(R.string.error_title),
+                        requestMethods.showDialog(mContext.getString(R.string.error_title),
                                 mContext.getString(R.string.error_message));
                         Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
                     }
@@ -515,7 +513,7 @@ public class ListUser implements ServerAuthenticate {
 
         } else { //If logged in, remove from DB
             if(!(requestMethods.isNetworkAvailable())){
-                requestMethods.showErrorDialog(mContext, mActivity.getString(R.string.error_network_title),
+                requestMethods.showDialog(mActivity.getString(R.string.error_network_title),
                         mActivity.getString(R.string.error_network_message));
                 return;
             }
@@ -541,8 +539,7 @@ public class ListUser implements ServerAuthenticate {
                         public void onErrorResponse(VolleyError error) {
                             //TODO: Add “not successful“ toast
                             Log.d("Delete Item Failed: ", error.getMessage());
-                            requestMethods.showErrorDialog(mContext,
-                                    mContext.getString(R.string.error_title),
+                            requestMethods.showDialog(mContext.getString(R.string.error_title),
                                     mContext.getString(R.string.error_message));
                         }
                     }) {

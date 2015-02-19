@@ -126,7 +126,7 @@ public class MainListItem {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("error", error.toString());
-                requestMethods.showErrorDialog(mContext,
+                requestMethods.showDialog(mContext,
                         mContext.getString(R.string.error_title),
                         mContext.getString(R.string.error_message));
             }
@@ -159,7 +159,7 @@ public class MainListItem {
 //            @Override
 //            public void onErrorResponse(VolleyError error) {
 //                Log.d("error", error.toString());
-//                requestMethods.showErrorDialog(mContext,
+//                requestMethods.showDialog(mContext,
 //                        mContext.getString(R.string.error_title),
 //                        mContext.getString(R.string.error_message));
 //            }

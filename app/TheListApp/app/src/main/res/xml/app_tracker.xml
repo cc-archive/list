@@ -9,6 +9,9 @@
     <!-- Percentage of events to include in reports -->
     <string name="ga_sampleFrequency">100.0</string>
 
+    <!--Hide user IPs from results-->
+    <string name="ga_anonymizeIp">true</string>
+
     <!-- Enable automatic Activity measurement -->
     <bool name="ga_autoActivityTracking">true</bool>
 

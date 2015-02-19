@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class RequestMethods {
+    //TODO: probably make this obsolete
     public static final String TAG = RequestMethods.class.getSimpleName();
     protected Context mContext;
+    protected AlertDialog mAlertDialog;
 
     //Set Context
     public RequestMethods(Context mc) {
@@ -52,20 +54,15 @@ public final class RequestMethods {
         return isAvailable;
     }
 
-    //Generic Toast Builder
-    public void showToast(Context context, String title, String message){
-
-    }
-
     //Generic Error Dialog Builder
-    public void showErrorDialog(Context context, String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    public void showDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(title)
                .setMessage(message)
                .setPositiveButton(android.R.string.ok, null);
         AlertDialog dialog = builder.create();
         dialog.show();
-    } //showErrorDialog
+    } //showDialog
 
     //Parse List Objects of List Items and return list of Item IDS
     public List<String> getItemIds(List<MainListItem> list){
@@ -81,8 +78,6 @@ public final class RequestMethods {
     public String createUploadPhotoObject(Uri uri) {
         //Convert photo file to Base64 encoded string
         String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
-
         return fileString;
     }
-
-}
+} //RequestMethods

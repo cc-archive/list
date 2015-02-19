@@ -187,7 +187,7 @@ public class AccountFragment_old extends Fragment {
                 //Create account
                 if (mUsername.isEmpty() || mPassword.isEmpty() || mEmail.isEmpty()) {
                     //Show error
-                    requestMethods.showErrorDialog(mContext,
+                    requestMethods.showDialog(mContext,
                             mContext.getString(R.string.login_error_title),
                             mContext.getString(R.string.login_error_message));
                 } else {
@@ -206,7 +206,7 @@ public class AccountFragment_old extends Fragment {
                 mLoginPassword = mPasswordLoginField.getText().toString().trim();
 
                 if (mLoginEmail.isEmpty() || mLoginPassword.isEmpty()) {
-                    requestMethods.showErrorDialog(mContext,
+                    requestMethods.showDialog(mContext,
                             mContext.getString(R.string.login_error_title),
                             mContext.getString(R.string.login_error_message));
                 } else {

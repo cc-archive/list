@@ -137,7 +137,7 @@ public class UploadFragment extends Fragment {
 
           //TODO: handle upload retry
 //        if(!(requestMethods.isNetworkAvailable())){
-//            requestMethods.showErrorDialog(mContext, getString(R.string.error_network_title),
+//            requestMethods.showDialog(mContext, getString(R.string.error_network_title),
 //                    getString(R.string.error_network_message));
 //            //TODO: networkfail callback to actvitiy? + go to retry upload screen or something?
 //            return;

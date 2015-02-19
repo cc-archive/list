@@ -42,10 +42,12 @@ import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.misc.AccountFragment_old;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
-public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener, AccountFragment_old.LoginClickListener {
+public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener,
+        AccountFragment_old.LoginClickListener {
     public static final String TAG = StartActivity.class.getSimpleName();
     ListUser mCurrentUser;
     protected Button mStartButton;
@@ -54,7 +56,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected Context mContext;
     protected SharedPreferencesMethods sharedPreferencesMethods;
     private AccountManager am;
-    private String mAuthTokenType;
     protected FrameLayout mFrameLayout;
 
     //Fragment
@@ -73,6 +74,13 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         am = AccountManager.get(getBaseContext());
 
         Log.v(TAG, "STARTACTIVITY ON CREATE");
+
+        //TODO: check for google analytics opt-in
+        //The beta version of this app uses google analytics message
+        RequestMethods rqm = new RequestMethods(mContext);
+        rqm.showDialog("Just letting you know!", "The List beta uses Google Analytics help us learn" +
+                "how to make the app better." + "We don’t collect your personal info!");
+
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
 //        instance.setAppOptOut(true);

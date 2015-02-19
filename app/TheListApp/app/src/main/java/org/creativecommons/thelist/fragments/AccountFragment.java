@@ -122,7 +122,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                 final String accountPassword = accountPasswordField.getText().toString().trim();
 
                 if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
-                    requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
+                    requestMethods.showDialog(mContext, getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
                 } else {
                     ListUser mCurrentUser = new ListUser(getActivity());
@@ -183,7 +183,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //                final String accountPassword = accountPasswordField.getText().toString().trim();
 //
 //                if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
-//                    requestMethods.showErrorDialog(mContext, getString(R.string.login_error_title),
+//                    requestMethods.showDialog(mContext, getString(R.string.login_error_title),
 //                            getString(R.string.login_error_message));
 //                } else {
 //                    //TODO: Login User + save to sharedPreferences
