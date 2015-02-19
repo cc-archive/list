@@ -37,7 +37,7 @@
             android:name=".activities.AccountActivity"
             android:label="@string/title_activity_account"
             android:theme="@style/ListThemeNoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name=".activities.CategoryListActivity"

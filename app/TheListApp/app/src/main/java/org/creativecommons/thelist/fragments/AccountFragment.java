@@ -85,15 +85,6 @@ public class AccountFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        //create ContextThemeWrapper from the original Activity Context with the custom theme
-//        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.ListTheme);
-//
-//        // clone the inflater using the ContextThemeWrapper
-//        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-//
-//        // Inflate the layout for this fragment
-//        return localInflater.inflate(R.layout.fragment_account, container, false);
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 

@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -825,14 +826,15 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 startActivity(aboutAppIntent);
                 return true;
             case R.id.remove_accounts:
-                sharedPreferencesMethods.ClearAllSharedPreferences();
-                mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                    @Override
-                    public void onSuccess(String authtoken) {
-                        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                        startActivity(startIntent);
-                    }
-                });
+                Intent startIntent = new Intent(Settings.ACTION_SETTINGS);
+//                sharedPreferencesMethods.ClearAllSharedPreferences();
+//                mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+//                    @Override
+//                    public void onSuccess(String authtoken) {
+//                        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+//                        startActivity(startIntent);
+//                    }
+//                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

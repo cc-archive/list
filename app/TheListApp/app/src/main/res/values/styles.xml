@@ -16,7 +16,6 @@
     <!--EditTextStyle-->
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
         <!--Can make changes to default in here-->
-        <item name="android:drawableBottom">@color/colorSecondaryDark</item>
     </style>
 
     <!--Button Styles-->
@@ -87,13 +86,13 @@
     </style>
 
     <!--About The App Text Styles-->
-    <style name="about_text_body" parent="@style/text_body">
-        <!--Any changes to default go here-->
-        <item name="android:autoLink">web</item>
-    </style>
+    <!--<style name="about_text_body" parent="@style/text_body">-->
+        <!--&lt;!&ndash;Any changes to default go here&ndash;&gt;-->
+        <!--<item name="android:autoLink">web</item>-->
+    <!--</style>-->
 
-    <style name="about_text_title" parent="@style/text_list_item_title">
-    </style>
+    <!--<style name="about_text_title" parent="@style/text_list_item_title">-->
+    <!--</style>-->
 
 
 
