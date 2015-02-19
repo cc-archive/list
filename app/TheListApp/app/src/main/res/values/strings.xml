@@ -70,36 +70,62 @@
         <item>#FFC107</item>
     </string-array>
 
-    <!--About the App text-->
-    <string name="about_section1">This app is developed by Creative Commons.\n\n
-        Through The List, organizations will provide lists of locations, people, and events that
+    <!--About the App single text-->
+    <string name="about_app">This app is developed by Creative Commons.\n\nThrough The List,
+        organizations will provide lists of locations, people, and events that
         they need photographs of. And when users are in the right place at the right time, they can
-        claim an item from the list and publish a photograph of it.</string>
-
-    <string name="about_title2">Licensing and Attribution</string>
-    <string name="about_section2">All images created and uploaded using the List can be used and
+        claim an item from the list and publish a photograph of it.
+        \n\n<b>Licensing and Attribution</b>
+        \nAll images created and uploaded using the List can be used and
         re-used by anyone, so long as they attribute the work of the author. You set your
         attribution information <a href="https://thelist.creativecommons.org/app">here</a>.
-        The List uses Creative Commons' CC BY "for attribution" license."</string>
+        The List uses Creative Commons’ CC BY “for attribution” license.
+        \n\n<b>Terms of Service</b>
+        \nSee The List terms of service
+        <a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.
+        \n\n<b>How to help and file a bug</b>
+        \nThe List is an open-source project
+        of Creative Commons. Contributions are welcome; from writing code to filing bugs.
+        Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.
+        \n\n<b>Partners</b>
+        \nThe app is created with the generous support of the
+        <a href="http://www.knightfoundation.org/">Knight Foundation</a>, and partners like the
+        <a href="https://archive.org/index.php">Internet Archive</a>
+        \n\nCreative Commons is a global non-profit, supported by generous
+        donations from people just like you who believe in shared content.
+        <a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
+    </string>
 
-    <string name="about_title3">Terms of Service</string>
-    <string name="about_section3">See The List terms of service
-        <a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.</string>
+    <!--About the App text-->
+    <!--<string name="about_section1">This app is developed by Creative Commons.\n\nThrough The List,-->
+        <!--organizations will provide lists of locations, people, and events that-->
+        <!--they need photographs of. And when users are in the right place at the right time, they can-->
+        <!--claim an item from the list and publish a photograph of it.</string>-->
 
-    <string name="about_title4">How to help and file a bug</string>
-    <string name="about_section4">How to help and file a bug: "The List is an open-source project
-        of Creative Commons. Contributions are welcome, from writing code, to filing bugs.
-        Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>."</string>
+    <!--<string name="about_title2">Licensing and Attribution</string>-->
+    <!--<string name="about_section2">All images created and uploaded using the List can be used and-->
+        <!--re-used by anyone, so long as they attribute the work of the author. You set your-->
+        <!--attribution information <a href="https://thelist.creativecommons.org/app">here</a>.-->
+        <!--The List uses Creative Commons’ CC BY “for attribution” license."</string>-->
 
-    <string name="about_title5">Partners</string>
-    <string name="about_section5">The app is created with the generous support of the Knight
-        Foundation, and partners like the Internet Archive</string>
+    <!--<string name="about_title3">Terms of Service</string>-->
+    <!--<string name="about_section3">See The List terms of service-->
+        <!--<a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.</string>-->
 
-    <string name="about_section6">Creative Commons is a global non-profit, supported by generous
-        donations from people just like you who believe in shared content. Please consider making a
-        donation today.</string>
+    <!--<string name="about_title4">How to help and file a bug</string>-->
+    <!--<string name="about_section4">The List is an open-source project-->
+        <!--of Creative Commons. Contributions are welcome; from writing code to filing bugs.-->
+        <!--Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.</string>-->
 
+    <!--<string name="about_title5">Partners</string>-->
+    <!--<string name="about_section5">The app is created with the generous support of the-->
+        <!--<a href="http://www.knightfoundation.org/">Knight Foundation</a>, and partners like the-->
+        <!--<a href="https://archive.org/index.php">Internet Archive</a></string>-->
 
+    <!--<string name="about_section6">Creative Commons is a global non-profit, supported by generous-->
+        <!--donations from people just like you who believe in shared content.-->
+        <!--<a href="https://donate.creativecommons.org/">Please consider making a donation today.-->
+        <!--</a></string>-->
 
     <!-- TODO: Insert ascii codes -->
 

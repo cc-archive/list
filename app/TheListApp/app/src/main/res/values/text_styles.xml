@@ -3,6 +3,7 @@
     <!--Text Body-->
     <style name="text_body" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_size_body_1_material</item>
+        <item name="android:lineSpacingExtra">20sp</item>
         <item name="android:textColor">@color/secondary_text_default_material_light</item>
     </style>
 

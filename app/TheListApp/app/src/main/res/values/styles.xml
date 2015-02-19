@@ -86,6 +86,17 @@
         <item name="android:paddingBottom">@dimen/fragment_vertical_margin</item>
     </style>
 
+    <!--About The App Text Styles-->
+    <style name="about_text_body" parent="@style/text_body">
+        <!--Any changes to default go here-->
+        <item name="android:autoLink">web</item>
+    </style>
+
+    <style name="about_text_title" parent="@style/text_list_item_title">
+    </style>
+
+
+
     <!--Fragment Styles-->
     <style name="fragment_layout_main">
         <item name="android:layout_width">match_parent</item>

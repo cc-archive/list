@@ -1,22 +1,84 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="org.creativecommons.thelist.activities.AboutActivity">
 
-    <TextView android:id="@+id/section1"
-        android:text="@string/hello_world"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
 
-    <TextView android:id="@+id/title2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView android:id="@+id/about_text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:lineSpacingMultiplier="1.1"
+            android:text="@string/about_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView android:id="@+id/section2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!--<TextView android:id="@+id/section1"-->
+            <!--android:textAppearance="@style/about_text_body"-->
+            <!--android:text="@string/about_section1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
 
-</RelativeLayout>
+        <!--<TextView android:id="@+id/title2"-->
+            <!--android:textAppearance="@style/about_text_title"-->
+            <!--android:text="@string/about_title2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/section2"-->
+            <!--android:textAppearance="@style/about_text_body"-->
+            <!--android:text="@string/about_section2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/title3"-->
+            <!--android:textAppearance="@style/about_text_title"-->
+            <!--android:text="@string/about_title3"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/section3"-->
+            <!--android:textAppearance="@style/about_text_body"-->
+            <!--android:text="@string/about_section3"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/title4"-->
+            <!--android:textAppearance="@style/about_text_title"-->
+            <!--android:text="@string/about_title4"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/section4"-->
+            <!--android:textAppearance="@style/about_text_body"-->
+            <!--android:text="@string/about_section4"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/title5"-->
+            <!--android:textAppearance="@style/about_text_title"-->
+            <!--android:text="@string/about_title5"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/section5"-->
+            <!--android:textAppearance="@style/about_text_body"-->
+            <!--android:text="@string/about_section5"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView android:id="@+id/section6"-->
+            <!--android:textAppearance="@style/about_text_body"-->
+            <!--android:text="@string/about_section6"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+    </LinearLayout>
+</ScrollView>

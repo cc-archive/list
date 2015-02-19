@@ -36,7 +36,7 @@
         <activity
             android:name=".activities.AccountActivity"
             android:label="@string/title_activity_account"
-            android:theme="@style/ListTheme"
+            android:theme="@style/ListThemeNoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" >
         </activity>
         <activity

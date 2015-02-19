@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -40,7 +41,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     private Bundle newUserBundle;
 
     //UI Elements
-    //FrameLayout mFrameLayout;
+    FrameLayout mFrameLayout;
     EditText mPasswordTextField;
 
     //Fragments
@@ -56,7 +57,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         mCurrentUser = new ListUser(mContext);
 
         //UI Elements
-        //mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
+        mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
 
         //Get account information (intent is coming from ListAuthenticator…always call AuthToken)
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
@@ -70,13 +71,11 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         }
 
         //auto load loginFragment
-//        AccountFragment accountFragment = new AccountFragment();
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.fragment_container,accountFragment)
-//                .commit();
-//                mFrameLayout.setClickable(true);
-
-        Log.v("This", "is being called!");
+        AccountFragment accountFragment = new AccountFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container,accountFragment)
+                .commit();
+                mFrameLayout.setClickable(true);
     } //OnCreate
 
     @Override

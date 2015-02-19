@@ -814,21 +814,15 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.switch_accounts:
-                //Load Upload Fragment
-                getSupportFragmentManager().beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .add(R.id.overlay_fragment_container,accountFragment).commit();
-                mFrameLayout.setClickable(true);
-                getSupportActionBar().hide();
-                    //handleUserAccount();
+                    handleUserAccount();
                 return true;
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
                 startActivity(pickCategoriesIntent);
                 return true;
             case R.id.about_theapp:
-                //TODO: go to scrollview of app things
-
+                Intent aboutAppIntent = new Intent(MainActivity.this,AboutActivity.class);
+                startActivity(aboutAppIntent);
                 return true;
             case R.id.remove_accounts:
                 sharedPreferencesMethods.ClearAllSharedPreferences();
