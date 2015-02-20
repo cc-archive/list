@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -193,9 +193,8 @@ public class RandomActivity extends Activity {
                 }
             }); //Done Button
         } else { //Display network error
-            requestMethods.showDialog(getString(R.string.error_network_title),
+            requestMethods.showDialog(mContext,getString(R.string.error_network_title),
                     getString(R.string.error_network_message));
-            //Log.v("NO BUTTON", "THIS IS THE ERROR ERROR ERROR");
         }
     } //onCreate
 
@@ -203,7 +202,7 @@ public class RandomActivity extends Activity {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
-            requestMethods.showDialog("Oops", "No data found. Please try again.");
+            requestMethods.showDialog(mContext,"Oops", "No data found. Please try again.");
         }
         else {
             try {
@@ -235,6 +234,13 @@ public class RandomActivity extends Activity {
 
     //GET Random Items from API
     private void getRandomItemRequest() {
+
+        if(!(requestMethods.isNetworkAvailable())){
+            requestMethods.showDialog(mContext,getString(R.string.error_network_title),
+                    getString(R.string.error_network_message));
+            return;
+        }
+
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
         String url = ApiConstants.GET_RANDOM_ITEMS;
@@ -253,7 +259,7 @@ public class RandomActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
-                requestMethods.showDialog(getString(R.string.error_title),
+                requestMethods.showDialog(mContext,getString(R.string.error_title),
                         getString(R.string.error_message));
 
             }

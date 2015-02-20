@@ -196,7 +196,7 @@ public class CategoryListActivity extends ActionBarActivity {
     private void updateList() {
         //mProgressBar.setVisibility(View.INVISIBLE);
         if (mCategoryData == null) {
-            requestMethods.showDialog(getString(R.string.error_title),
+            requestMethods.showDialog(mContext, getString(R.string.error_title),
                     getString(R.string.error_message));
         }
         else {
@@ -238,7 +238,7 @@ public class CategoryListActivity extends ActionBarActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("error", error.toString());
-                requestMethods.showDialog(getString(R.string.error_title),
+                requestMethods.showDialog(mContext, getString(R.string.error_title),
                         getString(R.string.error_message));
             }
         });

@@ -245,7 +245,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
             Log.v("HELLO", "this user is logged in");
             if(!(requestMethods.isNetworkAvailable())){
-                requestMethods.showDialog(getString(R.string.error_network_title),
+                requestMethods.showDialog(mContext,getString(R.string.error_network_title),
                         getString(R.string.error_network_message));
                 return;
             }
@@ -352,7 +352,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("error", error.toString());
-                requestMethods.showDialog(getString(R.string.error_title),
+                requestMethods.showDialog(mContext,getString(R.string.error_title),
                         getString(R.string.error_message));
             }
         }) {

@@ -80,7 +80,7 @@ public class AccountActivity_old extends AccountAuthenticatorActivity {
                 mPassword = mPasswordLoginField.getText().toString().trim();
 
                 if(mPassword.isEmpty() || mEmail.isEmpty()) {
-                    requestMethods.showDialog(getString(R.string.login_error_title),
+                    requestMethods.showDialog(mContext, getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
                 }
                 else {

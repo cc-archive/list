@@ -55,8 +55,8 @@ public final class RequestMethods {
     }
 
     //Generic Error Dialog Builder
-    public void showDialog(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    public void showDialog(Context context, String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title)
                .setMessage(message)
                .setPositiveButton(android.R.string.ok, null);
