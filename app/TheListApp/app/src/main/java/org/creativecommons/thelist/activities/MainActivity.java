@@ -90,7 +90,8 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener, CancelFragment.CancelListener, AccountFragment.AuthListener {
+public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener,
+        CancelFragment.CancelListener, AccountFragment.AuthListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
 
@@ -783,6 +784,8 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                 }
             });
         } else {
+            Log.d(TAG, "new account should be added");
+
             mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
                 AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
                     @Override

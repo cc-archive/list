@@ -47,7 +47,7 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener,
-        AccountFragment_old.LoginClickListener {
+        AccountFragment.AuthListener {
     public static final String TAG = StartActivity.class.getSimpleName();
     ListUser mCurrentUser;
     protected Button mStartButton;
@@ -77,9 +77,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
         //TODO: check for google analytics opt-in
         //The beta version of this app uses google analytics message
-        RequestMethods rqm = new RequestMethods(mContext);
-        rqm.showDialog(mContext, "Just letting you know!", "The List beta uses Google Analytics help us learn " +
-                "how to make the app better." + "We don’t collect your personal info!");
+//        RequestMethods rqm = new RequestMethods(mContext);
+//        rqm.showDialog(mContext, "Just letting you know!", "The List beta uses Google Analytics help us learn " +
+//                "how to make the app better." + "We don’t collect your personal info!");
 
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
@@ -196,7 +196,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     }
 
     @Override
-    public void UserLoggedIn(String userData) {
+    public void onUserSignedIn(Bundle userData) {
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -204,7 +204,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     }
 
     @Override
-    public void UserCreated(String userData) {
+    public void onUserSignedUp(Bundle userData) {
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -212,7 +212,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     }
 
     @Override
-    public void CancelLogin() {
+    public void onCancelLogin() {
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .remove(loginFragment)
@@ -239,4 +239,5 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         }
         return super.onOptionsItemSelected(item);
     } //onOptionsItemSelected
+
 } //StartActivity

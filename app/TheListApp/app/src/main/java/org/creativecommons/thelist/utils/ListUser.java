@@ -158,6 +158,11 @@ public class ListUser implements ServerAuthenticate {
         } else {
             Account account = getAccount(getUserID());
 
+            if(account == null){
+                Log.v(TAG, "getToken > getAccount > account is null");
+                return;
+            }
+
             am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
                     new AccountManagerCallback<Bundle>() {
                         @Override
