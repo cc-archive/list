@@ -17,7 +17,7 @@ list and publish a photograph of it.
 
     The List powered by Creative Commons
 	
-    Copyright (c) 2014 Creative Commons
+    Copyright (c) 2014, 2015 Creative Commons Corporation
 
     This program is free software: you can redistribute it and/or
     modify it under the terms of the GNU Affero General Public License
