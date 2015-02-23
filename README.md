@@ -13,6 +13,8 @@ people, and events that they need photographs of. And when users are
 in the right place at the right time, they can claim an item from the
 list and publish a photograph of it.
 
+[![Build Status](https://travis-ci.org/creativecommons/list.svg?branch=master)](https://travis-ci.org/creativecommons/list)
+
 * See our [functional spec](docs/spec.md)
 
     The List powered by Creative Commons
