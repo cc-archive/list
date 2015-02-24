@@ -278,9 +278,9 @@ with('/api/userlist', function () {
 
 });
 
-with('/api/usercategories/', function() {
+with('/api/usercategories/add', function() {
 
-    respond('POST', '/add/[:user]/[:id]', function ($request, $response) {
+    respond('POST', '/[:user]/[:id]', function ($request, $response) {
 
         $categoryid=$request->id;
 	$userid=$request->user;
@@ -290,8 +290,11 @@ with('/api/usercategories/', function() {
 
     });
 
+});
 
-    respond('POST', '/delete/[:user]/[:id]', function ($request, $response) {
+with('/api/usercategories/delete', function() {
+
+    respond('POST', '/[:user]/[:id]', function ($request, $response) {
 
         $categoryid=$request->id;
 	$userid=$request->user;
@@ -301,6 +304,9 @@ with('/api/usercategories/', function() {
 
     });
 
+});
+
+with('/api/usercategories/list', function() {
 
     respond('GET', '/list/[:user]', function ($request, $response) {
 
