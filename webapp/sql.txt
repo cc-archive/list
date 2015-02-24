@@ -45,6 +45,7 @@ primary KEY (id)
 drop table if exists List;
 drop table if exists Makers;
 drop table if exists Categories;
+drop table if exists UserCategories;
 
 CREATE TABLE Makers (
 id int(11) NOT NULL auto_increment,
@@ -58,6 +59,14 @@ id int(11) NOT NULL auto_increment,
 title VARCHAR(255) NOT NULL,
 makerid int(11) NOT NULL,
 approved int(11),
+primary KEY (id)
+);
+
+
+CREATE TABLE UserCategories (
+id int(11) NOT NULL auto_increment,
+userid int(11) NOT NULL,
+categoryid int(11) NOT NULL,
 primary KEY (id)
 );
 
@@ -240,7 +249,7 @@ INSERT into List (makerid, title) values (6, "Christmas tree decorations");
 INSERT into List (makerid, title) values (6, "Well-placed stickers");
 INSERT into List (makerid, title) values (6, "A family heirloom");
 INSERT into List (makerid, title) values (6, "A classic arcade machine");
-INSERT into List (makerid, title) values (6, "Sweet lego sets");
+INSERT into List (makerid, title) values (6, "Sweet LEGO sets");
 
 UPDATE List SET category = 1 where makerid = 1;
 UPDATE List SET category = 2 where makerid = 2;

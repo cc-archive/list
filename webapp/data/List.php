@@ -518,6 +518,25 @@ class UserList {
 
     }
 
+    static function addUserCategory ($categoryid, $userid) {
+
+        echo $userid;
+        echo $categoryid;
+
+    }
+
+    static function deleteUserCategory ($categoryid, $userid) {
+
+        echo $userid;
+        echo $categoryid;
+
+    }
+
+    static function getUserCategories ($userid) {
+
+        echo $userid;
+
+    }
     
                
 }
