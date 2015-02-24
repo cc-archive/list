@@ -278,6 +278,46 @@ with('/api/userlist', function () {
 
 });
 
+with('/api/usercategories/', function() {
+
+    respond('POST', '/add/[:user]/[:id]', function ($request, $response) {
+
+        $categoryid=$request->id;
+	$userid=$request->user;
+
+        $list = new UserList();
+        $save = $list->addUserCategory($categoryid, $userid);
+
+    });
+
+
+    respond('POST', '/delete/[:user]/[:id]', function ($request, $response) {
+
+        $categoryid=$request->id;
+	$userid=$request->user;
+
+        $list = new UserList();
+        $save = $list->deleteUserCategory($categoryid, $userid);
+
+    });
+
+
+    respond('GET', '/list/[:user]', function ($request, $response) {
+
+	$userid=$request->user;
+
+        $list = new UserList();
+        $save = $list->getUserCategories($userid);
+
+        $output = json_encode($save, JSON_PRETTY_PRINT);
+
+        echo $output;
+
+    });
+    
+
+});
+
 with('/api', function () {
 
     respond('GET', '/', function ($request, $response) {
