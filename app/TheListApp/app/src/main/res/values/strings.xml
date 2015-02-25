@@ -85,7 +85,7 @@
         <a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.
         \nTo opt out of Google Analytics, see your CCID account in your phone’s Settings.
         \n\n<b>How to help and file a bug</b>
-        \nThe List is an open-source project
+        \nThe List is an free software project
         of Creative Commons. Contributions are welcome; from writing code to filing bugs.
         Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.
         \n\n<b>Partners</b>
@@ -114,7 +114,7 @@
         <!--<a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.</string>-->
 
     <!--<string name="about_title4">How to help and file a bug</string>-->
-    <!--<string name="about_section4">The List is an open-source project-->
+    <!--<string name="about_section4">The List is an free software project-->
         <!--of Creative Commons. Contributions are welcome; from writing code to filing bugs.-->
         <!--Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.</string>-->
 
