@@ -532,6 +532,8 @@ class UserList {
 
 	    $adodb->CacheFlush();
 
+            echo $query;
+
             http_response_code(204);
             
         } catch (Exception $e) {
@@ -561,6 +563,8 @@ class UserList {
 
 	    $adodb->CacheFlush();
 
+            echo $query;
+
             http_response_code(204);
             
         } catch (Exception $e) {
@@ -583,6 +587,8 @@ class UserList {
         $query = "SELECT * from UserCategories WHERE userid=?";
         $params = array();
         $params[] = $userid;
+
+        echo $query;
         
         $res = $adodb->CacheGetAll(5, $query, $params);
 
