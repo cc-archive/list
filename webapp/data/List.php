@@ -584,7 +584,7 @@ class UserList {
  
         global $adodb;              
 
-        $query = "SELECT * from UserCategories WHERE userid=?";
+        $query = "SELECT categoryid from UserCategories WHERE userid=?";
         $params = array();
         $params[] = $userid;
 
