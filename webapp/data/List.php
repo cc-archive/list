@@ -136,8 +136,6 @@ class UserList {
         $params = array();
         $params[] = $userid;
 
-        echo $query;
-
         $res = $adodb->CacheGetAll(50, $query, $params);
 
         return $res;
