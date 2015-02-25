@@ -61,7 +61,7 @@ $query = "SELECT * FROM Photos WHERE url IS NULL LIMIT 1";
 
       //$url = basename($url);
 
-      $url = "https://thelist.creativecommons.org" . $url;
+      $url = "https://thelist.creativecommons.org/" . $url;
 
       $query = "UPDATE Photos SET url = %s WHERE id=(%s)";
 
