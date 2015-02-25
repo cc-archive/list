@@ -520,21 +520,73 @@ class UserList {
 
     static function addUserCategory ($categoryid, $userid) {
 
-        echo $userid;
-        echo $categoryid;
+        global $adodb;              
+
+        $query = "INSERT INTO UserCategories (userid, categoryid) VALUES (%s,%s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($categoryid)
+            ));
+
+	    $adodb->CacheFlush();
+
+            http_response_code(204);
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            //echo "There was an error";
+
+            http_response_code(400);
+            
+            return null;
+        }
 
     }
 
     static function deleteUserCategory ($categoryid, $userid) {
 
-        echo $userid;
-        echo $categoryid;
+        global $adodb;              
+
+        $query = "DELETE FROM UserCategories WHERE userid = %s AND categoryid = %s";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($categoryid)
+            ));
+
+	    $adodb->CacheFlush();
+
+            http_response_code(204);
+            
+        } catch (Exception $e) {
+            
+            //echo $e;
+
+            //echo "There was an error";
+
+            http_response_code(400);
+            
+            return null;
+        }
 
     }
 
     static function getUserCategories ($userid) {
+ 
+        global $adodb;              
 
-        echo $userid;
+        $query = "SELECT * from UserCategories WHERE userid=?";
+        $params = array();
+        $params[] = $userid;
+        
+        $res = $adodb->CacheGetAll(5, $query, $params);
+
+        return $res;
 
     }
     
