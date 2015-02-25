@@ -587,8 +587,6 @@ class UserList {
         $query = "SELECT categoryid from UserCategories WHERE userid=?";
         $params = array();
         $params[] = $userid;
-
-        echo $query;
         
         $res = $adodb->CacheGetAll(5, $query, $params);
 
