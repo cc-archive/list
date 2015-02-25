@@ -334,7 +334,7 @@ with('/api/photos', function() {
 
         $gallery = $list->getUserGallery($userid);
 
-        $output = json_encode($gallery, JSON_PRINTY_PRINT);
+        $output = json_encode($gallery, JSON_PRETTY_PRINT);
 
         echo $output;
 
