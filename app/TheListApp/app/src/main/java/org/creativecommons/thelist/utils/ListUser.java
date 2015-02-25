@@ -75,6 +75,7 @@ public class ListUser implements ServerAuthenticate {
 
     public ListUser(Activity a) {
         mActivity = a;
+        Log.v("MACTIVITY NAME", mActivity.getClass().getSimpleName());
         mContext = a;
         requestMethods = new RequestMethods(mContext);
         sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
@@ -368,12 +369,8 @@ public class ListUser implements ServerAuthenticate {
                                 //Save userID in sharedPreferences
                                 Log.d(TAG, " > USER SIGN IN > setting userid: " + userID);
                                 sharedPreferencesMethods.saveUserID(userID);
-                                //Add items chosen before login to userlist
 
-                                //TODO: also add category preferences + callback for these two?
-                                addSavedItemsToUserList();
-
-                                //pass authtoken back to activity
+                                //Pass authtoken back to activity
                                 callback.onSuccess(sessionToken);
 
                             } catch (JSONException e) {
@@ -435,6 +432,7 @@ public class ListUser implements ServerAuthenticate {
 
     //Add all list items to userlist (previously temp stored items)
     public void addSavedItemsToUserList(){
+        Log.v(TAG," > addSavedItemsToUserList, started");
         JSONArray listItemPref;
         listItemPref = sharedPreferencesMethods.RetrieveUserItemPreference();
 
@@ -564,7 +562,6 @@ public class ListUser implements ServerAuthenticate {
                     queue.add(deleteItemRequest);
                 }
             });
-
         }
     } //removeItemFromUserList
 
@@ -573,8 +570,16 @@ public class ListUser implements ServerAuthenticate {
     // --------------------------------------------------------
 
     //Add all categories to userlist
-    public void addSavedCategoriesToUserAccount(){
+    public void addSavedCategoriesToUser(){
         //TODO: make request when endpoint is available
+    }
+
+    public void addCategoryToUser(){
+
+    }
+
+    public void removeCategoryFromUser(){
+
     }
 
 } //ListUser

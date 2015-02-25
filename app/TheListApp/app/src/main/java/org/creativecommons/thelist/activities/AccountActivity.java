@@ -115,6 +115,10 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
                 sharedPref.saveKey(key.toString());
 
+                //Add items chosen before login to userlist
+                mCurrentUser.addSavedItemsToUserList();
+                //TODO: also add category preferences (+ callback?) for these two?
+
             } catch (GeneralSecurityException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {

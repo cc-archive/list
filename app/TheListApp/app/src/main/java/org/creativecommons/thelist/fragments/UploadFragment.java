@@ -68,7 +68,8 @@ public class UploadFragment extends Fragment {
     UploadListener mCallback;
 
     public interface UploadListener {
-        public void onUploadFinish();
+        public void onUploadSuccess();
+        public void onUploadFail();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class UploadFragment extends Fragment {
             uploadPhoto();
         } else {
             displayNetworkFailMessage();
-            mCallback.onUploadFinish();
+            mCallback.onUploadFail();
         }
     } //onResume
 
@@ -165,20 +166,20 @@ public class UploadFragment extends Fragment {
                         @Override
                         public void onResponse(String response) {
                             //Get Response
-                            Log.v(TAG, "Photo response: " + response);
+                            Log.v(TAG, "uploadPhoto > onResponse: " + response);
                             //TODO: add conditions? What happens when photo upload fails?
 
                             displaySuccessMessage();
                             //Send notice to activity (will execute timed close of this fragment)
-                            mCallback.onUploadFinish();
+                            mCallback.onUploadSuccess();
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.v(TAG, "THERE WAS AN ERROR IN THE VOLLEY UPLOAD ATTEMPT");
+                    Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
                     //TODO: add switch for all possible error codes
                     displayFailMessage();
-                    mCallback.onUploadFinish();
+                    mCallback.onUploadFail();
                 }
             }) {
                 @Override

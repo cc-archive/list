@@ -93,10 +93,10 @@ public class CategoryListActivity extends ActionBarActivity {
         mCurrentUser = new ListUser(mContext);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        if (toolbar != null) {
+//            setSupportActionBar(toolbar);
+//        }
 
         //Google Analytics Tracker
 //        Tracker t = ((ListApplication) CategoryListActivity.this.getApplication()).getTracker(

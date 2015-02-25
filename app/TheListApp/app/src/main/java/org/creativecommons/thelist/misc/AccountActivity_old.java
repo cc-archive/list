@@ -69,8 +69,8 @@ public class AccountActivity_old extends AccountAuthenticatorActivity {
 
         //----------------------------------------------------
 
-        mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
-        mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
+        //mEmailLoginField = (EditText)findViewById(R.id.emailLoginField);
+        //mPasswordLoginField = (EditText)findViewById(R.id.passwordLoginField);
         mLoginButton = (Button)findViewById(R.id.loginButton);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
