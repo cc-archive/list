@@ -132,9 +132,11 @@ class UserList {
 
         global $adodb;
 
-        $query = "SELECT url FROM Photos where userid=?";
+        $query = "SELECT url FROM Photos WHERE userid=?";
         $params = array();
         $params[] = $userid;
+
+        echo $query;
 
         $res = $adodb->CacheGetAll(50, $query, $params);
 
