@@ -91,13 +91,22 @@
         \nThe List is an open-source project
         of Creative Commons. Contributions are welcome; from writing code to filing bugs.
         Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.
+        \n\n<a href="https://github.com/creativecommons/list/archive/master.zip">Download The List Source Code</a>
+        \n\nThis program is free software: you can redistribute it and/or modify it under the terms
+        of the GNU Affero General Public License as published by the Free Software Foundation, either
+        version 3 of the License, or (at your option) any later version.
+        \n\n
+        This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+        without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        See the <a href="http://www.gnu.org/licenses/agpl-3.0.html">GNU Affero General Public License</a>
+        for more details.
         \n\n<b>Partners</b>
         \nThe app is created with the generous support of the
         <a href="http://www.knightfoundation.org/">Knight Foundation</a>, and partners like the
         <a href="https://archive.org/index.php">Internet Archive</a>
         \n\nCreative Commons is a global non-profit, supported by generous
         donations from people just like you who believe in shared content.
-        <a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
+        \n\n<a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
     </string>
 
     <!--About the App text-->
