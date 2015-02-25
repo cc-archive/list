@@ -308,7 +308,7 @@ with('/api/usercategories/delete', function() {
 
 with('/api/usercategories/list', function() {
 
-    respond('GET', '/list/[:user]', function ($request, $response) {
+    respond('GET', '/[:user]', function ($request, $response) {
 
 	$userid=$request->user;
 
