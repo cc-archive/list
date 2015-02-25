@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.authentication.ListAuthenticator;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 
@@ -126,6 +127,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                             getString(R.string.login_error_message));
                 } else {
                     ListUser mCurrentUser = new ListUser(getActivity());
+                    ListAuthenticator la = new ListAuthenticator(getActivity());
                     try {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.AuthCallback() {

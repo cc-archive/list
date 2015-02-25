@@ -47,6 +47,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,14 +92,18 @@ import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity implements UploadFragment.UploadListener,
-        CancelFragment.CancelListener, AccountFragment.AuthListener {
+        CancelFragment.CancelListener {
     public static final String TAG = MainActivity.class.getSimpleName();
     protected Context mContext;
 
-    //Request Methods
+    //Helper Methods
     RequestMethods requestMethods;
     SharedPreferencesMethods sharedPreferencesMethods;
     ListUser mCurrentUser;
+
+    //Notification Ids
+    protected static final int mNotifySuccess = 42341234;
+    protected static final int mNotifyFail = 4234133;
 
     protected MainListItem mCurrentItem;
     protected int activeItemPosition;
@@ -116,6 +121,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     private Menu menu;
     private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
+    protected RelativeLayout mUploadProgressBar;
     protected FrameLayout mFrameLayout;
     protected TextView mEmptyView;
 
@@ -141,8 +147,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         mCurrentUser = new ListUser(MainActivity.this);
         menuLogin = false;
 
-        Log.v(TAG, "MAINACTIVITY ON CREATE");
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -160,6 +164,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
+        mUploadProgressBar = (RelativeLayout) findViewById(R.id.photoProgressBar);
         mEmptyView = (TextView) findViewById(R.id.empty_list_label);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -265,7 +270,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             //Get items selected from SharedPref
             itemIds = sharedPreferencesMethods.RetrieveUserItemPreference();
 
-            if (itemIds != null || !(itemIds.length() == 0)) {
+            if (itemIds != null) {
                 for (int i = 0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
                     MainListItem listItem = new MainListItem();
@@ -418,21 +423,6 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
                     }
                 }));
     } //initRecyclerView
-
-    @Override
-    public void onUserSignedIn(Bundle userData) {
-
-    }
-
-    @Override
-    public void onUserSignedUp(Bundle userData) {
-
-    }
-
-    @Override
-    public void onCancelLogin() {
-        removeFragment(accountFragment, false);
-    }
 
     //For Swipe to Dismiss
     public interface OnItemClickListener {
@@ -651,6 +641,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
     //Start UploadFragment and upload photo
     public void startPhotoUpload(){
         Log.d(TAG, "Starting photo upload");
+        mUploadProgressBar.setVisibility(View.VISIBLE);
 
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
             mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
@@ -708,18 +699,35 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
 
     //When UploadFragment has gotten response from server
     @Override
-    public void onUploadFinish() {
-        Log.d(TAG, "On Upload Finish");
+    public void onUploadSuccess() {
+        Log.d(TAG, "On Upload Success");
         //Refresh user list + remove item that has just been uploaded
         //TODO: create new check for this (invalidate when photo is uploaded?)
         photoToBeUploaded = false;
-        displayUserListItems();
+        displayUserListItems(); //TODO: used to be a notifydatasetchanged after this
 
-        //TODO: why does this need to be here?
-        mFeedAdapter.notifyDataSetChanged();
+
+        requestMethods.sendNotification(mContext, "The List",
+                "Your photo has been uploaded successfully!",
+                "List Photo Uploaded Successfully", mNotifySuccess);
+        mUploadProgressBar.setVisibility(View.GONE);
+
         //Show upload message for limited time
-        removeFragment(uploadFragment, true);
-    } //onUploadFinish
+        removeFragment(uploadFragment, false);
+    } //onUploadSuccess
+
+    @Override
+    public void onUploadFail() {
+        Log.d(TAG, "On Upload Fail");
+        photoToBeUploaded = false;
+        requestMethods.sendNotification(mContext, "The List",
+                "There was a problem uploading your photo.",
+                "List Photo Uploaded Failed", mNotifyFail);
+        mUploadProgressBar.setVisibility(View.GONE);
+
+        removeFragment(uploadFragment, false);
+    }
+
 
     @Override
     public void onCancelStart() {
@@ -728,6 +736,10 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
         //Remove cancelFragment after set period
         removeFragment(cancelFragment, true);
     } //onCancelStart
+
+    //----------------------------------------------
+    //UI HELPER METHODS
+    //----------------------------------------------
 
     //REMOVE FRAGMENT HELPER
     public void removeFragment(final Fragment f, boolean delay){
@@ -758,6 +770,7 @@ public class MainActivity extends ActionBarActivity implements UploadFragment.Up
             getSupportActionBar().show();
         }
     } //removeFragment
+
 
     //----------------------------------------------
     //MENU + MENU HELPER METHODS

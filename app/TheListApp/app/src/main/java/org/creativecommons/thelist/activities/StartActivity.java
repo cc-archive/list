@@ -36,11 +36,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
-import org.creativecommons.thelist.misc.AccountFragment_old;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -76,11 +77,15 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         Log.v(TAG, "STARTACTIVITY ON CREATE");
 
         //TODO: check for google analytics opt-in
-        //The beta version of this app uses google analytics message
-//        RequestMethods rqm = new RequestMethods(mContext);
-//        rqm.showDialog(mContext, "Just letting you know!", "The List beta uses Google Analytics help us learn " +
-//                "how to make the app better." + "We don’t collect your personal info!");
 
+        if(!(sharedPreferencesMethods.gaMessageViewed())){
+            //The beta version of this app uses google analytics message
+            RequestMethods rqm = new RequestMethods(mContext);
+            rqm.showMaterialDialog(mContext, "The List Beta Uses Google Analytics", "Hey just a heads up that " +
+                    "we’re using Google Analytics help us learn how to make the app better." +
+                    "We don’t collect your personal info!");
+            sharedPreferencesMethods.setMessageViewed();
+        }
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
 //        instance.setAppOptOut(true);
@@ -106,7 +111,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                Intent intent = new Intent(StartActivity.this, MainActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -147,7 +152,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                     });
                 }
             }
-        }); //accountButon
+        }); //accountButton
 
         if(mTermsLink != null){
             mTermsLink.setMovementMethod(LinkMovementMethod.getInstance());

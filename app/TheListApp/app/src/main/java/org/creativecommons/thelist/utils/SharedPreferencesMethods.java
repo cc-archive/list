@@ -48,7 +48,8 @@ public class SharedPreferencesMethods {
     public static final String CATEGORY_PREFERENCE_KEY = "category";
     public static final String LIST_ITEM_PREFERENCE_KEY = "item";
     public static final String USER_ID_PREFERENCE_KEY = "id";
-    public static final String USER_KEY = "ekey.#j1ldkf9dj3jf9";
+    public static final String USER_KEY = "ekey";
+    public static final String GA_CHECK = "GA_check";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
@@ -71,6 +72,13 @@ public class SharedPreferencesMethods {
         editor.putString(USER_ID_PREFERENCE_KEY, id);
         editor.apply();
         Log.v("ADDED AND SAVED ITEM: ", id);
+    }
+
+    public void setMessageViewed(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(GA_CHECK, true);
+        editor.apply();
     }
 
     public void saveKey(String key){
@@ -100,8 +108,12 @@ public class SharedPreferencesMethods {
         } else {
             return null;
         }
-
     } //getUserId
+
+    public Boolean gaMessageViewed(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+            return sharedPref.getBoolean(GA_CHECK, false);
+    }
 
     //Non-logged in user
     public int getUserItemCount(){

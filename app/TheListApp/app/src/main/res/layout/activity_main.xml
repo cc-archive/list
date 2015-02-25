@@ -6,11 +6,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout android:id="@+id/photoProgressBar"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+            <com.gc.materialdesign.views.ProgressBarIndeterminate
+                android:id="@+id/progressBarIndeterminate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#1E88E5"/>
+        </RelativeLayout>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/photoProgressBar"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
 
@@ -49,5 +61,7 @@
     <FrameLayout android:id="@+id/overlay_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"/>
+        android:clickable="false">
+
+    </FrameLayout>
 </merge>

@@ -43,6 +43,9 @@
         <item>Choose Picture</item>
     </string-array>
 
+    <!--Dialog Labels-->
+    <string name="ok_label">OK</string>
+
     <!-- Onboarding Explainers -->
     <string-array name="onboarding_explainers">
         <item>The List is a collaborative project to build a global collection of images that anyone can use</item>
