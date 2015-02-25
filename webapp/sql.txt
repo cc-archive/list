@@ -59,6 +59,7 @@ id int(11) NOT NULL auto_increment,
 title VARCHAR(255) NOT NULL,
 makerid int(11) NOT NULL,
 approved int(11),
+color VARCHAR(10) NOT NULL,
 primary KEY (id)
 );
 
@@ -94,12 +95,12 @@ insert into Makers (name, uri) values ("The  Domestic Zoo", 'zoo.biz');
 insert into Makers (name, uri) values ("Planet Gastronomy",'gastro.net');
 insert into Makers (name, uri) values ("The Objects Museum",'obj.biz');
 
-INSERT into Categories (approved, makerid, title) values (1, 1, "People");
-INSERT into Categories (approved, makerid, title) values (1, 2, "Places & Cities");
-INSERT into Categories (approved, makerid, title) values (1, 3, "Clothing & Fashion");
-INSERT into Categories (approved, makerid, title) values (1, 4, "Nature & Animals");
-INSERT into Categories (approved, makerid, title) values (1, 5, "Food");
-INSERT into Categories (approved, makerid, title) values (1, 6, "Objects");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "People", "ccff00");
+INSERT into Categories (approved, makerid, title, color) values (1, 2, "Places & Cities", "ff0000");
+INSERT into Categories (approved, makerid, title, color) values (1, 3, "Clothing & Fashion", "2a7fff");
+INSERT into Categories (approved, makerid, title, color) values (1, 4, "Nature & Animals", "ff6600");
+INSERT into Categories (approved, makerid, title, color) values (1, 5, "Food", "ff00ff");
+INSERT into Categories (approved, makerid, title, color) values (1, 6, "Objects", "7f2aff");
 
 INSERT into List (makerid, title) values (1, "Sitting on a bench");
 INSERT into List (makerid, title) values (1, "Sipping coffee");
