@@ -13,6 +13,17 @@ people, and events that they need photographs of. And when users are
 in the right place at the right time, they can claim an item from the
 list and publish a photograph of it.
 
+## Who's working on it at Creative Commons?
+
+| Role  | Person |
+| ------------- | ------------- |
+| Driver  | [Matt](https://github.com/mattl)  |
+| Approvers  | [Ryan](https://github.com/ryanmerkley)  |
+| Contributors | Add yourselves here |
+| Informed | Add yourselves here |
+
+## Other things
+
 [![Build Status](https://travis-ci.org/creativecommons/list.svg?branch=master)](https://travis-ci.org/creativecommons/list)
 
 * See our [functional spec](docs/spec.md)
