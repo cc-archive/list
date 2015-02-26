@@ -127,7 +127,7 @@ INSERT into List (makerid, title) values (2, "A Skyscraper");
 INSERT into List (makerid, title) values (2, "Downtown");
 INSERT into List (makerid, title) values (2, "A house full of character");
 INSERT into List (makerid, title) values (2, "A storefront");
-INSERT into List (makerid, title) values (2, "Community Center");
+INSERT into List (makerid, title) values (2, "Community center");
 INSERT into List (makerid, title) values (2, "A trendy cafe");
 INSERT into List (makerid, title) values (2, "The intimidating gym");
 INSERT into List (makerid, title) values (2, "An elevator");
