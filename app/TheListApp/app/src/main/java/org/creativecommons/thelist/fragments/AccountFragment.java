@@ -37,8 +37,9 @@ import android.widget.TextView;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ListAuthenticator;
+import org.creativecommons.thelist.misc.CancelFragment;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.MessageHelper;
 
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_TYPE;
@@ -49,8 +50,10 @@ import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_US
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends android.support.v4.app.Fragment {
-    private RequestMethods requestMethods;
+    public static final String TAG = CancelFragment.class.getSimpleName();
+
     Context mContext;
+    private MessageHelper mMessageHelper;
 
     //private final int REQ_SIGNUP = 1;
     private String mAuthTokenType;
@@ -93,7 +96,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
         mContext = getActivity();
-        requestMethods = new RequestMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
 
         //Get account information
         String accountName = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_NAME);
@@ -123,7 +126,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                 final String accountPassword = accountPasswordField.getText().toString().trim();
 
                 if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
-                    requestMethods.showDialog(mContext,getString(R.string.login_error_title),
+                    mMessageHelper.showDialog(mContext,getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
                 } else {
                     ListUser mCurrentUser = new ListUser(getActivity());
@@ -162,7 +165,6 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //            @Override
 //            public void onClick(View v) {
 //
-//
 //                //loginButton.setVisibility(View.GONE);
 //                //signUpButton.setVisibility(View.VISIBLE);
 //            }
@@ -185,7 +187,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //                final String accountPassword = accountPasswordField.getText().toString().trim();
 //
 //                if (accountEmail.isEmpty() || accountPassword.isEmpty()) {
-//                    requestMethods.showDialog(mContext, getString(R.string.login_error_title),
+//                    mMessageHelper.showDialog(mContext, getString(R.string.login_error_title),
 //                            getString(R.string.login_error_message));
 //                } else {
 //                    //TODO: Login User + save to sharedPreferences
@@ -194,7 +196,6 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.AuthCallback() {
 //                            @Override
 //                            public void onSuccess(String authtoken) {
-//                                //TODO: fill this in to create user
 //
 //                                Bundle data = new Bundle();
 //

@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
@@ -47,6 +46,7 @@ import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -60,8 +60,9 @@ import java.util.List;
 public class CategoryListActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     //Helper Methods
-    RequestMethods requestMethods;
-    SharedPreferencesMethods sharedPreferencesMethods;
+    RequestMethods mRequestMethods;
+    SharedPreferencesMethods mSharedPref;
+    MessageHelper mMessageHelper;
     ListUser mCurrentUser;
 
     protected Context mContext;
@@ -88,8 +89,9 @@ public class CategoryListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
         mContext = this;
-        requestMethods = new RequestMethods(mContext);
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(mContext);
 
 
@@ -146,7 +148,7 @@ public class CategoryListActivity extends ActionBarActivity {
         });
 
         //If Network Connection is available, Execute getDataTask
-        if(requestMethods.isNetworkAvailable()) {
+        if(mRequestMethods.isNetworkAvailable()) {
             //mProgressBar.setVisibility(View.VISIBLE);
             getCategoriesRequest();
         }
@@ -176,12 +178,12 @@ public class CategoryListActivity extends ActionBarActivity {
                         userCategories.add(id);
                     }
                     //Save user categories to shared preferences
-                    sharedPreferencesMethods.SaveSharedPreference
+                    mSharedPref.SaveSharedPreference
                             (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
                 }
                 //Navigate to Random Activity
                 //TODO: make category list activity into a fragment so there is no need for this
-                if(mCurrentUser.isTempUser() && sharedPreferencesMethods.getUserItemCount() < 3){
+                if(mCurrentUser.isTempUser() && mSharedPref.getUserItemCount() < 3){
                     Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
                     startActivity(intent);
                 } else {
@@ -196,7 +198,7 @@ public class CategoryListActivity extends ActionBarActivity {
     private void updateList() {
         //mProgressBar.setVisibility(View.INVISIBLE);
         if (mCategoryData == null) {
-            requestMethods.showDialog(mContext, getString(R.string.error_title),
+            mMessageHelper.showDialog(mContext, getString(R.string.error_title),
                     getString(R.string.error_message));
         }
         else {
@@ -237,7 +239,7 @@ public class CategoryListActivity extends ActionBarActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "> getCategoriesRequest > onErrorResponse: " + error.getMessage());
-                requestMethods.showDialog(mContext, getString(R.string.error_title),
+                mMessageHelper.showDialog(mContext, getString(R.string.error_title),
                         getString(R.string.error_message));
             }
         });

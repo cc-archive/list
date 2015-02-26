@@ -164,7 +164,7 @@ public class RandomActivity extends Activity {
                 public void onClick(View v) {
                     //Get array of selected item IDS
                     if(mCurrentUser.isTempUser()){
-                        List<String> userItemList = requestMethods.getItemIds(mItemList);
+                        List<String> userItemList = getItemIds(mItemList);
 
                         JSONArray oldItemArray = sharedPreferencesMethods.RetrieveUserItemPreference();
                         if(oldItemArray != null) {
@@ -193,7 +193,7 @@ public class RandomActivity extends Activity {
                 }
             }); //Done Button
         } else { //Display network error
-            requestMethods.showDialog(mContext,getString(R.string.error_network_title),
+            mMessageHelper.showDialog(mContext,getString(R.string.error_network_title),
                     getString(R.string.error_network_message));
         }
     } //onCreate
@@ -202,7 +202,7 @@ public class RandomActivity extends Activity {
         mProgressBar.setVisibility(View.INVISIBLE);
         if(mRandomItemData == null) {
             //TODO: better error message
-            requestMethods.showDialog(mContext,"Oops", "No data found. Please try again.");
+            mMessageHelper.showDialog(mContext,"Oops", "No data found. Please try again.");
         }
         else {
             try {
@@ -234,7 +234,7 @@ public class RandomActivity extends Activity {
     private void getRandomItemRequest() {
 
         if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showDialog(mContext,getString(R.string.error_network_title),
+            mMessageHelper.showDialog(mContext,getString(R.string.error_network_title),
                     getString(R.string.error_network_message));
             return;
         }
@@ -255,7 +255,7 @@ public class RandomActivity extends Activity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                requestMethods.showDialog(mContext,"Oops!",
+                mMessageHelper.showDialog(mContext,"Oops!",
                         "We couldn’t find any items for you");
 
                 //TODO: Take user elsewhere if items don’t load
@@ -263,6 +263,16 @@ public class RandomActivity extends Activity {
         });
         queue.add(randomItemRequest);
     } //getRandomItemRequest
+
+    //Parse List Objects of List Items and return list of Item IDS
+    public List<String> getItemIds(List<MainListItem> list){
+        List<String>arrayList = new ArrayList<String>();
+        for (int i = 0; i < list.size(); i++) {
+            String singleID = list.get(i).getItemID();
+            arrayList.add(singleID);
+        }
+        return arrayList;
+    } //getItemIds
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

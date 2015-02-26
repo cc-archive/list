@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -36,14 +36,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
@@ -55,7 +53,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected Button mAccountButton;
     protected TextView mTermsLink;
     protected Context mContext;
-    protected SharedPreferencesMethods sharedPreferencesMethods;
+    protected SharedPreferencesMethods mSharedPref;
     private AccountManager am;
     protected FrameLayout mFrameLayout;
 
@@ -71,21 +69,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         setContentView(R.layout.activity_start);
         mContext = this;
         mCurrentUser = new ListUser(StartActivity.this);
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
         am = AccountManager.get(getBaseContext());
-
-        Log.v(TAG, "STARTACTIVITY ON CREATE");
-
-        //TODO: check for google analytics opt-in
-
-        if(!(sharedPreferencesMethods.gaMessageViewed())){
-            //The beta version of this app uses google analytics message
-            RequestMethods rqm = new RequestMethods(mContext);
-            rqm.showMaterialDialog(mContext, "The List Beta Uses Google Analytics", "Hey just a heads up that " +
-                    "we’re using Google Analytics help us learn how to make the app better." +
-                    "We don’t collect your personal info!");
-            sharedPreferencesMethods.setMessageViewed();
-        }
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
 //        instance.setAppOptOut(true);
@@ -97,9 +82,20 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //        t.setScreenName(TAG);
 //        t.send(new HitBuilders.AppViewBuilder().build());
 
-        //Create sharedPreferences
+        //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        //TODO: add google analytics opt-in
+        //Display Google Analytics Message
+        if(!(mSharedPref.gaMessageViewed())){
+            //The beta version of this app uses google analytics message
+            MessageHelper mh = new MessageHelper(mContext);
+            mh.showDialog(mContext, "The List Beta Uses Google Analytics", "Hey just a heads up that " +
+                    "we’re using Google Analytics help us learn how to make the app better." +
+                    "We don’t collect personal info!");
+            mSharedPref.setMessageViewed();
+        }
 
         //UI Elements
         mFrameLayout = (FrameLayout)findViewById(R.id.fragment_container);
@@ -154,6 +150,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             }
         }); //accountButton
 
+        //Enable links
         if(mTermsLink != null){
             mTermsLink.setMovementMethod(LinkMovementMethod.getInstance());
         }
@@ -185,13 +182,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             Log.v(TAG, "START: USER IS NOT LOGGED IN");
         }
 
+        //TODO: better way to do this?
         //If explainer is still there, get rid of it
-        Log.d(TAG, "On Resume, removing Fragment");
         getSupportFragmentManager().beginTransaction()
                 .remove(explainerFragment)
                 .commit();
-        mFrameLayout.setClickable(false);
-        Log.d(TAG, "On Resume, removed Fragment");
     }
 
     @Override
@@ -244,5 +239,4 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         }
         return super.onOptionsItemSelected(item);
     } //onOptionsItemSelected
-
 } //StartActivity

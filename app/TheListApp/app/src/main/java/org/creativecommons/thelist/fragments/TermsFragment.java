@@ -1,7 +1,7 @@
 
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -41,7 +41,7 @@ import org.creativecommons.thelist.utils.RequestMethods;
 public class TermsFragment extends Fragment {
     public static final String TAG = TermsFragment.class.getSimpleName();
     RequestMethods requestMethods = new RequestMethods(getActivity());
-//    SharedPreferencesMethods sharedPreferencesMethods = new SharedPreferencesMethods(getActivity());
+//    SharedPreferencesMethods mSharedPref = new SharedPreferencesMethods(getActivity());
 //    ListUser mCurrentUser = new ListUser();
 
     protected Button mNextButton;

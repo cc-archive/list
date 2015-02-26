@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist.fragments;
+package org.creativecommons.thelist.misc;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,6 +41,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.FileHelper;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
@@ -138,7 +139,7 @@ public class UploadFragment extends Fragment {
 
           //TODO: handle upload retry
 //        if(!(requestMethods.isNetworkAvailable())){
-//            requestMethods.showDialog(mContext, getString(R.string.error_network_title),
+//            mMessageHelper.showDialog(mContext, getString(R.string.error_network_title),
 //                    getString(R.string.error_network_message));
 //            //TODO: networkfail callback to actvitiy? + go to retry upload screen or something?
 //            return;
@@ -157,7 +158,7 @@ public class UploadFragment extends Fragment {
             displayFileSizeFailMessage();
         } else {
             //Get Photo as Base64 encoded String
-            final String photoFile = requestMethods.createUploadPhotoObject(uri);
+            final String photoFile = FileHelper.createUploadPhotoObject(mContext, uri);
             String url = ApiConstants.ADD_PHOTO + mCurrentUser.getUserID() + "/" + itemID;
 
             //Upload Photo

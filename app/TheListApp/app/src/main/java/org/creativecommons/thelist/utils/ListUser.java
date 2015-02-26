@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -55,8 +55,9 @@ import java.util.Map;
 public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
 
-    private RequestMethods requestMethods;
-    private SharedPreferencesMethods sharedPreferencesMethods;
+    private RequestMethods mRequestMethods;
+    private MessageHelper mMessageHelper;
+    private SharedPreferencesMethods mSharedPref;
     private Context mContext;
     private Activity mActivity;
 
@@ -66,17 +67,17 @@ public class ListUser implements ServerAuthenticate {
 
     public ListUser(Context mc){
         mContext = mc;
-        requestMethods = new RequestMethods(mContext);
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
         am = AccountManager.get(mContext);
     }
 
     public ListUser(Activity a) {
         mActivity = a;
-        Log.v("MACTIVITY NAME", mActivity.getClass().getSimpleName());
         mContext = a;
-        requestMethods = new RequestMethods(mContext);
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
         am = AccountManager.get(mContext);
     }
 
@@ -90,7 +91,7 @@ public class ListUser implements ServerAuthenticate {
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-        if(sharedPreferencesMethods.getUserId() == null) {
+        if(mSharedPref.getUserId() == null) {
             return true;
         } else {
             return false;
@@ -98,11 +99,11 @@ public class ListUser implements ServerAuthenticate {
     } //isTempUser
 
 //    public void setUserID(String id) {
-//        sharedPreferencesMethods.saveUserID(id);
+//        mSharedPref.saveUserID(id);
 //    }
 
     public String getUserID() {
-        return sharedPreferencesMethods.getUserId();
+        return mSharedPref.getUserId();
     } //getUserID
 
     // --------------------------------------------------------
@@ -118,7 +119,7 @@ public class ListUser implements ServerAuthenticate {
         Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
         //Check if account matches ID
-        String userID = sharedPreferencesMethods.getUserId();
+        String userID = mSharedPref.getUserId();
 
         for(Account currentAccount: availableAccounts){
             String testID = getUserIDFromAccount(currentAccount);
@@ -341,8 +342,8 @@ public class ListUser implements ServerAuthenticate {
     //LOG IN USER
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
-        if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showDialog(mContext, mActivity.getString(R.string.error_network_title),
+        if(!(mRequestMethods.isNetworkAvailable())){
+            mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -356,7 +357,7 @@ public class ListUser implements ServerAuthenticate {
                         //Get Response
                         if(response == null || response.equals("null")) {
                             Log.v("RESPONSE NULL HERE: ", response);
-                            requestMethods.showDialog(mContext,"YOU SHALL NOT PASS",
+                            mMessageHelper.showDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
                             Log.v("RESPONSE FOR LOGIN: ", response);
@@ -366,7 +367,7 @@ public class ListUser implements ServerAuthenticate {
                                 String userID = res.getString(ApiConstants.USER_ID);
                                 //Save userID in sharedPreferences
                                 Log.d(TAG, " > USER SIGN IN > setting userid: " + userID);
-                                sharedPreferencesMethods.saveUserID(userID);
+                                mSharedPref.saveUserID(userID);
 
                                 //Pass authtoken back to activity
                                 callback.onSuccess(sessionToken);
@@ -374,7 +375,7 @@ public class ListUser implements ServerAuthenticate {
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
                                 //TODO: add proper error message
-                                requestMethods.showDialog(mContext, mContext.getString
+                                mMessageHelper.showDialog(mContext, mContext.getString
                                                 (R.string.login_error_exception_title),
                                         mContext.getString(R.string.login_error_exception_message));
                             }
@@ -383,7 +384,7 @@ public class ListUser implements ServerAuthenticate {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                requestMethods.showDialog(mContext, mContext.getString(R.string.login_error_title),
+                mMessageHelper.showDialog(mContext, mContext.getString(R.string.login_error_title),
                         mContext.getString(R.string.login_error_message));
             }
         }) {
@@ -401,8 +402,8 @@ public class ListUser implements ServerAuthenticate {
     //TODO: SIGN UP USER
     @Override
     public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
-        if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showDialog(mContext, mActivity.getString(R.string.error_network_title),
+        if(!(mRequestMethods.isNetworkAvailable())){
+            mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -415,7 +416,7 @@ public class ListUser implements ServerAuthenticate {
 //    public void logOut() {
 //        //Clear session-relevant sharedPreferences
 //        //TODO:this is just userid, new user profile data will need to be cleared if added
-//        sharedPreferencesMethods.ClearAllSharedPreferences();
+//        mSharedPref.ClearAllSharedPreferences();
 //
 //        //TODO: take you back to startActivity?
 //        Intent intent = new Intent(mContext, StartActivity.class);
@@ -432,7 +433,7 @@ public class ListUser implements ServerAuthenticate {
     public void addSavedItemsToUserList(){
         Log.v(TAG," > addSavedItemsToUserList, started");
         JSONArray listItemPref;
-        listItemPref = sharedPreferencesMethods.RetrieveUserItemPreference();
+        listItemPref = mSharedPref.RetrieveUserItemPreference();
 
         try{
             if (listItemPref != null && listItemPref.length() > 0) {
@@ -449,8 +450,8 @@ public class ListUser implements ServerAuthenticate {
 
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
-        if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showDialog(mContext,mActivity.getString(R.string.error_network_title),
+        if(!(mRequestMethods.isNetworkAvailable())){
+            mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -470,7 +471,7 @@ public class ListUser implements ServerAuthenticate {
                                 Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
                                 Log.v(TAG,"AN ITEM IS BEING ADDED");
                                 //TODO: on success remove the item from the sharedPreferences
-                                sharedPreferencesMethods.RemoveUserItemPreference(itemID);
+                                mSharedPref.RemoveUserItemPreference(itemID);
 
                                 //Toast: Confirm List Item has been added if it is RandomActivity
 //                                if(mActivity.getClass().getSimpleName()
@@ -490,7 +491,7 @@ public class ListUser implements ServerAuthenticate {
                     @Override
                     public void onErrorResponse (VolleyError error){
                         //TODO: Add “not successful“ toast
-                        requestMethods.showDialog(mContext,
+                        mMessageHelper.showDialog(mContext,
                                 mContext.getString(R.string.error_title),
                                 mContext.getString(R.string.error_message));
                         Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
@@ -515,11 +516,11 @@ public class ListUser implements ServerAuthenticate {
 
         if(isTempUser()){
             //If not logged in, remove item from sharedPreferences
-            sharedPreferencesMethods.RemoveUserItemPreference(itemID);
+            mSharedPref.RemoveUserItemPreference(itemID);
 
         } else { //If logged in, remove from DB
-            if(!(requestMethods.isNetworkAvailable())){
-                requestMethods.showDialog(mContext,mActivity.getString(R.string.error_network_title),
+            if(!(mRequestMethods.isNetworkAvailable())){
+                mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                         mActivity.getString(R.string.error_network_message));
                 return;
             }
@@ -545,7 +546,7 @@ public class ListUser implements ServerAuthenticate {
                         public void onErrorResponse(VolleyError error) {
                             //TODO: Add “not successful“ toast
                             Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
-                            requestMethods.showDialog(mContext, mContext.getString(R.string.error_title),
+                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
                                     mContext.getString(R.string.error_message));
                         }
                     }) {
@@ -570,7 +571,7 @@ public class ListUser implements ServerAuthenticate {
     public void addSavedCategoriesToUser(){
         Log.v(TAG," > addSavedCategoriesToUser, started");
         JSONArray listCategoryPref;
-        listCategoryPref = sharedPreferencesMethods.RetrieveCategorySharedPreference();
+        listCategoryPref = mSharedPref.RetrieveCategorySharedPreference();
 
         try{
             if (listCategoryPref != null && listCategoryPref.length() > 0) {
@@ -586,8 +587,8 @@ public class ListUser implements ServerAuthenticate {
     } //addSavedCategoriesToUser
 
     public void addCategoryToUser(final String catId){
-        if(!(requestMethods.isNetworkAvailable())){
-            requestMethods.showDialog(mContext,mActivity.getString(R.string.error_network_title),
+        if(!(mRequestMethods.isNetworkAvailable())){
+            mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
         }
@@ -606,14 +607,14 @@ public class ListUser implements ServerAuthenticate {
                                 Log.v(TAG, "> addCategoryToUser > OnResponse: " + response);
                                 Log.v(TAG,"AN ITEM IS BEING ADDED");
                                 //TODO: on success remove the item from the sharedPreferences
-                                sharedPreferencesMethods.RemoveUserCategoryPreference(catId);
+                                mSharedPref.RemoveUserCategoryPreference(catId);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse (VolleyError error){
                         Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
                         //TODO: Add “not successful“ toast
-                        requestMethods.showDialog(mContext,
+                        mMessageHelper.showDialog(mContext,
                                 mContext.getString(R.string.error_title),
                                 mContext.getString(R.string.error_message));
                     }
@@ -634,11 +635,11 @@ public class ListUser implements ServerAuthenticate {
 
         if(isTempUser()){
             //If not logged in, remove item from sharedPreferences
-            sharedPreferencesMethods.RemoveUserItemPreference(catId);
+            mSharedPref.RemoveUserItemPreference(catId);
 
         } else { //If logged in, remove from DB
-            if(!(requestMethods.isNetworkAvailable())){
-                requestMethods.showDialog(mContext,mActivity.getString(R.string.error_network_title),
+            if(!(mRequestMethods.isNetworkAvailable())){
+                mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                         mActivity.getString(R.string.error_network_message));
                 return;
             }
@@ -663,7 +664,7 @@ public class ListUser implements ServerAuthenticate {
                         public void onErrorResponse(VolleyError error) {
                             //TODO: Add “not successful“ toast
                             Log.d(TAG, " > removeCategoryFromUser > onErrorResponse: " + error.getMessage());
-                            requestMethods.showDialog(mContext, mContext.getString(R.string.error_title),
+                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
                                     mContext.getString(R.string.error_message));
                         }
                     }) {
@@ -679,5 +680,7 @@ public class ListUser implements ServerAuthenticate {
             });
         }
     } //removeCategoryFromUser
+
+
 
 } //ListUser

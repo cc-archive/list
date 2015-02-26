@@ -1,6 +1,6 @@
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License as published by
@@ -19,37 +19,49 @@
 
 package org.creativecommons.thelist.utils;
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
-import org.creativecommons.thelist.adapters.MainListItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class RequestMethods {
-    //TODO: probably make this obsolete
     public static final String TAG = RequestMethods.class.getSimpleName();
     protected Context mContext;
+    protected MessageHelper mMessageHelper;
+    protected SharedPreferencesMethods mSharedPref;
+    protected ListUser mCurrentUser;
 
-    //Set Context
     public RequestMethods(Context mc) {
         mContext = mc;
+        mMessageHelper = new MessageHelper(mc);
+        mSharedPref = new SharedPreferencesMethods(mc);
+        mCurrentUser = new ListUser(mc);
+    }
+
+    //Callback for requests
+    public interface RequestCallback {
+        void onSuccess();
+        void onFail();
     }
 
     //Check if thar be internets
@@ -61,68 +73,77 @@ public final class RequestMethods {
         if(networkInfo != null && networkInfo.isConnected()) {
             isAvailable = true;
         }
+
         return isAvailable;
     }
 
-    //Material Design Dialog
-    public void showMaterialDialog(Context context, String title, String message){
-        new MaterialDialog.Builder(mContext)
-                .title(title)
-                .content(message)
-                .positiveText(R.string.ok_label)
-                //.negativeText(R.string.disagree)
-                .show();
-    }
+    // --------------------------------------------------------
+    // USER LIST REQUESTS
+    // --------------------------------------------------------
 
-    //Generic Error Dialog Builder
-    public void showDialog(Context context, String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title)
-               .setMessage(message)
-               .setPositiveButton(android.R.string.ok, null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    } //showDialog
 
-    //Send Android System Notifications
-    public void sendNotification(Context context, String title, String message, String ticker, Integer id){
-        //Bitmap largeIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder (context)
-                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setTicker(ticker);
+    // --------------------------------------------------------
+    // USER PHOTO REQUESTS
+    // --------------------------------------------------------
 
-        Intent resultIntent = new Intent(mContext, MainActivity.class);
-        android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
-        stackBuilder.addParentStack(StartActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
+    public void uploadPhoto(String itemID, Uri photoUri, final RequestCallback callback) {
 
-        NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(id, mBuilder.build());
-    }
-
-    //Parse List Objects of List Items and return list of Item IDS
-    public List<String> getItemIds(List<MainListItem> list){
-        List<String>arrayList = new ArrayList<String>();
-        for (int i = 0; i < list.size(); i++) {
-            String singleID = list.get(i).getItemID();
-            arrayList.add(singleID);
+        if(!(isNetworkAvailable())){
+            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_network_title),
+                    mContext.getString(R.string.error_network_message));
+            return;
         }
-        return arrayList;
-    } //getItemIds
 
-    //Create Upload Photo Object (in bytes) + return object with ID and userID
-    public String createUploadPhotoObject(Uri uri) {
-        //Convert photo file to Base64 encoded string
-        String fileString = FileHelper.getByteArrayFromFile(mContext, uri);
-        return fileString;
-    }
+        if(FileHelper.getFileSize(photoUri) > 8){
+            mMessageHelper.showDialog(mContext,
+                    mContext.getString(R.string.upload_failed_title_filesize),
+                    mContext.getString(R.string.upload_failed_text_filesize));
+            return;
+        }
+
+        //Get Photo as Base64 encoded String
+        final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
+        final String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+
+                //Upload Request
+                StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                //Get Response
+                                Log.v(TAG, "uploadPhoto > onResponse: " + response);
+                                //TODO: add conditions? What happens when photo upload fails?
+
+                                mMessageHelper.notifyUploadSuccess();
+                                //Send notice to activity (will execute timed close of this fragment)
+                                callback.onSuccess();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
+                        //TODO: add switch for all possible error codes
+                        mMessageHelper.notifyUploadFail();
+                        callback.onFail();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(uploadPhotoRequest);
+            }
+        });
+    } //uploadPhoto
+
 } //RequestMethods

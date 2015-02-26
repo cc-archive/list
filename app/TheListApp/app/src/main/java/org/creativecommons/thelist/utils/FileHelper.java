@@ -129,4 +129,17 @@ public class FileHelper {
 		
 		return fileName;
 	}
+
+    public static long getFileSize(Uri uri){
+        File photo = new File(uri.getPath());
+        long size = photo.length()/(1024*1024);
+        return size;
+    }
+
+    public static String createUploadPhotoObject(Context context, Uri uri) {
+        //Convert photo file to Base64 encoded string
+        String fileString = getByteArrayFromFile(context, uri);
+
+        return fileString;
+    }
 }
