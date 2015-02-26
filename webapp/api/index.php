@@ -324,6 +324,25 @@ with('/api/usercategories/list', function() {
 
 });
 
+with('/api/photos', function() {
+
+    respond('GET', '/[:user]', function ($request, $response) {
+
+        $userid = $request->user;
+
+        $list = new UserList();
+
+        $gallery = $list->getUserGallery($userid);
+
+        $output = json_encode($gallery, JSON_PRETTY_PRINT);
+
+        echo $output;
+
+    });
+
+
+});
+
 with('/api', function () {
 
     respond('GET', '/', function ($request, $response) {

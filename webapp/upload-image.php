@@ -61,7 +61,8 @@ if ($auth) {
          }
   } else {
 
-      echo "File naming error!";
+      echo "File naming error! Please try again. This is a bug we're aware of";
+      
 
   }
 

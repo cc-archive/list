@@ -128,6 +128,20 @@ class UserList {
 
     }
 
+    function getUserGallery($userid) {
+
+        global $adodb;
+
+        $query = "SELECT url FROM Photos WHERE userid=?";
+        $params = array();
+        $params[] = $userid;
+
+        $res = $adodb->CacheGetAll(50, $query, $params);
+
+        return $res;
+
+    }
+
     function addToMyList($listitem, $userid){
 
         global $adodb;
