@@ -18,7 +18,7 @@ list and publish a photograph of it.
 | Role  | Person |
 | ------------- | ------------- |
 | Driver  | [Matt](https://github.com/mattl)  |
-| Approvers  | [Ryan](https://github.com/ryanmerkley)  |
+| Approvers  | [Ryan](https://github.com/ryanmerkley), [Sarah](http://github.com/sarahpearson) |
 | Contributors | Add yourselves here |
 | Informed | Add yourselves here |
 
