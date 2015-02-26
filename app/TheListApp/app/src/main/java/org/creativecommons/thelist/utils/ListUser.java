@@ -33,7 +33,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,7 +42,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ServerAuthenticate;
 import org.json.JSONArray;
@@ -469,25 +467,24 @@ public class ListUser implements ServerAuthenticate {
                             @Override
                             public void onResponse(String response) {
 
-                                //get Response
-                                Log.v("Response: ", response);
+                                Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
                                 Log.v(TAG,"AN ITEM IS BEING ADDED");
                                 //TODO: on success remove the item from the sharedPreferences
                                 sharedPreferencesMethods.RemoveUserItemPreference(itemID);
 
                                 //Toast: Confirm List Item has been added if it is RandomActivity
-                                if(mActivity.getClass().getSimpleName()
-                                        .equals(RandomActivity.class.getSimpleName())){
-                                    final Toast toast = Toast.makeText(mContext,
-                                            "Added to Your List", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                    new android.os.Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            toast.cancel();
-                                        }
-                                    }, 1500);
-                                }
+//                                if(mActivity.getClass().getSimpleName()
+//                                        .equals(RandomActivity.class.getSimpleName())){
+//                                    final Toast toast = Toast.makeText(mContext,
+//                                            "Added to Your List", Toast.LENGTH_SHORT);
+//                                    toast.show();
+//                                    new android.os.Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            toast.cancel();
+//                                        }
+//                                    }, 1500);
+//                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -539,7 +536,7 @@ public class ListUser implements ServerAuthenticate {
                                 @Override
                                 public void onResponse(String response) {
                                     //get Response
-                                    Log.v("Response: ", response);
+                                    Log.v(TAG, "> removeItemFromUserList > OnResponse: " + response);
                                     Log.v(TAG, "AN ITEM IS BEING REMOVED");
                                     //TODO: do something with response?
                                 }
@@ -547,7 +544,7 @@ public class ListUser implements ServerAuthenticate {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             //TODO: Add “not successful“ toast
-                            Log.d("Delete Item Failed: ", error.getMessage());
+                            Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
                             requestMethods.showDialog(mContext, mContext.getString(R.string.error_title),
                                     mContext.getString(R.string.error_message));
                         }
@@ -569,17 +566,118 @@ public class ListUser implements ServerAuthenticate {
     // USER CATEGORY REQUESTS
     // --------------------------------------------------------
 
-    //Add all categories to userlist
+    //Add all categories to user
     public void addSavedCategoriesToUser(){
-        //TODO: make request when endpoint is available
-    }
+        Log.v(TAG," > addSavedCategoriesToUser, started");
+        JSONArray listCategoryPref;
+        listCategoryPref = sharedPreferencesMethods.RetrieveCategorySharedPreference();
 
-    public void addCategoryToUser(){
+        try{
+            if (listCategoryPref != null && listCategoryPref.length() > 0) {
+                Log.v("LIST ITEM PREF: ", listCategoryPref.toString());
+                for (int i = 0; i < listCategoryPref.length(); i++) {
+                    Log.v("ITEMS", "ARE BEING ADDED");
+                    addCategoryToUser(listCategoryPref.getString(i));
+                }
+            }
+        } catch(JSONException e){
+            Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
+        }
+    } //addSavedCategoriesToUser
 
-    }
+    public void addCategoryToUser(final String catId){
+        if(!(requestMethods.isNetworkAvailable())){
+            requestMethods.showDialog(mContext,mActivity.getString(R.string.error_network_title),
+                    mActivity.getString(R.string.error_network_message));
+            return;
+        }
 
-    public void removeCategoryFromUser(){
+        getToken(new AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.ADD_CATEGORY + getUserID() + "/" + catId;
 
-    }
+                //Add single item to user list
+                StringRequest postCategoryRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.v(TAG, "> addCategoryToUser > OnResponse: " + response);
+                                Log.v(TAG,"AN ITEM IS BEING ADDED");
+                                //TODO: on success remove the item from the sharedPreferences
+                                sharedPreferencesMethods.RemoveUserCategoryPreference(catId);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse (VolleyError error){
+                        Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
+                        //TODO: Add “not successful“ toast
+                        requestMethods.showDialog(mContext,
+                                mContext.getString(R.string.error_title),
+                                mContext.getString(R.string.error_message));
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(postCategoryRequest);
+            }
+        });
+    } //addCategoryToUser
+
+    public void removeCategoryFromUser(final String catId){
+
+        if(isTempUser()){
+            //If not logged in, remove item from sharedPreferences
+            sharedPreferencesMethods.RemoveUserItemPreference(catId);
+
+        } else { //If logged in, remove from DB
+            if(!(requestMethods.isNetworkAvailable())){
+                requestMethods.showDialog(mContext,mActivity.getString(R.string.error_network_title),
+                        mActivity.getString(R.string.error_network_message));
+                return;
+            }
+
+            getToken(new AuthCallback() {
+                @Override
+                public void onSuccess(final String authtoken) { //getToken and then start request
+                    RequestQueue queue = Volley.newRequestQueue(mContext);
+                    String url = ApiConstants.REMOVE_CATEGORY + getUserID() + "/" + catId;
+
+                    StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    //get Response
+                                    Log.v(TAG, "> removeCategoryFromUser > onResponse: " + response);
+                                    Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                                    //TODO: do something with response?
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //TODO: Add “not successful“ toast
+                            Log.d(TAG, " > removeCategoryFromUser > onErrorResponse: " + error.getMessage());
+                            requestMethods.showDialog(mContext, mContext.getString(R.string.error_title),
+                                    mContext.getString(R.string.error_message));
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put(ApiConstants.USER_TOKEN, authtoken);
+                            return params;
+                        }
+                    };
+                    queue.add(deleteItemRequest);
+                }
+            });
+        }
+    } //removeCategoryFromUser
 
 } //ListUser

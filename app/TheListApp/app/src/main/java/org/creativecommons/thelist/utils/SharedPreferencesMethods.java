@@ -198,7 +198,7 @@ public class SharedPreferencesMethods {
         ClearSharedPreference(USER_ID_PREFERENCE_KEY);
     } //Clearall
 
-    //Remove single value in Preferences
+    //Remove single value in Item Preferences
     public void RemoveUserItemPreference(String itemID) {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         String listOfValues = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
@@ -221,6 +221,27 @@ public class SharedPreferencesMethods {
         editor.apply();
     } //RemoveUserItemPreference
 
-    //TODO: RemoveCategoryItemPreference
+    //Remove single value in Category Preferences
+    public void RemoveUserCategoryPreference(String catId) {
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        String listOfValues = sharedPref.getString(CATEGORY_PREFERENCE_KEY, null);
+        Log.v("REMOVE ITEM ID: ", catId);
+        //Convert from String to Array
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(listOfValues);
+        JsonArray array = element.getAsJsonArray();
+        Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
+
+        for (int i = 0; i < array.size(); i++) {
+            String singleItem = array.get(i).getAsString();
+            if (singleItem.equals(catId)) {
+                Log.v("ITEM TO REMOVE IS: ", singleItem);
+                array.remove(i);
+            }
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(CATEGORY_PREFERENCE_KEY, array.toString());
+        editor.apply();
+    } //RemoveUserCategoryPreference
 
 } //SharedPreferenceMethods

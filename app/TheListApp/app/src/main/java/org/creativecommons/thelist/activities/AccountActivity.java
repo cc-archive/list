@@ -126,7 +126,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
             }
 
         } else {
-            //TODO: is this right?
             Log.d("THE LIST", TAG + "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
@@ -138,8 +137,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
     @Override
     public void onCancelLogin() {
-        //TODO: If there are items in sharedPref head to MainActivity, if not: take to StartActivity?)
-        //TODO: put extra: this was a cancelled login so activity can act
         setAccountAuthenticatorResult(null);
         setResult(RESULT_CANCELED, null);
         finish(); //this should take you to previous activity

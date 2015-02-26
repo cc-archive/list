@@ -69,7 +69,8 @@
                 style="@style/input_fields"
                 android:hint="@string/email_hint"
                 android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress"
+                android:textCursorDrawable="@null"/>
 
             <EditText android:id="@+id/accountPassword"
                 style="@style/input_fields"
@@ -78,7 +79,8 @@
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"
                 android:hint="@string/password_hint"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:textCursorDrawable="@null"/>
 
             <Button android:id="@+id/loginButton"
                 android:layout_height="wrap_content"

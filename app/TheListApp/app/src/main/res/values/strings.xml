@@ -161,10 +161,10 @@
     <string name="cc_logo_contentDescription">Creative Commons Logo</string>
 
     <!-- Login Fragment -->
-    <string name="login_fragment_title">Who do we attribute this photo to?</string>
-    <string name="login_fragment_text">Login or Create a Creative Commons account in one click</string>
+    <string name="login_fragment_title">Who do we attribute photos to?</string>
+    <string name="login_fragment_text">Login to your Creative Commons account</string>
     <string name="signUpButton_label">CREATE MY ACCOUNT</string>
-    <string name="existing_account_text">I already have an account</string>
+    <string name="existing_account_text">I ALREADY HAVE AN ACCOUNT</string>
     <string name="new_account_text"><a href="https://login.creativecommons.org/register.php">Actually, I need an account</a></string>
 
     <!-- Terms Fragment -->

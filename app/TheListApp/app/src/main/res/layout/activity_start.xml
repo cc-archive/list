@@ -31,7 +31,7 @@
                 android:layout_marginTop="130dp"
                 android:layout_marginBottom="20dp"/>
 
-            <!--TODO: MAKE UP TAGLINE-->
+            <!--TODO: ADD TAGLINE-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

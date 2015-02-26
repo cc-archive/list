@@ -212,12 +212,10 @@ public class RandomActivity extends Activity {
                     startActivity(intent);
                 } else {
                     mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
-                    //Log.v(TAG, mListItemData.toString());
-                    //Store values from response JSON Array
                     mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
-                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
+                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME).toLowerCase();
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
-                    //Log.v(TAG +" this is the maker name for this item", mMakerName);
+
                     //Update UI
                     mTextView.setText(mMakerName + " needs a picture of " + mItemName);
 
@@ -242,7 +240,6 @@ public class RandomActivity extends Activity {
         }
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        //Genymotion Emulator
         String url = ApiConstants.GET_RANDOM_ITEMS;
 
         JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
@@ -258,10 +255,10 @@ public class RandomActivity extends Activity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //Log.v("error", error.toString() + "THIS IS THE ERROR ERROR ERROR IN GET REQUEST");
-                requestMethods.showDialog(mContext,getString(R.string.error_title),
-                        getString(R.string.error_message));
+                requestMethods.showDialog(mContext,"Oops!",
+                        "We couldn’t find any items for you");
 
+                //TODO: Take user elsewhere if items don’t load
             }
         });
         queue.add(randomItemRequest);
@@ -292,7 +289,6 @@ public class RandomActivity extends Activity {
     @Override
     public void onStop() {
         super.onStop();
-
         mItemList = null;
     }
 }

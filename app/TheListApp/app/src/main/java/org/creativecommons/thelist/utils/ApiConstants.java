@@ -95,9 +95,9 @@ public final class ApiConstants {
     //(+ UserID)
     public static final String GET_USER_CATEGORIES = URL + "/usercategories/list/";
     //(+ UserID, + "/" + CategoryID)
-    public static final String ADD_USER_CATEGORY = URL +"/usercategories/add/";
+    public static final String ADD_CATEGORY = URL +"/usercategories/add/";
     //(+ UserID, + "/" + CategoryID)
-    public static final String REMOVE_USER_CATEGORY = URL +"/usercategories/delete/";
+    public static final String REMOVE_CATEGORY = URL +"/usercategories/delete/";
 
     //PHOTOS
     //POST photo (+ ID, + ItemID)

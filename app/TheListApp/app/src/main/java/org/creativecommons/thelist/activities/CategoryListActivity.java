@@ -223,13 +223,12 @@ public class CategoryListActivity extends ActionBarActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         //Genymotion Emulator
         String url = ApiConstants.GET_CATEGORIES;
-        //Android Default Emulator
-        //String url = "http://10.0.2.2:3000/api/category";
 
         JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.v(TAG, "> getCategoriesRequest > onResponse: " + response);
                         //Handle Data
                         mCategoryData = response;
                         updateList();
@@ -237,51 +236,13 @@ public class CategoryListActivity extends ActionBarActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("error", error.toString());
+                Log.d(TAG, "> getCategoriesRequest > onErrorResponse: " + error.getMessage());
                 requestMethods.showDialog(mContext, getString(R.string.error_title),
                         getString(R.string.error_message));
             }
         });
         queue.add(getCategoriesRequest);
     } //getCategoriesRequest
-
-    //PUT REQUEST: Add category preferences to DB
-//    private void storeCategoriesRequest() {
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//        String userID = mCurrentUser.getUserID();
-//        //Genymotion Emulator
-//        //TODO: FIX URL
-//        String url = "" + userID;
-//
-//        //Create Object to send
-//        //JSONObject UserCategoriesObject = sharedPreferencesMethods.createCategoryListObject();
-//        //Log.v(TAG, UserCategoriesObject.toString());
-//
-//        //Volley Request
-//        JsonObjectRequest putCategoriesRequest = new JsonObjectRequest(Request.Method.PUT, url,
-//                UserCategoriesObject,
-//                new Response.Listener<JSONObject>() {
-//
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        //TODO: Check response code + display error
-//                        //if(responseCode != 200), get response data + show error
-//
-//                        //Handle Data
-//                        mPutResponse = response;
-//                        //Log.v(TAG, mPutResponse.toString());
-//                        //mProgressBar.setVisibility(View.INVISIBLE);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                requestMethods.showDialog(mContext,
-//                        getString(R.string.error_title),
-//                        getString(R.string.error_message));
-//            }
-//        });
-//        queue.add(putCategoriesRequest);
-//    } //storeCategoriesRequest
 
 
     @Override

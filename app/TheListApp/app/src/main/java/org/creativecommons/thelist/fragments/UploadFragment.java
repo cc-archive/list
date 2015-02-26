@@ -202,10 +202,6 @@ public class UploadFragment extends Fragment {
         return size;
     }
 
-
-    //DISPLAY RETRY
-    //TODO: add retry button
-
     //DISPLAY MESSAGES
     public void displaySuccessMessage(){
         addConfirmText(getString(R.string.upload_success_title),
