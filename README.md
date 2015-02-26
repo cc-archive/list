@@ -19,7 +19,7 @@ list and publish a photograph of it.
 | ------------- | ------------- |
 | Driver  | [Matt](https://github.com/mattl)  |
 | Approvers  | [Ryan](https://github.com/ryanmerkley), [Sarah](http://github.com/sarahpearson) |
-| Contributors | Add yourselves here |
+| Contributors | [Jane](https://github.com/janeatcc) |
 | Informed | Add yourselves here |
 
 ## Other things
