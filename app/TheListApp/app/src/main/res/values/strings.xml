@@ -173,7 +173,7 @@
     <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
     <string name="about_theapp_menu_label">About the app</string>
     <string name="hello_world">Hello world!</string>
-    <string name="ccid_account_label">CCID (The List)</string>
+    <string name="ccid_account_label">Creative Commons/string>
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>

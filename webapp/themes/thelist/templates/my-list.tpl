@@ -6,6 +6,8 @@
       <div class="row">
       <div class="col-md-12">
 
+<div class="bg-warning">Please note, there is a bug where the first item you add to your list may not appear. We're aware of this issue.</div>
+
 <h1>My List</h1>
 
 {if $msg}<div class="bg-info"><h6 style="padding: 1em" class="text-center">{$msg}</h6></div>{/if}

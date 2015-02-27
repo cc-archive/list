@@ -70,6 +70,11 @@
 	  </a>
 	</li>
 	{/if}
+
+	<li><a href="https://github.com/creativecommons/list/issues" target="_blank">Report a bug or issue</a></li>
+
+
+
 </ul>		
 
 	</nav>

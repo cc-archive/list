@@ -18,7 +18,7 @@ data, and 24-hour diners.
 
 <img class="float-left" width="200" src="/img/mattl.jpg" />
 
-Technology Lead at Creative Commons. Bearded free software hacker. GNU developer. Likes ghouls, Short Circuit 2, monkey movies. Ready to fire walk with you.
+Technology Lead at Creative Commons. Free software hacker. Always wears a hat.
 
 ## Alexandra Bain
 
