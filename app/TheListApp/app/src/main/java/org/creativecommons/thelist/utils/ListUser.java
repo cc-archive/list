@@ -310,7 +310,8 @@ public class ListUser implements ServerAuthenticate {
                         callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
                     } catch (Exception e) {
-                        Log.d(TAG, e.getMessage());
+                        //Log.d(TAG, e.getMessage());
+                        Log.d(TAG, "addNewAccount > Error adding new account");
                     }
                 }
         }, null);
@@ -454,20 +455,6 @@ public class ListUser implements ServerAuthenticate {
                                 Log.v(TAG,"AN ITEM IS BEING ADDED");
                                 //TODO: on success remove the item from the sharedPreferences
                                 mSharedPref.RemoveUserItemPreference(itemID);
-
-                                //Toast: Confirm List Item has been added if it is RandomActivity
-//                                if(mActivity.getClass().getSimpleName()
-//                                        .equals(RandomActivity.class.getSimpleName())){
-//                                    final Toast toast = Toast.makeText(mContext,
-//                                            "Added to Your List", Toast.LENGTH_SHORT);
-//                                    toast.show();
-//                                    new android.os.Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            toast.cancel();
-//                                        }
-//                                    }, 1500);
-//                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override

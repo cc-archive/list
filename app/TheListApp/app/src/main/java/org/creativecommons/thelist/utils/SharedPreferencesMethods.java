@@ -203,27 +203,25 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         String listOfValues = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
 
-        if(listOfValues == null){
-            return;
-        }
+        if(listOfValues != null && listOfValues.length() > 0){
+            Log.v(TAG, "> RemoveUserItemPreference, try to remove item: " +  itemID);
+            //Convert from String to Array
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(listOfValues);
+            JsonArray array = element.getAsJsonArray();
+            Log.v(TAG, "> RemoveUserItemPreference, array from SharedPref: " +  array.toString());
 
-        Log.v("REMOVE ITEM ID: ", itemID);
-        //Convert from String to Array
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(listOfValues);
-        JsonArray array = element.getAsJsonArray();
-        Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
-
-        for (int i = 0; i < array.size(); i++) {
-            String singleItem = array.get(i).getAsString();
-            if (singleItem.equals(itemID)) {
-                Log.v("ITEM TO REMOVE IS: ", singleItem);
-                array.remove(i);
+            for (int i = 0; i < array.size(); i++) {
+                String singleItem = array.get(i).getAsString();
+                if (singleItem.equals(itemID)) {
+                    Log.v(TAG, "> RemoveUserItemPreference, removing item: " +  itemID);
+                    array.remove(i);
+                }
             }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(LIST_ITEM_PREFERENCE_KEY, array.toString());
+            editor.apply();
         }
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(LIST_ITEM_PREFERENCE_KEY, array.toString());
-        editor.apply();
     } //RemoveUserItemPreference
 
     //Remove single value in Category Preferences

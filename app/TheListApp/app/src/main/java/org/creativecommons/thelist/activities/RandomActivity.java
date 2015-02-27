@@ -38,10 +38,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -120,6 +123,7 @@ public class RandomActivity extends Activity {
                     mItemList.add(listItem);
 
                     //Toast: Confirm List Item has been added
+                    //TODO: add this to addItemToUserList callback
                     final Toast toast = Toast.makeText(RandomActivity.this,
                             "Added to Your List", Toast.LENGTH_SHORT);
                     toast.show();
@@ -132,9 +136,8 @@ public class RandomActivity extends Activity {
 
                     //If logged in, add item to user’s list right away
                     if (!(mCurrentUser.isTempUser())) {
-                        Log.v("LOGGED IN", "user is logged in");
-                        //Add to UserList
-                        mCurrentUser.addItemToUserList(mItemID); //NB: includes confirmation toast
+                        Log.v(TAG, "> isTempUser, user is logged in");
+                        mCurrentUser.addItemToUserList(mItemID);
                     }
                     //Display a new item
                     updateView();
@@ -162,32 +165,14 @@ public class RandomActivity extends Activity {
                 public void onClick(View v) {
                     //Get array of selected item IDS
                     if(mCurrentUser.isTempUser()){
-                        List<String> userItemList = getItemIds(mItemList);
-
-                        JSONArray oldItemArray = mSharedPref.RetrieveUserItemPreference();
-                        if(oldItemArray != null) {
-                            for (int i = 0; i < oldItemArray.length(); i++) {
-                                try {
-                                    userItemList.add(0, oldItemArray.getString(i));
-                                } catch (JSONException e) {
-                                    Log.v(TAG, e.getMessage());
-                                }
-                            }
-                        }
-                        Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());
-                        //Save Array as String to sharedPreferences
-                        mSharedPref.SaveSharedPreference
-                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
-                                        userItemList.toString());
-
-                        String sharedPref = mSharedPref.RetrieveSharedPreferenceList
-                                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
-                        Log.v("ALL ITEMS IN USER PREF", sharedPref);
+                        saveTempUserItems();
                     }
+
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+
                 }
             }); //Done Button
         } else { //Display network error
@@ -206,8 +191,14 @@ public class RandomActivity extends Activity {
             try {
                 if(itemPositionCount == mRandomItemData.length()) {
                     //If you run out of items, just go to MainActivity
+                    if(mCurrentUser.isTempUser()){
+                        saveTempUserItems();
+                    }
                     Intent intent = new Intent(RandomActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+
                 } else {
                     mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
                     mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
@@ -224,6 +215,30 @@ public class RandomActivity extends Activity {
             }
         }
     } //updateView
+
+    public void saveTempUserItems(){
+        List<String> userItemList = getItemIds(mItemList);
+
+        JSONArray oldItemArray = mSharedPref.RetrieveUserItemPreference();
+        if(oldItemArray != null) {
+            for (int i = 0; i < oldItemArray.length(); i++) {
+                try {
+                    userItemList.add(0, oldItemArray.getString(i));
+                } catch (JSONException e) {
+                    Log.v(TAG, e.getMessage());
+                }
+            }
+        }
+        Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());
+        //Save Array as String to sharedPreferences
+        mSharedPref.SaveSharedPreference
+                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
+                        userItemList.toString());
+
+        String sharedPref = mSharedPref.RetrieveSharedPreferenceList
+                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
+        Log.v("ALL ITEMS IN USER PREF", sharedPref);
+    }
 
 //    ------------------------------------------------------------------------------------------
 //    ------------------------------------------------------------------------------------------
