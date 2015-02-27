@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Theme Colours-->
-    <color name="colorSecondaryDark">#558B2F</color>
-    <color name="colorSecondary">#8BC34A</color>
-    <color name="colorSecondaryLight">#AED581</color>
-    <color name="colorPrimaryDark">#4E342E</color>
-    <color name="colorPrimary">#795548</color>
-    <color name="colorPrimaryLight">#8D6E63</color>
-    <!--<color name="colorPrimaryDark">#004D40</color>-->
-    <!--<color name="colorPrimary">#00796B</color>-->
-    <!--<color name="colorPrimaryLight">#26A69A</color>-->
-    <!--<color name="colorSecondaryDark">#FF6F00</color>-->
-    <!--<color name="colorSecondary">#FFA000</color>-->
-    <!--<color name="colorSecondaryLight">#FFC107</color>-->
+    <!--<color name="colorSecondaryDark">#558B2F</color>-->
+    <!--<color name="colorSecondary">#8BC34A</color>-->
+    <!--<color name="colorSecondaryLight">#AED581</color>-->
+    <!--<color name="colorPrimaryDark">#4E342E</color>-->
+    <!--<color name="colorPrimary">#795548</color>-->
+    <!--<color name="colorPrimaryLight">#8D6E63</color>-->
+    <color name="colorPrimaryDark">#004D40</color>
+    <color name="colorPrimary">#00796B</color>
+    <color name="colorPrimaryLight">#26A69A</color>
+    <color name="colorSecondaryDark">#FF6F00</color>
+    <color name="colorSecondary">#FFA000</color>
+    <color name="colorSecondaryLight">#FFC107</color>
 
 
     <!--Button Colours-->

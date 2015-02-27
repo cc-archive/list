@@ -191,21 +191,19 @@ public class MainActivity extends ActionBarActivity {
         //Update menu for login/logout options
         invalidateOptionsMenu();
 
-        if(mItemToBeUploaded != null){
-            mItemList.remove(uploadItemPosition);
-            mFeedAdapter.notifyDataSetChanged();
-        }
-
         if(!mFab.isVisible()){
             mFab.show();
         }
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mFab.setEnabled(true);
             }
         }, 500);
+
+        if(mItemToBeUploaded != null){
+            return;
+        }
 
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
             displayUserListItems();
@@ -414,7 +412,7 @@ public class MainActivity extends ActionBarActivity {
                         //Get item details for photo upload
                         activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
-                        Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
+                        //Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
                     }
                 }));
     } //initRecyclerView
@@ -610,8 +608,7 @@ public class MainActivity extends ActionBarActivity {
                     mItemToBeUploaded = mCurrentItem;
                     uploadItemPosition = activeItemPosition;
 
-                    mItemToBeUploaded.setProgress(true);
-                    //mItemList.remove(mItemToBeUploaded);
+                    mItemList.remove(mItemToBeUploaded);
                     mFeedAdapter.notifyDataSetChanged();
 
                     if(data == null) {
@@ -685,7 +682,6 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onFail() {
-                        mItemToBeUploaded.setError(true);
                         Log.d(TAG, "On Upload Fail");
                         //photoToBeUploaded = false;
                         //mItemlist.add(uploadItemPosition);
