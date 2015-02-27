@@ -109,40 +109,7 @@
         \n\n<a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
     </string>
 
-    <!--About the App text-->
-    <!--<string name="about_section1">This app is developed by Creative Commons.\n\nThrough The List,-->
-        <!--organizations will provide lists of locations, people, and events that-->
-        <!--they need photographs of. And when users are in the right place at the right time, they can-->
-        <!--claim an item from the list and publish a photograph of it.</string>-->
-
-    <!--<string name="about_title2">Licensing and Attribution</string>-->
-    <!--<string name="about_section2">All images created and uploaded using the List can be used and-->
-        <!--re-used by anyone, so long as they attribute the work of the author. You set your-->
-        <!--attribution information <a href="https://thelist.creativecommons.org/app">here</a>.-->
-        <!--The List uses Creative Commons’ CC BY “for attribution” license."</string>-->
-
-    <!--<string name="about_title3">Terms of Service</string>-->
-    <!--<string name="about_section3">See The List terms of service-->
-        <!--<a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.</string>-->
-
-    <!--<string name="about_title4">How to help and file a bug</string>-->
-    <!--<string name="about_section4">The List is an free software project-->
-        <!--of Creative Commons. Contributions are welcome; from writing code to filing bugs.-->
-        <!--Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.</string>-->
-
-    <!--<string name="about_title5">Partners</string>-->
-    <!--<string name="about_section5">The app is created with the generous support of the-->
-        <!--<a href="http://www.knightfoundation.org/">Knight Foundation</a>, and partners like the-->
-        <!--<a href="https://archive.org/index.php">Internet Archive</a></string>-->
-
-    <!--<string name="about_section6">Creative Commons is a global non-profit, supported by generous-->
-        <!--donations from people just like you who believe in shared content.-->
-        <!--<a href="https://donate.creativecommons.org/">Please consider making a donation today.-->
-        <!--</a></string>-->
-
-    <!-- TODO: Insert ascii codes -->
-
-    <string name="start_button_label">I’m new to The List</string>
+    <string name="start_button_label">I’M NEW TO THE LIST</string>
     <string name="general_error">Sorry there was an error!</string>
     <string name="email_hint">Email</string>
     <string name="full_name_hint">Full Name</string>

@@ -38,6 +38,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
     private List<MainListItem> listItems; //Collections.emptyList()
     private static final int DEFAULT_VIEW = 1;
     public static final int ERROR_VIEW = 0;
+    public static final int PROGRESS_VIEW = 2;
 
     public FeedAdapter(Context context, List<MainListItem> listItems) {
         this.listItems = listItems;
@@ -52,6 +53,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
     @Override
     public int getItemViewType(int position){
         MainListItem l = listItems.get(position);
+
         if(l.getError()){
             return ERROR_VIEW;
         } else {
@@ -78,12 +80,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
 
         //Set unique view for different ViewTypes
         switch(getItemViewType(position)){
-            case DEFAULT_VIEW:
-                holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
-                break;
             case ERROR_VIEW:
                 holder.iconImageView.setImageResource(R.drawable.ic_error_red_24dp);
                 break;
+            case DEFAULT_VIEW:
+                holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+                break;
+//            case PROGRESS_VIEW:
+//                //TODO: add progress drawable
+//                holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
         }
         holder.itemView.setTag(l);
     }

@@ -202,6 +202,11 @@ public class SharedPreferencesMethods {
     public void RemoveUserItemPreference(String itemID) {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         String listOfValues = sharedPref.getString(LIST_ITEM_PREFERENCE_KEY, null);
+
+        if(listOfValues == null){
+            return;
+        }
+
         Log.v("REMOVE ITEM ID: ", itemID);
         //Convert from String to Array
         JsonParser parser = new JsonParser();

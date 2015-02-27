@@ -39,7 +39,7 @@ import org.json.JSONObject;
 
 public class MainListItem {
     private String itemName, makerName, itemID;
-    private boolean error;
+    private boolean error, progress;
     private Context mContext;
     private MainActivity mainActivity;
     private MessageHelper mMessageHelper;
@@ -53,6 +53,7 @@ public class MainListItem {
         this.itemName = name;
         this.makerName = maker;
         this.error =  false;
+        this.progress = false;
     }
 
     public String getItemID() {
@@ -83,8 +84,16 @@ public class MainListItem {
         return error;
     }
 
+    public boolean getProgress(){
+        return progress;
+    }
+
     public void setError(boolean bol){
         this.error = bol;
+    }
+
+    public void setProgress(boolean bol){
+        this.progress = bol;
     }
 
     public void setContext(Context c) {

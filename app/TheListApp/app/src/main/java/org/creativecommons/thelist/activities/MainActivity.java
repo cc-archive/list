@@ -99,6 +99,10 @@ public class MainActivity extends ActionBarActivity {
 
     protected MainListItem mCurrentItem;
     protected int activeItemPosition;
+
+    protected MainListItem mItemToBeUploaded;
+    protected int uploadItemPosition;
+
     protected MainListItem mLastDismissedItem;
     protected int lastDismissedItemPosition;
     protected Uri mMediaUri;
@@ -186,6 +190,11 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         //Update menu for login/logout options
         invalidateOptionsMenu();
+
+        if(mItemToBeUploaded != null){
+            mItemList.remove(uploadItemPosition);
+            mFeedAdapter.notifyDataSetChanged();
+        }
 
         if(!mFab.isVisible()){
             mFab.show();
@@ -598,6 +607,12 @@ public class MainActivity extends ActionBarActivity {
             case PhotoConstants.TAKE_PHOTO_REQUEST:
                 if(resultCode == RESULT_OK) {
                     //photoToBeUploaded = true;
+                    mItemToBeUploaded = mCurrentItem;
+                    uploadItemPosition = activeItemPosition;
+
+                    mItemToBeUploaded.setProgress(true);
+                    //mItemList.remove(mItemToBeUploaded);
+                    mFeedAdapter.notifyDataSetChanged();
 
                     if(data == null) {
                         Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
@@ -625,7 +640,6 @@ public class MainActivity extends ActionBarActivity {
     //Start Upload + Respond
     public void startPhotoUpload(){
         mUploadProgressBar.setVisibility(View.VISIBLE);
-
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
             mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
                 @Override
@@ -652,11 +666,12 @@ public class MainActivity extends ActionBarActivity {
     } //startPhotoUpload
 
     public void performUpload(){
-        mRequestMethods.uploadPhoto(mCurrentItem.getItemID(), mMediaUri,
+        mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "On Upload Success");
+                        mItemToBeUploaded = null;
                         //photoToBeUploaded = false;
                         displayUserListItems();
 
@@ -670,14 +685,16 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onFail() {
+                        mItemToBeUploaded.setError(true);
                         Log.d(TAG, "On Upload Fail");
                         //photoToBeUploaded = false;
-                        displayUserListItems();
+                        //mItemlist.add(uploadItemPosition);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 mUploadProgressBar.setVisibility(View.GONE);
+                                displayUserListItems();
                                 //TODO: add visual indication that item failed
                             }
                         }, 500);
@@ -754,7 +771,6 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(aboutAppIntent);
                 return true;
             case R.id.remove_accounts:
-                Intent startIntent = new Intent(Settings.ACTION_SETTINGS);
                 mSharedPref.ClearAllSharedPreferences();
                 mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
                     @Override
