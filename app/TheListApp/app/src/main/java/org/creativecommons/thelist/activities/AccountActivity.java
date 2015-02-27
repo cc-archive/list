@@ -52,7 +52,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         setContentView(R.layout.activity_account);
         mContext = this;
         mAccountManager = AccountManager.get(getBaseContext());
-        mCurrentUser = new ListUser(mContext);
+        mCurrentUser = new ListUser(AccountActivity.this);
 
         //UI Elements
         mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
@@ -91,6 +91,8 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
         final Account account = new Account(accountEmail, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
+
+        //TODO: is this working or skipping to setPassword?
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
             Log.d("THE LIST", TAG + "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);

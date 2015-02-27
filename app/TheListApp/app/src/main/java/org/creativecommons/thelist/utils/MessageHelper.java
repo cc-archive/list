@@ -24,6 +24,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -31,13 +32,14 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MessageHelper {
     public static final String TAG = RequestMethods.class.getSimpleName();
     protected Context mContext;
 
-    //Notification Ids
-    protected static final int mNotifySuccess = 42341234;
-    protected static final int mNotifyFail = 4234133;
+    //Notifications
+    final AtomicInteger notificationID = new AtomicInteger(0);
 
     //Set Context
     public MessageHelper(Context mc) {
@@ -55,7 +57,7 @@ public class MessageHelper {
     }
 
     //Send Android System Notifications
-    public void sendNotification(Context context, String title, String message, String ticker, int id){
+    public void sendNotification(Context context, String title, String message, String ticker){
         //Bitmap largeIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder (context)
@@ -76,15 +78,21 @@ public class MessageHelper {
         mBuilder.setContentIntent(resultPendingIntent);
 
         NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(id, mBuilder.build());
+        manager.notify(getNotificationID(), mBuilder.build());
+    }
+
+    //Create unique notification ID
+    public int getNotificationID(){
+        return notificationID.incrementAndGet();
     }
 
     // --------------------------------------------------------
     // GENERAL MESSAGES
     // --------------------------------------------------------
 
+    //TODO: replace frequently used messages w/ pre-created showDialogs
     public void NetworkFailMessage(){
-        //showDialog(mContext, );
+
     }
 
 
@@ -97,13 +105,13 @@ public class MessageHelper {
     public void notifyUploadSuccess(){
         sendNotification(mContext, "The List",
                 "Your photo has been uploaded successfully!",
-                "List Photo Uploaded Successfully", mNotifySuccess);
+                "List Photo Uploaded Successfully");
     }
 
     public void notifyUploadFail(){
         sendNotification(mContext, "The List",
                 "There was a problem uploading your photo.",
-                "List Photo Uploaded Failed", mNotifyFail);
+                "List Photo Uploaded Failed");
     }
 
     //DIALOGS
@@ -116,6 +124,10 @@ public class MessageHelper {
     public void photoSizeFailMessage(){
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_filesize),
                 mContext.getString(R.string.upload_failed_text_filesize));
+    }
+
+    public void photoFailMessage(){
+        //TODO: message if file format is not jpg?
     }
 
 } //MessageHelper

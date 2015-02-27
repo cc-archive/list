@@ -43,6 +43,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -55,37 +56,35 @@ import java.util.List;
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
     protected Context mContext;
-    //Helper Methods
-    RequestMethods requestMethods;
-    SharedPreferencesMethods sharedPreferencesMethods;
+    RequestMethods mRequestMethods;
+    SharedPreferencesMethods mSharedPref;
+    MessageHelper mMessageHelper;
     ListUser mCurrentUser;
 
-    //GET Request
+    //Handle Data
     protected JSONArray mRandomItemData;
     protected JSONObject mListItemData;
     String mMakerName;
     String mItemName;
     String mItemID;
 
-    //Handle Data
     private List<MainListItem> mItemList;
-    //private ArrayList<String> mItemsViewed = new ArrayList<String>();
+
+    int itemPositionCount = 0;
 
     //UI Elements
     TextView mTextView;
     ProgressBar mProgressBar;
     Button mDoneButton;
 
-    //Shared variables
-    int itemPositionCount = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random);
         mContext = this;
-        requestMethods = new RequestMethods(mContext);
-        sharedPreferencesMethods = new SharedPreferencesMethods(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
         mCurrentUser = new ListUser(RandomActivity.this);
 
         //Google Analytics Tracker
@@ -106,10 +105,9 @@ public class RandomActivity extends Activity {
         //TODO: add camera functionality?
         //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
-        if(requestMethods.isNetworkAvailable()) {
+        if(mRequestMethods.isNetworkAvailable()) {
             mProgressBar.setVisibility(View.VISIBLE);
             getRandomItemRequest();
-
             //Yes Button Listener
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,7 +164,7 @@ public class RandomActivity extends Activity {
                     if(mCurrentUser.isTempUser()){
                         List<String> userItemList = getItemIds(mItemList);
 
-                        JSONArray oldItemArray = sharedPreferencesMethods.RetrieveUserItemPreference();
+                        JSONArray oldItemArray = mSharedPref.RetrieveUserItemPreference();
                         if(oldItemArray != null) {
                             for (int i = 0; i < oldItemArray.length(); i++) {
                                 try {
@@ -178,11 +176,11 @@ public class RandomActivity extends Activity {
                         }
                         Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());
                         //Save Array as String to sharedPreferences
-                        sharedPreferencesMethods.SaveSharedPreference
+                        mSharedPref.SaveSharedPreference
                                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                                         userItemList.toString());
 
-                        String sharedPref = sharedPreferencesMethods.RetrieveSharedPreferenceList
+                        String sharedPref = mSharedPref.RetrieveSharedPreferenceList
                                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
                         Log.v("ALL ITEMS IN USER PREF", sharedPref);
                     }
@@ -233,7 +231,7 @@ public class RandomActivity extends Activity {
     //GET Random Items from API
     private void getRandomItemRequest() {
 
-        if(!(requestMethods.isNetworkAvailable())){
+        if(!(mRequestMethods.isNetworkAvailable())){
             mMessageHelper.showDialog(mContext,getString(R.string.error_network_title),
                     getString(R.string.error_network_message));
             return;

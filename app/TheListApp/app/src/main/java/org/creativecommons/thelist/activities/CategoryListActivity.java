@@ -92,7 +92,7 @@ public class CategoryListActivity extends ActionBarActivity {
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
-        mCurrentUser = new ListUser(mContext);
+        mCurrentUser = new ListUser(CategoryListActivity.this);
 
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

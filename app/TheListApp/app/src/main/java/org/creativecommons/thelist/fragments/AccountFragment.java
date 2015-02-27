@@ -37,7 +37,6 @@ import android.widget.TextView;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ListAuthenticator;
-import org.creativecommons.thelist.misc.CancelFragment;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 
@@ -50,7 +49,7 @@ import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_US
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends android.support.v4.app.Fragment {
-    public static final String TAG = CancelFragment.class.getSimpleName();
+    public static final String TAG = AccountFragment.class.getSimpleName();
 
     Context mContext;
     private MessageHelper mMessageHelper;
@@ -115,7 +114,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
         final Button signUpButton = (Button) getView().findViewById(R.id.signUpButton);
         final EditText accountEmailField = (EditText)getView().findViewById(R.id.accountName);
         final EditText accountPasswordField = (EditText)getView().findViewById(R.id.accountPassword);
-        accountPasswordField.setTypeface(Typeface.DEFAULT);
+            accountPasswordField.setTypeface(Typeface.DEFAULT);
         final TextView newAccountButton = (TextView) getView().findViewById(R.id.signUp);
 
         //Try Login on Click
@@ -130,7 +129,6 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                             getString(R.string.login_error_message));
                 } else {
                     ListUser mCurrentUser = new ListUser(getActivity());
-                    ListAuthenticator la = new ListAuthenticator(getActivity());
                     try {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.AuthCallback() {

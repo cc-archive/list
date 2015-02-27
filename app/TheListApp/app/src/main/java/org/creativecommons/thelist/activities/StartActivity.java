@@ -42,6 +42,7 @@ import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
@@ -68,8 +69,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         mContext = this;
-        mCurrentUser = new ListUser(StartActivity.this);
         mSharedPref = new SharedPreferencesMethods(mContext);
+        mCurrentUser = new ListUser(StartActivity.this);
         am = AccountManager.get(getBaseContext());
 
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
@@ -92,7 +93,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             //The beta version of this app uses google analytics message
             MessageHelper mh = new MessageHelper(mContext);
             mh.showDialog(mContext, "The List Beta Uses Google Analytics", "Hey just a heads up that " +
-                    "we’re using Google Analytics help us learn how to make the app better." +
+                    "we’re using Google Analytics to help us learn how to make the app better. " +
                     "We don’t collect personal info!");
             mSharedPref.setMessageViewed();
         }

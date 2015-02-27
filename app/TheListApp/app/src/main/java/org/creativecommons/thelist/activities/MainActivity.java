@@ -64,10 +64,10 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.misc.MaterialInterpolator;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -508,7 +508,7 @@ public class MainActivity extends ActionBarActivity {
                 , MainActivity.this);
     } //showSnackbar
 
-    //DIALOG FOR LIST ITEM ACTION
+    //Show dialog when List Item is tapped
     public DialogInterface.OnClickListener mDialogListener =
             new DialogInterface.OnClickListener() {
                 @Override
@@ -624,6 +624,34 @@ public class MainActivity extends ActionBarActivity {
 
     //Start Upload + Respond
     public void startPhotoUpload(){
+        mUploadProgressBar.setVisibility(View.VISIBLE);
+
+        if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
+            mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d("THIS IS AUTH IN SPU", authtoken);
+                    Log.d("USER ID: ", mCurrentUser.getUserID());
+                    performUpload();
+                }
+            });
+        } else {
+            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
+                        @Override
+                        public void onSuccess(String authtoken) {
+                            Log.d(TAG, "IS TEMP USER RETURNING BUNDLE ");
+                            try {
+                                performUpload();
+                            } catch (Exception e) {
+                                Log.d(TAG,"addAccount > " + e.getMessage());
+                            }
+                        }
+                    });
+        }
+    } //startPhotoUpload
+
+    public void performUpload(){
         mRequestMethods.uploadPhoto(mCurrentItem.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
@@ -631,7 +659,13 @@ public class MainActivity extends ActionBarActivity {
                         Log.d(TAG, "On Upload Success");
                         //photoToBeUploaded = false;
                         displayUserListItems();
-                        mUploadProgressBar.setVisibility(View.GONE);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mUploadProgressBar.setVisibility(View.GONE);
+                            }
+                        }, 500); //could add a time check from visible to invisible, heh.
                     }
 
                     @Override
@@ -639,11 +673,17 @@ public class MainActivity extends ActionBarActivity {
                         Log.d(TAG, "On Upload Fail");
                         //photoToBeUploaded = false;
                         displayUserListItems();
-                        mUploadProgressBar.setVisibility(View.GONE);
-                        //TODO: add visual indication that item failed
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mUploadProgressBar.setVisibility(View.GONE);
+                                //TODO: add visual indication that item failed
+                            }
+                        }, 500);
                     }
                 });
-    } //startPhotoUpload
+    } //performUpload
 
     //----------------------------------------------
     //MENU + MENU HELPER METHODS

@@ -64,6 +64,19 @@ public final class RequestMethods {
         void onFail();
     }
 
+    //Check if thar be internets (public helper)
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+        if(networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+
+        return isAvailable;
+    }
+
     //Check if thar be internets
     public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -83,6 +96,7 @@ public final class RequestMethods {
 
 
 
+
     // --------------------------------------------------------
     // USER PHOTO REQUESTS
     // --------------------------------------------------------
@@ -90,15 +104,12 @@ public final class RequestMethods {
     public void uploadPhoto(String itemID, Uri photoUri, final RequestCallback callback) {
 
         if(!(isNetworkAvailable())){
-            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_network_title),
-                    mContext.getString(R.string.error_network_message));
+            mMessageHelper.photoNetworkFailMessage();
             return;
         }
 
         if(FileHelper.getFileSize(photoUri) > 8){
-            mMessageHelper.showDialog(mContext,
-                    mContext.getString(R.string.upload_failed_title_filesize),
-                    mContext.getString(R.string.upload_failed_text_filesize));
+            mMessageHelper.photoSizeFailMessage();
             return;
         }
 
@@ -118,10 +129,7 @@ public final class RequestMethods {
                             public void onResponse(String response) {
                                 //Get Response
                                 Log.v(TAG, "uploadPhoto > onResponse: " + response);
-                                //TODO: add conditions? What happens when photo upload fails?
-
                                 mMessageHelper.notifyUploadSuccess();
-                                //Send notice to activity (will execute timed close of this fragment)
                                 callback.onSuccess();
                             }
                         }, new Response.ErrorListener() {

@@ -55,19 +55,18 @@ import java.util.Map;
 public class ListUser implements ServerAuthenticate {
     public static final String TAG = ListUser.class.getSimpleName();
 
-    private RequestMethods mRequestMethods;
     private MessageHelper mMessageHelper;
     private SharedPreferencesMethods mSharedPref;
     private Context mContext;
     private Activity mActivity;
 
-    //TODO: clean up if unecessary
     private AccountManager am;
     public AlertDialog mAlertDialog;
 
+    @Deprecated
+    //TODO: Refactor; should really only need one constructor
     public ListUser(Context mc){
         mContext = mc;
-        mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
         mMessageHelper = new MessageHelper(mContext);
         am = AccountManager.get(mContext);
@@ -76,8 +75,8 @@ public class ListUser implements ServerAuthenticate {
     public ListUser(Activity a) {
         mActivity = a;
         mContext = a;
-        mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
         am = AccountManager.get(mContext);
     }
 
@@ -98,10 +97,6 @@ public class ListUser implements ServerAuthenticate {
         }
     } //isTempUser
 
-//    public void setUserID(String id) {
-//        mSharedPref.saveUserID(id);
-//    }
-
     public String getUserID() {
         return mSharedPref.getUserId();
     } //getUserID
@@ -114,7 +109,7 @@ public class ListUser implements ServerAuthenticate {
         return am.getUserData(ac, AccountGeneral.USER_ID);
     } //getUserIDFromAccount
 
-    public Account getAccount(String userid){
+    public Account getAccount(){
         Account matchingAccount = null;
         Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
@@ -156,7 +151,7 @@ public class ListUser implements ServerAuthenticate {
             });
 
         } else {
-            Account account = getAccount(getUserID());
+            Account account = getAccount();
 
             if(account == null){
                 Log.v(TAG, "getToken > getAccount > account is null");
@@ -191,7 +186,7 @@ public class ListUser implements ServerAuthenticate {
         Log.d(TAG, "getToken > getting session token");
         //sessionComplete = false;
         //TODO: match userID to account with the same userID store in AccountManager
-        Account account = getAccount(getUserID());
+        Account account = getAccount();
 
         if(account == null){
             Log.v(TAG, "getToken > getAccount > account is null");
@@ -251,7 +246,7 @@ public class ListUser implements ServerAuthenticate {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-//                    TODO: what is this for?
+//                    TODO: do we need this?
 //                    if(invalidate)
 //                        invalidateAuthToken(availableAccounts[which], authTokenType);
 //                    else
@@ -303,20 +298,21 @@ public class ListUser implements ServerAuthenticate {
 
     //AddNewAccount
     public void addNewAccount(String accountType, String authTokenType, final AuthCallback callback) {
+        final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType, null,
+                null, mActivity, new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(AccountManagerFuture<Bundle> future) {
+                    try {
+                        Bundle bnd = future.getResult();
+                        //TODO: does this addAccountExplicitly
+                        //addSavedItemsToUserList();
+                        Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
+                        callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
-        final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType, null, null, mActivity, new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(AccountManagerFuture<Bundle> future) {
-                try {
-                    Bundle bnd = future.getResult();
-                    Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
-                    callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    //Log.d(TAG, e.getMessage());
+                    } catch (Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
                 }
-            }
         }, null);
     }
 
@@ -342,7 +338,7 @@ public class ListUser implements ServerAuthenticate {
     //LOG IN USER
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
-        if(!(mRequestMethods.isNetworkAvailable())){
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
@@ -402,7 +398,7 @@ public class ListUser implements ServerAuthenticate {
     //TODO: SIGN UP USER
     @Override
     public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
-        if(!(mRequestMethods.isNetworkAvailable())){
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
@@ -410,20 +406,6 @@ public class ListUser implements ServerAuthenticate {
 
         //TODO: actually register user
     }
-
-
-    //TODO: do we need this?
-//    public void logOut() {
-//        //Clear session-relevant sharedPreferences
-//        //TODO:this is just userid, new user profile data will need to be cleared if added
-//        mSharedPref.ClearAllSharedPreferences();
-//
-//        //TODO: take you back to startActivity?
-//        Intent intent = new Intent(mContext, StartActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        mContext.startActivity(intent);
-//    }
 
     // --------------------------------------------------------
     // USER LIST REQUESTS
@@ -450,7 +432,7 @@ public class ListUser implements ServerAuthenticate {
 
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
-        if(!(mRequestMethods.isNetworkAvailable())){
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
@@ -519,7 +501,7 @@ public class ListUser implements ServerAuthenticate {
             mSharedPref.RemoveUserItemPreference(itemID);
 
         } else { //If logged in, remove from DB
-            if(!(mRequestMethods.isNetworkAvailable())){
+            if(!(RequestMethods.isNetworkAvailable(mContext))){
                 mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                         mActivity.getString(R.string.error_network_message));
                 return;
@@ -587,7 +569,7 @@ public class ListUser implements ServerAuthenticate {
     } //addSavedCategoriesToUser
 
     public void addCategoryToUser(final String catId){
-        if(!(mRequestMethods.isNetworkAvailable())){
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
@@ -638,7 +620,7 @@ public class ListUser implements ServerAuthenticate {
             mSharedPref.RemoveUserItemPreference(catId);
 
         } else { //If logged in, remove from DB
-            if(!(mRequestMethods.isNetworkAvailable())){
+            if(!(RequestMethods.isNetworkAvailable(mContext))){
                 mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
                         mActivity.getString(R.string.error_network_message));
                 return;
