@@ -48,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:text="@string/start_button_label"
                 android:id="@+id/startButton"
+                android:textColor="@color/app_white"
                 android:layout_below="@+id/intro" />
 
             <Button
@@ -55,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:text="@string/existing_account_text"
                 android:id="@+id/accountButton"
+                android:textColor="@color/app_white"
                 android:layout_below="@+id/startButton" />
         </RelativeLayout>
 
