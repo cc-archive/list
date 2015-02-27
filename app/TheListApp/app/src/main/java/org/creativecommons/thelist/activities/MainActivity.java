@@ -611,9 +611,6 @@ public class MainActivity extends ActionBarActivity {
                     mItemToBeUploaded = mCurrentItem;
                     uploadItemPosition = activeItemPosition;
 
-                    mItemList.remove(mItemToBeUploaded);
-                    mFeedAdapter.notifyDataSetChanged();
-
                     if(data == null) {
                         //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                     }
@@ -644,8 +641,10 @@ public class MainActivity extends ActionBarActivity {
             mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
                 @Override
                 public void onSuccess(String authtoken) {
-                    Log.d("THIS IS AUTH IN SPU", authtoken);
-                    Log.d("USER ID: ", mCurrentUser.getUserID());
+                    Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
+
+                    mItemList.remove(mItemToBeUploaded);
+                    mFeedAdapter.notifyDataSetChanged();
                     performUpload();
                 }
             });
@@ -656,6 +655,8 @@ public class MainActivity extends ActionBarActivity {
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "IS TEMP USER RETURNING BUNDLE ");
                             try {
+                                mItemList.remove(mItemToBeUploaded);
+                                mFeedAdapter.notifyDataSetChanged();
                                 performUpload();
                             } catch (Exception e) {
                                 Log.d(TAG,"addAccount > " + e.getMessage());
