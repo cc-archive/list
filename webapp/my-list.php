@@ -49,7 +49,7 @@ if (isset($_REQUEST['hs'])) {
             
             $listitems = $list->getUserTopList(20, $userid);
 
-            $selection = $list->getNewList(20);
+            $selection = $list->getNewList(5);
 
             $smarty->assign('list',$listitems);
 
