@@ -40,11 +40,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -101,11 +104,11 @@ public class CategoryListActivity extends ActionBarActivity {
 //        }
 
         //Google Analytics Tracker
-//        Tracker t = ((ListApplication) CategoryListActivity.this.getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName(TAG);
-//        t.send(new HitBuilders.AppViewBuilder().build());
+        Tracker t = ((ListApplication) CategoryListActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Load UI Elements
         //mProgressBar = (ProgressBar) findViewById(R.id.category_progressBar);

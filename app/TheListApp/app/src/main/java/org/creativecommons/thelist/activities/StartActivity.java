@@ -36,10 +36,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.ExplainerFragment;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -77,11 +81,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //        instance.setAppOptOut(true);
 
         //Google Analytics Tracker
-//        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName(TAG);
-//        t.send(new HitBuilders.AppViewBuilder().build());
+        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences

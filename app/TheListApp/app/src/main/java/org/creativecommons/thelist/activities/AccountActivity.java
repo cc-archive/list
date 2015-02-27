@@ -9,11 +9,15 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.TermsFragment;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
@@ -54,9 +58,15 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
 
+        //Google Analytics
+        Tracker t = ((ListApplication) AccountActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
+
         //UI Elements
         mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
-
         //Get account information (intent is coming from ListAuthenticator…always call AuthToken)
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);

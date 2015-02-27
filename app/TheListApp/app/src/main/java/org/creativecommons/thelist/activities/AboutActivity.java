@@ -6,10 +6,14 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.utils.ListApplication;
 
 public class AboutActivity extends ActionBarActivity {
-
+    private final String TAG = this.getClass().getSimpleName();
 
     // --------------------------------------------------------
 
@@ -18,11 +22,15 @@ public class AboutActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if (toolbar != null) {
-//            setSupportActionBar(toolbar);
-//        }
+        //Google Analytics
+        Tracker t = ((ListApplication) AboutActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
 
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
+
+
+        //UI Elements
         TextView aboutAppText = (TextView)findViewById(R.id.about_text);
 
         if(aboutAppText != null) {

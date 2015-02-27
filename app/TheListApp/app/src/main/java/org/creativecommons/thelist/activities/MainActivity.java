@@ -54,6 +54,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -66,6 +68,7 @@ import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -146,12 +149,12 @@ public class MainActivity extends ActionBarActivity {
 //        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
 //        instance.setAppOptOut(true);
 //
-//        //Google Analytics Tracker
-//        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName(TAG);
-//        t.send(new HitBuilders.AppViewBuilder().build());
+        //Google Analytics Tracker
+        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
@@ -612,7 +615,7 @@ public class MainActivity extends ActionBarActivity {
                     mFeedAdapter.notifyDataSetChanged();
 
                     if(data == null) {
-                        Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+                        //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                     }
                     else {
                         mMediaUri = data.getData();

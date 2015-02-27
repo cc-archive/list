@@ -7,8 +7,6 @@
     <string name="title_activity_category_list">Pick Categories</string>
     <string name="title_activity_random">Hit Me</string>
     <string name="title_activity_login">Log In</string>
-    <string name="title_activity_feed">Feed Activity</string>
-    <string name="title_activity_login_fragment">Login Fragment</string>
     <string name="title_activity_explainer">What’s up with the List?</string>
     <string name="title_activity_account">Add Account</string>
     <string name="title_activity_start">Start The List</string>
@@ -58,9 +56,9 @@
 
     <!-- Onboarding Button Text -->
     <string-array name="onboarding_button_text">
-        <item>Sounds good</item>
-        <item>I like getting credit</item>
-        <item>Cool, let’s go</item>
+        <item>SOUNDS GOOD</item>
+        <item>I LIKE GETTING CREDIT</item>
+        <item>COOL, LET’S GO</item>
     </string-array>
 
     <!-- Category Background Colours -->
@@ -141,6 +139,7 @@
     <string name="terms_checkbox_label">I agree to the terms and conditions</string>
     <string name="terms_continue_button_label">CONTINUE</string>
 
+    <!--TODO: remove strings exclusive to UploadFragment-->
     <!-- Upload Fragment -->
     <string name="upload_cancelled_title">Upload Cancelled</string>
     <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>

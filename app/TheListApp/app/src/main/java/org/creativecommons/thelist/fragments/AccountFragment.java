@@ -34,9 +34,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ListAuthenticator;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 
@@ -88,6 +92,14 @@ public class AccountFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Google Analytics Tracker
+        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
+        t.setScreenName("Explainer Fragment");
+        t.send(new HitBuilders.AppViewBuilder().build());
+
         return inflater.inflate(R.layout.fragment_account, container, false);
     }
 

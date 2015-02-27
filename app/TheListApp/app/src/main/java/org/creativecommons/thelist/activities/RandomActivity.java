@@ -91,18 +91,19 @@ public class RandomActivity extends Activity {
         mCurrentUser = new ListUser(RandomActivity.this);
 
         //Google Analytics Tracker
-//        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName(TAG);
-//        t.send(new HitBuilders.AppViewBuilder().build());
+        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
 
+        t.setScreenName(TAG);
+        t.send(new HitBuilders.AppViewBuilder().build());
+
+
+        //UI Elements
         mItemList = new ArrayList<>();
         mTextView = (TextView) findViewById(R.id.account_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mDoneButton = (Button) findViewById(R.id.doneButton);
 
-        //Picker Buttons
         ImageButton yesButton = (ImageButton) findViewById(R.id.YesButton);
         ImageButton noButton = (ImageButton) findViewById(R.id.NoButton);
         //TODO: add camera functionality?
