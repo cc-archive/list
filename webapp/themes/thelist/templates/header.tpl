@@ -71,7 +71,7 @@
 	</li>
 	{/if}
 
-	<li><a href="https://github.com/creativecommons/list/issues" target="_blank" class="btn btn-danger">Report a bug or issue</a></li>
+	<li><a href="https://github.com/creativecommons/list/issues" target="_blank">Report a bug or issue</a></li>
 
 
 
