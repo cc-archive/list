@@ -48,7 +48,7 @@ public class MessageHelper {
 
     //Material Design Dialog
     public void showDialog(Context context, String title, String message){
-        new MaterialDialog.Builder(mContext)
+        new MaterialDialog.Builder(context)
                 .title(title)
                 .content(message)
                 .positiveText(R.string.ok_label)

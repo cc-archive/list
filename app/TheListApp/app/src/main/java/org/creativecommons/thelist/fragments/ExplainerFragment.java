@@ -65,11 +65,11 @@ public class ExplainerFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName("Explainer Fragment");
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName("Explainer Fragment");
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_explainer, container, false);

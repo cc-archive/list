@@ -81,11 +81,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 //        instance.setAppOptOut(true);
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName(TAG);
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences

@@ -94,11 +94,11 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName("Explainer Fragment");
-        t.send(new HitBuilders.AppViewBuilder().build());
+//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
+//
+//        t.setScreenName("Explainer Fragment");
+//        t.send(new HitBuilders.AppViewBuilder().build());
 
         return inflater.inflate(R.layout.fragment_account, container, false);
     }

@@ -29,5 +29,5 @@
 <screenName name="org.creativecommons.thelist.activities.StartActivity">Start Activity</screenName>
 
 <!--  The following value should be replaced with correct property id. -->
-<string name="ga_trackingId">UA-57679207-1</string>
+<string name="ga_trackingId">UA-2010376-31</string>
 </resources>

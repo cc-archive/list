@@ -613,6 +613,7 @@ public class MainActivity extends ActionBarActivity {
 
                     if(data == null) {
                         //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "> onActivityResult > data == null");
                     }
                     else {
                         mMediaUri = data.getData();
@@ -628,7 +629,8 @@ public class MainActivity extends ActionBarActivity {
                     startPhotoUpload();
                 } //RESULT OK
                 else if(resultCode != RESULT_CANCELED) { //result other than ok or cancelled
-                    Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "> onActivityResult > resultCode != canceled");
                 }
                 break;
         } //switch
@@ -653,7 +655,7 @@ public class MainActivity extends ActionBarActivity {
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
                         @Override
                         public void onSuccess(String authtoken) {
-                            Log.d(TAG, "IS TEMP USER RETURNING BUNDLE ");
+                            Log.d(TAG, "> addNewAccount > onSuccess, authtoken: " + authtoken);
                             try {
                                 mItemList.remove(mItemToBeUploaded);
                                 mFeedAdapter.notifyDataSetChanged();

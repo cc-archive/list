@@ -650,6 +650,4 @@ public class ListUser implements ServerAuthenticate {
         }
     } //removeCategoryFromUser
 
-
-
 } //ListUser
