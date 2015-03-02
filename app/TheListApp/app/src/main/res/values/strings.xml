@@ -50,7 +50,7 @@
         <item>Photos you share with The List will be available for any person or organization to
             use, as long as they give you credit</item>
         <item>You’ll be helping creators tell their stories – on Wikipedia, social media, in the
-            news, or in campaigns.\n\nTogether were building a commons of creativity and knowledge
+            news, or in campaigns.\n\nTogether we are building a commons of creativity and knowledge
             for everyone</item>
     </string-array>
 
@@ -72,36 +72,37 @@
     </string-array>
 
     <!--About the App single text-->
-    <string name="about_app">This app is developed by Creative Commons.\n\nThrough The List,
+    <string name="about_app">This app is developed by Creative Commons.\n\n
+        <a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
+        \n\nThrough The List,
         organizations will provide lists of locations, people, and events that
         they need photographs of. And when users are in the right place at the right time, they can
         claim an item from the list and publish a photograph of it.
         \n\n<b>Licensing and Attribution</b>
         \nAll images created and uploaded using the List can be used and
-        re-used by anyone, so long as they attribute the work of the author. You set your
-        attribution information <a href="https://thelist.creativecommons.org/app">here</a>.
+        re-used by anyone, so long as they attribute the work of the author.<br />
         The List uses Creative Commons’ CC BY “for attribution” license.
         \n\n<b>Terms of Service</b>
-        \nSee The List terms of service
-        <a href="https://thelist.creativecommons.org/app/alpha-tos.html">here</a>.
-        \nTo opt out of Google Analytics, see your CCID account in your phone’s Settings.
+        \nSee <a href="https://thelist.creativecommons.org/app/alpha-tos.html">The List terms of service</a>.
+        \nTo opt out of Google Analytics, see your Creative Commons account in your phone’s Settings.
         \n\n<b>How to help and file a bug</b>
         \nThe List is an free software project
         of Creative Commons. Contributions are welcome; from writing code to filing bugs.
-        Our GitHub repo is <a href="https://github.com/creativecommons/list">here</a>.
-        \n\n<a href="https://github.com/creativecommons/list/archive/master.zip">Download The List Source Code</a>
+        Our GitHub repo is <a href="https://github.com/creativecommons/list">https://github.com/creativecommons/list</a>.
+        \n\n<a href="https://github.com/creativecommons/list/archive/master.zip">Download The List Source Code</a>\n\n
+        &#169; 2014, 2015 Creative Commons Corporation. \nPortions based on GNU FM,\n
+        &#169; 2009-2015 Free Software Foundation, Inc
         \n\nThis program is free software: you can redistribute it and/or modify it under the terms
         of the GNU Affero General Public License as published by the Free Software Foundation, either
         version 3 of the License, or (at your option) any later version.
-        \n\n
-        This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+        \n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
         without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
         See the <a href="http://www.gnu.org/licenses/agpl-3.0.html">GNU Affero General Public License</a>
         for more details.
         \n\n<b>Partners</b>
         \nThe app is created with the generous support of the
         <a href="http://www.knightfoundation.org/">Knight Foundation</a>, and partners like the
-        <a href="https://archive.org/index.php">Internet Archive</a>
+        <a href="https://archive.org/">Internet Archive</a>
         \n\nCreative Commons is a global non-profit, supported by generous
         donations from people just like you who believe in shared content.
         \n\n<a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>

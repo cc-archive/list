@@ -4,7 +4,7 @@
 /.emacs.desktop
 /.emacs.desktop.lock
 *.elc
-*.apk
+#*.apk
 *.exe
 *.dmg
 auto-save-list

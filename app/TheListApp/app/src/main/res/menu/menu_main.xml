@@ -8,6 +8,6 @@
         android:orderInCategory="200" compat:showAsAction="never" />
     <item android:id="@+id/pick_categories" android:title="@string/pick_categories_menu_label"
         android:orderInCategory="300" compat:showAsAction="never"/>
-    <item android:id="@+id/remove_accounts" android:title="Remove Accounts"
+    <item android:id="@+id/remove_accounts" android:title="Debug only: Remove Accounts"
         android:orderInCategory="400" compat:showAsAction="never"/>
 </menu>
