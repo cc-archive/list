@@ -31,7 +31,7 @@ import java.util.HashMap;
 public class ListApplication extends Application {
 
     // The following line should be changed to include the correct property id.
-    private static final String PROPERTY_ID = "UA-57679207-1";
+    private static final String PROPERTY_ID = "UA-2010376-31";
 
     //Logging TAG
     private static final String TAG = "ListApp";
@@ -44,6 +44,7 @@ public class ListApplication extends Application {
 
     public enum TrackerName {
         GLOBAL_TRACKER,
+        APP_TRACKER,
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();

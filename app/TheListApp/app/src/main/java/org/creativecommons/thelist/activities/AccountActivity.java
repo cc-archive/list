@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -58,12 +59,10 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
 
-        //Google Analytics
-        Tracker t = ((ListApplication) AccountActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+        //Google Analytics Tracker
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
+        GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
+        ga.enableAutoActivityReports(getApplication());
 
         //UI Elements
         mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);
@@ -85,6 +84,18 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 .commit();
                 mFrameLayout.setClickable(true);
     } //OnCreate
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
     @Override
     public void onUserSignedIn(Bundle userData) {

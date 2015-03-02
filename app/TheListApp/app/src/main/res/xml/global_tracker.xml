@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-<integer name="ga_sessionTimeout">300</integer>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="TypographyDashes">
+
+<!-- The apps Analytics Tracking Id -->
+<string name="ga_trackingId">UA-2010376-31</string>
+
+<!-- Percentage of events to include in reports -->
+<string name="ga_sampleFrequency">100.0</string>
 
 <!-- Enable automatic Activity measurement -->
 <bool name="ga_autoActivityTracking">true</bool>
@@ -18,16 +25,17 @@
 <bool name="ga_reportUncaughtExceptions">true</bool>
 
 <!-- Treat events as test events and don't send to google -->
-<bool name="ga_dryRun">true</bool>
+<bool name="ga_dryRun">false</bool>
 
+<!--How long a session exists before giving up-->
 <integer name="ga_sessionTimeout">300</integer>
 
 <!-- The screen names that will appear in reports -->
-<screenName name="org.creativecommons.thelist.activities.MainActivity">Main Feed Activity</screenName>
-<screenName name="org.creativecommons.thelist.activities.RandomActivity">Random Item Suggestions Activity</screenName>
-<screenName name="org.creativecommons.thelist.activities.CategoryListActivity">Category List Activity</screenName>
-<screenName name="org.creativecommons.thelist.activities.StartActivity">Start Activity</screenName>
+<screenName name="org.creativecommons.thelist.activities.MainActivity">Main Feed</screenName>
+<screenName name="org.creativecommons.thelist.activities.RandomActivity">Random Item Suggestions</screenName>
+<screenName name="org.creativecommons.thelist.activities.CategoryListActivity">Pick Categories</screenName>
+<screenName name="org.creativecommons.thelist.activities.StartActivity">Start Screen</screenName>
+<screenName name="org.creativecommons.thelist.activities.AboutActivity">About The App</screenName>
+<screenName name="org.creativecommons.thelist.fragments.AccountFragment">Log Into Your CCID</screenName>
 
-<!--  The following value should be replaced with correct property id. -->
-<string name="ga_trackingId">UA-2010376-31</string>
 </resources>

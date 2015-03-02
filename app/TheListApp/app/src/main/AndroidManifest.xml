@@ -54,6 +54,15 @@
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
 
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.MainActivity" />
+        </activity>
+
         <!-- Authenticator -->
         <service android:name=".authentication.ListAuthenticatorService" >
             <intent-filter>
@@ -70,14 +79,9 @@
             android:name="com.google.android.gms.analytics.globalConfigResource"
             android:resource="@xml/global_tracker" />
 
-        <activity
-            android:name=".activities.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:parentActivityName=".activities.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.creativecommons.thelist.activities.MainActivity" />
-        </activity>
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
     </application>
 
 </manifest>

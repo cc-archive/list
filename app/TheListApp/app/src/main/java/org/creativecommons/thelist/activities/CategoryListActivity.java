@@ -40,6 +40,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -97,18 +98,8 @@ public class CategoryListActivity extends ActionBarActivity {
         mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(CategoryListActivity.this);
 
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if (toolbar != null) {
-//            setSupportActionBar(toolbar);
-//        }
-
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) CategoryListActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Load UI Elements
         //mProgressBar = (ProgressBar) findViewById(R.id.category_progressBar);
@@ -196,6 +187,18 @@ public class CategoryListActivity extends ActionBarActivity {
             }
         });
     } //onCreate
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {

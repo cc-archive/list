@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -77,15 +78,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mCurrentUser = new ListUser(StartActivity.this);
         am = AccountManager.get(getBaseContext());
 
-//        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
-//        instance.setAppOptOut(true);
-
         //Google Analytics Tracker
-//        Tracker t = ((ListApplication) StartActivity.this.getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName(TAG);
-//        t.send(new HitBuilders.AppViewBuilder().build());
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences
@@ -171,6 +165,18 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             }
         }); //StartButton ClickListener
     } //OnCreate
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
     @Override
     protected void onResume(){

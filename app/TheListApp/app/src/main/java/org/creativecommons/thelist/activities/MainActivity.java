@@ -54,6 +54,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
@@ -146,15 +147,10 @@ public class MainActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
         }
 
-//        GoogleAnalytics instance = GoogleAnalytics.getInstance(this);
-//        instance.setAppOptOut(true);
-//
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
+//        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
+//                ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
@@ -189,8 +185,21 @@ public class MainActivity extends ActionBarActivity {
     } //onCreate
 
     @Override
+    protected void onStart(){
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
         //Update menu for login/logout options
         invalidateOptionsMenu();
 

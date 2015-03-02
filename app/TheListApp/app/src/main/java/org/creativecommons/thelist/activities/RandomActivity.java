@@ -38,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -91,12 +92,7 @@ public class RandomActivity extends Activity {
         mCurrentUser = new ListUser(RandomActivity.this);
 
         //Google Analytics Tracker
-        Tracker t = ((ListApplication) RandomActivity.this.getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        t.setScreenName(TAG);
-        t.send(new HitBuilders.AppViewBuilder().build());
-
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //UI Elements
         mItemList = new ArrayList<>();
@@ -181,6 +177,19 @@ public class RandomActivity extends Activity {
                     getString(R.string.error_network_message));
         }
     } //onCreate
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        mItemList = null;
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
     private void updateView() {
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -309,10 +318,4 @@ public class RandomActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mItemList = null;
-    }
-}
+} //RandomActivity
