@@ -2,9 +2,18 @@
 title: The List by Creative Commons
 email: info@creativecommons.org
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+No one can be everywhere at once. But everyone can.
+
+NGOs, journalists, government agencies, and cultural institutions all
+need photographs to tell their story and educate others. But there’s
+no way for those organizations to be in the right place at the right
+time, every time. That’s where we come in.
+
+Through The List, organizations will provide lists of locations,
+people, and events that they need photographs of. And when users are
+in the right place at the right time, they can claim an item from the
+list and publish a photograph of it. All photos on The List are openly
+licensed, meaning that everyone can use them.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "https://thelist.creativecommons.org" # the base hostname & protocol for your site
 twitter_username: creativecommons
