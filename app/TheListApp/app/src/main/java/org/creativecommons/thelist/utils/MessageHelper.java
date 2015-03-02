@@ -105,13 +105,13 @@ public class MessageHelper {
     public void notifyUploadSuccess(String itemName){
         sendNotification(mContext, "The List",
                 itemName + " has been uploaded successfully!",
-                itemName + " Uploaded Successfully");
+                itemName + " uploaded successfully");
     }
 
     public void notifyUploadFail(String itemName){
         sendNotification(mContext, "The List",
                 "There was a problem uploading" + itemName ,
-                itemName + " Uploaded Failed");
+                itemName + " upload failed");
     }
 
     //DIALOGS
