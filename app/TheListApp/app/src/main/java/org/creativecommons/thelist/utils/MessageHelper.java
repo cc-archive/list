@@ -102,16 +102,16 @@ public class MessageHelper {
 
     //NOTIFICATIONS
 
-    public void notifyUploadSuccess(){
+    public void notifyUploadSuccess(String itemName){
         sendNotification(mContext, "The List",
-                "Your photo has been uploaded successfully!",
-                "List Photo Uploaded Successfully");
+                itemName + " has been uploaded successfully!",
+                itemName + " Uploaded Successfully");
     }
 
-    public void notifyUploadFail(){
+    public void notifyUploadFail(String itemName){
         sendNotification(mContext, "The List",
-                "There was a problem uploading your photo.",
-                "List Photo Uploaded Failed");
+                "There was a problem uploading" + itemName ,
+                itemName + " Uploaded Failed");
     }
 
     //DIALOGS

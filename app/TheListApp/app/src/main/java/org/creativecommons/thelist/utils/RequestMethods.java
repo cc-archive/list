@@ -129,7 +129,7 @@ public final class RequestMethods {
                             public void onResponse(String response) {
                                 //Get Response
                                 Log.v(TAG, "uploadPhoto > onResponse: " + response);
-                                mMessageHelper.notifyUploadSuccess();
+                                //mMessageHelper.notifyUploadSuccess();
                                 callback.onSuccess();
                             }
                         }, new Response.ErrorListener() {
@@ -137,7 +137,7 @@ public final class RequestMethods {
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
                         //TODO: add switch for all possible error codes
-                        mMessageHelper.notifyUploadFail();
+                        //mMessageHelper.notifyUploadFail();
                         callback.onFail();
                     }
                 }) {

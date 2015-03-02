@@ -319,7 +319,6 @@ public class MainActivity extends ActionBarActivity {
                                             (singleListItem.getString(ApiConstants.ITEM_ID));
                                     mItemList.add(listItem);
                                 } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
-                                    //TODO: QA (add error items to the top)
                                     MainListItem listItem = new MainListItem();
                                     listItem.setItemName
                                             (singleListItem.getString(ApiConstants.ITEM_NAME));
@@ -328,6 +327,7 @@ public class MainActivity extends ActionBarActivity {
                                     listItem.setItemID
                                             (singleListItem.getString(ApiConstants.ITEM_ID));
                                     listItem.setError(true);
+                                    //TODO: QA (add error items to the top)
                                     mItemList.add(0, listItem);
                                 } else {
                                     continue;
@@ -674,6 +674,8 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "On Upload Success");
+
+                        mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
                         mItemToBeUploaded = null;
                         //photoToBeUploaded = false;
                         displayUserListItems();
@@ -689,6 +691,8 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onFail() {
                         Log.d(TAG, "On Upload Fail");
+
+                        mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
                         //photoToBeUploaded = false;
                         //mItemlist.add(uploadItemPosition);
 
