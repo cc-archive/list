@@ -32,7 +32,6 @@ public class AboutActivity extends ActionBarActivity {
         if(aboutAppText != null) {
             aboutAppText.setMovementMethod(LinkMovementMethod.getInstance());
         }
-
     } //onCreate
 
     @Override

@@ -262,7 +262,6 @@ public class MainActivity extends ActionBarActivity {
                         getString(R.string.error_network_message));
                 return;
             }
-
             //Get usertoken to start request
             mCurrentUser.getToken(new ListUser.AuthCallback() {
                 @Override

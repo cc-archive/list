@@ -105,77 +105,88 @@ public class RandomActivity extends Activity {
         //TODO: add camera functionality?
         //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
-        if(mRequestMethods.isNetworkAvailable()) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            getRandomItemRequest();
-            //Yes Button Listener
-            yesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Add items to ItemList
-                    MainListItem listItem = new MainListItem();
-                    listItem.setItemID(mItemID);
-                    listItem.setItemName(mItemName);
-                    listItem.setMakerName(mMakerName);
-                    mItemList.add(listItem);
+        mRequestMethods.getRandomItems(new RequestMethods.ResponseCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                Log.v(TAG, "> getRandomListItems > onSuccess: " + response);
+                mRandomItemData = response;
+                updateView();
+            }
 
-                    //Toast: Confirm List Item has been added
-                    //TODO: add this to addItemToUserList callback
-                    final Toast toast = Toast.makeText(RandomActivity.this,
-                            "Added to Your List", Toast.LENGTH_SHORT);
-                    toast.show();
-                    new android.os.Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            toast.cancel();
-                        }
-                    }, 1000);
+            @Override
+            public void onFail(VolleyError error) {
+                Log.d(TAG, "> getRandomListItems > onFail: " + error.getMessage());
+                mMessageHelper.noItemsFound();
+                //TODO: Take user elsewhere if items don’t load
+            }
+        });
 
-                    //If logged in, add item to user’s list right away
-                    if (!(mCurrentUser.isTempUser())) {
-                        Log.v(TAG, "> isTempUser, user is logged in");
-                        mCurrentUser.addItemToUserList(mItemID);
-                    }
-                    //Display a new item
-                    updateView();
-                    //show doneButton if user has selected at least 3 items
-                    if (mItemList.size() == 3) { //once it has 3 items
-                        mDoneButton.setVisibility(View.VISIBLE);
-                    }
-                } //OnClick
-            }); //YesButton.setOnClickListener
+        //Add list item to my list
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add items to ItemList
+                MainListItem listItem = new MainListItem();
+                listItem.setItemID(mItemID);
+                listItem.setItemName(mItemName);
+                listItem.setMakerName(mMakerName);
+                mItemList.add(listItem);
 
-            //No Button Functionality
-            noButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    updateView();
-                    if(itemPositionCount >= 7 && mDoneButton.getVisibility() == View.INVISIBLE){
-                        mDoneButton.setVisibility(View.VISIBLE);
+                //Toast: Confirm List Item has been added
+                //TODO: add this to addItemToUserList callback
+                final Toast toast = Toast.makeText(RandomActivity.this,
+                        "Added to Your List", Toast.LENGTH_SHORT);
+                toast.show();
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
                     }
+                }, 1000);
+
+                //If logged in, add item to user’s list right away
+                if (!(mCurrentUser.isTempUser())) {
+                    Log.v(TAG, "> isTempUser, user is logged in");
+                    mCurrentUser.addItemToUserList(mItemID);
                 }
-            });
-
-            //Done Button Functionality
-            mDoneButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Get array of selected item IDS
-                    if(mCurrentUser.isTempUser()){
-                        saveTempUserItems();
-                    }
-
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-
+                //Display a new item
+                updateView();
+                //show doneButton if user has selected at least 3 items
+                if (mItemList.size() == 3) { //once it has 3 items
+                    mDoneButton.setVisibility(View.VISIBLE);
                 }
-            }); //Done Button
-        } else { //Display network error
-            mMessageHelper.showDialog(mContext,getString(R.string.error_network_title),
-                    getString(R.string.error_network_message));
-        }
+            } //OnClick
+        }); //YesButton.setOnClickListener
+
+        //Decline adding list item to my list
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateView();
+                if(itemPositionCount >= 7 && mDoneButton.getVisibility() == View.INVISIBLE){
+                    mDoneButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        //I’m done with picking items
+        mDoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Get array of selected item IDS
+                if(mCurrentUser.isTempUser()){
+                    saveTempUserItems();
+                }
+
+                //Clear ItemList
+                mItemList.clear();
+
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        }); //Done Button
     } //onCreate
 
     @Override
@@ -187,7 +198,6 @@ public class RandomActivity extends Activity {
     @Override
     protected void onStop(){
         super.onStop();
-        mItemList = null;
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
@@ -204,6 +214,10 @@ public class RandomActivity extends Activity {
                     if(mCurrentUser.isTempUser()){
                         saveTempUserItems();
                     }
+
+                    //Clear ItemList
+                    mItemList.clear();
+
                     Intent intent = new Intent(RandomActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -252,40 +266,6 @@ public class RandomActivity extends Activity {
 
 //    ------------------------------------------------------------------------------------------
 //    ------------------------------------------------------------------------------------------
-
-    //GET Random Items from API
-    private void getRandomItemRequest() {
-
-        if(!(mRequestMethods.isNetworkAvailable())){
-            mMessageHelper.showDialog(mContext,getString(R.string.error_network_title),
-                    getString(R.string.error_network_message));
-            return;
-        }
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = ApiConstants.GET_RANDOM_ITEMS;
-
-        JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //Handle Data
-                        mRandomItemData = response;
-                        Log.v("HI RANDOM DATA", response.toString());
-                        updateView();
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mMessageHelper.showDialog(mContext,"Oops!",
-                        "We couldn’t find any items for you");
-
-                //TODO: Take user elsewhere if items don’t load
-            }
-        });
-        queue.add(randomItemRequest);
-    } //getRandomItemRequest
 
     //Parse List Objects of List Items and return list of Item IDS
     public List<String> getItemIds(List<MainListItem> list){

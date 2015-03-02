@@ -33,16 +33,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
@@ -102,7 +95,6 @@ public class CategoryListActivity extends ActionBarActivity {
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Load UI Elements
-        //mProgressBar = (ProgressBar) findViewById(R.id.category_progressBar);
         mGridView = (GridView) findViewById(R.id.categoryGrid);
         mNextButton = (Button) findViewById(R.id.nextButton);
         mNextButton.setVisibility(View.GONE);
@@ -110,6 +102,37 @@ public class CategoryListActivity extends ActionBarActivity {
         //Set List Adapter
         adapter = new CategoryListAdapter(this,mCategoryList);
         mGridView.setAdapter(adapter);
+
+        //If user is logged in, request any pre-selected categories
+        mRequestMethods.getUserCategories(new RequestMethods.ResponseCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
+                Log.v("USER CATS", "THESE ARE THEM ^^");
+            }
+
+            @Override
+            public void onFail(VolleyError error) {
+                Log.v(TAG, "> getUserCategories > onFail " + error.toString());
+            }
+        });
+
+        //Get Categories
+        mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                Log.v(TAG, "> getCategories > onSuccess: " + response);
+                mCategoryData = response;
+                updateList();
+            }
+
+            @Override
+            public void onFail(VolleyError error) {
+                Log.d(TAG, "> getCategories > onFail: " + error.getMessage());
+                mMessageHelper.showDialog(mContext, getString(R.string.error_title),
+                        getString(R.string.error_message));
+            }
+        });
 
         //Category Selection
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,40 +164,34 @@ public class CategoryListActivity extends ActionBarActivity {
             }
         });
 
-        //If Network Connection is available, Execute getDataTask
-        if(mRequestMethods.isNetworkAvailable()) {
-            //mProgressBar.setVisibility(View.VISIBLE);
-            getCategoriesRequest();
-        }
-        else {
-            Toast.makeText(this, "Network is unavailable", Toast.LENGTH_LONG).show();
-        }
-
         //Next Button: handle User’s Category Preferences
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //If logged in, put to user profile, else create sharedPreference
-                if((mCurrentUser.isTempUser())) {
-                    Log.v(TAG, "User is logged in so no preferences are being saved");
-                    //storeCategoriesRequest();
-                } else {
-                    SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-                    int length = positions.size();
-                    //Array of user selected categories
-                    List<Integer> userCategories = new ArrayList<>();
+                SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+                int length = positions.size();
+                //Array of user selected categories
+                List<Integer> userCategories = new ArrayList<>();
 
-                    for(int i = 0; i < length; i++) {
-                        int itemPosition = positions.keyAt(i);
-                        CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
-                        int id = item.getCategoryID();
-                        userCategories.add(id);
+                for(int i = 0; i < length; i++) {
+                    int itemPosition = positions.keyAt(i);
+                    CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
+                    int id = item.getCategoryID();
+                    userCategories.add(id);
+
+                    //If logged in, add category to user’s profile
+                    if(!(mCurrentUser.isTempUser())){
+                        mRequestMethods.addCategory(String.valueOf(id));
                     }
+                }
+
+                if(mCurrentUser.isTempUser()){ //TEMP USER
                     //Save user categories to shared preferences
                     mSharedPref.SaveSharedPreference
                             (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
                 }
+
                 //Navigate to Random Activity
                 //TODO: make category list activity into a fragment so there is no need for this
                 if(mCurrentUser.isTempUser() && mSharedPref.getUserItemCount() < 3){
@@ -225,33 +242,6 @@ public class CategoryListActivity extends ActionBarActivity {
             adapter.notifyDataSetChanged();
         }
     } //updateList
-
-    //GET Categories from API
-    private void getCategoriesRequest() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        //Genymotion Emulator
-        String url = ApiConstants.GET_CATEGORIES;
-
-        JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.v(TAG, "> getCategoriesRequest > onResponse: " + response);
-                        //Handle Data
-                        mCategoryData = response;
-                        updateList();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "> getCategoriesRequest > onErrorResponse: " + error.getMessage());
-                mMessageHelper.showDialog(mContext, getString(R.string.error_title),
-                        getString(R.string.error_message));
-            }
-        });
-        queue.add(getCategoriesRequest);
-    } //getCategoriesRequest
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

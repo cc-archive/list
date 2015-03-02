@@ -19,27 +19,23 @@
 
 package org.creativecommons.thelist.utils;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
-import org.creativecommons.thelist.activities.StartActivity;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +58,11 @@ public final class RequestMethods {
     public interface RequestCallback {
         void onSuccess();
         void onFail();
+    }
+
+    public interface ResponseCallback {
+        void onSuccess(JSONArray response);
+        void onFail(VolleyError error);
     }
 
     //Check if thar be internets (public helper)
@@ -94,7 +95,226 @@ public final class RequestMethods {
     // USER LIST REQUESTS
     // --------------------------------------------------------
 
+    //GET Random Items from API
+    public void getRandomItems(final ResponseCallback callback) {
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
 
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        String url = ApiConstants.GET_RANDOM_ITEMS;
+
+        JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        callback.onSuccess(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callback.onFail(error);
+            }
+        });
+        queue.add(randomItemRequest);
+    } //getRandomItemRequest
+
+
+
+
+    // --------------------------------------------------------
+    // CATEGORY REQUESTS
+    // --------------------------------------------------------
+
+    //GET List of All Categories
+    public void getCategories(final ResponseCallback callback) {
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        String url = ApiConstants.GET_CATEGORIES;
+
+        JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.v(TAG, "> getCategories > onResponse: " + response);
+                        callback.onSuccess(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "> getCategories > onErrorResponse: " + error.getMessage());
+                callback.onFail(error);
+            }
+        });
+        queue.add(getCategoriesRequest);
+    } //getCategories
+
+    //GET User Selected Categories from API
+    public void getUserCategories(final ResponseCallback callback) {
+
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.GET_USER_CATEGORIES + mCurrentUser.getUserID();
+
+                JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                Log.v(TAG, "> getCategories > onResponse: " + response);
+                                callback.onSuccess(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "> getCategories > onErrorResponse: " + error.getMessage());
+                        callback.onFail(error);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(getCategoriesRequest);
+            }
+        });
+    } //getUserCategories
+
+    //Add all categories to User Account (during login)
+    public void addTempCategoriesToUser(){
+
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        Log.v(TAG," > addTempCategoriesToUser, started");
+        JSONArray listCategoryPref;
+        listCategoryPref = mSharedPref.RetrieveCategorySharedPreference();
+
+        try{
+            if (listCategoryPref != null && listCategoryPref.length() > 0) {
+                Log.v("LIST ITEM PREF: ", listCategoryPref.toString());
+                for (int i = 0; i < listCategoryPref.length(); i++) {
+                    Log.v("ITEMS", "ARE BEING ADDED");
+                    addCategory(listCategoryPref.getString(i));
+                }
+            }
+        } catch(JSONException e){
+            Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
+        }
+    } //addTempCategoriesToUser
+
+    //Add Single Category to User Account
+    public void addCategory(final String catId){
+
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.ADD_CATEGORY + mCurrentUser.getUserID() + "/" + catId;
+
+                //Add single item to user list
+                StringRequest postCategory = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.v(TAG, "> addCategory > OnResponse: " + response);
+                                Log.v(TAG, "AN ITEM IS BEING ADDED");
+                                //TODO: on success remove the item from the sharedPreferences
+                                mSharedPref.RemoveUserCategoryPreference(catId);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
+                        //TODO: Add “not successful“ toast
+                        mMessageHelper.showDialog(mContext,
+                                mContext.getString(R.string.error_title),
+                                mContext.getString(R.string.error_message));
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(postCategory);
+            }
+        });
+    } //addCategory
+
+    public void removeCategoryFromUser(final String catId){
+
+        if(mCurrentUser.isTempUser()){ //TEMP USER
+
+            //If not logged in, remove item from sharedPreferences
+            mSharedPref.RemoveUserItemPreference(catId);
+
+        } else { //If logged in, remove from DB
+
+            if(!(RequestMethods.isNetworkAvailable(mContext))){
+                mMessageHelper.networkFailMessage();
+                return;
+            }
+
+            mCurrentUser.getToken(new ListUser.AuthCallback() {
+                @Override
+                public void onSuccess(final String authtoken) { //getToken and then start request
+                    RequestQueue queue = Volley.newRequestQueue(mContext);
+                    String url = ApiConstants.REMOVE_CATEGORY + mCurrentUser.getUserID() + "/" + catId;
+
+                    StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    //get Response
+                                    Log.v(TAG, "> removeCategoryFromUser > onResponse: " + response);
+                                    Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                                    //TODO: do something with response?
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //TODO: Add “not successful“ toast
+                            Log.d(TAG, " > removeCategoryFromUser > onErrorResponse: " + error.getMessage());
+                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
+                                    mContext.getString(R.string.error_message));
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put(ApiConstants.USER_TOKEN, authtoken);
+                            return params;
+                        }
+                    };
+                    queue.add(deleteItemRequest);
+                }
+            });
+        }
+    } //removeCategoryFromUser
 
 
     // --------------------------------------------------------

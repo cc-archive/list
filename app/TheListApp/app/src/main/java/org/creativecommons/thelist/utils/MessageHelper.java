@@ -91,9 +91,22 @@ public class MessageHelper {
     // --------------------------------------------------------
 
     //TODO: replace frequently used messages w/ pre-created showDialogs
-    public void NetworkFailMessage(){
-
+    public void networkFailMessage(){
+        showDialog(mContext, mContext.getString(R.string.error_network_title),
+                mContext.getString(R.string.error_network_message));
     }
+
+
+    // --------------------------------------------------------
+    // LIST ITEM MESSAGES
+    // --------------------------------------------------------
+
+    public void noItemsFound(){
+        showDialog(mContext,"Oops!",
+                "We couldn’t find any items for you");
+        //used in RandomActivity
+    }
+
 
 
     // --------------------------------------------------------
