@@ -18,8 +18,8 @@ list and publish a photograph of it.
 | Role  | Person |
 | ------------- | ------------- |
 | Driver  | [Matt](https://github.com/mattl)  |
-| Approvers  | [Ryan](https://github.com/ryanmerkley), [Sarah](http://github.com/sarahpearson) |
-| Contributors | [Jane](https://github.com/janeatcc) |
+| Accountable  | [Ryan](https://github.com/ryanmerkley), [Sarah](http://github.com/sarahpearson) |
+| Consulted | [Jane](https://github.com/janeatcc) |
 | Informed | Add yourselves here |
 
 ## Other things
