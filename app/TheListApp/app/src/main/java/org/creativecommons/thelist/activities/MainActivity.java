@@ -610,7 +610,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch(requestCode){
             case PhotoConstants.PICK_PHOTO_REQUEST:
             case PhotoConstants.TAKE_PHOTO_REQUEST:
@@ -646,7 +645,6 @@ public class MainActivity extends ActionBarActivity {
 
     //Start Upload + Respond
     public void startPhotoUpload(){
-        mUploadProgressBar.setVisibility(View.VISIBLE);
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
             mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
                 @Override
@@ -677,6 +675,7 @@ public class MainActivity extends ActionBarActivity {
     } //startPhotoUpload
 
     public void performUpload(){
+        mUploadProgressBar.setVisibility(View.VISIBLE);
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override

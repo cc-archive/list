@@ -103,19 +103,6 @@ public class CategoryListActivity extends ActionBarActivity {
         adapter = new CategoryListAdapter(this,mCategoryList);
         mGridView.setAdapter(adapter);
 
-        //If user is logged in, request any pre-selected categories
-        mRequestMethods.getUserCategories(new RequestMethods.ResponseCallback() {
-            @Override
-            public void onSuccess(JSONArray response) {
-                Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
-                Log.v("USER CATS", "THESE ARE THEM ^^");
-            }
-
-            @Override
-            public void onFail(VolleyError error) {
-                Log.v(TAG, "> getUserCategories > onFail " + error.toString());
-            }
-        });
 
         //Get Categories
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
@@ -134,15 +121,44 @@ public class CategoryListActivity extends ActionBarActivity {
             }
         });
 
+        if(!(mCurrentUser.isTempUser())){
+            //If user is logged in, request any pre-selected categories
+            mRequestMethods.getUserCategories(new RequestMethods.ResponseCallback() {
+                @Override
+                public void onSuccess(JSONArray response) {
+                    Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
+                    Log.v("USER CATS", "THESE ARE THEM ^^");
+
+                    if(response.length() > 0){
+                        //TODO: check each of these
+                    }
+                }
+
+                @Override
+                public void onFail(VolleyError error) {
+                    Log.v(TAG, "> getUserCategories > onFail " + error.toString());
+                }
+            });
+        } else {
+            //TODO: Check for temp user Preferences
+        }
+
         //Category Selection
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
+                //Get item clicked + its category id
+                CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(position);
+                String catId = String.valueOf(item.getCategoryID());
+
                 if(mGridView.isItemChecked(position)) {
                     checkmarkView.setVisibility(View.VISIBLE);
+                    mRequestMethods.addCategory(catId);
+
                 } else {
                     checkmarkView.setVisibility(View.GONE);
+                    mRequestMethods.removeCategory(catId);
                 }
                 //Count how many items are checked: if at least 3, show Next Button
                 SparseBooleanArray positions = mGridView.getCheckedItemPositions();
@@ -162,7 +178,7 @@ public class CategoryListActivity extends ActionBarActivity {
                     mNextButton.setVisibility(View.GONE);
                 }
             }
-        });
+        }); //setOnItemClickListener
 
         //Next Button: handle User’s Category Preferences
         mNextButton.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +189,7 @@ public class CategoryListActivity extends ActionBarActivity {
                 int length = positions.size();
                 //Array of user selected categories
                 List<Integer> userCategories = new ArrayList<>();
+                Boolean TempUser = mCurrentUser.isTempUser();
 
                 for(int i = 0; i < length; i++) {
                     int itemPosition = positions.keyAt(i);
@@ -181,7 +198,7 @@ public class CategoryListActivity extends ActionBarActivity {
                     userCategories.add(id);
 
                     //If logged in, add category to user’s profile
-                    if(!(mCurrentUser.isTempUser())){
+                    if(!TempUser){
                         mRequestMethods.addCategory(String.valueOf(id));
                     }
                 }

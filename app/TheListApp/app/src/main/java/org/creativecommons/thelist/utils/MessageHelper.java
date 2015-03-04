@@ -107,8 +107,6 @@ public class MessageHelper {
         //used in RandomActivity
     }
 
-
-
     // --------------------------------------------------------
     // PHOTO REQUEST MESSAGES
     // --------------------------------------------------------

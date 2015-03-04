@@ -340,8 +340,7 @@ public class ListUser implements ServerAuthenticate {
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
         if(!(RequestMethods.isNetworkAvailable(mContext))){
-            mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
-                    mActivity.getString(R.string.error_network_message));
+            mMessageHelper.networkFailMessage();
             return;
         }
 
@@ -434,8 +433,7 @@ public class ListUser implements ServerAuthenticate {
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
         if(!(RequestMethods.isNetworkAvailable(mContext))){
-            mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
-                    mActivity.getString(R.string.error_network_message));
+            mMessageHelper.networkFailMessage();
             return;
         }
         //Get sessionToken
@@ -480,7 +478,6 @@ public class ListUser implements ServerAuthenticate {
     } //addItemToUserList
 
     //REMOVE SINGLE item from user list
-    //TODO: FILL IN WITH REAL API INFO
     public void removeItemFromUserList(final String itemID){
 
         if(isTempUser()){

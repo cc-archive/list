@@ -78,6 +78,16 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mCurrentUser = new ListUser(StartActivity.this);
         am = AccountManager.get(getBaseContext());
 
+        if(!(mCurrentUser.isTempUser())) {
+            Log.v(TAG, "START: USER IS LOGGED IN");
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else {
+            Log.v(TAG, "START: USER IS NOT LOGGED IN");
+        }
+
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 

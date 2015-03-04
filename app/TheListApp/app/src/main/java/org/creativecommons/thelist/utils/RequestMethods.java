@@ -172,13 +172,13 @@ public final class RequestMethods {
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
-                                Log.v(TAG, "> getCategories > onResponse: " + response);
+                                //Log.v(TAG, "> getUserCategories > onResponse: " + response);
                                 callback.onSuccess(response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "> getCategories > onErrorResponse: " + error.getMessage());
+                        //Log.d(TAG, "> getUserCategories > onErrorResponse: " + error.getMessage());
                         callback.onFail(error);
                     }
                 }) {
@@ -215,7 +215,7 @@ public final class RequestMethods {
                 }
             }
         } catch(JSONException e){
-            Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
+            Log.d(TAG, "> addTempCategoriesToUser: " + e.getMessage());
         }
     } //addTempCategoriesToUser
 
@@ -239,14 +239,14 @@ public final class RequestMethods {
                             @Override
                             public void onResponse(String response) {
                                 Log.v(TAG, "> addCategory > OnResponse: " + response);
-                                Log.v(TAG, "AN ITEM IS BEING ADDED");
-                                //TODO: on success remove the item from the sharedPreferences
+                                Log.v(TAG, "A CATEGORY IS BEING ADDED");
+
                                 mSharedPref.RemoveUserCategoryPreference(catId);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
+                        Log.d(TAG, " > addCategory > onErrorResponse: " + error.getMessage());
                         //TODO: Add “not successful“ toast
                         mMessageHelper.showDialog(mContext,
                                 mContext.getString(R.string.error_title),
@@ -265,7 +265,7 @@ public final class RequestMethods {
         });
     } //addCategory
 
-    public void removeCategoryFromUser(final String catId){
+    public void removeCategory(final String catId){
 
         if(mCurrentUser.isTempUser()){ //TEMP USER
 
@@ -290,7 +290,7 @@ public final class RequestMethods {
                                 @Override
                                 public void onResponse(String response) {
                                     //get Response
-                                    Log.v(TAG, "> removeCategoryFromUser > onResponse: " + response);
+                                    Log.v(TAG, "> removeCategory > onResponse: " + response);
                                     Log.v(TAG, "AN ITEM IS BEING REMOVED");
                                     //TODO: do something with response?
                                 }
@@ -298,7 +298,7 @@ public final class RequestMethods {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             //TODO: Add “not successful“ toast
-                            Log.d(TAG, " > removeCategoryFromUser > onErrorResponse: " + error.getMessage());
+                            Log.d(TAG, " > removeCategory > onErrorResponse: " + error.getMessage());
                             mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
                                     mContext.getString(R.string.error_message));
                         }
@@ -314,7 +314,7 @@ public final class RequestMethods {
                 }
             });
         }
-    } //removeCategoryFromUser
+    } //removeCategory
 
 
     // --------------------------------------------------------

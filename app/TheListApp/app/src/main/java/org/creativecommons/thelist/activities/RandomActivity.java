@@ -269,7 +269,7 @@ public class RandomActivity extends Activity {
 
     //Parse List Objects of List Items and return list of Item IDS
     public List<String> getItemIds(List<MainListItem> list){
-        List<String>arrayList = new ArrayList<String>();
+        List<String>arrayList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             String singleID = list.get(i).getItemID();
             arrayList.add(singleID);
