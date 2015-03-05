@@ -37,8 +37,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -47,7 +45,6 @@ import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
@@ -72,24 +69,15 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Google Analytics Tracker
+        //Log.v(TAG, "ON CREATED CALLED – BEFORE TRACKER CALLED");
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
+        //Log.v(TAG, "ON CREATED CALLED – AFTER TRACKER CALLED");
         setContentView(R.layout.activity_start);
         mContext = this;
         mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(StartActivity.this);
         am = AccountManager.get(getBaseContext());
-
-        if(!(mCurrentUser.isTempUser())) {
-            Log.v(TAG, "START: USER IS LOGGED IN");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else {
-            Log.v(TAG, "START: USER IS NOT LOGGED IN");
-        }
-
-        //Google Analytics Tracker
-        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences
@@ -97,7 +85,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
         //TODO: add google analytics opt-in
         //Display Google Analytics Message
-        if(!(mSharedPref.gaMessageViewed())){
+        if(!(mSharedPref.getGaMessageViewed())){
             //The beta version of this app uses google analytics message
             MessageHelper mh = new MessageHelper(mContext);
             mh.showDialog(mContext, "The List Beta Uses Google Analytics", "Hey just a heads up that " +
@@ -116,12 +104,13 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StartActivity.this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                //Load explainerFragment
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container,explainerFragment)
+                        .commit();
+                mFrameLayout.setClickable(true);
             }
-        }); //startButton
+        }); //StartButton ClickListener
 
         //“I already have an account”
         mAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -163,52 +152,49 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         if(mTermsLink != null){
             mTermsLink.setMovementMethod(LinkMovementMethod.getInstance());
         }
-
-        mStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Load explainerFragment
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container,explainerFragment)
-                        .commit();
-                mFrameLayout.setClickable(true);
-            }
-        }); //StartButton ClickListener
     } //OnCreate
 
     @Override
-    protected void onStart(){
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        //TODO: Check if user token is valid, redirect to MainActivity if yes
+    protected void onRestart(){
+        super.onRestart();
+        Log.v(TAG, "ON RESTART CALLED");
         if(!(mCurrentUser.isTempUser())) {
-            Log.v(TAG, "START: USER IS LOGGED IN");
+            Log.v(TAG, "ONRESTART: USER IS LOGGED IN");
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
-            Log.v(TAG, "START: USER IS NOT LOGGED IN");
+            Log.v(TAG, "ONRESTART: USER IS NOT LOGGED IN");
+        }
+        Log.v(TAG, "ON RESTART CALLED – AFTER START MAIN INTENT");
+    } //onRestart
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        Log.v(TAG, "ON START CALLED");
+        if(!(mCurrentUser.isTempUser())) {
+            Log.v(TAG, "ONSTART: USER IS LOGGED IN");
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else {
+            Log.v(TAG, "ONSTART: USER IS NOT LOGGED IN");
         }
 
-        //TODO: better way to do this?
-        //If explainer is still there, get rid of it
-        getSupportFragmentManager().beginTransaction()
-                .remove(explainerFragment)
-                .commit();
-    }
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        Log.v(TAG, "ON START CALLED – AFTER GA CALLED");
+    } //onStart
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.v(TAG, "ON STOP CALLED");
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        Log.v(TAG, "ON STOP CALLED – AFTER GA CALLED");
+    } //onStop
 
     @Override
     public void onNextClicked() {

@@ -415,7 +415,7 @@ public class ListUser implements ServerAuthenticate {
     public void addSavedItemsToUserList(){
         Log.v(TAG," > addSavedItemsToUserList, started");
         JSONArray listItemPref;
-        listItemPref = mSharedPref.RetrieveUserItemPreference();
+        listItemPref = mSharedPref.getUserItemPreference();
 
         try{
             if (listItemPref != null && listItemPref.length() > 0) {
@@ -452,7 +452,7 @@ public class ListUser implements ServerAuthenticate {
                                 Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
                                 Log.v(TAG,"AN ITEM IS BEING ADDED");
                                 //TODO: on success remove the item from the sharedPreferences
-                                mSharedPref.RemoveUserItemPreference(itemID);
+                                mSharedPref.deleteUserItemPreference(itemID);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -482,7 +482,7 @@ public class ListUser implements ServerAuthenticate {
 
         if(isTempUser()){
             //If not logged in, remove item from sharedPreferences
-            mSharedPref.RemoveUserItemPreference(itemID);
+            mSharedPref.deleteUserItemPreference(itemID);
 
         } else { //If logged in, remove from DB
             if(!(RequestMethods.isNetworkAvailable(mContext))){

@@ -95,7 +95,7 @@ public final class RequestMethods {
     // USER LIST REQUESTS
     // --------------------------------------------------------
 
-    //GET Random Items from API
+    //GET Random List Items
     public void getRandomItems(final ResponseCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
@@ -120,7 +120,45 @@ public final class RequestMethods {
         queue.add(randomItemRequest);
     } //getRandomItemRequest
 
+    //GET User List Items
 
+    public void getUserItems(final ResponseCallback callback){
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
+
+                JsonArrayRequest userListRequest = new JsonArrayRequest(url,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                callback.onSuccess(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG , "> requestUserListItems > onErrorResponse: " + error.getMessage());
+                        callback.onFail(error);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(userListRequest);
+            }
+        });
+    } //requestUserListItems
 
 
     // --------------------------------------------------------
@@ -204,7 +242,7 @@ public final class RequestMethods {
 
         Log.v(TAG," > addTempCategoriesToUser, started");
         JSONArray listCategoryPref;
-        listCategoryPref = mSharedPref.RetrieveCategorySharedPreference();
+        listCategoryPref = mSharedPref.getCategorySharedPreference();
 
         try{
             if (listCategoryPref != null && listCategoryPref.length() > 0) {
@@ -241,7 +279,7 @@ public final class RequestMethods {
                                 Log.v(TAG, "> addCategory > OnResponse: " + response);
                                 Log.v(TAG, "A CATEGORY IS BEING ADDED");
 
-                                mSharedPref.RemoveUserCategoryPreference(catId);
+                                mSharedPref.deleteUserCategoryPreference(catId);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -270,7 +308,7 @@ public final class RequestMethods {
         if(mCurrentUser.isTempUser()){ //TEMP USER
 
             //If not logged in, remove item from sharedPreferences
-            mSharedPref.RemoveUserItemPreference(catId);
+            mSharedPref.deleteUserItemPreference(catId);
 
         } else { //If logged in, remove from DB
 

@@ -33,14 +33,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
@@ -243,7 +237,7 @@ public class RandomActivity extends Activity {
     public void saveTempUserItems(){
         List<String> userItemList = getItemIds(mItemList);
 
-        JSONArray oldItemArray = mSharedPref.RetrieveUserItemPreference();
+        JSONArray oldItemArray = mSharedPref.getUserItemPreference();
         if(oldItemArray != null) {
             for (int i = 0; i < oldItemArray.length(); i++) {
                 try {
@@ -255,11 +249,11 @@ public class RandomActivity extends Activity {
         }
         Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());
         //Save Array as String to sharedPreferences
-        mSharedPref.SaveSharedPreference
+        mSharedPref.saveSharedPreference
                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
                         userItemList.toString());
 
-        String sharedPref = mSharedPref.RetrieveSharedPreferenceList
+        String sharedPref = mSharedPref.getSharedPreferenceList
                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
         Log.v("ALL ITEMS IN USER PREF", sharedPref);
     }

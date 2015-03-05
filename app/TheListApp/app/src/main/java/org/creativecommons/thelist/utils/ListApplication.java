@@ -20,8 +20,10 @@
 package org.creativecommons.thelist.utils;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
@@ -50,15 +52,40 @@ public class ListApplication extends Application {
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
     public synchronized Tracker getTracker(TrackerName trackerId) {
+        Log.d(TAG, "getTracker()");
         if (!mTrackers.containsKey(trackerId)) {
-
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            Tracker t = analytics.newTracker(R.xml.global_tracker);
-            mTrackers.put(trackerId, t);
 
+            analytics.getLogger().setLogLevel(Logger.LogLevel.INFO);
+            //analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+
+            // Global GA Settings
+            // <!-- Google Analytics SDK V4 BUG20141213 Using a GA global xml freezes the app! Do config by coding. -->
+            analytics.setDryRun(false);
+            analytics.enableAutoActivityReports(this);
+            analytics.setLocalDispatchPeriod(30);
+
+
+            // Create a new tracker
+            Tracker t = (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(PROPERTY_ID) : null;
+            if (t != null) {
+                //t.enableAdvertisingIdCollection(true);
+                t.setSampleRate(100.0);
+                t.setSessionTimeout(300);
+                t.setAnonymizeIp(true);
+                t.enableExceptionReporting(true);
+                t.enableAutoActivityTracking(true);
+            } else {
+                Log.v(TAG, "TRACKER t: is NULL");
+            }
+            mTrackers.put(trackerId, t);
+            Log.v(TAG, "put mTrackers: " + trackerId.toString());
         }
+        Log.v(TAG, "return mTrackers");
         return mTrackers.get(trackerId);
     }
+
+
 }
 
 

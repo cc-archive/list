@@ -189,7 +189,7 @@ public class CategoryListActivity extends ActionBarActivity {
                 int length = positions.size();
                 //Array of user selected categories
                 List<Integer> userCategories = new ArrayList<>();
-                Boolean TempUser = mCurrentUser.isTempUser();
+                //Boolean TempUser = mCurrentUser.isTempUser();
 
                 for(int i = 0; i < length; i++) {
                     int itemPosition = positions.keyAt(i);
@@ -198,19 +198,18 @@ public class CategoryListActivity extends ActionBarActivity {
                     userCategories.add(id);
 
                     //If logged in, add category to user’s profile
-                    if(!TempUser){
-                        mRequestMethods.addCategory(String.valueOf(id));
-                    }
+//                    if(!TempUser){
+//                        mRequestMethods.addCategory(String.valueOf(id));
+//                    }
                 }
 
                 if(mCurrentUser.isTempUser()){ //TEMP USER
                     //Save user categories to shared preferences
-                    mSharedPref.SaveSharedPreference
+                    mSharedPref.saveSharedPreference
                             (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
                 }
 
-                //Navigate to Random Activity
-                //TODO: make category list activity into a fragment so there is no need for this
+                //Navigate to Random Activity if temp has low item count
                 if(mCurrentUser.isTempUser() && mSharedPref.getUserItemCount() < 3){
                     Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
                     startActivity(intent);

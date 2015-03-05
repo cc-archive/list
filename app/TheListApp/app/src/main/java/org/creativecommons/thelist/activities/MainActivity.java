@@ -28,7 +28,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,14 +48,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -85,10 +78,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -147,10 +138,10 @@ public class MainActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
         }
 
+        Log.v(TAG, "ON CREATED CALLED – BEFORE TRACKER CALLED");
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-//        Tracker t = ((ListApplication) MainActivity.this.getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
+        Log.v(TAG, "ON CREATED CALLED – AFTER TRACKER CALLED");
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
@@ -185,20 +176,31 @@ public class MainActivity extends ActionBarActivity {
     } //onCreate
 
     @Override
+    protected void onRestart(){
+        super.onRestart();
+        Log.v(TAG, "ON RESTART CALLED");
+    }
+
+    @Override
     protected void onStart(){
         super.onStart();
+        Log.v(TAG, "ON START CALLED");
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        Log.v(TAG, "ON START CALLED – AFTER GA CALLED");
     }
 
     @Override
     protected void onStop(){
         super.onStop();
+        Log.v(TAG, "ON STOP CALLED");
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        Log.v(TAG, "ON STOP CALLED – AFTER GA CALLED");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.v(TAG, "ON RESUME CALLED");
 
         //Update menu for login/logout options
         invalidateOptionsMenu();
@@ -218,7 +220,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
-            displayUserListItems();
+            displayUserItems();
             Log.v("NOT A TEMP: ", "legit user");
 
         } else { //if user is a temp
@@ -226,7 +228,7 @@ public class MainActivity extends ActionBarActivity {
             if(mItemList.size() == 0){
                 Log.v("THERE ARE NO ITEMS: ", "Annd not logged in");
                 mRecyclerView.setVisibility(View.INVISIBLE);
-                displayUserListItems();
+                displayUserItems();
             } else {
                 Log.v("THERE ARE ITEMS: ", "Annd not logged in");
                 mFeedAdapter.notifyDataSetChanged();
@@ -235,38 +237,69 @@ public class MainActivity extends ActionBarActivity {
         }
     } //onResume
 
-    //For temp users displayUserListItems:
-    // Check if all items have been returned from API before displaying list
-    public void CheckComplete() {
-        Log.v("Check complete", "start");
-        for(int i = 0; i < mItemList.size(); i++) {
-            if (!mItemList.get(i).completed) {
-                return;
-            }
-        }
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mFab.show();
-        mFab.setVisibility(View.VISIBLE);
-        mFeedAdapter.notifyDataSetChanged();
-        mRecyclerView.setVisibility(View.VISIBLE);
-    } //CheckComplete
+    //----------------------------------------------
+    //LIST ITEM REQUEST + UPDATE VIEW
+    //----------------------------------------------
 
-    //GET USER LIST ITEMS
-    private void displayUserListItems() {
+    private void displayUserItems() {
         JSONArray itemIds;
 
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
-            Log.v("HELLO", "this user is logged in");
-            if(!(mRequestMethods.isNetworkAvailable())){
-                mMessageHelper.showDialog(mContext,getString(R.string.error_network_title),
-                        getString(R.string.error_network_message));
-                return;
-            }
-            //Get usertoken to start request
-            mCurrentUser.getToken(new ListUser.AuthCallback() {
+            mRequestMethods.getUserItems(new RequestMethods.ResponseCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
-                    requestUserListItems(authtoken);
+                public void onSuccess(JSONArray response) {
+                    Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
+                    mItemList.clear();
+
+                    for(int i=0; i < response.length(); i++) {
+                        try {
+                            JSONObject singleListItem = response.getJSONObject(i);
+                            //Only show items in the user’s list that have not been completed
+                            if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
+                                MainListItem listItem = new MainListItem();
+                                listItem.setItemName
+                                        (singleListItem.getString(ApiConstants.ITEM_NAME));
+                                listItem.setMakerName
+                                        (singleListItem.getString(ApiConstants.MAKER_NAME));
+                                listItem.setItemID
+                                        (singleListItem.getString(ApiConstants.ITEM_ID));
+                                mItemList.add(listItem);
+                            } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
+                                MainListItem listItem = new MainListItem();
+                                listItem.setItemName
+                                        (singleListItem.getString(ApiConstants.ITEM_NAME));
+                                listItem.setMakerName
+                                        (singleListItem.getString(ApiConstants.MAKER_NAME));
+                                listItem.setItemID
+                                        (singleListItem.getString(ApiConstants.ITEM_ID));
+                                listItem.setError(true);
+                                //TODO: QA (add error items to the top)
+                                mItemList.add(0, listItem);
+                            } else {
+                                continue;
+                            }
+                        } catch (JSONException e) {
+                            Log.v(TAG, e.getMessage());
+                        }
+                    }
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mFab.show();
+                    mFab.setVisibility(View.VISIBLE);
+
+                    if(mItemList.size() == 0){
+                        //TODO: show textView
+                        mEmptyView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        //TODO: hide textView
+                        mEmptyView.setVisibility(View.GONE);
+                        Collections.reverse(mItemList);
+                        mFeedAdapter.notifyDataSetChanged();
+                    }
+                } //onSuccess
+                @Override
+                public void onFail(VolleyError error) {
+                    Log.d(TAG , "> getUserItems > onFail: " + error.toString());
                 }
             });
         }
@@ -274,7 +307,7 @@ public class MainActivity extends ActionBarActivity {
             mItemList.clear();
             mEmptyView.setVisibility(View.GONE);
             //Get items selected from SharedPref
-            itemIds = mSharedPref.RetrieveUserItemPreference();
+            itemIds = mSharedPref.getUserItemPreference();
 
             if (itemIds != null) {
                 for (int i = 0; i < itemIds.length(); i++) {
@@ -299,83 +332,28 @@ public class MainActivity extends ActionBarActivity {
                 mFab.setVisibility(View.VISIBLE);
             }
         }
-    } //displayUserListItems
+    } //displayUserItems
 
-    private void requestUserListItems(String authtoken){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        final String auth = authtoken;
-        String url = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
-
-        JsonArrayRequest userListRequest = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.v(TAG , "> requestUserListItems > onResponse: " + response.toString());
-                        mItemList.clear();
-
-                        for(int i=0; i < response.length(); i++) {
-                            try {
-                                JSONObject singleListItem = response.getJSONObject(i);
-                                //Only show items in the user’s list that have not been completed
-                                if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
-                                    MainListItem listItem = new MainListItem();
-                                    listItem.setItemName
-                                            (singleListItem.getString(ApiConstants.ITEM_NAME));
-                                    listItem.setMakerName
-                                            (singleListItem.getString(ApiConstants.MAKER_NAME));
-                                    listItem.setItemID
-                                            (singleListItem.getString(ApiConstants.ITEM_ID));
-                                    mItemList.add(listItem);
-                                } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
-                                    MainListItem listItem = new MainListItem();
-                                    listItem.setItemName
-                                            (singleListItem.getString(ApiConstants.ITEM_NAME));
-                                    listItem.setMakerName
-                                            (singleListItem.getString(ApiConstants.MAKER_NAME));
-                                    listItem.setItemID
-                                            (singleListItem.getString(ApiConstants.ITEM_ID));
-                                    listItem.setError(true);
-                                    //TODO: QA (add error items to the top)
-                                    mItemList.add(0, listItem);
-                                } else {
-                                    continue;
-                                }
-                            } catch (JSONException e) {
-                                Log.v(TAG, e.getMessage());
-                            }
-                        }
-                        mProgressBar.setVisibility(View.INVISIBLE);
-                        mFab.show();
-                        mFab.setVisibility(View.VISIBLE);
-
-                        if(mItemList.size() == 0){
-                            //TODO: show textView
-                            mEmptyView.setVisibility(View.VISIBLE);
-
-                        } else {
-                            //TODO: hide textView
-                            mEmptyView.setVisibility(View.GONE);
-                            Collections.reverse(mItemList);
-                            mFeedAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG , "> requestUserListItems > onErrorResponse: " + error.getMessage());
-                mMessageHelper.showDialog(mContext, getString(R.string.error_title),
-                        getString(R.string.error_message));
+    //For temp users displayUserItems:
+    // Check if all items have been returned from API before displaying list
+    public void CheckComplete() {
+        Log.v("Check complete", "start");
+        for(int i = 0; i < mItemList.size(); i++) {
+            if (!mItemList.get(i).completed) {
+                return;
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(ApiConstants.USER_TOKEN, auth);
-                return params;
-            }
-        };
-        queue.add(userListRequest);
-    } //requestUserListItems
+        }
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mFab.show();
+        mFab.setVisibility(View.VISIBLE);
+        mFeedAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+    } //CheckComplete
+
+
+    //----------------------------------------------
+    //RECYCLERVIEW – LIST ITEM INTERACTION
+    //----------------------------------------------
 
     private void initRecyclerView(){
         SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
@@ -461,6 +439,11 @@ public class MainActivity extends ActionBarActivity {
         }
     } //RecyclerItemClickListener
 
+
+    //----------------------------------------------
+    //SNACKBAR – UNDO ITEM DELETION
+    //----------------------------------------------
+
     public void showSnackbar(){
         SnackbarManager.show(
                 //also includes duration: SHORT, LONG, INDEFINITE
@@ -525,6 +508,11 @@ public class MainActivity extends ActionBarActivity {
                         }) //event listener
                 , MainActivity.this);
     } //showSnackbar
+
+
+    //----------------------------------------------
+    //TAKING PHOTO/PHOTO SELECTION
+    //----------------------------------------------
 
     //Show dialog when List Item is tapped
     public DialogInterface.OnClickListener mDialogListener =
@@ -643,6 +631,11 @@ public class MainActivity extends ActionBarActivity {
         } //switch
     } //onActivityResult
 
+
+    //----------------------------------------------
+    //PHOTO UPLOAD
+    //----------------------------------------------
+
     //Start Upload + Respond
     public void startPhotoUpload(){
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
@@ -685,7 +678,7 @@ public class MainActivity extends ActionBarActivity {
                         mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
                         mItemToBeUploaded = null;
                         //photoToBeUploaded = false;
-                        displayUserListItems();
+                        displayUserItems();
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -707,7 +700,7 @@ public class MainActivity extends ActionBarActivity {
                             @Override
                             public void run() {
                                 mUploadProgressBar.setVisibility(View.GONE);
-                                displayUserListItems();
+                                displayUserItems();
                                 //TODO: add visual indication that item failed
                             }
                         }, 500);
