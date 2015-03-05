@@ -46,7 +46,7 @@ public class ListApplication extends Application {
 
     public enum TrackerName {
         GLOBAL_TRACKER,
-        APP_TRACKER,
+        APP_TRACKER, //not used currently
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
@@ -56,18 +56,17 @@ public class ListApplication extends Application {
         if (!mTrackers.containsKey(trackerId)) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
 
-            analytics.getLogger().setLogLevel(Logger.LogLevel.INFO);
-            //analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+            //analytics.getLogger().setLogLevel(Logger.LogLevel.INFO);
+            analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
 
             // Global GA Settings
-            // <!-- Google Analytics SDK V4 BUG20141213 Using a GA global xml freezes the app! Do config by coding. -->
+            // <!-- Google Analytics SDK V4 BUG20141213 Using a GA global xml freezes the app! -->
             analytics.setDryRun(false);
             analytics.enableAutoActivityReports(this);
             analytics.setLocalDispatchPeriod(30);
 
-
             // Create a new tracker
-            Tracker t = (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(PROPERTY_ID) : null;
+            Tracker t = (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker) : null;
             if (t != null) {
                 //t.enableAdvertisingIdCollection(true);
                 t.setSampleRate(100.0);
@@ -75,8 +74,6 @@ public class ListApplication extends Application {
                 t.setAnonymizeIp(true);
                 t.enableExceptionReporting(true);
                 t.enableAutoActivityTracking(true);
-            } else {
-                Log.v(TAG, "TRACKER t: is NULL");
             }
             mTrackers.put(trackerId, t);
             Log.v(TAG, "put mTrackers: " + trackerId.toString());
@@ -84,8 +81,6 @@ public class ListApplication extends Application {
         Log.v(TAG, "return mTrackers");
         return mTrackers.get(trackerId);
     }
-
-
-}
+} //ListApplication
 
 

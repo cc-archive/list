@@ -61,8 +61,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-        GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
-        ga.enableAutoActivityReports(getApplication());
 
         //UI Elements
         mFrameLayout = (FrameLayout) findViewById(R.id.fragment_container);

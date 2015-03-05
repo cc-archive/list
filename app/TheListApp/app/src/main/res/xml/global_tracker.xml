@@ -36,6 +36,6 @@
 <screenName name="org.creativecommons.thelist.activities.CategoryListActivity">Pick Categories</screenName>
 <screenName name="org.creativecommons.thelist.activities.StartActivity">Start Screen</screenName>
 <screenName name="org.creativecommons.thelist.activities.AboutActivity">About The App</screenName>
-    <screenName name="org.creativecommons.thelist.activities.AccountActivity">Log Into Your CCID</screenName>
+<screenName name="org.creativecommons.thelist.activities.AccountActivity">Log Into Your CCID</screenName>
 
 </resources>

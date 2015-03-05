@@ -50,6 +50,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -138,10 +139,8 @@ public class MainActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
         }
 
-        Log.v(TAG, "ON CREATED CALLED – BEFORE TRACKER CALLED");
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-        Log.v(TAG, "ON CREATED CALLED – AFTER TRACKER CALLED");
 
         //Load UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);

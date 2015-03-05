@@ -37,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -69,15 +70,14 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Google Analytics Tracker
-        //Log.v(TAG, "ON CREATED CALLED – BEFORE TRACKER CALLED");
-        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-        //Log.v(TAG, "ON CREATED CALLED – AFTER TRACKER CALLED");
         setContentView(R.layout.activity_start);
         mContext = this;
         mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(StartActivity.this);
         am = AccountManager.get(getBaseContext());
+
+        //Google Analytics Tracker
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences
