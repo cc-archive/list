@@ -20,6 +20,10 @@
 </ul>
 
 <a class="btn btn-info" href="my-list.php">Add to my list</a>
+<a class="btn btn-info" href="my-list.php">Shuffle approved lists</a>
+<br>
+<br>
+</br>
 
 {else}
 
