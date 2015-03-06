@@ -19,7 +19,8 @@
 {/foreach}
 </ul>
 
-<a class="btn btn-info" href="my-list.php">Add to my list</a>
+<p><a class="btn btn-primary" href="my-list.php"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> Shuffle approved lists</a></p>
+
 
 {else}
 
@@ -34,7 +35,7 @@
 {foreach from=$newlist item=foo}
 <form action="./add-to-my-list.php" method="post">
     <input type="hidden" name="list-item" value="{$foo.id}" />
-    <button type="submit" class="btn btn-success">{$foo.title}</button>
+    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$foo.title}</button>
 </form>
 {/foreach}
 
