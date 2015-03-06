@@ -10,8 +10,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -41,6 +39,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     private AccountManager mAccountManager;
     private String mAuthTokenType;
     private ListUser mCurrentUser;
+    private SharedPreferencesMethods mSharedPref;
     private Bundle newUserBundle;
 
     //UI Elements
@@ -51,6 +50,8 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     //TODO: agree to terms
     //TermsFragment termsFragment = new TermsFragment();
 
+    // --------------------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         mContext = this;
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
+        mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
@@ -113,7 +115,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
         //TODO: is this working or skipping to setPassword?
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d("THE LIST", TAG + "> finishLogin > addAccountExplicitly");
+            Log.d(TAG, "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
@@ -130,7 +132,9 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
                 mAccountManager.setAuthToken(account, authtokenType, authtoken);
                 mAccountManager.setUserData(account, AccountGeneral.USER_ID, mCurrentUser.getUserID());
-                Log.v("FINISH LOGIN ", "token: " + authtoken);
+                mAccountManager.setUserData(account, AccountGeneral.ANALYTICS_OPTOUT,
+                        String.valueOf(mSharedPref.getAnalyticsOptOut()));
+                Log.v(TAG, "> finishLogin > setUserData, token: " + authtoken);
 
                 //Save Key for later use
                 SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
@@ -139,6 +143,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 //Add items chosen before login to userlist
                 mCurrentUser.addSavedItemsToUserList();
                 //TODO: also add category preferences (+ callback?) for these two?
+                //mCurrentUser.addSavedCategoriesToUserList();
 
             } catch (GeneralSecurityException e) {
                 e.printStackTrace();
@@ -147,7 +152,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
             }
 
         } else {
-            Log.d("THE LIST", TAG + "> finishLogin > setPassword");
+            Log.d(TAG, "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
 

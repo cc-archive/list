@@ -29,7 +29,7 @@ public class AccountGeneral {
      * User Data Keys
      */
     public static final String USER_ID = "userid";
-
+    public static final String ANALYTICS_OPTOUT = "analyticsOptOut";
     /**
      * Auth token types
      */

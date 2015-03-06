@@ -48,9 +48,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -177,23 +177,19 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onRestart(){
         super.onRestart();
-        Log.v(TAG, "ON RESTART CALLED");
+        //Log.v(TAG, "ON RESTART CALLED");
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        Log.v(TAG, "ON START CALLED");
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
-        Log.v(TAG, "ON START CALLED – AFTER GA CALLED");
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        Log.v(TAG, "ON STOP CALLED");
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-        Log.v(TAG, "ON STOP CALLED – AFTER GA CALLED");
     }
 
     @Override

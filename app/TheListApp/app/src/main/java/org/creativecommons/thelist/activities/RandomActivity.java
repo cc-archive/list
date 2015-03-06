@@ -76,6 +76,8 @@ public class RandomActivity extends Activity {
     ProgressBar mProgressBar;
     Button mDoneButton;
 
+    // --------------------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

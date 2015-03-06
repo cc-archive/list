@@ -63,8 +63,7 @@ public class ListUser implements ServerAuthenticate {
     private AccountManager am;
     public AlertDialog mAlertDialog;
 
-    @Deprecated
-    //TODO: Refactor; should really only need one constructor
+
     public ListUser(Context mc){
         mContext = mc;
         mSharedPref = new SharedPreferencesMethods(mContext);
@@ -108,6 +107,11 @@ public class ListUser implements ServerAuthenticate {
     public String getUserIDFromAccount(Account ac){
         return am.getUserData(ac, AccountGeneral.USER_ID);
     } //getUserIDFromAccount
+
+    public Boolean getAnalyticsOptOut(){
+        Account ac = getAccount();
+        return Boolean.valueOf(am.getUserData(ac, AccountGeneral.ANALYTICS_OPTOUT));
+    }
 
     public Account getAccount(){
         Account matchingAccount = null;

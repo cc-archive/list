@@ -46,15 +46,28 @@ public class MessageHelper {
         mContext = mc;
     }
 
-    //Material Design Dialog
+    //Generic Dialog
     public void showDialog(Context context, String title, String message){
         new MaterialDialog.Builder(context)
                 .title(title)
                 .content(message)
                 .positiveText(R.string.ok_label)
-                        //.negativeText(R.string.disagree)
+                 //.negativeText(R.string.disagree)
                 .show();
     }
+
+    //Enable Feature Dialog
+    public void enableFeatureDialog(Context context, String title, String message,
+                                    MaterialDialog.ButtonCallback callback){
+                    new MaterialDialog.Builder(context)
+                            .title(title)
+                            .content(message)
+                            .positiveText(context.getString(R.string.general_positive_text))
+                            .negativeText(context.getString(R.string.general_negative_text))
+                            .callback(callback)
+                            .show();
+    } //enableFeatureDialog
+
 
     //Send Android System Notifications
     public void sendNotification(Context context, String title, String message, String ticker){

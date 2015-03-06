@@ -105,7 +105,7 @@ public final class RequestMethods {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.GET_RANDOM_ITEMS;
 
-        JsonArrayRequest randomItemRequest = new JsonArrayRequest(url,
+        JsonArrayRequest randomItemsRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -117,7 +117,7 @@ public final class RequestMethods {
                 callback.onFail(error);
             }
         });
-        queue.add(randomItemRequest);
+        queue.add(randomItemsRequest);
     } //getRandomItemRequest
 
     //GET User List Items
@@ -131,11 +131,10 @@ public final class RequestMethods {
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(final String authtoken) {
-
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
 
-                JsonArrayRequest userListRequest = new JsonArrayRequest(url,
+                JsonArrayRequest userItemsRequest = new JsonArrayRequest(url,
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
@@ -155,10 +154,10 @@ public final class RequestMethods {
                         return params;
                     }
                 };
-                queue.add(userListRequest);
+                queue.add(userItemsRequest);
             }
         });
-    } //requestUserListItems
+    } //getUserListItems
 
 
     // --------------------------------------------------------
@@ -175,7 +174,7 @@ public final class RequestMethods {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.GET_CATEGORIES;
 
-        JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
+        JsonArrayRequest categoriesRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -189,12 +188,11 @@ public final class RequestMethods {
                 callback.onFail(error);
             }
         });
-        queue.add(getCategoriesRequest);
+        queue.add(categoriesRequest);
     } //getCategories
 
     //GET User Selected Categories from API
     public void getUserCategories(final ResponseCallback callback) {
-
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
@@ -206,7 +204,7 @@ public final class RequestMethods {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_USER_CATEGORIES + mCurrentUser.getUserID();
 
-                JsonArrayRequest getCategoriesRequest = new JsonArrayRequest(url,
+                JsonArrayRequest userCategoriesRequest = new JsonArrayRequest(url,
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
@@ -227,14 +225,13 @@ public final class RequestMethods {
                         return params;
                     }
                 };
-                queue.add(getCategoriesRequest);
+                queue.add(userCategoriesRequest);
             }
         });
     } //getUserCategories
 
     //Add all categories to User Account (during login)
     public void addTempCategoriesToUser(){
-
         if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
@@ -259,7 +256,6 @@ public final class RequestMethods {
 
     //Add Single Category to User Account
     public void addCategory(final String catId){
-
         if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
@@ -272,7 +268,7 @@ public final class RequestMethods {
                 String url = ApiConstants.ADD_CATEGORY + mCurrentUser.getUserID() + "/" + catId;
 
                 //Add single item to user list
-                StringRequest postCategory = new StringRequest(Request.Method.POST, url,
+                StringRequest postCategoryRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -298,7 +294,7 @@ public final class RequestMethods {
                         return params;
                     }
                 };
-                queue.add(postCategory);
+                queue.add(postCategoryRequest);
             }
         });
     } //addCategory
@@ -306,10 +302,7 @@ public final class RequestMethods {
     public void removeCategory(final String catId){
 
         if(mCurrentUser.isTempUser()){ //TEMP USER
-
-            //If not logged in, remove item from sharedPreferences
             mSharedPref.deleteUserItemPreference(catId);
-
         } else { //If logged in, remove from DB
 
             if(!(RequestMethods.isNetworkAvailable(mContext))){
@@ -323,7 +316,7 @@ public final class RequestMethods {
                     RequestQueue queue = Volley.newRequestQueue(mContext);
                     String url = ApiConstants.REMOVE_CATEGORY + mCurrentUser.getUserID() + "/" + catId;
 
-                    StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                    StringRequest deleteCategoryRequest = new StringRequest(Request.Method.POST, url,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -348,7 +341,7 @@ public final class RequestMethods {
                             return params;
                         }
                     };
-                    queue.add(deleteItemRequest);
+                    queue.add(deleteCategoryRequest);
                 }
             });
         }
@@ -360,7 +353,6 @@ public final class RequestMethods {
     // --------------------------------------------------------
 
     public void uploadPhoto(String itemID, Uri photoUri, final RequestCallback callback) {
-
         if(!(isNetworkAvailable())){
             mMessageHelper.photoNetworkFailMessage();
             return;
@@ -371,7 +363,6 @@ public final class RequestMethods {
             return;
         }
 
-        //Get Photo as Base64 encoded String
         final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
         final String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;
 

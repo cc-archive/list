@@ -36,8 +36,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -52,20 +52,23 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener,
         AccountFragment.AuthListener {
     public static final String TAG = StartActivity.class.getSimpleName();
-    ListUser mCurrentUser;
-    protected Button mStartButton;
-    protected Button mAccountButton;
-    protected TextView mTermsLink;
     protected Context mContext;
+    protected ListUser mCurrentUser;
     protected SharedPreferencesMethods mSharedPref;
+    protected MessageHelper mMessageHelper;
     private AccountManager am;
+
+    //UI Elements
+    protected Button mAccountButton;
     protected FrameLayout mFrameLayout;
+    protected Button mStartButton;
+    protected TextView mTermsLink;
 
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
     AccountFragment loginFragment = new AccountFragment();
 
-    // ---------------------------------------------------------------------------------
+    // --------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +85,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         //Create App SharedPreferences
         SharedPreferences sharedPref = mContext.getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-
-        //TODO: add google analytics opt-in
-        //Display Google Analytics Message
-        if(!(mSharedPref.getGaMessageViewed())){
-            //The beta version of this app uses google analytics message
-            MessageHelper mh = new MessageHelper(mContext);
-            mh.showDialog(mContext, "The List Beta Uses Google Analytics", "Hey just a heads up that " +
-                    "we’re using Google Analytics to help us learn how to make the app better. " +
-                    "We don’t collect personal info!");
-            mSharedPref.setMessageViewed();
-        }
 
         //UI Elements
         mFrameLayout = (FrameLayout)findViewById(R.id.fragment_container);
@@ -157,31 +149,40 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onRestart(){
         super.onRestart();
-        Log.v(TAG, "ON RESTART CALLED");
-        if(!(mCurrentUser.isTempUser())) {
-            Log.v(TAG, "ONRESTART: USER IS LOGGED IN");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else {
-            Log.v(TAG, "ONRESTART: USER IS NOT LOGGED IN");
-        }
-        Log.v(TAG, "ON RESTART CALLED – AFTER START MAIN INTENT");
     } //onRestart
 
     @Override
     protected void onStart(){
         super.onStart();
-        Log.v(TAG, "ON START CALLED");
         if(!(mCurrentUser.isTempUser())) {
-            Log.v(TAG, "ONSTART: USER IS LOGGED IN");
+            //Redirect to MainActivity
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
-            Log.v(TAG, "ONSTART: USER IS NOT LOGGED IN");
+            //Display Google Analytics Message
+            //TODO: check if this will return false
+            if(mSharedPref.getAnalyticsOptOut() == null){
+                //Request Permissions
+                mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
+                        getString(R.string.dialog_ga_message),
+                        new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onPositive(MaterialDialog dialog) {
+                                super.onPositive(dialog);
+                                //Set boolean opt-in
+                                mSharedPref.setAnalyticsOptOut(false);
+                            }
+                            @Override
+                            public void onNegative(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                //Set boolean opt-out
+                                mSharedPref.setAnalyticsOptOut(true);
+                            }
+                        });
+                //mSharedPref.setAnalyticsMessageViewed(); TODO: remove
+            }
         }
 
         GoogleAnalytics.getInstance(this).reportActivityStart(this);

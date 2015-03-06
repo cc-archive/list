@@ -20,6 +20,7 @@
 package org.creativecommons.thelist.utils;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -31,18 +32,32 @@ import org.creativecommons.thelist.R;
 import java.util.HashMap;
 
 public class ListApplication extends Application {
-
-    // The following line should be changed to include the correct property id.
-    private static final String PROPERTY_ID = "UA-2010376-31";
-
-    //Logging TAG
     private static final String TAG = "ListApp";
-
-    public static int GENERAL_TRACKER = 0;
+    private static final String PROPERTY_ID = "UA-2010376-31";
 
     public ListApplication() {
         super();
     }
+
+    public void onCreate() {
+        super.onCreate();
+        ListUser listUser = new ListUser(getApplicationContext());
+        SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(getApplicationContext());
+
+        //Check OptOut status (on app open
+        if(!(listUser.isTempUser())){ //Logged in
+            if(!(listUser.getAnalyticsOptOut())){ //if false
+                //Set app opt-out
+                GoogleAnalytics.getInstance(this).setAppOptOut(true);
+                Log.v(TAG, "> isTempUser = false > setOptOut, true");
+            }
+        } else { //Temp User
+            if(sharedPref.getAnalyticsOptOut() == false){
+                GoogleAnalytics.getInstance(this).setAppOptOut(true);
+                Log.v(TAG, "> isTempUser = true > setOptOut, true");
+            }
+        }
+    } //onCreate
 
     public enum TrackerName {
         GLOBAL_TRACKER,
