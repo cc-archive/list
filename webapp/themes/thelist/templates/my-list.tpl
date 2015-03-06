@@ -36,7 +36,7 @@
 {foreach from=$newlist item=foo}
 <form action="./add-to-my-list.php" method="post">
     <input type="hidden" name="list-item" value="{$foo.id}" />
-    <button type="submit" class="btn btn-success">{$foo.title}</button>
+    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> {$foo.title}</button>
 </form>
 {/foreach}
 
