@@ -19,8 +19,7 @@
 {/foreach}
 </ul>
 
-<p></p><a class="btn btn-success" href="my-list.php"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add to my list</a>&nbsp;
-<a class="btn btn-primary" href="my-list.php"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> Shuffle approved lists</a></p>
+<p><a class="btn btn-primary" href="my-list.php"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> Shuffle approved lists</a></p>
 
 
 {else}
