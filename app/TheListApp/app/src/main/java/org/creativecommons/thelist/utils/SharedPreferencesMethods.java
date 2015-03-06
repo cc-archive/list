@@ -129,11 +129,13 @@ public class SharedPreferencesMethods {
 
     public Boolean getAnalyticsOptOut(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        Boolean bol = null;
 
         if(sharedPref.contains(SharedPreferencesMethods.ANALYTICS_OPTOUT)) {
-            return sharedPref.getBoolean(ANALYTICS_OPTOUT, false); //defaults to false
+            bol =  sharedPref.getBoolean(ANALYTICS_OPTOUT, false); //defaults to false
+            return bol;
         } else {
-            return null;
+            return bol;
         }
     }
 

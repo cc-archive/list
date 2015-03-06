@@ -66,6 +66,9 @@ public final class ApiConstants {
 
     //Real API
 
+    //APP VERSION
+    public static final String GET_CURRENT_APP_VERSION = URL + "/androidversion/";
+
     //ITEMS
     //Must add item ID
     public static final String GET_SINGLE_ITEM = URL + "/items/";

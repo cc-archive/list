@@ -49,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
@@ -183,8 +184,29 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onStart(){
         super.onStart();
+
+        //TODO: check app version
+        //If user is logged in but has not opted into/out of GA
+        if(!(mCurrentUser.isTempUser()) && mCurrentUser.getAnalyticsOptOut() == null) {
+            mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
+                    getString(R.string.dialog_ga_message),
+                    new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+                            GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
+                        }
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            super.onNegative(dialog);
+                            GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
+
+                        }
+                    });
+        }
+
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
+    } //onStart
 
     @Override
     protected void onStop(){

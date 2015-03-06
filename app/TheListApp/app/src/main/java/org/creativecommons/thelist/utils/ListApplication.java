@@ -41,18 +41,28 @@ public class ListApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
+        Log.v(TAG, "LIST ON CREATE");
         ListUser listUser = new ListUser(getApplicationContext());
         SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(getApplicationContext());
 
         //Check OptOut status (on app open
         if(!(listUser.isTempUser())){ //Logged in
-            if(!(listUser.getAnalyticsOptOut())){ //if false
+            Log.v(TAG, "LIST ON CREATE: LOGGED IN");
+            Boolean optOut = listUser.getAnalyticsOptOut();
+
+            if(optOut == null){
+                sharedPref.setAnalyticsOptOut(null); //this will trigger dialog onStart
+            }
+            if(listUser.getAnalyticsOptOut()){ //if user has opt-ted out
                 //Set app opt-out
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
                 Log.v(TAG, "> isTempUser = false > setOptOut, true");
             }
         } else { //Temp User
-            if(sharedPref.getAnalyticsOptOut() == false){
+
+            Boolean optOut = sharedPref.getAnalyticsOptOut();
+            Log.v(TAG, String.valueOf(optOut));
+            if(Boolean.TRUE.equals(sharedPref.getAnalyticsOptOut())){
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
                 Log.v(TAG, "> isTempUser = true > setOptOut, true");
             }
@@ -76,7 +86,7 @@ public class ListApplication extends Application {
 
             // Global GA Settings
             // <!-- Google Analytics SDK V4 BUG20141213 Using a GA global xml freezes the app! -->
-            analytics.setDryRun(false);
+            analytics.setDryRun(true);
             analytics.enableAutoActivityReports(this);
             analytics.setLocalDispatchPeriod(30);
 

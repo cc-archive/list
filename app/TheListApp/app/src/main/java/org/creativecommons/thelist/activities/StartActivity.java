@@ -76,6 +76,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         setContentView(R.layout.activity_start);
         mContext = this;
         mSharedPref = new SharedPreferencesMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
         mCurrentUser = new ListUser(StartActivity.this);
         am = AccountManager.get(getBaseContext());
 
@@ -163,7 +164,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         } else {
             //Display Google Analytics Message
             //TODO: check if this will return false
-            if(mSharedPref.getAnalyticsOptOut() == null){
+            Boolean OptOut = mSharedPref.getAnalyticsOptOut();
+            Log.v(TAG, "OPTOUT" + String.valueOf(OptOut));
+            if(OptOut == null){
                 //Request Permissions
                 mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
                         getString(R.string.dialog_ga_message),
@@ -173,12 +176,15 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 super.onPositive(dialog);
                                 //Set boolean opt-in
                                 mSharedPref.setAnalyticsOptOut(false);
+                                GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
                             }
                             @Override
                             public void onNegative(MaterialDialog dialog) {
                                 super.onNegative(dialog);
                                 //Set boolean opt-out
                                 mSharedPref.setAnalyticsOptOut(true);
+                                GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
+
                             }
                         });
                 //mSharedPref.setAnalyticsMessageViewed(); TODO: remove

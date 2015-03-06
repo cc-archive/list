@@ -92,6 +92,25 @@ public final class RequestMethods {
     }
 
     // --------------------------------------------------------
+    // APP REQUEST
+    // --------------------------------------------------------
+
+    public void getAppVersion(Response.Listener<JSONArray> response, Response.ErrorListener error){
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        String url = ApiConstants.GET_CURRENT_APP_VERSION;
+
+        JsonArrayRequest appVersionRequest = new JsonArrayRequest(url,
+                response, error);
+        queue.add(appVersionRequest);
+    }
+
+
+    // --------------------------------------------------------
     // USER LIST REQUESTS
     // --------------------------------------------------------
 
