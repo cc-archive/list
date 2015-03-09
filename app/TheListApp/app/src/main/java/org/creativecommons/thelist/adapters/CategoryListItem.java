@@ -22,13 +22,15 @@ package org.creativecommons.thelist.adapters;
 public class CategoryListItem {
     private String categoryName;
     private int categoryID;
+    private boolean categoryChecked;
 
     public CategoryListItem() {
     }
 
-    public CategoryListItem(String title, int id) {
+    public CategoryListItem(String title, int id, boolean bol) {
         this.categoryName = title;
         this.categoryID = id;
+        this.categoryChecked = bol;
     }
 
     public String getCategoryName() {
@@ -45,5 +47,14 @@ public class CategoryListItem {
 
     public void setCategoryID(int id) {
         this.categoryID = id;
+    }
+
+    public boolean getCategoryChecked(){
+        return categoryChecked;
+
+    }
+
+    public void setCategoryChecked(boolean bol){
+        this.categoryChecked = bol;
     }
 }

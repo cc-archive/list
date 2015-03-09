@@ -197,13 +197,13 @@ public final class RequestMethods {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v(TAG, "> getCategories > onResponse: " + response);
+                        //Log.v(TAG, "> getCategories > onResponse: " + response);
                         callback.onSuccess(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "> getCategories > onErrorResponse: " + error.getMessage());
+                //Log.d(TAG, "> getCategories > onErrorResponse: " + error.getMessage());
                 callback.onFail(error);
             }
         });

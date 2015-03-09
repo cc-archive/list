@@ -73,6 +73,8 @@ public class CategoryListAdapter extends BaseAdapter {
             holder.checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
             holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
+
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder)convertView.getTag();
@@ -83,6 +85,11 @@ public class CategoryListAdapter extends BaseAdapter {
         //Item Name
         holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
         //Item Background Color
+
+        //Set checkmarkView visibility
+        if(c.getCategoryChecked()){
+            holder.checkmarkView.setVisibility(View.VISIBLE);
+        }
 
         if(position < 5){
             holder.checkableLayout.setBackgroundColor(Color.parseColor(colours[position]));

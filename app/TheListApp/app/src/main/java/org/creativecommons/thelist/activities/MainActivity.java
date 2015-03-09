@@ -704,7 +704,6 @@ public class MainActivity extends ActionBarActivity {
                             }
                         }, 500); //could add a time check from visible to invisible, heh.
                     }
-
                     @Override
                     public void onFail() {
                         Log.d(TAG, "On Upload Fail");

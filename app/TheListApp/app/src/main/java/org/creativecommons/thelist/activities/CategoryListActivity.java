@@ -52,29 +52,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class CategoryListActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
+    protected Context mContext;
     //Helper Methods
     RequestMethods mRequestMethods;
     SharedPreferencesMethods mSharedPref;
     MessageHelper mMessageHelper;
     ListUser mCurrentUser;
 
-    protected Context mContext;
-
     //GET Request
     protected JSONArray mCategoryData;
-    protected JSONArray mJsonCategories;
-    //PUT request (if user is logged in)
-    protected JSONObject mPutResponse;
+    protected List<Integer> mUserCategories = new ArrayList<>();
+    protected JSONArray mCheckedCategories;
 
     //GridView
     protected GridView mGridView;
     private List<CategoryListItem> mCategoryList = new ArrayList<>();
     protected CategoryListAdapter adapter;
+    protected ImageView mCheckmarkView;
 
     //UI Elements
     protected ProgressBar mProgressBar;
@@ -111,9 +111,54 @@ public class CategoryListActivity extends ActionBarActivity {
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getCategories > onSuccess: " + response);
                 mCategoryData = response;
-                updateList();
-            }
 
+                //Get user’s pre-selected categories
+                if(!(mCurrentUser.isTempUser())){
+                    //If user is logged in, request any pre-selected categories
+                    mRequestMethods.getUserCategories(new RequestMethods.ResponseCallback() {
+                        @Override
+                        public void onSuccess(JSONArray response) {
+                            Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
+
+                            //Create list of category ids
+                            if(response.length() > 0) {
+
+                                //Get array of catIds
+                                for(int i = 0; i < response.length(); i++){
+                                    try {
+                                        JSONObject singleCat = response.getJSONObject(i);
+                                        mUserCategories.add(i, singleCat.getInt("categoryid"));
+                                        Log.v("USERCATS", "add: " + singleCat.getInt("categoryid"));
+                                    } catch (JSONException e) {
+                                        Log.e(TAG, e.getMessage());
+                                    }
+                                }
+                                Log.v(TAG, "user’s category list: " + mUserCategories.toString());
+                            }
+                            updateList();
+                        } //onSuccess
+                        @Override
+                        public void onFail(VolleyError error) {
+                            Log.v(TAG, "> getUserCategories > onFail " + error.toString());
+                        }
+                    });
+                } else {
+                    //TODO: Check for temp user Preferences
+                    JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
+
+                    //Convert to list + add to mUserCategories
+                    for(int i = 0; i > tempUserCategories.length(); i++){
+                        try {
+                            mUserCategories.add(i, tempUserCategories.getInt(i));
+                            Log.v(TAG, " TEMPUSER CATEGORIES: " + mUserCategories.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    updateList();
+                }
+
+            } //onSuccess
             @Override
             public void onFail(VolleyError error) {
                 Log.d(TAG, "> getCategories > onFail: " + error.getMessage());
@@ -122,29 +167,7 @@ public class CategoryListActivity extends ActionBarActivity {
             }
         });
 
-        if(!(mCurrentUser.isTempUser())){
-            //If user is logged in, request any pre-selected categories
-            mRequestMethods.getUserCategories(new RequestMethods.ResponseCallback() {
-                @Override
-                public void onSuccess(JSONArray response) {
-                    Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
-                    Log.v("USER CATS", "THESE ARE THEM ^^");
-
-                    if(response.length() > 0){
-                        //TODO: check each of these
-                    }
-                }
-
-                @Override
-                public void onFail(VolleyError error) {
-                    Log.v(TAG, "> getUserCategories > onFail " + error.toString());
-                }
-            });
-        } else {
-            //TODO: Check for temp user Preferences
-        }
-
-        //Category Selection
+        //When Category is tapped
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -156,10 +179,12 @@ public class CategoryListActivity extends ActionBarActivity {
                 if(mGridView.isItemChecked(position)) {
                     checkmarkView.setVisibility(View.VISIBLE);
                     mRequestMethods.addCategory(catId);
+                    Log.v(TAG, "ADDED " + catId);
 
                 } else {
                     checkmarkView.setVisibility(View.GONE);
                     mRequestMethods.removeCategory(catId);
+                    Log.v(TAG, "REMOVED " + catId);
                 }
                 //Count how many items are checked: if at least 3, show Next Button
                 SparseBooleanArray positions = mGridView.getCheckedItemPositions();
@@ -197,11 +222,6 @@ public class CategoryListActivity extends ActionBarActivity {
                     CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
                     int id = item.getCategoryID();
                     userCategories.add(id);
-
-                    //If logged in, add category to user’s profile
-//                    if(!TempUser){
-//                        mRequestMethods.addCategory(String.valueOf(id));
-//                    }
                 }
 
                 if(mCurrentUser.isTempUser()){ //TEMP USER
@@ -236,6 +256,7 @@ public class CategoryListActivity extends ActionBarActivity {
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {
+        Log.v(TAG, "> updateList");
         //mProgressBar.setVisibility(View.INVISIBLE);
         if (mCategoryData == null) {
             mMessageHelper.showDialog(mContext, getString(R.string.error_title),
@@ -243,20 +264,41 @@ public class CategoryListActivity extends ActionBarActivity {
         }
         else {
             try {
-                mJsonCategories = mCategoryData;
-                for(int i = 0; i<mJsonCategories.length(); i++) {
-                    JSONObject jsonSingleCategory = mJsonCategories.getJSONObject(i);
+                for(int i = 0; i < mCategoryData.length(); i++) {
+                    JSONObject jsonSingleCategory = mCategoryData.getJSONObject(i);
                     CategoryListItem categoryListItem = new CategoryListItem();
                     categoryListItem.setCategoryName(jsonSingleCategory.getString(ApiConstants.CATEGORY_NAME));
                     categoryListItem.setCategoryID(jsonSingleCategory.getInt(ApiConstants.CATEGORY_ID));
+                    Log.v(TAG, "mCategoryData to add to list: " + categoryListItem.getCategoryName());
+                    Log.v(TAG, "THIS IS USER CATEGORIES IN LOOP: " + mUserCategories.toString());
 
-                    //Adding to array of List Items
+                    if(mUserCategories.contains(categoryListItem.getCategoryID())){
+                        //Log.v(TAG, "VISUAL CHECK ITEM SET TRUE: " + mCategoryList.get(i).getCategoryName());
+                        categoryListItem.setCategoryChecked(true);
+                    }
+
+                    //Add to array list to be adapted
                     mCategoryList.add(categoryListItem);
+                    Log.v(TAG, "ITEM ADDED TO CATEGORY LIST");
+
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Exception Caught: ", e);
             }
+
             adapter.notifyDataSetChanged();
+
+            //if category has been previously selected by user, set item in gridview as checked
+            for(int i = 0; i < mCategoryList.size(); i++){
+                CategoryListItem checkItem = mCategoryList.get(i);
+                if(mUserCategories.contains(checkItem.getCategoryID())){
+                    mGridView.setItemChecked(i, true);
+                    //checkItem.setCategoryChecked(false);
+
+                    Log.v(TAG, "CHECKED ITEM: " + mCategoryList.get(i).getCategoryName());
+                }
+            }
+
         }
     } //updateList
 
