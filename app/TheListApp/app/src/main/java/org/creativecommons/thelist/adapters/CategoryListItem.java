@@ -22,6 +22,7 @@ package org.creativecommons.thelist.adapters;
 public class CategoryListItem {
     private String categoryName;
     private int categoryID;
+    private String categoryColour;
     private boolean categoryChecked;
 
     public CategoryListItem() {
@@ -53,6 +54,16 @@ public class CategoryListItem {
         return categoryChecked;
 
     }
+
+    public void setCategoryColour(String hexValue){
+        this.categoryColour = hexValue;
+    }
+
+    public String getCategoryColour(){
+        return categoryColour;
+    }
+
+
 
     public void setCategoryChecked(boolean bol){
         this.categoryChecked = bol;

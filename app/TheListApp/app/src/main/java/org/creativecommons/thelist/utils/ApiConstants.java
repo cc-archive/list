@@ -32,6 +32,7 @@ public final class ApiConstants {
     //Category Object
     public static final String CATEGORY_NAME = "title";
     public static final String CATEGORY_ID = "id";
+    public static final String CATEGORY_COLOUR = "color";
 
     //List Item
     public static final String ITEM_MAKER_ID = "makerid";

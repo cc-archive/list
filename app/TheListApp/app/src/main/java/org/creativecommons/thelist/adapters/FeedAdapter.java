@@ -70,7 +70,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder
 
     @Override
     public void onBindViewHolder(FeedViewholder holder, int position) {
-
         //Getting Data for the row
         MainListItem l = listItems.get(position);
         holder.itemView.setVisibility(View.VISIBLE);

@@ -49,7 +49,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
@@ -162,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         //RecyclerView
-        mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView)findViewById(R.id.feedRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         //TODO: Try dividers in layout instead?
 //        RecyclerView.ItemDecoration itemDecoration =
