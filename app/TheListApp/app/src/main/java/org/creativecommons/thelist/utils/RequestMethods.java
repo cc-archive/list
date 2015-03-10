@@ -341,7 +341,7 @@ public final class RequestMethods {
                                 public void onResponse(String response) {
                                     //get Response
                                     Log.v(TAG, "> removeCategory > onResponse: " + response);
-                                    Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                                    Log.v(TAG, "A CATEGORY IS BEING REMOVED");
                                     //TODO: do something with response?
                                 }
                             }, new Response.ErrorListener() {

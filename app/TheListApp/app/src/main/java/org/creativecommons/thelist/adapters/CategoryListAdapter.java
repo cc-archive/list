@@ -87,6 +87,12 @@ public class CategoryListAdapter extends BaseAdapter {
         holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
         //Item Background Color
 
+        if(c.getCategoryColour() != null){
+            holder.checkableLayout.setBackgroundColor((Color.parseColor(c.getCategoryColour())));
+        } else {
+            holder.checkableLayout.setBackgroundColor(activity.getResources().getColor(R.color.category_default));
+        }
+
         //Set checkmarkView visibility
         if(c.getCategoryChecked()){
             Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE BEING SET TO VISIBLE");
@@ -97,11 +103,6 @@ public class CategoryListAdapter extends BaseAdapter {
             holder.checkableLayout.setChecked(false);
         }
 
-        if(position < 5){
-            holder.checkableLayout.setBackgroundColor(Color.parseColor(colours[position]));
-        } else {
-            holder.checkableLayout.setBackgroundColor(activity.getResources().getColor(R.color.category_default));
-        }
         return convertView;
     }
 
