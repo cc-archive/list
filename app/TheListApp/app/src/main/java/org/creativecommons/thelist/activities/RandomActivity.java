@@ -304,7 +304,16 @@ public class RandomActivity extends Activity {
                             mDoneButton.setTextColor(getResources().getColor(R.color.objects_100));
                             mBackground.setBackgroundColor(getResources().getColor(R.color.objects_500));
                             break;
+                        default:
+                            setButtonTheme(mYesButton, R.drawable.checkmark_default,
+                                    R.drawable.checkmark_pressed, R.drawable.checkmark_pressed);
+                            setButtonTheme(mNoButton, R.drawable.x_default,
+                                    R.drawable.x_pressed, R.drawable.x_pressed);
 
+                            mTextView.setTextColor(getResources().getColor(R.color.default_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.default_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.default_500));
+                            break;
                     }
 
                     mTextView.setText(mMakerName + " needs a picture of " + mItemName);
