@@ -196,5 +196,6 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="dialog_ga_title">The List Beta Uses Google Analytics</string>
     <string name="dialog_ga_message">Hey just a heads up that we’re using Google Analytics to help us learn how to make the app better. We don’t use personal info!</string>
 
+    <string name="app_version">Version 0.4.0 (March 13th 2015)</string>
 
 </resources>

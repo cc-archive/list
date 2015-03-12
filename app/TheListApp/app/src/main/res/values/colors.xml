@@ -32,6 +32,43 @@
     <!--nb: should be accent colour-->
     <color name="snackbar_action">@color/colorSecondary</color>
 
+    <!--Category Colours-->
+
+    <!--People - Orange-->
+    <color name="people_100">#ffe0b2</color>
+    <color name="people_500">#ff9800</color>
+    <color name="people_700">#e65100</color>
+
+    <!--Places/Cities – Red-->
+    <color name="places_100">#FFCDD2</color>
+    <color name="places_500">#F44336</color>
+    <color name="places_900">#B71C1C</color>
+
+    <!--Clothing + Fashion – Indigo-->
+    <color name="clothing_100">#C5CAE9</color>
+    <color name="clothing_500">#3F51B5</color>
+    <color name="clothing_900">#1A237E</color>
+
+    <!--Nature + Animals – Green-->
+    <color name="nature_100">#c8e6c9</color>
+    <color name="nature_500">#4caf50</color>
+    <color name="nature_900">#1b5e20</color>
+
+    <!--Food – Blue-->
+    <color name="food_100">#bbdefb</color>
+    <color name="food_500">#2196f3</color>
+    <color name="food_900">#0d47a1</color>
+
+    <!--Objects – Pink-->
+    <color name="objects_100">#F8BBD0</color>
+    <color name="objects_500">#E91E63</color>
+    <color name="objects_900">#880E4F</color>
+
+    <!--Default category-->
+    <color name="default_100">#cfd8dc</color>
+    <color name="default_500">#607d8b</color>
+    <color name="default_900">#263238</color>
+
     <!--Text-->
     <!-- Black 87% -->
     <color name="primary_text_default_material_light">#de000000</color>
@@ -53,17 +90,7 @@
     <!--General-->
     <color name="app_black">#000000</color>
     <color name="app_white">#ffffff</color>
-    <!--<color name="apptheme_color">#a3a3a3</color>-->
 
-    <!--Other-->
-    <!--<color name="accent">#ffc400</color>-->
-    <!--<color name ="red_accent">#E82D2C</color>-->
 
-    <!--Theme Colours-->
-    <!--<color name="colorPrimaryDark">#F26444</color>-->
-    <!--<color name="colorPrimary">#F29057</color>-->
-    <!--<color name="colorAccent">#555973</color>-->
-    <!--<color name="colorControlNormal">#BF8450</color>-->
-    <!--<color name="colorControlLight">#F2B366</color>-->
 
 </resources>

@@ -40,7 +40,7 @@
                 android:textColor="@color/primary_text_default_material_dark"
                 android:maxLines="1" />
             <TextView
-                android:id="@+id/account_text"
+                android:id="@+id/random_item_text"
                 android:text="@string/terms_fragment_text"
                 android:textColor="@color/primary_text_default_material_dark"
                 style="@style/fragment_text" />
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/terms_learn_more_label"
                 android:id="@+id/learnMoreButton"
-                android:layout_below="@+id/account_text"
+                android:layout_below="@+id/random_item_text"
                 android:layout_centerHorizontal="true"
                 android:textStyle="bold"
                 android:textAllCaps="true"
