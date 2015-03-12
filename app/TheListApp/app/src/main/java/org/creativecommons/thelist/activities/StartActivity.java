@@ -177,6 +177,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 //Set boolean opt-in
                                 mSharedPref.setAnalyticsOptOut(false);
                                 GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
+                                dialog.dismiss();
                             }
                             @Override
                             public void onNegative(MaterialDialog dialog) {
@@ -184,7 +185,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 //Set boolean opt-out
                                 mSharedPref.setAnalyticsOptOut(true);
                                 GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
-
+                                dialog.dismiss();
                             }
                         });
                 //mSharedPref.setAnalyticsMessageViewed(); TODO: remove

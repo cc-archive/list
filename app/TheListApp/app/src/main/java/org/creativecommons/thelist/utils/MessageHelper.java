@@ -64,6 +64,7 @@ public class MessageHelper {
                             .content(message)
                             .positiveText(context.getString(R.string.general_positive_text))
                             .negativeText(context.getString(R.string.general_negative_text))
+                            .autoDismiss(false)
                             .callback(callback)
                             .show();
     } //enableFeatureDialog

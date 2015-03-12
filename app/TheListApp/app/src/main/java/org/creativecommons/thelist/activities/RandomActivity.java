@@ -57,6 +57,8 @@ import java.util.List;
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
     protected Context mContext;
+
+    //Helper Methods
     RequestMethods mRequestMethods;
     SharedPreferencesMethods mSharedPref;
     MessageHelper mMessageHelper;
@@ -158,7 +160,7 @@ public class RandomActivity extends Activity {
                 //Display a new item
                 updateView();
                 //show doneButton if user has selected at least 3 items
-                if (mItemList.size() == 3) { //once it has 3 items
+                if (mItemList.size() == 1) { //once it has 3 items
                     mDoneButton.setVisibility(View.VISIBLE);
                 }
             } //OnClick
@@ -169,7 +171,7 @@ public class RandomActivity extends Activity {
             @Override
             public void onClick(View v) {
                 updateView();
-                if(itemPositionCount >= 7 && mDoneButton.getVisibility() == View.INVISIBLE){
+                if(itemPositionCount >= 1 && mDoneButton.getVisibility() == View.INVISIBLE){
                     mDoneButton.setVisibility(View.VISIBLE);
                 }
             }

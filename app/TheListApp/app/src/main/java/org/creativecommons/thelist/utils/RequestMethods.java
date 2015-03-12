@@ -43,6 +43,8 @@ import java.util.Map;
 public final class RequestMethods {
     public static final String TAG = RequestMethods.class.getSimpleName();
     protected Context mContext;
+
+    //Helper Methods
     protected MessageHelper mMessageHelper;
     protected SharedPreferencesMethods mSharedPref;
     protected ListUser mCurrentUser;

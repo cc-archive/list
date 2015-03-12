@@ -194,11 +194,13 @@ public class MainActivity extends ActionBarActivity {
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
+                            dialog.dismiss();
                         }
                         @Override
                         public void onNegative(MaterialDialog dialog) {
                             super.onNegative(dialog);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
+                            dialog.dismiss();
 
                         }
                     });

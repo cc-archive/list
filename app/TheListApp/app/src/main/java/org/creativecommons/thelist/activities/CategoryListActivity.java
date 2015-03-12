@@ -60,6 +60,7 @@ import java.util.List;
 public class CategoryListActivity extends ActionBarActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     protected Context mContext;
+
     //Helper Methods
     RequestMethods mRequestMethods;
     SharedPreferencesMethods mSharedPref;
@@ -69,7 +70,6 @@ public class CategoryListActivity extends ActionBarActivity {
     //GET Request
     protected JSONArray mCategoryData;
     protected List<Integer> mUserCategories = new ArrayList<>();
-    protected JSONArray mCheckedCategories;
 
     //RecyclerView
 //    private RecyclerView mRecyclerView;
@@ -148,16 +148,19 @@ public class CategoryListActivity extends ActionBarActivity {
                         }
                     });
                 } else {
-                    //TODO: Check for temp user Preferences
+
                     JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
 
-                    //Convert to list + add to mUserCategories
-                    for(int i = 0; i > tempUserCategories.length(); i++){
-                        try {
-                            mUserCategories.add(i, tempUserCategories.getInt(i));
-                            Log.v(TAG, " TEMPUSER CATEGORIES: " + mUserCategories.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    if(tempUserCategories != null){
+
+                        //Convert to list + add to mUserCategories
+                        for(int i = 0; i > tempUserCategories.length(); i++){
+                            try {
+                                mUserCategories.add(i, tempUserCategories.getInt(i));
+                                Log.v(TAG, " TEMPUSER CATEGORIES: " + mUserCategories.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     updateList();
@@ -323,23 +326,15 @@ public class CategoryListActivity extends ActionBarActivity {
             }
             mGridView.setAdapter(adapter);
 
-            //adapter.notifyDataSetChanged();
-
             //if category has been previously selected by user, set item in gridview as checked
             for(int i = 0; i < mCategoryList.size(); i++){
                 CategoryListItem checkItem = mCategoryList.get(i);
                 if(mUserCategories.contains(checkItem.getCategoryID())){
-
                     checkItem.setCategoryChecked(true);
                     mGridView.setItemChecked(i, true);
-
-                    Log.v(TAG, "CHECKED ITEM: " + mCategoryList.get(i).getCategoryName());
                 }
             }
-
-            Log.v("CATEGORY LIST ACTIVITY", "NOTIFY DATA SEt CHANGED!!!!!!!!!!!!!!");
             adapter.notifyDataSetChanged();
-
         }
     } //updateList
 
