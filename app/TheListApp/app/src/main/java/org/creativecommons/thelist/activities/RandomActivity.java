@@ -22,6 +22,8 @@ package org.creativecommons.thelist.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,12 +32,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainListItem;
@@ -66,6 +68,7 @@ public class RandomActivity extends Activity {
     String mMakerName;
     String mItemName;
     String mItemID;
+    String mCategoryID;
 
     private List<MainListItem> mItemList;
 
@@ -75,6 +78,9 @@ public class RandomActivity extends Activity {
     TextView mTextView;
     ProgressBar mProgressBar;
     Button mDoneButton;
+    ImageButton mYesButton;
+    ImageButton mNoButton;
+    RelativeLayout mBackground;
 
     // --------------------------------------------------------
 
@@ -91,15 +97,17 @@ public class RandomActivity extends Activity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-        //UI Elements
         mItemList = new ArrayList<>();
-        mTextView = (TextView) findViewById(R.id.account_text);
+
+        //UI Elements
+        mBackground = (RelativeLayout) findViewById(R.id.random_item_background);
+        mTextView = (TextView) findViewById(R.id.random_item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mDoneButton = (Button) findViewById(R.id.doneButton);
 
-        ImageButton yesButton = (ImageButton) findViewById(R.id.YesButton);
-        ImageButton noButton = (ImageButton) findViewById(R.id.NoButton);
-        //TODO: add camera functionality?
+
+        mYesButton = (ImageButton) findViewById(R.id.YesButton);
+        mNoButton = (ImageButton) findViewById(R.id.NoButton);
         //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
         mRequestMethods.getRandomItems(new RequestMethods.ResponseCallback() {
@@ -119,7 +127,7 @@ public class RandomActivity extends Activity {
         });
 
         //Add list item to my list
-        yesButton.setOnClickListener(new View.OnClickListener() {
+        mYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Add items to ItemList
@@ -127,6 +135,7 @@ public class RandomActivity extends Activity {
                 listItem.setItemID(mItemID);
                 listItem.setItemName(mItemName);
                 listItem.setMakerName(mMakerName);
+                listItem.setCategoryID(mCategoryID);
                 mItemList.add(listItem);
 
                 //Toast: Confirm List Item has been added
@@ -156,7 +165,7 @@ public class RandomActivity extends Activity {
         }); //YesButton.setOnClickListener
 
         //Decline adding list item to my list
-        noButton.setOnClickListener(new View.OnClickListener() {
+        mNoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateView();
@@ -225,9 +234,82 @@ public class RandomActivity extends Activity {
                     mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
                     mItemName = mListItemData.getString(ApiConstants.ITEM_NAME).toLowerCase();
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
+                    mCategoryID = mListItemData.getString(ApiConstants.ITEM_CATEGORY);
 
                     //Update UI
+                    switch(Integer.valueOf(mCategoryID)){
+                        case ApiConstants.PEOPLE:
+
+                            setButtonTheme(mYesButton, R.drawable.check_default_orange,
+                                    R.drawable.check_pressed_orange, R.drawable.check_pressed_orange);
+                            setButtonTheme(mNoButton, R.drawable.x_default_orange,
+                                    R.drawable.x_pressed_orange, R.drawable.x_pressed_orange);
+
+                            mTextView.setTextColor(getResources().getColor(R.color.people_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.people_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.people_500));
+                            break;
+
+                        case ApiConstants.PLACES:
+                            setButtonTheme(mYesButton, R.drawable.check_default_red,
+                                    R.drawable.check_pressed_red, R.drawable.check_pressed_red);
+                            setButtonTheme(mNoButton, R.drawable.x_default_red,
+                                    R.drawable.x_pressed_red, R.drawable.x_pressed_red);
+
+                            mTextView.setTextColor(getResources().getColor(R.color.places_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.places_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.places_500));
+                            break;
+
+                        case ApiConstants.CLOTHING:
+                            setButtonTheme(mYesButton, R.drawable.check_default_indigo,
+                                    R.drawable.check_pressed_indigo, R.drawable.check_pressed_indigo);
+                            setButtonTheme(mNoButton, R.drawable.x_default_indigo,
+                                    R.drawable.x_pressed_indigo, R.drawable.x_pressed_indigo);
+
+                            mTextView.setTextColor(getResources().getColor(R.color.clothing_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.clothing_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.clothing_500));
+                            break;
+
+                        case ApiConstants.NATURE:
+                            setButtonTheme(mYesButton, R.drawable.check_default_green,
+                                    R.drawable.check_pressed_green, R.drawable.check_pressed_green);
+                            setButtonTheme(mNoButton, R.drawable.x_default_green,
+                                    R.drawable.x_pressed_green, R.drawable.x_pressed_green);
+
+                            mTextView.setTextColor(getResources().getColor(R.color.nature_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.nature_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.nature_500));
+                            break;
+
+                        case ApiConstants.FOOD:
+                            setButtonTheme(mYesButton, R.drawable.check_default_blue,
+                                    R.drawable.check_pressed_blue, R.drawable.check_pressed_blue);
+                            setButtonTheme(mNoButton, R.drawable.x_default_blue,
+                                    R.drawable.x_pressed_blue, R.drawable.x_pressed_blue);
+
+                            mTextView.setTextColor(getResources().getColor(R.color.food_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.food_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.food_500));
+                            break;
+
+                        case ApiConstants.OBJECTS:
+                            setButtonTheme(mYesButton, R.drawable.check_default_pink,
+                                    R.drawable.check_pressed_pink, R.drawable.check_pressed_pink);
+                            setButtonTheme(mNoButton, R.drawable.x_default_pink,
+                                    R.drawable.x_pressed_pink, R.drawable.x_pressed_pink);
+
+                            mTextView.setTextColor(getResources().getColor(R.color.objects_100));
+                            mDoneButton.setTextColor(getResources().getColor(R.color.objects_100));
+                            mBackground.setBackgroundColor(getResources().getColor(R.color.objects_500));
+                            break;
+
+                    }
+
                     mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+                    mYesButton.setVisibility(View.VISIBLE);
+                    mNoButton.setVisibility(View.VISIBLE);
 
                     itemPositionCount++;
                 }
@@ -260,6 +342,19 @@ public class RandomActivity extends Activity {
                 (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
         Log.v("ALL ITEMS IN USER PREF", sharedPref);
     }
+
+
+    public void setButtonTheme(ImageButton button, int normalState, int pressedState, int focusedState){
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_pressed},
+                getResources().getDrawable(pressedState));
+        states.addState(new int[] {android.R.attr.state_focused},
+                getResources().getDrawable(focusedState));
+        states.addState(new int[] { },
+                getResources().getDrawable(normalState));
+        button.setImageDrawable(states);
+    } //setButtonTheme
+
 
 //    ------------------------------------------------------------------------------------------
 //    ------------------------------------------------------------------------------------------

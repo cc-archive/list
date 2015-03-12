@@ -38,7 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainListItem {
-    private String itemName, makerName, itemID;
+    private String itemName, makerName, itemID, categoryID;
     private boolean error, progress;
     private Context mContext;
     private MainActivity mainActivity;
@@ -84,16 +84,25 @@ public class MainListItem {
         return error;
     }
 
-    public boolean getProgress(){
-        return progress;
-    }
-
     public void setError(boolean bol){
         this.error = bol;
     }
 
+    public boolean getProgress(){
+        return progress;
+    }
+
     public void setProgress(boolean bol){
         this.progress = bol;
+    }
+
+    public String getCategoryID(){
+        return categoryID;
+
+    }
+
+    public void setCategoryID(String id){
+        categoryID = id;
     }
 
     public void setContext(Context c) {

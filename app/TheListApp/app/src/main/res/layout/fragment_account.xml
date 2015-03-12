@@ -41,7 +41,7 @@
         <TextView
             style="@style/fragment_text"
             android:text="@string/login_fragment_text"
-            android:id="@+id/account_text"
+            android:id="@+id/random_item_text"
             android:layout_below="@+id/account_title"
             android:textColor="@color/primary_text_default_material_dark" />
     </RelativeLayout>

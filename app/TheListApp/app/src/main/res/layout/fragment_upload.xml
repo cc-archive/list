@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/upload_success_text"
-                android:id="@+id/account_text"
+                android:id="@+id/random_item_text"
                 android:paddingLeft="10dp"
                 android:layout_below="@+id/account_title"
                 android:gravity="center"

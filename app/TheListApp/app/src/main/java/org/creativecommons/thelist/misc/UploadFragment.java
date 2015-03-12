@@ -101,7 +101,7 @@ public class UploadFragment extends Fragment {
         mResultMessage = (RelativeLayout)getView().findViewById(R.id.result_message);
 
         mTitle = (TextView)getView().findViewById(R.id.account_title);
-        mText = (TextView)getView().findViewById(R.id.account_text);
+        mText = (TextView)getView().findViewById(R.id.random_item_text);
         mIcon = (ImageView)getView().findViewById(R.id.confirm_icon);
 
         if(requestMethods.isNetworkAvailable()){
