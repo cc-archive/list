@@ -151,8 +151,7 @@ public class CategoryListActivity extends ActionBarActivity {
 
                     JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
 
-                    if(tempUserCategories != null){
-
+                    if(tempUserCategories != null && tempUserCategories.length() > 0){
                         //Convert to list + add to mUserCategories
                         for(int i = 0; i > tempUserCategories.length(); i++){
                             try {
@@ -165,7 +164,6 @@ public class CategoryListActivity extends ActionBarActivity {
                     }
                     updateList();
                 }
-
             } //onSuccess
             @Override
             public void onFail(VolleyError error) {
@@ -327,13 +325,16 @@ public class CategoryListActivity extends ActionBarActivity {
             mGridView.setAdapter(adapter);
 
             //if category has been previously selected by user, set item in gridview as checked
-            for(int i = 0; i < mCategoryList.size(); i++){
-                CategoryListItem checkItem = mCategoryList.get(i);
-                if(mUserCategories.contains(checkItem.getCategoryID())){
-                    checkItem.setCategoryChecked(true);
-                    mGridView.setItemChecked(i, true);
+            if(!(mUserCategories.isEmpty()) || mUserCategories != null){
+                for(int i = 0; i < mCategoryList.size(); i++){
+                    CategoryListItem checkItem = mCategoryList.get(i);
+                    if(mUserCategories.contains(checkItem.getCategoryID())){
+                        checkItem.setCategoryChecked(true);
+                        mGridView.setItemChecked(i, true);
+                    }
                 }
             }
+
             adapter.notifyDataSetChanged();
         }
     } //updateList

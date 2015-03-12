@@ -58,6 +58,17 @@
                 android:id="@+id/accountButton"
                 android:textColor="@color/app_white"
                 android:layout_below="@+id/startButton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/app_version"
+                android:id="@+id/app_version"
+                android:layout_below="@id/accountButton"
+                android:layout_alignParentBottom="false"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="10dp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -72,6 +83,7 @@
                 android:id="@+id/cc_logo"
                 android:src="@drawable/start_logo"
                 android:layout_above="@+id/cc_logo_label"
+                android:layout_marginBottom="5dp"
                 android:layout_centerHorizontal="true" />
             <TextView
                 android:layout_width="wrap_content"
@@ -80,20 +92,6 @@
                 android:text="@string/alpha_release_terms_label"
                 android:id="@+id/cc_logo_label"
                 android:layout_alignParentBottom="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/app_version"
-                android:id="@+id/textView"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_alignParentBottom="false"
-                android:layout_centerHorizontal="true"
-                android:paddingTop="10dp"
-                android:layout_alignBottom="@+id/cc_logo_label"
-                android:layout_alignParentTop="true"
-                android:textColor="#ff333333" />
 
         </RelativeLayout>
     </LinearLayout>
