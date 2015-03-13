@@ -178,7 +178,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onRestart(){
         super.onRestart();
         //Log.v(TAG, "ON RESTART CALLED");
-        if(mCurrentUser.getAnalyticsOptOut() != null){
+        if(!mCurrentUser.isTempUser() && mCurrentUser.getAnalyticsOptOut() != null){
             mSharedPref.setAnalyticsViewed(true);
         }
     }

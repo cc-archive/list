@@ -239,13 +239,13 @@ public class CategoryListActivity extends ActionBarActivity {
                 }
 
                 //Navigate to Random Activity if temp has low item count
-                if(mCurrentUser.isTempUser() && mSharedPref.getUserItemCount() < 3){
-                    Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-                    startActivity(intent);
-                } else {
+//                if(mCurrentUser.isTempUser() && mSharedPref.getUserItemCount() < 3){
+//                    Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+//                    startActivity(intent);
+//                } else {
                     Intent intent = new Intent(CategoryListActivity.this, MainActivity.class);
                     startActivity(intent);
-                }
+//                }
             }
         });
     } //onCreate
