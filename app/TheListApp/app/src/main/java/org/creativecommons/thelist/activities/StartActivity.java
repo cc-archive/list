@@ -83,10 +83,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-        //Create App SharedPreferences
-        SharedPreferences sharedPref = mContext.getSharedPreferences
-                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-
         //UI Elements
         mFrameLayout = (FrameLayout)findViewById(R.id.fragment_container);
         mStartButton = (Button) findViewById(R.id.startButton);
@@ -159,17 +155,19 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected void onStart(){
         super.onStart();
         if(!(mCurrentUser.isTempUser())) {
+            GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
             //Redirect to MainActivity
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        } else {
+        } else { //TEMP USER
             //Display Google Analytics Message
-            //TODO: check if this will return false
-            Boolean OptOut = mSharedPref.getAnalyticsOptOut();
-            Log.v(TAG, "OPTOUT" + String.valueOf(OptOut));
-            if(OptOut == null){
+
+            Boolean optOut = mSharedPref.getAnalyticsOptOut();
+            Log.v(TAG, "OPTOUT" + String.valueOf(optOut));
+            if(optOut == null){
                 //Request Permissions
                 mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
                         getString(R.string.dialog_ga_message),
@@ -191,12 +189,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 dialog.dismiss();
                             }
                         });
-                //mSharedPref.setAnalyticsMessageViewed(); TODO: remove
             }
+            GoogleAnalytics.getInstance(this).reportActivityStart(this);
         }
-
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-        Log.v(TAG, "ON START CALLED – AFTER GA CALLED");
     } //onStart
 
     @Override

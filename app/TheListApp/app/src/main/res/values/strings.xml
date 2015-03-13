@@ -191,10 +191,10 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
     <string name="title_activity_about">About The App</string>
-    <string name="general_negative_text">Disagree</string>
-    <string name="general_positive_text">Agree</string>
-    <string name="dialog_ga_title">The List Beta Uses Google Analytics</string>
-    <string name="dialog_ga_message">Hey just a heads up that we’re using Google Analytics to help us learn how to make the app better. We don’t use personal info!</string>
+    <string name="general_negative_text">Disable</string>
+    <string name="general_positive_text">Enable</string>
+    <string name="dialog_ga_title">Use Google Analytics?</string>
+    <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
 
     <string name="app_version">Version 0.4.0 (March 13th 2015)</string>
 

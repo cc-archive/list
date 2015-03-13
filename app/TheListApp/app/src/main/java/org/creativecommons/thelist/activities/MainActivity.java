@@ -184,26 +184,31 @@ public class MainActivity extends ActionBarActivity {
     protected void onStart(){
         super.onStart();
 
-        //TODO: check app version
-        //If user is logged in but has not opted into/out of GA
-        if(!(mCurrentUser.isTempUser()) && mCurrentUser.getAnalyticsOptOut() == null) {
+        if(!mCurrentUser.isTempUser() && !mSharedPref.getAnalyticsViewed()){
+            //TODO: check app version
+            //If user is logged in but has not opted into/out of GA
+            Log.v(TAG, "logged in without opt out response");
             mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
                     getString(R.string.dialog_ga_message),
                     new MaterialDialog.ButtonCallback() {
                         @Override
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
+                            mCurrentUser.setAnalyticsOptOut(false);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
                             dialog.dismiss();
                         }
                         @Override
                         public void onNegative(MaterialDialog dialog) {
                             super.onNegative(dialog);
+                            mCurrentUser.setAnalyticsOptOut(true);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
                             dialog.dismiss();
 
                         }
                     });
+            mSharedPref.setAnalyticsViewed(true);
+            Log.v(TAG, "SET ANALYTICS VIEWED TRUE");
         }
 
         GoogleAnalytics.getInstance(this).reportActivityStart(this);

@@ -21,6 +21,7 @@ package org.creativecommons.thelist.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -45,24 +46,28 @@ public class ListApplication extends Application {
         ListUser listUser = new ListUser(getApplicationContext());
         SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(getApplicationContext());
 
-        //Check OptOut status (on app open
+        //Create App SharedPreferences
+        SharedPreferences sharedPrefCreate = getApplicationContext().getSharedPreferences
+                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        //Check OptOut status (must happen once per app open/restart)
         if(!(listUser.isTempUser())){ //Logged in
             Log.v(TAG, "LIST ON CREATE: LOGGED IN");
+            //Get optOut value from the account (if there is no value this should return null)
             Boolean optOut = listUser.getAnalyticsOptOut();
 
+            //TODO: CHECK THIS
             if(optOut == null){
-                sharedPref.setAnalyticsOptOut(null); //this will trigger dialog onStart
-            }
-            if(listUser.getAnalyticsOptOut()){ //if user has opt-ted out
+                sharedPref.setAnalyticsOptOut(null); //this will trigger dialog in StartActivity
+            } else if(optOut == true){ //if user has opt-ted out (true)
                 //Set app opt-out
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
                 Log.v(TAG, "> isTempUser = false > setOptOut, true");
             }
         } else { //Temp User
-
             Boolean optOut = sharedPref.getAnalyticsOptOut();
-            Log.v(TAG, String.valueOf(optOut));
-            if(Boolean.TRUE.equals(sharedPref.getAnalyticsOptOut())){
+            Log.v(TAG, "tempUser optOut is: " + String.valueOf(optOut));
+            if(Boolean.TRUE.equals(optOut)){
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
                 Log.v(TAG, "> isTempUser = true > setOptOut, true");
             }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+    android:title="The List App Preferences"
+    android:key="list_pref">
+    <SwitchPreference
+        android:title="Google Analytics" android:key="ga_switch"
+        android:checked="true"
+        android:summary="Turn on Google Analytics so we can improve the app faster. No personal data collected or stored."/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -50,6 +50,7 @@ public class SharedPreferencesMethods {
     public static final String USER_ID_PREFERENCE_KEY = "id";
     public static final String USER_KEY = "ekey";
     public static final String ANALYTICS_OPTOUT = "analyticsOptOut";
+    public static final String ANALYTICS_VIEWED = "analyticsViewed";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
@@ -66,7 +67,7 @@ public class SharedPreferencesMethods {
         Log.v("ADDED AND SAVED ITEM: ", value);
     }
 
-    public void saveUserID(String id){
+    public void setUserID(String id){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_ID_PREFERENCE_KEY, id);
@@ -78,6 +79,13 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(ANALYTICS_OPTOUT, bol);
+        editor.apply();
+    }
+
+    public void setAnalyticsViewed(Boolean bol){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(ANALYTICS_VIEWED, bol);
         editor.apply();
     }
 
@@ -114,11 +122,24 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         Boolean bol = null;
 
+        sharedPref.getBoolean(ANALYTICS_OPTOUT, false);
+
         if(sharedPref.contains(SharedPreferencesMethods.ANALYTICS_OPTOUT)) {
             bol =  sharedPref.getBoolean(ANALYTICS_OPTOUT, false); //defaults to false
             return bol;
         } else {
             return bol;
+        }
+    }
+
+    public Boolean getAnalyticsViewed(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+
+        if(sharedPref.contains(SharedPreferencesMethods.ANALYTICS_VIEWED)) {
+            return sharedPref.getBoolean(ANALYTICS_VIEWED, false); //defaults to false
+        } else {
+            return false;
         }
     }
 

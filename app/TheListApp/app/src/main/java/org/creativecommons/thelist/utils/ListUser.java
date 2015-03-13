@@ -113,6 +113,11 @@ public class ListUser implements ServerAuthenticate {
         return Boolean.valueOf(am.getUserData(ac, AccountGeneral.ANALYTICS_OPTOUT));
     }
 
+    public void setAnalyticsOptOut(Boolean bol){
+        Account ac = getAccount();
+        am.setUserData(ac, AccountGeneral.ANALYTICS_OPTOUT, bol.toString());
+    }
+
     public Account getAccount(){
         Account matchingAccount = null;
         Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
@@ -367,7 +372,7 @@ public class ListUser implements ServerAuthenticate {
                                 String userID = res.getString(ApiConstants.USER_ID);
                                 //Save userID in sharedPreferences
                                 Log.d(TAG, " > USER SIGN IN > setting userid: " + userID);
-                                mSharedPref.saveUserID(userID);
+                                mSharedPref.setUserID(userID);
 
                                 //Pass authtoken back to activity
                                 callback.onSuccess(sessionToken);
