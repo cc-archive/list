@@ -58,7 +58,7 @@
             fab:fab_colorPressed="@color/FAB_PRESSED_COLOR" />
             <!--fab:fab_colorRipple="@color/FOCUSED_STATE_COLOR" />-->
     </RelativeLayout>
-    <FrameLayout android:id="@+id/p"
+    <FrameLayout android:id="@+id/overlay_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false">
