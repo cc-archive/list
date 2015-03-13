@@ -235,23 +235,26 @@ public class SharedPreferencesMethods {
     public void deleteUserCategoryPreference(String catId) {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         String listOfValues = sharedPref.getString(CATEGORY_PREFERENCE_KEY, null);
-        Log.v("REMOVE ITEM ID: ", catId);
-        //Convert from String to Array
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(listOfValues);
-        JsonArray array = element.getAsJsonArray();
-        Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
 
-        for (int i = 0; i < array.size(); i++) {
-            String singleItem = array.get(i).getAsString();
-            if (singleItem.equals(catId)) {
-                Log.v("ITEM TO REMOVE IS: ", singleItem);
-                array.remove(i);
+        if(listOfValues != null && listOfValues.length() > 0){
+            Log.v(TAG, "> deleteUserCategoryPreference, try to remove item: " +  catId);
+            //Convert from String to Array
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(listOfValues);
+            JsonArray array = element.getAsJsonArray();
+            Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
+
+            for (int i = 0; i < array.size(); i++) {
+                String singleCat = array.get(i).getAsString();
+                if (singleCat.equals(catId)) {
+                    Log.v("CATEGORY TO REMOVE IS: ", singleCat);
+                    array.remove(i);
+                }
             }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(CATEGORY_PREFERENCE_KEY, array.toString());
+            editor.apply();
         }
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(CATEGORY_PREFERENCE_KEY, array.toString());
-        editor.apply();
     } //deleteUserCategoryPreference
 
     //----------------------------------------------------------
