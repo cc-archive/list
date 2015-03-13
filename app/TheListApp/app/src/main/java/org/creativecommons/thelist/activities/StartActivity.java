@@ -97,6 +97,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Reset Category Preferences
+                mSharedPref.ClearSharedPreference(SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY);
+
                 //Load explainerFragment
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragment_container,explainerFragment)

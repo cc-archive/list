@@ -49,7 +49,6 @@ public class SharedPreferencesMethods {
     public static final String LIST_ITEM_PREFERENCE_KEY = "item";
     public static final String USER_ID_PREFERENCE_KEY = "id";
     public static final String USER_KEY = "ekey";
-    public static final String GA_CHECK = "GA_check";
     public static final String ANALYTICS_OPTOUT = "analyticsOptOut";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
@@ -73,15 +72,6 @@ public class SharedPreferencesMethods {
         editor.putString(USER_ID_PREFERENCE_KEY, id);
         editor.apply();
         Log.v("ADDED AND SAVED ITEM: ", id);
-    }
-
-    @Deprecated
-    //TODO: remove once permission exists
-    public void setAnalyticsMessageViewed(){
-        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(GA_CHECK, true);
-        editor.apply();
     }
 
     public void setAnalyticsOptOut(Boolean bol){
@@ -119,13 +109,6 @@ public class SharedPreferencesMethods {
             return null;
         }
     } //getKey
-
-    @Deprecated
-    //Boolean if googleAnalytics message has been viewed TODO: remove when permission is available
-    public Boolean getGaMessageViewed(){
-        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        return sharedPref.getBoolean(GA_CHECK, false);
-    }
 
     public Boolean getAnalyticsOptOut(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);

@@ -153,7 +153,7 @@ public class CategoryListActivity extends ActionBarActivity {
 
                     if(tempUserCategories != null && tempUserCategories.length() > 0){
                         //Convert to list + add to mUserCategories
-                        for(int i = 0; i > tempUserCategories.length(); i++){
+                        for(int i = 0; i < tempUserCategories.length(); i++){
                             try {
                                 mUserCategories.add(i, tempUserCategories.getInt(i));
                                 Log.v(TAG, " TEMPUSER CATEGORIES: " + mUserCategories.toString());
@@ -325,7 +325,7 @@ public class CategoryListActivity extends ActionBarActivity {
             mGridView.setAdapter(adapter);
 
             //if category has been previously selected by user, set item in gridview as checked
-            if(!(mUserCategories.isEmpty()) || mUserCategories != null){
+            if(mUserCategories != null && mUserCategories.size() > 0) {
                 for(int i = 0; i < mCategoryList.size(); i++){
                     CategoryListItem checkItem = mCategoryList.get(i);
                     if(mUserCategories.contains(checkItem.getCategoryID())){
@@ -333,6 +333,13 @@ public class CategoryListActivity extends ActionBarActivity {
                         mGridView.setItemChecked(i, true);
                     }
                 }
+            }
+
+            SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+            int length = positions.size();
+
+            if(length >= 3){
+                mNextButton.setVisibility(View.VISIBLE);
             }
 
             adapter.notifyDataSetChanged();

@@ -327,7 +327,7 @@ public class MainActivity extends ActionBarActivity {
             //Get items selected from SharedPref
             itemIds = mSharedPref.getUserItemPreference();
 
-            if (itemIds != null) {
+            if (itemIds != null && itemIds.length() > 0) {
                 for (int i = 0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
                     MainListItem listItem = new MainListItem();
