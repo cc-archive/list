@@ -62,6 +62,7 @@ public class ListApplication extends Application {
             } else if(optOut == true){ //if user has opt-ted out (true)
                 //Set app opt-out
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
+                sharedPref.setAnalyticsViewed(true);
                 Log.v(TAG, "> isTempUser = false > setOptOut, true");
             }
         } else { //Temp User
