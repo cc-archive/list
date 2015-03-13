@@ -28,6 +28,18 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
+import org.acra.*;
+import org.acra.annotation.*;
+
+@ReportsCrashes(
+        formKey = "",
+        formUri = "https://thelist.cloudant.com//acra-thelist/_design/acra-storage/_update/report",
+        reportType = org.acra.sender.HttpSender.Type.JSON,
+        httpMethod = org.acra.sender.HttpSender.Method.PUT,
+        formUriBasicAuthLogin="whishadvourayedoestroket",
+        formUriBasicAuthPassword="avuoSpDDOooApkqveRj12KI2", // we might want to consider putting this in another file
+)
+
 import org.creativecommons.thelist.R;
 
 import java.util.HashMap;
@@ -40,6 +52,7 @@ public class ListApplication extends Application {
         super();
     }
 
+    @Override
     public void onCreate() {
         super.onCreate();
         Log.v(TAG, "LIST ON CREATE");
@@ -73,6 +86,10 @@ public class ListApplication extends Application {
                 Log.v(TAG, "> isTempUser = true > setOptOut, true");
             }
         }
+
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this);
+
     } //onCreate
 
     public enum TrackerName {
