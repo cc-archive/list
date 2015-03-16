@@ -373,6 +373,27 @@ public final class RequestMethods {
     // USER PHOTO REQUESTS
     // --------------------------------------------------------
 
+
+    public void getUserPhotos(final RequestCallback callback){
+        if(!(isNetworkAvailable())){
+            mMessageHelper.photoNetworkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+
+
+
+            }
+        });
+
+
+
+    }
+
     public void uploadPhoto(String itemID, Uri photoUri, final RequestCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.photoNetworkFailMessage();
