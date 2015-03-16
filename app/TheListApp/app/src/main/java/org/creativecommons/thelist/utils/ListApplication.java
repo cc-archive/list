@@ -117,7 +117,7 @@ public class ListApplication extends Application {
 
             // Global GA Settings
             // <!-- Google Analytics SDK V4 BUG20141213 Using a GA global xml freezes the app! -->
-            analytics.setDryRun(true);
+            analytics.setDryRun(false);
             analytics.enableAutoActivityReports(this);
             analytics.setLocalDispatchPeriod(30);
 
