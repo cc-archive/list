@@ -25,7 +25,7 @@
 <bool name="ga_reportUncaughtExceptions">true</bool>
 
 <!-- Treat events as test events and don't send to google -->
-<bool name="ga_dryRun">true</bool>
+<bool name="ga_dryRun">false</bool>
 
 <!--How long a session exists before giving up-->
 <integer name="ga_sessionTimeout">300</integer>
