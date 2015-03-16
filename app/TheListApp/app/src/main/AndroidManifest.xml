@@ -34,13 +34,13 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.StartActivity"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/ListTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,24 +53,23 @@
         </activity>
         <activity
             android:name=".activities.AccountActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_account"
+            android:screenOrientation="portrait"
             android:theme="@style/ListThemeNoActionBar"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name=".activities.CategoryListActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_category_list" >
+            android:label="@string/title_activity_category_list"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.RandomActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_random"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
-
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
@@ -92,13 +91,18 @@
         </service>
 
         <!-- Google Analytics Version v4 needs this value for easy tracking -->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.gms.analytics.globalConfigResource"-->
-            <!--android:resource="@xml/global_tracker" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.analytics.globalConfigResource" -->
+        <!-- android:resource="@xml/global_tracker" /> -->
 
-        <!--<meta-data android:name="com.google.android.gms.version"-->
-            <!--android:value="@integer/google_play_services_version" />-->
 
+        <!-- <meta-data android:name="com.google.android.gms.version" -->
+        <!-- android:value="@integer/google_play_services_version" /> -->
+
+        <activity
+            android:name=".activities.GalleryActivity"
+            android:label="@string/title_activity_gallery" >
+        </activity>
     </application>
 
 </manifest>
