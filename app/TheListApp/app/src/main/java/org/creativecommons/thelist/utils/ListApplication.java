@@ -27,6 +27,8 @@ import android.util.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
+import org.creativecommons.thelist.R;
+import java.util.HashMap;
 
 import org.creativecommons.thelist.R;
 
@@ -34,6 +36,7 @@ import java.util.HashMap;
 
 import org.acra.*;
 import org.acra.annotation.*;
+
 
 @ReportsCrashes(
         //formKey = "",
@@ -52,6 +55,7 @@ import org.acra.annotation.*;
         forceCloseDialogAfterToast = true, // optional, default false
         resToastText = R.string.crash_toast_text
 )
+
 public class ListApplication extends Application {
     private static final String TAG = "ListApp";
     private static final String PROPERTY_ID = "UA-2010376-31";

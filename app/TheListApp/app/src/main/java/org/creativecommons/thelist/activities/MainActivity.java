@@ -793,6 +793,10 @@ public class MainActivity extends ActionBarActivity {
             case R.id.switch_accounts:
                     handleUserAccount();
                 return true;
+            case R.id.gallery:
+                Intent galleryIntent = new Intent(MainActivity.this, GalleryActivity.class);
+                startActivity(galleryIntent);
+                return true;
             case R.id.pick_categories:
                 Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
                 startActivity(pickCategoriesIntent);

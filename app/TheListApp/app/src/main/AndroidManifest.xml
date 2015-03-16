@@ -79,6 +79,11 @@
                 android:value="org.creativecommons.thelist.activities.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".activities.GalleryActivity"
+            android:label="@string/title_activity_gallery" >
+        </activity>
+
         <!-- Authenticator -->
         <service android:name=".authentication.ListAuthenticatorService" >
             <intent-filter>
@@ -98,11 +103,6 @@
 
         <!-- <meta-data android:name="com.google.android.gms.version" -->
         <!-- android:value="@integer/google_play_services_version" /> -->
-
-        <activity
-            android:name=".activities.GalleryActivity"
-            android:label="@string/title_activity_gallery" >
-        </activity>
     </application>
 
 </manifest>
