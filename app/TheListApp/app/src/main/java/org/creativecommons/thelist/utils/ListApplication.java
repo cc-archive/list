@@ -28,22 +28,30 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
-import org.acra.*;
-import org.acra.annotation.*;
-
-@ReportsCrashes(
-        formKey = "",
-        formUri = "https://thelist.cloudant.com//acra-thelist/_design/acra-storage/_update/report",
-        reportType = org.acra.sender.HttpSender.Type.JSON,
-        httpMethod = org.acra.sender.HttpSender.Method.PUT,
-        formUriBasicAuthLogin="whishadvourayedoestroket",
-        formUriBasicAuthPassword="avuoSpDDOooApkqveRj12KI2", // we might want to consider putting this in another file
-)
-
 import org.creativecommons.thelist.R;
 
 import java.util.HashMap;
 
+import org.acra.*;
+import org.acra.annotation.*;
+
+@ReportsCrashes(
+        //formKey = "",
+        formUri = "https://thelist.creativecommons.org/app/acra/index.php",
+        httpMethod = org.acra.sender.HttpSender.Method.POST,
+        customReportContent = {
+                ReportField.APP_VERSION_CODE,
+                ReportField.APP_VERSION_NAME,
+                ReportField.ANDROID_VERSION,
+                ReportField.PACKAGE_NAME,
+                ReportField.REPORT_ID,
+                ReportField.BUILD,
+                ReportField.STACK_TRACE
+        },
+        mode = ReportingInteractionMode.TOAST,
+        forceCloseDialogAfterToast = false, // optional, default false
+        resToastText = R.string.crash_toast_text
+)
 public class ListApplication extends Application {
     private static final String TAG = "ListApp";
     private static final String PROPERTY_ID = "UA-2010376-31";

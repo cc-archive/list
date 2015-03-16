@@ -198,4 +198,6 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
 
     <string name="app_version">Version 0.4.0 (March 13th 2015)</string>
 
+    <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
+
 </resources>
