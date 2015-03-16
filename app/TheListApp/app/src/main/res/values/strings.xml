@@ -84,7 +84,6 @@
         The List uses Creative Commons’ CC BY “for attribution” license.
         \n\n<b>Terms of Service</b>
         \nSee <a href="https://thelist.creativecommons.org/app/alpha-tos.html">The List terms of service</a>.
-        \nTo opt out of Google Analytics, see your Creative Commons account in your phone’s Settings.
         \n\n<b>How to help and file a bug</b>
         \nThe List is an free software project
         of Creative Commons. Contributions are welcome; from writing code to filing bugs.
@@ -110,7 +109,7 @@ Timonthy Miller\n
 Yannick Lung\n
         \n\n
 Some icons have been edited.
-\n\
+\n\n
 Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a>.
         \n\n<b>Partners</b>
         \nThe app is created with the generous support of the
@@ -197,5 +196,6 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
 
     <string name="app_version">Version 0.4.0 (March 13th 2015)</string>
+    <string name="title_activity_gallery">GalleryActivity</string>
 
 </resources>
