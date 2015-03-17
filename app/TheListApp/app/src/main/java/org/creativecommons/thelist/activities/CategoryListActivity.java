@@ -35,6 +35,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
@@ -127,7 +128,6 @@ public class CategoryListActivity extends ActionBarActivity {
 
                             //Create list of category ids
                             if(response.length() > 0) {
-
                                 //Get array of catIds
                                 for(int i = 0; i < response.length(); i++){
                                     try {
@@ -173,7 +173,6 @@ public class CategoryListActivity extends ActionBarActivity {
             }
         });
 
-
         //When Category is tapped
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -187,12 +186,12 @@ public class CategoryListActivity extends ActionBarActivity {
                     checkmarkView.setVisibility(View.VISIBLE);
                     item.setCategoryChecked(true);
                     mRequestMethods.addCategory(catId);
-                    Log.v(TAG, "ADDED " + catId);
+                    //Log.v(TAG, "ADDED " + catId);
                 } else {
                     checkmarkView.setVisibility(View.GONE);
                     item.setCategoryChecked(false);
                     mRequestMethods.removeCategory(catId);
-                    Log.v(TAG, "REMOVED " + catId);
+                    //Log.v(TAG, "REMOVED " + catId);
                 }
                 //Count how many items are checked: if at least 3, show Next Button
                 SparseBooleanArray positions = mGridView.getCheckedItemPositions();
@@ -205,7 +204,7 @@ public class CategoryListActivity extends ActionBarActivity {
                         }
                     }
                 }
-                if (ItemsChecked >= 3) {
+                if (ItemsChecked >= 1) {
                     mNextButton.setVisibility(View.VISIBLE);
                 }
                 else {
@@ -218,18 +217,21 @@ public class CategoryListActivity extends ActionBarActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 SparseBooleanArray positions = mGridView.getCheckedItemPositions();
                 int length = positions.size();
                 //Array of user selected categories
                 List<Integer> userCategories = new ArrayList<>();
-                //Boolean TempUser = mCurrentUser.isTempUser();
 
                 for(int i = 0; i < length; i++) {
                     int itemPosition = positions.keyAt(i);
-                    CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
-                    int id = item.getCategoryID();
-                    userCategories.add(id);
+                    boolean value = positions.get(itemPosition);
+
+                    if(value) {
+                        CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
+                        int id = item.getCategoryID();
+                        userCategories.add(id);
+                        Log.v(TAG, "ITEM ADDED");
+                    }
                 }
 
                 if(mCurrentUser.isTempUser()){ //TEMP USER
@@ -323,14 +325,15 @@ public class CategoryListActivity extends ActionBarActivity {
                 Log.e(TAG, "Exception Caught: ", e);
             }
             mGridView.setAdapter(adapter);
+            mGridView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
             //if category has been previously selected by user, set item in gridview as checked
             if(mUserCategories != null && mUserCategories.size() > 0) {
                 for(int i = 0; i < mCategoryList.size(); i++){
                     CategoryListItem checkItem = mCategoryList.get(i);
                     if(mUserCategories.contains(checkItem.getCategoryID())){
-                        checkItem.setCategoryChecked(true);
                         mGridView.setItemChecked(i, true);
+                        checkItem.setCategoryChecked(true);
                     }
                 }
             }

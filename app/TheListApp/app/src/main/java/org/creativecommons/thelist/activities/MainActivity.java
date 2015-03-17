@@ -802,14 +802,20 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(aboutAppIntent);
                 return true;
             case R.id.remove_accounts:
-                mSharedPref.ClearAllSharedPreferences();
-                mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                    @Override
-                    public void onSuccess(String authtoken) {
-                        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                        startActivity(startIntent);
-                    }
-                });
+                if(mCurrentUser.isTempUser()){
+                    mSharedPref.ClearAllSharedPreferences();
+                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                    startActivity(startIntent);
+                } else {
+                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                        @Override
+                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+                        public void onSuccess(String authtoken) {
+                            Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                            startActivity(startIntent);
+                        }
+                    });
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

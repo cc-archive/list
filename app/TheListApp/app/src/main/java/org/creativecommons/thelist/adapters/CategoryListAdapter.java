@@ -62,7 +62,6 @@ public class CategoryListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        String[] colours = activity.getResources().getStringArray(R.array.category_background_colours);
 
         if (inflater == null) {
             inflater = (LayoutInflater) activity
@@ -97,10 +96,11 @@ public class CategoryListAdapter extends BaseAdapter {
         if(c.getCategoryChecked()){
             Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE BEING SET TO VISIBLE");
             holder.checkmarkView.setVisibility(View.VISIBLE);
-            holder.checkableLayout.setChecked(true);
+            //holder.checkableLayout.setChecked(true);
         } else {
+            Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE INVISIBLE");
             holder.checkmarkView.setVisibility(View.GONE);
-            holder.checkableLayout.setChecked(false);
+            //holder.checkableLayout.setChecked(false);
         }
 
         return convertView;
