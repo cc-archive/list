@@ -336,12 +336,6 @@ public class CategoryListActivity extends ActionBarActivity {
                         checkItem.setCategoryChecked(true);
                     }
                 }
-            }
-
-            SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-            int length = positions.size();
-
-            if(length >= 3){
                 mNextButton.setVisibility(View.VISIBLE);
             }
 
