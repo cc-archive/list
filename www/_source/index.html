@@ -4,35 +4,67 @@ layout: default
 
 <div class="col-md-8">
 
-<p><img src="/img/logo.png" alt="" /></p>
+<p><img src="/img/logo.png" alt="The List poweed by Creative Commons" /></p>
 
 <p class="lead">No one can be everywhere at once. But <em>everyone</em> can.</p>
 
-<p class="lead">NGOs, journalists, government agencies, and cultural institutions all need photographs to tell their story and educate others. But there&#8217;s no way for those organizations to be in the right place at the right time, every time. That&#8217;s where we come in.</p>
+<p class="lead">NGOs, journalists, government agencies, and cultural
+institutions all need photographs to tell their story and educate
+others. But there&#8217;s no way for those organizations to be in the
+right place at the right time, every time. That&#8217;s where we come
+in.</p>
 
-Through The List, organizations will provide lists of locations, people, and events that they need photographs of. And when users are in the right place at the right time, they can claim an item from the list and publish a photograph of it. All photos on The List are openly licensed, meaning that everyone can use them.</p>
-<!-- 
+Through The List, organizations will provide lists of locations,
+people, and events that they need photographs of. And when users are
+in the right place at the right time, they can claim an item from the
+list and publish a photograph of it. All photos on The List are openly
+licensed, meaning that everyone can use them.</p>
+
 <div class="well">
 
   <h4>Latest news</h4>
 
   <ul>
-    <li>The List app release is <a href="/beta">available as a public beta</a>.</li>
-  </ul>
 
+ {% for post in site.posts limit:5 %}
+      <li><a  href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
+
+    {% endfor %}
+  
+</ul>
+      
 </div>
-
--->
 
 </div>
 
 <div class="col-md-4">
 
-<p><img src="/img/nexus5.png" /></p>
-
-<!-- <p class="text-center"><a href="/download/" class="btn btn-danger btn-lg" />Download alpha version</a></p> -->
+<p><img src="/img/nexus5.gif" alt="" /></p>
 
 </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-6">
+
+    <h2><a href="/team">Meet the team</a></h2>
+
+<p>The List is being developed in the open by Creative Commons and Playground, Inc. <a href="https://github.com/creativecommons/list/pulse/monthly">Follow our work</a> on GitHub.</p>
+
+<img class="float-left" height="100" src="/img/ryan.jpg" />
+<img class="float-left" height="100" src="/img/mattl.jpg" />
+<img class="float-left" height="100" src="/img/alex.jpg" />
+<img class="float-left" height="100" src="/img/maciej.jpg" />
+<img class="float-left" height="100" src="/img/david.jpg" />
+  
+</div>
+<div class="col-md-6">
+
+ {% include list.html %}
+  
+</div>
+
 </div>
 
 {% include common.html %}

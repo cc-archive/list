@@ -6,35 +6,24 @@ permalink: /team/
 
 Meet the team behind The List.
 
-## Ryan Merkley
+<img class="float-left" height="100" src="/img/ryan.jpg" title="Ryan" />
+<img class="float-left" height="100" src="/img/mattl.jpg" title="Matt" />
+<img class="float-left" height="100" src="/img/alex.jpg" title="Alex" />
+<img class="float-left" height="100" src="/img/maciej.jpg" title="Maciej" />
+<img class="float-left" height="100" src="/img/david.jpg" title="David" />
 
-<img class="float-left" width="200" src="/img/ryan.jpg" />
 
-CEO at Creative Commons. Dad. Geek. Amateur
+**Ryan Merkley**, CEO at Creative Commons. Dad. Geek. Amateur
 barista. Loves things that are (or should be) open, like government,
 data, and 24-hour diners.
 
-## Matt Lee
+**Matt Lee**, Technology Lead at Creative Commons. Free software
+hacker. Always wears a hat.
 
-<img class="float-left" width="200" src="/img/mattl.jpg" />
+**Alexandra Bain**, Software Development Intern at Playground
+Inc. Designer turned developer. Also in love with service design.
 
-Technology Lead at Creative Commons. Free software hacker. Always wears a hat.
+**Maciej Jasiobedzki**, Technical Director at Playground Inc. Human being.
 
-## Alexandra Bain
-
-<img class="float-left" width="200" src="/img/alex.jpg" />
-
-Software Development Intern at Playground Inc. Designer turned developer. Also in love with service design.
-
-## Maciej Jasiobedzki
-
-<img class="float-left" width="200" src="/img/maciej.jpg" />
-
-Technical Director at Playground Inc. Human being.
-
-## David Bartholomew
-
-<img class="float-left" width="200" src="/img/david.jpg" />
-
-Software Engineer at Playground Inc.
+**David Bartholomew**, Software Engineer at Playground Inc.
 

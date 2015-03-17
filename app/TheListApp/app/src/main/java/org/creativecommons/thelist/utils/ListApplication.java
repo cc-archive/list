@@ -49,7 +49,7 @@ import org.acra.annotation.*;
                 ReportField.STACK_TRACE
         },
         mode = ReportingInteractionMode.TOAST,
-        forceCloseDialogAfterToast = false, // optional, default false
+        forceCloseDialogAfterToast = true, // optional, default false
         resToastText = R.string.crash_toast_text
 )
 public class ListApplication extends Application {
