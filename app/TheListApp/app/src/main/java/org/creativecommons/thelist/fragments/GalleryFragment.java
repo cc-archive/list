@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -53,7 +54,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class GalleryFragment extends Fragment {
-    public static final String TAG = AccountFragment.class.getSimpleName();
+    public static final String TAG = GalleryFragment.class.getSimpleName();
 
     Context mContext;
     private MessageHelper mMessageHelper;
@@ -61,6 +62,7 @@ public class GalleryFragment extends Fragment {
 
     //UI Elements
     private TextView mEmptyView;
+    private ProgressBar mProgressBar;
 
     //RecyclerView
     private RecyclerView mRecyclerView;
@@ -111,6 +113,7 @@ public class GalleryFragment extends Fragment {
 
         //UI Elements
         mEmptyView = (TextView)getView().findViewById(R.id.empty_gallery_label);
+        mProgressBar = (ProgressBar)getView().findViewById(R.id.gallery_progressBar);
 
         //RecyclerView
         mRecyclerView = (RecyclerView)getView().findViewById(R.id.galleryRecyclerView);
@@ -124,8 +127,11 @@ public class GalleryFragment extends Fragment {
         mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
+                Log.v(TAG, " > getUserPhotos > onSuccess" + response.toString());
+
                 mPhotoList.clear();
                 mEmptyView.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 GalleryItem galleryItem = new GalleryItem();
 
                 for(int i = 0; i < response.length(); i++){

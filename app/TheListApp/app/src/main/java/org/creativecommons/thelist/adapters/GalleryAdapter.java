@@ -9,11 +9,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.creativecommons.thelist.R;
 
 import java.util.List;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder> {
+    private Context mContext;
     private LayoutInflater inflater;
     private List<GalleryItem> galleryItems;
     private static final int DEFAULT_VIEW = 1;
@@ -21,6 +24,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     public static final int PROGRESS_VIEW = 2;
 
     public GalleryAdapter(Context context, List<GalleryItem> galleryItems){
+        mContext = context;
         this.galleryItems = galleryItems;
         inflater = LayoutInflater.from(context);
     }
@@ -60,10 +64,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                 holder.photoView.setImageResource(R.drawable.ic_error_red_24dp);
                 break;
             case DEFAULT_VIEW:
-                //TODO: add default view
-
-                //TODO: try to show photo, if fails show default image instead
-                holder.photoView.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+                Picasso.with(mContext)
+                        .load(g.getUrl())
+                        .placeholder(R.drawable.ic_camera_alt_grey600_24dp)
+                        //.error(R.drawable.user_placeholder_error) TODO: add error view sweeeet
+                        .into(holder.photoView);
                 break;
 //            case PROGRESS_VIEW:
 //                //TODO: add progress drawable
@@ -78,7 +83,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         public GalleryViewHolder(View itemView) {
             super(itemView);
             //TODO: add default photo
-            //photo = (ImageView)itemView.findViewById();
+            photoView = (ImageView)itemView.findViewById(R.id.gallery_image);
             //progress circle?
         }
     }

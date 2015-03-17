@@ -384,7 +384,8 @@ public final class RequestMethods {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.GET_USER_CATEGORIES + mCurrentUser.getUserID();
+                String url = ApiConstants.GET_USER_PHOTOS + mCurrentUser.getUserID();
+                Log.v(TAG, " > getUserPhotos, url: " + url);
 
                 JsonArrayRequest getUserPhotosRequest = new JsonArrayRequest(url,
                         new Response.Listener<JSONArray>() {
