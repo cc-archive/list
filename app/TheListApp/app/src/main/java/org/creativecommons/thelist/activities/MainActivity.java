@@ -811,6 +811,7 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
                         public void onSuccess(String authtoken) {
+                            mSharedPref.ClearAllSharedPreferences();
                             Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
                             startActivity(startIntent);
                         }
