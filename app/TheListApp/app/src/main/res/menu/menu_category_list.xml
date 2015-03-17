@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="org.creativecommons.thelist.activities.CategoryListActivity">
-    <!--<item android:id="@+id/action_done" android:title="@string/action_done"-->
-        <!--android:orderInCategory="100" app:showAsAction="always" />-->
+    <item android:id="@+id/action_done" android:title="@string/action_done"
+        android:icon="@drawable/ic_done_white_24dp" android:orderInCategory="100"
+        app:showAsAction="always" android:visible="false" />
 </menu>

@@ -86,7 +86,7 @@ public class CategoryListActivity extends ActionBarActivity {
 
     //UI Elements
     protected ProgressBar mProgressBar;
-    protected Button mNextButton;
+    private Menu menu;
 
     // --------------------------------------------------------
 
@@ -102,10 +102,6 @@ public class CategoryListActivity extends ActionBarActivity {
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        //Load UI Elements
-        mNextButton = (Button) findViewById(R.id.nextButton);
-        mNextButton.setVisibility(View.GONE);
 
         //Set List Adapter
         mGridView = (GridView) findViewById(R.id.categoryGrid);
@@ -193,7 +189,7 @@ public class CategoryListActivity extends ActionBarActivity {
                     mRequestMethods.removeCategory(catId);
                     //Log.v(TAG, "REMOVED " + catId);
                 }
-                //Count how many items are checked: if at least 3, show Next Button
+                //Count how many items are checked: if at least 3, show done button
                 SparseBooleanArray positions = mGridView.getCheckedItemPositions();
                 int length = positions.size();
                 int ItemsChecked = 0;
@@ -205,51 +201,16 @@ public class CategoryListActivity extends ActionBarActivity {
                     }
                 }
                 if (ItemsChecked >= 1) {
-                    mNextButton.setVisibility(View.VISIBLE);
+                    MenuItem doneButton = menu.findItem(R.id.action_done);
+                    doneButton.setVisible(true);
                 }
                 else {
-                    mNextButton.setVisibility(View.GONE);
+                    MenuItem doneButton = menu.findItem(R.id.action_done);
+                    doneButton.setVisible(false);
                 }
             }
         }); //setOnItemClickListener
 
-        //Next Button: handle User’s Category Preferences
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-                int length = positions.size();
-                //Array of user selected categories
-                List<Integer> userCategories = new ArrayList<>();
-
-                for(int i = 0; i < length; i++) {
-                    int itemPosition = positions.keyAt(i);
-                    boolean value = positions.get(itemPosition);
-
-                    if(value) {
-                        CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
-                        int id = item.getCategoryID();
-                        userCategories.add(id);
-                        Log.v(TAG, "ITEM ADDED");
-                    }
-                }
-
-                if(mCurrentUser.isTempUser()){ //TEMP USER
-                    //Save user categories to shared preferences
-                    mSharedPref.saveSharedPreference
-                            (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
-                }
-
-                //Navigate to Random Activity if temp has low item count
-//                if(mCurrentUser.isTempUser() && mSharedPref.getUserItemCount() < 3){
-//                    Intent intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-//                    startActivity(intent);
-//                } else {
-                    Intent intent = new Intent(CategoryListActivity.this, MainActivity.class);
-                    startActivity(intent);
-//                }
-            }
-        });
     } //onCreate
 
     @Override
@@ -336,7 +297,8 @@ public class CategoryListActivity extends ActionBarActivity {
                         checkItem.setCategoryChecked(true);
                     }
                 }
-                mNextButton.setVisibility(View.VISIBLE);
+                MenuItem doneButton = menu.findItem(R.id.action_done);
+                doneButton.setVisible(true);
             }
 
             adapter.notifyDataSetChanged();
@@ -347,6 +309,7 @@ public class CategoryListActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_category_list, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -359,6 +322,30 @@ public class CategoryListActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
+            SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+            int length = positions.size();
+            //Array of user selected categories
+            List<Integer> userCategories = new ArrayList<>();
+
+            for(int i = 0; i < length; i++) {
+                int itemPosition = positions.keyAt(i);
+                boolean value = positions.get(itemPosition);
+
+                if(value) {
+                    CategoryListItem catItem = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
+                    int catId = catItem.getCategoryID();
+                    userCategories.add(catId);
+                    Log.v(TAG, "ITEM ADDED");
+                }
+            }
+
+            if(mCurrentUser.isTempUser()){ //TEMP USER
+                //Save user categories to shared preferences
+                mSharedPref.saveSharedPreference
+                        (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
+            }
+            Intent intent = new Intent(CategoryListActivity.this, MainActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
