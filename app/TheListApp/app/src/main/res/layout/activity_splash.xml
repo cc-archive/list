@@ -10,6 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/cc_logo"
-        android:padding="30dp" />
+        android:padding="100dp" />
 
 </RelativeLayout>
