@@ -64,19 +64,18 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
                 .add(R.id.gallery_fragment_container,galleryFragment)
                 .commit();
         mFrameLayout.setClickable(true);
-
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        //GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        //GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
 //    @Override
