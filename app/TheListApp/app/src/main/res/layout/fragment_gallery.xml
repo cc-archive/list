@@ -24,16 +24,15 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/empty_gallery_label"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/secondary_text_default_material_light"
-            android:text="Hey, looks like your gallery is empty."
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
+    <TextView
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_gallery_label"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:text="Hey, looks like your gallery is empty. Upload some photos!"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

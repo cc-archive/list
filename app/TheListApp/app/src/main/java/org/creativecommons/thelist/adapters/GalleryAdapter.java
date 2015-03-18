@@ -43,6 +43,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 
         if(g.getError()){
             return ERROR_VIEW;
+        } else if(g.getProgress()) {
+            return PROGRESS_VIEW;
         } else {
             return DEFAULT_VIEW;
         }
@@ -64,18 +66,22 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         switch(getItemViewType(position)){
             case ERROR_VIEW:
                 //TODO: set error view
-                holder.photoView.setImageResource(R.drawable.ic_error_red_24dp);
+                holder.photoView.setImageResource(R.drawable.error_view);
+                Log.v(TAG, "ERROR VIEW");
                 break;
             case DEFAULT_VIEW:
                 Picasso.with(mContext)
                         .load(g.getUrl())
-                        .placeholder(R.drawable.ic_camera_alt_grey600_24dp) //TODO: switch drawable
-                        .error(R.drawable.ic_error_red_24dp)
+                        .placeholder(R.drawable.progress_view) //TODO: switch drawable
+                        .error(R.drawable.progress_view)
                         .into(holder.photoView);
+                Log.v(TAG, "DEFAULT VIEW");
                 break;
-//            case PROGRESS_VIEW:
+            case PROGRESS_VIEW:
 //                //TODO: add progress drawable
-//                holder.iconImageView.setImageResource(R.drawable.ic_camera_alt_black_36dp);
+               holder.photoView.setImageResource(R.drawable.progress_view);
+                Log.v(TAG, "PROGRESS VIEW");
+               break;
         }
         holder.itemView.setTag(g);
     }

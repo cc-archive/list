@@ -153,8 +153,12 @@ public class GalleryFragment extends Fragment {
 
                     try {
                         JSONObject singlePhotoItem = response.getJSONObject(i);
-                        galleryItem.setUrl(singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL));
+                        String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
+                        galleryItem.setUrl(photoUrl);
 
+                        if(photoUrl == null){
+                            galleryItem.setProgress(true);
+                        }
                     } catch (JSONException e) {
                         Log.v(TAG, e.getMessage());
                     }
