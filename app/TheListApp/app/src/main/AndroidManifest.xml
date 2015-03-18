@@ -47,7 +47,6 @@
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -82,6 +81,9 @@
         <activity
             android:name=".activities.GalleryActivity"
             android:label="@string/title_activity_gallery" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.MainActivity" />
         </activity>
 
         <!-- Authenticator -->
