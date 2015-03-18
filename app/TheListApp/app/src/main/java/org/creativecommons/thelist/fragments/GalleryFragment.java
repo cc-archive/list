@@ -132,12 +132,14 @@ public class GalleryFragment extends Fragment {
                 mPhotoList.clear();
                 mEmptyView.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
-                GalleryItem galleryItem = new GalleryItem();
 
                 for(int i = 0; i < response.length(); i++){
+                    GalleryItem galleryItem = new GalleryItem();
+
                     try {
                         JSONObject singlePhotoItem = response.getJSONObject(i);
                         galleryItem.setUrl(singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL));
+                        Log.v(TAG, "URL FROM ACTIVITY: " + singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL));
 
                     } catch (JSONException e) {
                         Log.v(TAG, e.getMessage());

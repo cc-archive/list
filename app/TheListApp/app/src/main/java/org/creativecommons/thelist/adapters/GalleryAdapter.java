@@ -2,6 +2,7 @@ package org.creativecommons.thelist.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import org.creativecommons.thelist.R;
 import java.util.List;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder> {
+    public static final String TAG = GalleryAdapter.class.getSimpleName();
+
     private Context mContext;
     private LayoutInflater inflater;
     private List<GalleryItem> galleryItems;
@@ -64,10 +67,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                 holder.photoView.setImageResource(R.drawable.ic_error_red_24dp);
                 break;
             case DEFAULT_VIEW:
+                Log.v(TAG, "GALLERY IMAGE URL: " + g.getUrl());
                 Picasso.with(mContext)
                         .load(g.getUrl())
                         .placeholder(R.drawable.ic_camera_alt_grey600_24dp)
-                        //.error(R.drawable.user_placeholder_error) TODO: add error view sweeeet
+                        .error(R.drawable.ic_error_red_24dp)
                         .into(holder.photoView);
                 break;
 //            case PROGRESS_VIEW:
@@ -82,9 +86,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 
         public GalleryViewHolder(View itemView) {
             super(itemView);
-            //TODO: add default photo
             photoView = (ImageView)itemView.findViewById(R.id.gallery_image);
-            //progress circle?
         }
     }
 
