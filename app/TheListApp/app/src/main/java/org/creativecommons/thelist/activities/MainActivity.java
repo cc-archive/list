@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -104,6 +105,7 @@ public class MainActivity extends ActionBarActivity {
     protected Uri mMediaUri;
 
     //RecyclerView
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -143,7 +145,7 @@ public class MainActivity extends ActionBarActivity {
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Load UI Elements
-        mProgressBar = (ProgressBar) findViewById(R.id.feed_progressBar);
+        mProgressBar = (ProgressBar) findViewById(R.id.feedProgressBar);
         mUploadProgressBar = (RelativeLayout) findViewById(R.id.photoProgressBar);
         mEmptyView = (TextView) findViewById(R.id.empty_list_label);
         mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
@@ -161,6 +163,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         //RecyclerView
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.feedSwipeRefresh);
         mRecyclerView = (RecyclerView)findViewById(R.id.feedRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         //TODO: Try dividers in layout instead?
@@ -172,6 +175,14 @@ public class MainActivity extends ActionBarActivity {
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         initRecyclerView();
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                displayUserItems();
+            }
+        });
+
     } //onCreate
 
     @Override
@@ -226,7 +237,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "ON RESUME CALLED");
 
         //Update menu for login/logout options
         invalidateOptionsMenu();
@@ -246,17 +256,14 @@ public class MainActivity extends ActionBarActivity {
         }
 
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
+            Log.v(TAG, " > User is logged in");
             displayUserItems();
-            Log.v("NOT A TEMP: ", "legit user");
-
         } else { //if user is a temp
-            Log.v("I R A TEMP: ", "not logged in");
+            Log.v(TAG, " > User is not logged in");
             if(mItemList.size() == 0){
-                Log.v("THERE ARE NO ITEMS: ", "Annd not logged in");
                 mRecyclerView.setVisibility(View.INVISIBLE);
                 displayUserItems();
             } else {
-                Log.v("THERE ARE ITEMS: ", "Annd not logged in");
                 mFeedAdapter.notifyDataSetChanged();
                 mRecyclerView.setVisibility(View.VISIBLE);
             }
@@ -321,6 +328,7 @@ public class MainActivity extends ActionBarActivity {
                         mEmptyView.setVisibility(View.GONE);
                         Collections.reverse(mItemList);
                         mFeedAdapter.notifyDataSetChanged();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 } //onSuccess
                 @Override
@@ -351,6 +359,7 @@ public class MainActivity extends ActionBarActivity {
                 }
                 Collections.reverse(mItemList);
                 mFeedAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
             } else {
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mEmptyView.setVisibility(View.VISIBLE);
