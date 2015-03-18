@@ -69,7 +69,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
             case DEFAULT_VIEW:
                 Picasso.with(mContext)
                         .load(g.getUrl())
-                        .placeholder(R.drawable.ic_camera_alt_grey600_24dp)
+                        .placeholder(R.drawable.ic_camera_alt_grey600_24dp) //TODO: switch drawable
                         .error(R.drawable.ic_error_red_24dp)
                         .into(holder.photoView);
                 break;
