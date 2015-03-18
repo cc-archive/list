@@ -61,4 +61,12 @@ public class GalleryItem {
         return error;
     }
 
+    public void setProgress(boolean progress){
+        this.progress = progress;
+    }
+
+    public boolean getProgress(){
+        return progress;
+    }
+
 } //GalleryItem

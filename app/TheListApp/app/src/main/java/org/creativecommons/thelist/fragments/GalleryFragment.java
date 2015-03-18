@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,6 +69,7 @@ public class GalleryFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private GalleryAdapter mGalleryAdapter;
     private GridLayoutManager mGridLayoutManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<GalleryItem> mPhotoList = new ArrayList<>();
 
     //Interface with Activity + ListUser
@@ -116,14 +118,27 @@ public class GalleryFragment extends Fragment {
         mProgressBar = (ProgressBar)getView().findViewById(R.id.gallery_progressBar);
 
         //RecyclerView
+        mSwipeRefreshLayout = (SwipeRefreshLayout)getView().findViewById(R.id.gallerySwipeRefresh);
         mRecyclerView = (RecyclerView)getView().findViewById(R.id.galleryRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.hasFixedSize();
         mGridLayoutManager = new GridLayoutManager(getActivity(), 3);
         mGalleryAdapter = new GalleryAdapter(mContext, mPhotoList);
         mRecyclerView.setAdapter(mGalleryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
-        //TODO: get gallery items
+        refreshItems();
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    } //onResume
+
+    public void refreshItems(){
         mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
@@ -162,7 +177,8 @@ public class GalleryFragment extends Fragment {
                 Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
             }
         });
-    } //onResume
+    }
+
 
     @Override
     public void onDetach() {
