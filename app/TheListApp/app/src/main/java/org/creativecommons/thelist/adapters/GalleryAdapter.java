@@ -67,7 +67,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                 holder.photoView.setImageResource(R.drawable.ic_error_red_24dp);
                 break;
             case DEFAULT_VIEW:
-                Log.v(TAG, "GALLERY IMAGE URL: " + g.getUrl());
                 Picasso.with(mContext)
                         .load(g.getUrl())
                         .placeholder(R.drawable.ic_camera_alt_grey600_24dp)
