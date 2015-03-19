@@ -6,7 +6,7 @@ permalink: /downloads/
 
 Downloads for The List app
 
-<p><a href="/releases/thelist-0.4.0.apk" class="btn btn-success btn-lg">Download latest version 0.4.0</a></p>
+<p><a href="/releases/thelist-0.4.1.apk" class="btn btn-success btn-lg">Download latest version 0.4.1</a></p>
 
 ### All public releases
 

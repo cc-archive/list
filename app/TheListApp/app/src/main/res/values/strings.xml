@@ -195,7 +195,7 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="dialog_ga_title">Use Google Analytics?</string>
     <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
 
-    <string name="app_version">Version 0.4.0 (March 16th 2015)</string>
+    <string name="app_version">Version 0.4.1 (March 19th 2015)</string>
     <string name="title_activity_gallery">GalleryActivity</string>
 
     <string name="crash_toast_text">Oops! The List crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
