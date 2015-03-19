@@ -44,7 +44,6 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
     FrameLayout mFrameLayout;
 
     ImageFragment imageFragment = new ImageFragment();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +69,6 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
                 .addToBackStack(null)
                 .commit();
         mFrameLayout.setClickable(true);
-
     }
 
     @Override
@@ -111,7 +109,6 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
 
         return true;
     }
-
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.

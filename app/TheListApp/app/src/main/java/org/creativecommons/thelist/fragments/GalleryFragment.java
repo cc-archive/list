@@ -21,7 +21,7 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,7 +33,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -51,7 +51,6 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,8 +103,6 @@ public class GalleryFragment extends Fragment {
         }
     } //onAttach
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,8 +130,6 @@ public class GalleryFragment extends Fragment {
         mGalleryAdapter = new GalleryAdapter(mContext, mPhotoList);
         mRecyclerView.setAdapter(mGalleryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
-
-
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override

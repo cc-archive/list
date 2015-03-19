@@ -75,11 +75,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                         .placeholder(R.drawable.progress_view) //TODO: switch drawable
                         .error(R.drawable.progress_view)
                         .into(holder.photoView);
-                break;
             case PROGRESS_VIEW:
                 //TODO: add progress drawable
+               holder.photoView.setImageResource(R.drawable.progress_view);
                 Log.v(TAG, "PROGRESS VIEW");
-                holder.photoView.setImageResource(R.drawable.progress_view);
                break;
         }
         holder.itemView.setTag(g);
