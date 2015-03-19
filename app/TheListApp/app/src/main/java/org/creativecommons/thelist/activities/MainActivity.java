@@ -69,6 +69,7 @@ import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
+import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -426,7 +427,7 @@ public class MainActivity extends ActionBarActivity {
         mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
 
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
-                new OnItemClickListener() {
+                new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -440,39 +441,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }));
     } //initRecyclerView
-
-    //For Swipe to Dismiss
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-    }
-    //For Swipe to Dismiss
-    public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-        private OnItemClickListener mListener;
-        GestureDetector mGestureDetector;
-
-        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
-            mListener = listener;
-            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    //Log.v("HI", "ON SINGLE TAG UP CALLED");
-                    return true;
-                }
-            });
-        }
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-            View childView = view.findChildViewUnder(e.getX(), e.getY());
-            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-                mListener.onItemClick(childView, view.getChildPosition(childView));
-            }
-            return false;
-        }
-        @Override
-        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
-            //Log.v("HI", "ON TOUCH EVENT CALLED");
-        }
-    } //RecyclerItemClickListener
 
 
     //----------------------------------------------

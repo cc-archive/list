@@ -20,21 +20,21 @@
 package org.creativecommons.thelist.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
-import org.creativecommons.thelist.fragments.ImageFragment;
 import org.creativecommons.thelist.utils.ListApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GalleryActivity extends ActionBarActivity implements GalleryFragment.GalleryListener {
     public static final String TAG = GalleryActivity.class.getSimpleName();
@@ -43,7 +43,6 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
     //UI Elements
     FrameLayout mFrameLayout;
 
-    ImageFragment imageFragment = new ImageFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +65,17 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.gallery_fragment_container,galleryFragment, "GALLERY_FRAGMENT") //TODO: get rid of frag tag
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
                 .commit();
         mFrameLayout.setClickable(true);
     }
+
+    @Override
+    public void viewImage(ArrayList<String> urls, int position) {
+        Intent intent = new Intent(GalleryActivity.this, ImageActivity.class);
+        intent.putExtra("position", position);
+        intent.putStringArrayListExtra("urls", urls);
+        startActivity(intent);
+    } //viewImage
 
     @Override
     protected void onStart(){
@@ -83,32 +89,8 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    @Override
-    public void viewImage(String url) {
-        Bundle b = new Bundle();
-        b.putString("url", url);
-        imageFragment.setArguments(b);
+} //GalleryActivity
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.gallery_fragment_container, imageFragment, "IMAGE_FRAGMENT") //TODO: get rid of frag tag
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit();
-    } //viewImage
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        //This method is called when the up button is pressed. Just the pop back stack.
-
-        if(imageFragment.isVisible()){
-            getSupportFragmentManager().popBackStack();
-        } else {
-            finish();
-        }
-
-
-        return true;
-    }
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
@@ -130,4 +112,4 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
 //
 //        return super.onOptionsItemSelected(item);
 //    }
-}
+//}

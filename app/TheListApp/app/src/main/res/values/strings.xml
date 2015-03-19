@@ -10,6 +10,8 @@
     <string name="title_activity_explainer">What’s up with the List?</string>
     <string name="title_activity_account">Add Account</string>
     <string name="title_activity_start">Start The List</string>
+    <string name="title_activity_gallery">Gallery</string>
+    <string name="title_activity_image">Gallery</string>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
@@ -198,8 +200,8 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
 
     <string name="app_version">Version 0.4.0 (March 16th 2015)</string>
-    <string name="title_activity_gallery">Gallery</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
+
 
 </resources>

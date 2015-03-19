@@ -84,7 +84,7 @@ public class GalleryFragment extends Fragment {
 
     //LISTENERS
     public interface GalleryListener {
-        public void viewImage(String url);
+        public void viewImage(ArrayList<String> urls, int position);
     }
 
     public GalleryFragment() {
@@ -134,8 +134,13 @@ public class GalleryFragment extends Fragment {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        GalleryItem currentItem = mPhotoList.get(position);
-                        mCallback.viewImage(currentItem.getUrl()); //TODO: eventually set url for large image
+                        ArrayList<String> urls = new ArrayList<>();
+
+                        for(int i = 0; i < mPhotoList.size(); i++){
+                            GalleryItem singlePhoto = mPhotoList.get(i);
+                            urls.add(singlePhoto.getUrl());
+                        }
+                        mCallback.viewImage(urls, position); //TODO: eventually set url for large image
                     }
                 }));
 
@@ -170,6 +175,7 @@ public class GalleryFragment extends Fragment {
                         galleryItem.setUrl(photoUrl);
 
                         if(photoUrl == null){
+                            Log.v("PROGRESS VIEW IS TRUE", " YO");
                             galleryItem.setProgress(true);
                         }
                     } catch (JSONException e) {
@@ -201,6 +207,7 @@ public class GalleryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallback = null;
+        mPhotoList.clear();
     }
 
 } //GalleryFragment
