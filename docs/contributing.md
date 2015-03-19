@@ -16,7 +16,7 @@ Contributor Agreement. "Your" has a corresponding meaning.
 
 ## Agreement
 
-1. Your Original Code and Content: If you want to contribute Code and Content that You created to The List Project (“Original Code” and/or “Original Content” and collectively, “Your Original Contributions”), you must agree to and comply with the following requirements. 
+(1) Your Original Code and Content: If you want to contribute Code and Content that You created to The List Project (“Original Code” and/or “Original Content” and collectively, “Your Original Contributions”), you must agree to and comply with the following requirements. 
 
 a) You retain any copyright that you have in Your Original Contributions. Your Original Code must be licensed under the GNU Affero General Public license version 3 with support for later versions or, in the case of trivial snippets of code, dedicated to the public domain using CC0. Your Original Content must be licensed CC BY 4.0 or dedicated to the public domain using CC0. 
 
@@ -26,7 +26,7 @@ c) Your Original Contributions must be marked with licensing information.
 
 d) You warrant that You are the sole copyright owner of Your Original Contributions, and Your Original Contributions do not violate the copyright or other legal rights of any person or entity, including Your employer or academic institution. You further warrant that, to the best of Your knowledge, Your Original Contributions do not violate the patent rights of any person or entity. You agree to hold Creative Commons harmless for any damages arising from a breach of this warranty by You. 
 
-2. Third Party Code or Content: If You want to contribute Code or
+(2) Third Party Code or Content: If You want to contribute Code or
 Content created by someone other than You ("Third Party Code" and/or
 "Third Party Content"), You must agree to and comply with the
 following requirements.
@@ -53,7 +53,7 @@ under these terms, and that, to the best of Your knowledge, the
 contribution does not violate the copyright, patent, or other legal
 rights of any person or entity.
 
-3. If You become aware of any information or circumstance that affects
+(3) If You become aware of any information or circumstance that affects
 Your ability to comply with Your obligations under this Tech
 Contributor Agreement, such as learning that Third Party Code You
 contributed may infringe the rights of another individual or entity,
