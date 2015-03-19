@@ -20,6 +20,7 @@
 package org.creativecommons.thelist.activities;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
+import org.creativecommons.thelist.fragments.ImageFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 
 public class GalleryActivity extends ActionBarActivity implements GalleryFragment.GalleryListener {
@@ -40,6 +42,8 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
 
     //UI Elements
     FrameLayout mFrameLayout;
+
+    ImageFragment imageFragment = new ImageFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +65,12 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
         //auto load loginFragment
         GalleryFragment galleryFragment = new GalleryFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.gallery_fragment_container,galleryFragment)
+                .add(R.id.gallery_fragment_container,galleryFragment, "GALLERY_FRAGMENT") //TODO: get rid of frag tag
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
                 .commit();
         mFrameLayout.setClickable(true);
+
     }
 
     @Override
@@ -76,6 +83,33 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
     protected void onStop(){
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    @Override
+    public void viewImage(String url) {
+        Bundle b = new Bundle();
+        b.putString("url", url);
+        imageFragment.setArguments(b);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.gallery_fragment_container, imageFragment, "IMAGE_FRAGMENT") //TODO: get rid of frag tag
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit();
+    } //viewImage
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        //This method is called when the up button is pressed. Just the pop back stack.
+
+        if(imageFragment.isVisible()){
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
+
+
+        return true;
     }
 
 //    @Override

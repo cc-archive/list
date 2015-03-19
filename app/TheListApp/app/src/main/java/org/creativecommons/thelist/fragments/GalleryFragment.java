@@ -21,6 +21,7 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -39,13 +42,16 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.GalleryAdapter;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,12 +81,11 @@ public class GalleryFragment extends Fragment {
     //Interface with Activity + ListUser
     public GalleryListener mCallback;
 
-
     // --------------------------------------------------------
 
     //LISTENERS
     public interface GalleryListener {
-        //TODO: add callbacks
+        public void viewImage(String url);
     }
 
     public GalleryFragment() {
@@ -98,6 +103,8 @@ public class GalleryFragment extends Fragment {
                     + activity.getString(R.string.gallery_callback_exception_message));
         }
     } //onAttach
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,6 +134,17 @@ public class GalleryFragment extends Fragment {
         mRecyclerView.setAdapter(mGalleryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        GalleryItem currentItem = mPhotoList.get(position);
+                        mCallback.viewImage(currentItem.getUrl()); //TODO: eventually set url for large image
+                    }
+                }));
+
+        //Show user Photos
         refreshItems();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
