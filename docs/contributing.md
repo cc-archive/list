@@ -68,5 +68,5 @@ contributions at any time. Similarly, Creative Commons may terminate
 this Agreement with You at any time, for any reason. You may not
 withdraw Your Original Contributions.
 
-You must indicate Your agreement with this Tech Contributor Agreement by expressly indicating your agreement to these terms in your initial pull request for the List Project. You may use this text to do so: “I have read and agree to the terms of the Tech Contributor Agreement.” 
+*You must indicate Your agreement with this Tech Contributor Agreement by expressly indicating your agreement to these terms in your initial pull request for the List Project. You may use this text to do so: “I have read and agree to the terms of the Tech Contributor Agreement.”*
 
