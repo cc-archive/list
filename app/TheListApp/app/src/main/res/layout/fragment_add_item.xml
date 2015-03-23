@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    tools:context="org.creativecommons.thelist.fragments.AddItemFragment">
+
+    <ImageButton android:id="@+id/add_item_example_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/progress_view"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:layout_centerInParent="true"
+        android:contentDescription="Add an example image (optional)"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <EditText android:id="@+id/add_item_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:hint="Item Name"
+        android:layout_below="@id/add_item_example_image"/>
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_below="@id/add_item_edittext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/category_array"
+        android:prompt="@string/category_prompt" />
+
+    <!--<Spinner android:id="@+id/add_item_category_spinner"-->
+        <!--android:layout_below="@id/spinner1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+</RelativeLayout>

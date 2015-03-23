@@ -780,6 +780,10 @@ public class MainActivity extends ActionBarActivity {
                 Intent aboutAppIntent = new Intent(MainActivity.this,AboutActivity.class);
                 startActivity(aboutAppIntent);
                 return true;
+            case R.id.add_item:
+                Intent addItemIntent = new Intent(MainActivity.this, AddItemActivity.class);
+                startActivity(addItemIntent);
+                return true;
             case R.id.remove_accounts:
                 if(mCurrentUser.isTempUser()){
                     mSharedPref.ClearAllSharedPreferences();

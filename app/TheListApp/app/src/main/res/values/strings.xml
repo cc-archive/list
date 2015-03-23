@@ -12,6 +12,7 @@
     <string name="title_activity_start">Start The List</string>
     <string name="title_activity_gallery">Gallery</string>
     <string name="title_activity_image">Gallery</string>
+    <string name="title_activity_add_item">Create an Item</string>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
@@ -169,6 +170,18 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">
         Use of this alpha release of The List is subject to these terms and conditions</a></string>
 
+    <!--Add Item Fragment-->
+    <string name="category_prompt">Choose a category</string>
+
+    <string-array name="category_array">
+        <item>Clothing/Fashion</item>
+        <item>Places/Cities</item>
+        <item>Nature/Animals</item>
+        <item>People</item>
+        <item>Food</item>
+        <item>Objects</item>
+    </string-array>
+
     <!-- Fragment Callback Exception Messages -->
     <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
     <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
@@ -199,9 +212,10 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="dialog_ga_title">Use Google Analytics?</string>
     <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
     <string name="app_version">Version 0.4.1 (March 19th 2015)</string>
-    <string name="title_activity_gallery">GalleryActivity</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
+    <string name="single_choice_text">Choose</string>
+    <string name="add_item_menu_label">Request an Item</string>
 
 
 </resources>

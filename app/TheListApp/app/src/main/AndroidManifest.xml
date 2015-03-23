@@ -80,7 +80,7 @@
         <activity
             android:name=".activities.GalleryActivity"
             android:label="@string/title_activity_gallery"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.creativecommons.thelist.activities.MainActivity" />
@@ -113,6 +113,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.creativecommons.thelist.activities.GalleryActivity" />
+        </activity>
+        <activity
+            android:name=".activities.AddItemActivity"
+            android:label="@string/title_activity_add_item"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.MainActivity" />
         </activity>
     </application>
 
