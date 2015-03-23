@@ -80,6 +80,16 @@ public class MessageHelper {
                             .show();
     } //takeSurveyDialog
 
+    //Single Choice Dialog
+    public void showSingleChoiceDialog(Context context, String title, String[] items,
+                                       MaterialDialog.ListCallback callback){
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .items(items)
+                .itemsCallbackSingleChoice(-1, callback)
+                //.positiveText(context.getString(R.string.single_choice_text))
+                .show();
+    } //showSingleChoiceDialog
 
     //Send Android System Notifications
     public void sendNotification(Context context, String title, String message, String ticker){
