@@ -21,19 +21,15 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -42,11 +38,8 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
-import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.GalleryAdapter;
 import org.creativecommons.thelist.adapters.GalleryItem;
-import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
@@ -175,7 +168,6 @@ public class GalleryFragment extends Fragment {
                         galleryItem.setUrl(photoUrl);
 
                         if(photoUrl == null){
-                            Log.v("PROGRESS VIEW IS TRUE", " YO");
                             galleryItem.setProgress(true);
                         }
                     } catch (JSONException e) {
@@ -200,8 +192,7 @@ public class GalleryFragment extends Fragment {
                 Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
             }
         });
-    }
-
+    } //refreshItems
 
     @Override
     public void onDetach() {

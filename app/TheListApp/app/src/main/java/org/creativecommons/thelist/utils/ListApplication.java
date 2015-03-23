@@ -27,15 +27,14 @@ import android.util.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
+
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 import org.creativecommons.thelist.R;
-import java.util.HashMap;
-
-import org.creativecommons.thelist.R;
 
 import java.util.HashMap;
-
-import org.acra.*;
-import org.acra.annotation.*;
 
 
 @ReportsCrashes(

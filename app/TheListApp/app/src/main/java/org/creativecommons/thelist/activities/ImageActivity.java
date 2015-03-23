@@ -1,14 +1,12 @@
 package org.creativecommons.thelist.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.adapters.ImageAdapter;
 
 import java.util.ArrayList;
