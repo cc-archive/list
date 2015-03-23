@@ -70,6 +70,9 @@ public final class ApiConstants {
     public static final String POST_PHOTO_KEY = "filedata";
     public static final String USER_TOKEN = "skey";
 
+    //User Photo List
+    public static final String USER_PHOTO_URL = "url";
+
     //Creative Commons API
     public static final String URL = "https://thelist.creativecommons.org/api";
 
@@ -114,7 +117,8 @@ public final class ApiConstants {
     //PHOTOS
     //POST photo (+ ID, + ItemID)
     public static final String ADD_PHOTO = URL + "/photos/";
-    //POST login (+ email and password)
+    //GET user photos (+ID)
+    public static final String GET_USER_PHOTOS = URL + "/photos/";
 
     //LOGIN
     public static final String LOGIN_USER = URL + "/users/login";

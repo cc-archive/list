@@ -373,6 +373,46 @@ public final class RequestMethods {
     // USER PHOTO REQUESTS
     // --------------------------------------------------------
 
+
+    public void getUserPhotos(final ResponseCallback callback) {
+        if (!(isNetworkAvailable())) {
+            mMessageHelper.photoNetworkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.GET_USER_PHOTOS + mCurrentUser.getUserID();
+                Log.v(TAG, " > getUserPhotos, url: " + url);
+
+                JsonArrayRequest getUserPhotosRequest = new JsonArrayRequest(url,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                //Log.v(TAG, "> getUserCategories > onResponse: " + response);
+                                callback.onSuccess(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Log.d(TAG, "> getUserCategories > onErrorResponse: " + error.getMessage());
+                        callback.onFail(error);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(getUserPhotosRequest);
+            }
+        });
+    } //getUserPhotos
+
     public void uploadPhoto(String itemID, Uri photoUri, final RequestCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.photoNetworkFailMessage();

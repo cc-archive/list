@@ -18,7 +18,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/ListTheme" >
-
         <activity
             android:name=".activities.SplashScreen"
             android:label="@string/app_name"
@@ -30,22 +29,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.StartActivity"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/ListTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -53,28 +52,35 @@
         </activity>
         <activity
             android:name=".activities.AccountActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_account"
+            android:screenOrientation="portrait"
             android:theme="@style/ListThemeNoActionBar"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name=".activities.CategoryListActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_category_list" >
+            android:label="@string/title_activity_category_list"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.RandomActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_random"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
-
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
             android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.GalleryActivity"
+            android:label="@string/title_activity_gallery"
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.creativecommons.thelist.activities.MainActivity" />
@@ -92,13 +98,22 @@
         </service>
 
         <!-- Google Analytics Version v4 needs this value for easy tracking -->
-        <!--<meta-data-->
-            <!--android:name="com.google.android.gms.analytics.globalConfigResource"-->
-            <!--android:resource="@xml/global_tracker" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.analytics.globalConfigResource" -->
+        <!-- android:resource="@xml/global_tracker" /> -->
 
-        <!--<meta-data android:name="com.google.android.gms.version"-->
-            <!--android:value="@integer/google_play_services_version" />-->
 
+        <!-- <meta-data android:name="com.google.android.gms.version" -->
+        <!-- android:value="@integer/google_play_services_version" /> -->
+        <activity
+            android:name=".activities.ImageActivity"
+            android:label="@string/title_activity_image"
+            android:launchMode="singleTask"
+            android:parentActivityName=".activities.GalleryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.GalleryActivity" />
+        </activity>
     </application>
 
 </manifest>
