@@ -70,3 +70,15 @@ withdraw Your Original Contributions.
 
 *You must indicate Your agreement with this Tech Contributor Agreement by expressly indicating your agreement to these terms in your initial pull request for the List Project. You may use this text to do so: “I have read and agree to the terms of the Tech Contributor Agreement.”*
 
+#### Note about Reusing this contributor agreement
+
+Tech Contributor Agreement for The List Powered by Creative Commons is dedicated to the public domain
+under the
+[Creative Commons CC0 Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/). You
+are free to use and adapt it and any applicable
+Additional Terms for your own purposes. However, please keep in mind
+that this agreement may not be completely suitable for your
+situation. Creative Commons strongly encourages you to seek the advice
+of your own attorney before repurposing this agreement on your own site.
+
+
