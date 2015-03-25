@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.creativecommons.thelist.fragments.GalleryFragment">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/gallerySwipeRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/galleryRecyclerView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gallery_progressBar"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_gallery_label"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:text="Hey, looks like your gallery is empty. Upload some photos!"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
