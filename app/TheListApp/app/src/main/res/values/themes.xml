@@ -12,7 +12,7 @@
     <style name="ListTheme" parent="ListThemeBase">
         <item name="android:buttonStyle">@style/raised_button</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
-        <item name="android:spinnerStyle">@style/Widget.AppCompat.Spinner</item>
+        <item name="android:spinnerStyle">@style/Widget.AppCompat.Spinner.Underlined</item>
     </style>
 
     <style name="ListThemeNoActionBar" parent="ListTheme">

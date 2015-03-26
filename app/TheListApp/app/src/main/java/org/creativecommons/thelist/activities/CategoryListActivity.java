@@ -32,7 +32,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -141,6 +140,8 @@ public class CategoryListActivity extends ActionBarActivity {
                         @Override
                         public void onFail(VolleyError error) {
                             Log.v(TAG, "> getUserCategories > onFail " + error.toString());
+                            mMessageHelper.showDialog(mContext, getString(R.string.error_title),
+                                    getString(R.string.error_message));
                         }
                     });
                 } else {
@@ -274,13 +275,9 @@ public class CategoryListActivity extends ActionBarActivity {
                     categoryListItem.setCategoryName(jsonSingleCategory.getString(ApiConstants.CATEGORY_NAME));
                     categoryListItem.setCategoryID(jsonSingleCategory.getInt(ApiConstants.CATEGORY_ID));
                     categoryListItem.setCategoryColour("#" + jsonSingleCategory.getString(ApiConstants.CATEGORY_COLOUR));
-                    Log.v(TAG, "mCategoryData to add to list: " + categoryListItem.getCategoryColour());
-                    Log.v(TAG, "THIS IS USER CATEGORIES IN LOOP: " + mUserCategories.toString());
 
                     //Add to array list to be adapted
                     mCategoryList.add(categoryListItem);
-                    Log.v(TAG, "ITEM ADDED TO CATEGORY LIST");
-
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Exception Caught: ", e);

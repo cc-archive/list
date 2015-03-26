@@ -106,6 +106,10 @@ public final class ApiConstants {
     //TODO: update with real info
     public static final String REMOVE_ITEM = URL + "/userlist/delete/";
 
+    //MAKERLIST
+    public static final String GET_MAKER_LIST =  URL + "//"; //TODO: insert proper url
+    public static final String ADD_MAKER_ITEM = URL + "//"; //TODO: insert proper url
+
     //USERCATEGORIES
     //(+ UserID)
     public static final String GET_USER_CATEGORIES = URL + "/usercategories/list/";

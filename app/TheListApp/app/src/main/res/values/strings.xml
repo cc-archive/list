@@ -12,7 +12,7 @@
     <string name="title_activity_start">Start The List</string>
     <string name="title_activity_gallery">Gallery</string>
     <string name="title_activity_image">Gallery</string>
-    <string name="title_activity_add_item">Create an Item</string>
+    <string name="title_activity_add_item">Request an Item</string>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
