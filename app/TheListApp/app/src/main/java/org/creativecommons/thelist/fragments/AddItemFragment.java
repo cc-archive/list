@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -49,10 +51,13 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
+    String catId;
 
     //UI Elements
     private ImageButton mAddImage;
     private Spinner mCategorySpinner;
+    private android.support.v7.widget.Toolbar mBottomToolbar;
+
     // --------------------------------------------------------
 
 
@@ -69,8 +74,8 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
         mMessageHelper = new MessageHelper(mContext);
@@ -78,14 +83,28 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
         //UI Elements
         mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
+        mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
+        mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
+
+        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //handle menu items //TODO: make send request
+                //TODO: check for all required values existing
+                return true;
+            }
+        });
 
         //Set Spinner Content
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getCategories > onResponse: " + response);
+                mSpinnerList.clear();
 
                 if(response.length() > 0){
+                    mSpinnerList.add(new SpinnerObject("Select category", "0"));
+
                     for(int i = 0; i < response.length(); i++){
                         try {
                             JSONObject jsonSingleCategory = response.getJSONObject(i);
@@ -115,7 +134,27 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
             }
         });
 
-    }
+        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SpinnerObject catObject = (SpinnerObject) mCategorySpinner.getSelectedItem();
+
+                //Set id for POST request
+                catId = catObject.getTag().toString();
+                Log.v(TAG, "> onItemSelected, catId: " + catId);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    } //onActivityCreated
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+    } //onStart (only do once per fragment creation)
 
     @Override
     public void onResume() {
@@ -187,11 +226,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                 }
             }
         });
-
-
-
     } //onResume
-
 
     //When photo has been selected from gallery
     @Override
