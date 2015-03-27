@@ -34,99 +34,72 @@ require_once('database.php');
 global $adodb;
 
 $query = "SELECT * FROM Photos WHERE url IS NULL LIMIT 1";
-
-  $res = $adodb->GetAll($query);
-
-  $res = $res[0]; // just the first item in the array
-
-  print_r($res);
-
-  if ($res) {
-
+$res = $adodb->GetAll($query);
+$res = $res[0]; // just the first item in the array
+print_r($res);
+if ($res) {
     $foo = exec("file " . $res[filename]);   
-
     if (strpos($foo, "JPEG")) {
-
-      $filename = $res['filename'];
-      $url = "live/" . basename($filename) . ".jpg";
-      
-      rename($filename, $url);
-
-      $id = $res['id'];
-      $listid = $res['listitem'];
-
-      echo "This file is a JPEG! " . $url . "\n";
-
-      // Need to fix the URLs better
-
-      //$url = basename($url);
-
-      $url = "https://thelist.creativecommons.org//" . $url;
-
-      $query = "UPDATE Photos SET url = %s WHERE id=(%s)";
-
-      try {
+        $filename = $res['filename'];
+        $url = "live/" . basename($filename) . ".jpg";
      
-	$res = $adodb->Execute(sprintf($query,$adodb->qstr($url), $adodb->qstr($id)));
+        rename($filename, $url);
 
-	echo $query;
+        $id = $res['id'];
+        $listid = $res['listitem'];
 
-	try {
+        echo "This file is a JPEG! " . $url . "\n";
 
-	  $query = "UPDATE UserList SET complete = 2 WHERE listid=(%s)";
+        // Need to fix the URLs better
 
-	  $res = $adodb->Execute(sprintf($query,$adodb->qstr($listid)));
+        //$url = basename($url);
 
-	  $adodb->CacheFlush();
+        $url = "https://thelist.creativecommons.org//" . $url;
+        $query = "UPDATE Photos SET url = %s WHERE id=(%s)";
 
-	echo $query;
-	
+        try {
+            $res = $adodb->Execute(sprintf($query,$adodb->qstr($url), $adodb->qstr($id)));
+            echo $query;
 
-	}
+            try {
+                $query = "UPDATE UserList SET complete = 2 WHERE listid=(%s)";
+                $res = $adodb->Execute(sprintf($query,$adodb->qstr($listid)));
+                $adodb->CacheFlush();
+                echo $query;
+            }
 
-	catch (Exception $e) {
-
-	  echo "Error";
-	}
-
-            
-      } catch (Exception $e) {
-            
-	//echo $e;
-
-	echo "There was an error";
-            
-	return null;
-      }
-
+            catch (Exception $e) {
+                echo "Error";
+            }
+        } catch (Exception $e) {
+            //echo $e;
+            echo "There was an error";
+            return null;
+        }
     }
-
+    
     else {
 
-      // Image is not a JPEG
+        // Image is not a JPEG
 
-      $id=$res['id'];
+        $id=$res['id'];
+        $query = "DELETE from Photos WHERE id=%s";
 
-      $query = "DELETE from Photos WHERE id=%s";
+        try {
 
-      try {
+            $q = sprintf($query,
+            $adodb->qstr($id)
+            );
 
-	$q = sprintf($query,
-		     $adodb->qstr($id)
-		     );
+            $res = $adodb->Execute($q);
 
-	$res = $adodb->Execute($q);
-
-      } catch (Exception $e) {
+        } catch (Exception $e) {
             
-	//echo $e;
+            //echo $e;
 
-	echo "There was an error";
-            
-	return null;
-      }
-
+            echo "There was an error";
+            return null;
+        }
     }
-
-  }
+}
 ?>
