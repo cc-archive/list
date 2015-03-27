@@ -22,6 +22,7 @@ package org.creativecommons.thelist.utils;
 public class PhotoConstants {
     public static final int TAKE_PHOTO_REQUEST = 0;
     public static final int PICK_PHOTO_REQUEST = 1;
+    public static final int REMOVE_PHOTO = 3;
     public static final int MEDIA_TYPE_IMAGE = 2;
 
     public static final int FILE_SIZE_LIMIT = 1024*1024*10; //10 MB

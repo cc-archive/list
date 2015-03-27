@@ -7,7 +7,7 @@
     <ImageButton android:id="@+id/add_item_example_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="5"
         android:src="@drawable/progress_view"
         android:background="@null"
         android:scaleType="centerCrop"
@@ -18,7 +18,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="3"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
@@ -38,15 +38,16 @@
             android:layout_height="wrap_content"
             android:prompt="@string/category_prompt" />
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_weight="1">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorSecondary"/>
     </RelativeLayout>
 
