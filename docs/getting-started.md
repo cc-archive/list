@@ -1,8 +1,4 @@
----
-layout: page
-title: How to get started hacking on The List
-permalink: /hacking/webapp/
----
+# How to get started hacking on The List
 
 **by Matt Lee**
 
