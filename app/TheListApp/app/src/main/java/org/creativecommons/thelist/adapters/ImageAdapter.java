@@ -52,12 +52,12 @@ public class ImageAdapter extends PagerAdapter {
 
         imgDisplay = (TouchImageView) viewLayout.findViewById(R.id.imgDisplay);
 
-        //TODO Picasso in the image
         Picasso.with(activity)
                 .load(imagePaths.get(position))
                 .placeholder(R.drawable.progress_view) //TODO: switch drawable
                 .error(R.drawable.progress_view)
                 .into(imgDisplay);
+
 
         ((ViewPager) container).addView(viewLayout);
 
