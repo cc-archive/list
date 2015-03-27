@@ -10,6 +10,7 @@
 auto-save-list
 tramp
 .\#*
+*.swp
 
 # Org-mode
 .org-id-locations
@@ -33,3 +34,5 @@ tramp
 
 # apitest
 /apitest/node_modules
+
+.DS_Store
