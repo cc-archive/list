@@ -132,7 +132,7 @@ class UserList {
 
         global $adodb;
 
-        $query = 'SELECT p.*,l.* From Photos p LEFT JOIN List l on (p.listitem = l.id) WHERE p.userid = ?';
+        $query = 'SELECT p.url,l.* From Photos p LEFT JOIN List l on (p.listitem = l.id) WHERE p.userid = ?';
         $params = array();
         $params[] = $userid;
 
