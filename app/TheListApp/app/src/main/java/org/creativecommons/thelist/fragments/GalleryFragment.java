@@ -131,7 +131,7 @@ public class GalleryFragment extends Fragment {
 
                         for(int i = 0; i < mPhotoList.size(); i++){
                             GalleryItem singlePhoto = mPhotoList.get(i);
-                            urls.add(singlePhoto.getUrl());
+                            urls.add(singlePhoto.getUrl() + "/1024"); //TODO: test this! when 1024 images are generated
                         }
                         mCallback.viewImage(urls, position); //TODO: eventually set url for large image
                     }
