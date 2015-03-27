@@ -2,12 +2,15 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
@@ -58,6 +62,8 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     private Spinner mCategorySpinner;
     private android.support.v7.widget.Toolbar mBottomToolbar;
 
+    private Boolean mPhotoAdded;
+
     // --------------------------------------------------------
 
 
@@ -85,6 +91,8 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
         mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
         mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
+
+        mPhotoAdded = false;
 
         mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
             @Override
@@ -163,92 +171,133 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         //UI Elements
         mAddImage = (ImageButton) getView().findViewById(R.id.add_item_example_image);
 
-        //Click Listener to get Image
+        //Click Listener to get sample image
         mAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                choosePhotoIntent.setType("image/*");
-                mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
-                Log.v(TAG, "Media URI:" + mMediaUri);
-                startActivityForResult(choosePhotoIntent, PhotoConstants.PICK_PHOTO_REQUEST);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                if(mPhotoAdded){
+                    builder.setItems(R.array.photo_choices_remove, mDialogListener);
+                } else {
+                    builder.setItems(R.array.photo_choices, mDialogListener);
+                }
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
+        });
+    } //onResume
 
-            private Uri getOutputMediaFileUri(int mediaType) {
-                // To be safe, you should check that the SDCard is mounted
-                // using Environment.getExternalStorageState() before doing this.
-                if (isExternalStorageAvailable()) {
-                    // get the URI
+    //Show dialog when List Item is tapped
+    public DialogInterface.OnClickListener mDialogListener =
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch(which) {
+                        case 0:
+                            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
+                            if (mMediaUri == null) {
+                                // Display an error
+                                Toast.makeText(getActivity(), R.string.error_external_storage,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            else {
+                                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
+                                startActivityForResult(takePhotoIntent, PhotoConstants.TAKE_PHOTO_REQUEST);
+                            }
+                            break;
+                        case 1: // Choose picture
+                            Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                            choosePhotoIntent.setType("image/*");
+                            //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
+                            startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
+                            break;
+                        case 2:
+                            Picasso.with(mContext).load(R.drawable.progress_view).into(mAddImage); //TODO: update with new image
+                            mPhotoAdded = false;
+                    }
+                }
+                private Uri getOutputMediaFileUri(int mediaType) {
+                    // To be safe, you should check that the SDCard is mounted
+                    // using Environment.getExternalStorageState() before doing this.
+                    if (isExternalStorageAvailable()) {
+                        // get the URI
 
-                    // 1. Get the external storage directory
-                    String appName = getActivity().getString(R.string.app_name);
-                    File mediaStorageDir = new File(
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                            appName);
+                        // 1. Get the external storage directory
+                        String appName = getActivity().getString(R.string.app_name);
+                        File mediaStorageDir = new File(
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                                appName);
 
-                    // 2. Create our subdirectory
-                    if (! mediaStorageDir.exists()) {
-                        if (! mediaStorageDir.mkdirs()) {
-                            Log.e(TAG, "Failed to create directory.");
+                        // 2. Create our subdirectory
+                        if (! mediaStorageDir.exists()) {
+                            if (! mediaStorageDir.mkdirs()) {
+                                Log.e(TAG, "Failed to create directory.");
+                                return null;
+                            }
+                        }
+                        // 3. Create a file name
+                        // 4. Create the file
+                        File mediaFile;
+                        Date now = new Date();
+                        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
+
+                        String path = mediaStorageDir.getPath() + File.separator;
+                        if (mediaType == PhotoConstants.MEDIA_TYPE_IMAGE) {
+                            mediaFile = new File(path + "IMG_" + timestamp + ".jpg");
+                        }
+                        else {
                             return null;
                         }
-                    }
-                    // 3. Create a file name
-                    // 4. Create the file
-                    File mediaFile;
-                    Date now = new Date();
-                    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(now);
+                        Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
 
-                    String path = mediaStorageDir.getPath() + File.separator;
-                    if (mediaType == PhotoConstants.MEDIA_TYPE_IMAGE) {
-                        mediaFile = new File(path + "IMG_" + timestamp + ".jpg");
+                        // 5. Return the file's URI
+                        return Uri.fromFile(mediaFile);
                     }
                     else {
                         return null;
                     }
-                    Log.d(TAG, "File: " + Uri.fromFile(mediaFile));
-
-                    // 5. Return the file's URI
-                    return Uri.fromFile(mediaFile);
                 }
-                else {
-                    return null;
+                //Check if external storage is available
+                private boolean isExternalStorageAvailable() {
+                    String state = Environment.getExternalStorageState();
+                    if (state.equals(Environment.MEDIA_MOUNTED)) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
                 }
-            }
-            //Check if external storage is available
-            private boolean isExternalStorageAvailable() {
-                String state = Environment.getExternalStorageState();
-                if (state.equals(Environment.MEDIA_MOUNTED)) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-        });
-    } //onResume
+            };
 
     //When photo has been selected from gallery
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch(requestCode){
             case PhotoConstants.PICK_PHOTO_REQUEST:
-                if (resultCode == Activity.RESULT_OK) {
-
-                    if (data == null) {
+            case PhotoConstants.TAKE_PHOTO_REQUEST:
+                if(resultCode == Activity.RESULT_OK) {
+                    if(data == null) {
                         //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
                         Log.d(TAG, "> onActivityResult > data == null");
-                    } else {
+                    }
+                    else {
                         mMediaUri = data.getData();
                     }
-                    Log.i(TAG, "Media URI:" + mMediaUri);
+                    Log.i(TAG,"Media URI:" + mMediaUri);
 
-                    //TODO: set image resource
+                    //Add photo to the Gallery (listen for broadcast and let gallery take action)
+                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    mediaScanIntent.setData(mMediaUri);
+                    getActivity().sendBroadcast(mediaScanIntent);
+
                     Picasso.with(mContext).load(mMediaUri).into(mAddImage);
-
+                    mPhotoAdded = true;
                 } //RESULT OK
-                else if (resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
+                else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
                     //Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "> onActivityResult > resultCode != canceled");
                 }
@@ -256,11 +305,11 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         } //switch
     } //onActivityResult
 
-
     @Override
     public void onDetach() {
         super.onDetach();
         //mCallback = null;
+        mPhotoAdded = false;
     }
 
 } //AddItemFragment

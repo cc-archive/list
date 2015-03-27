@@ -44,6 +44,17 @@
         <item>Choose Picture</item>
     </string-array>
 
+    <string-array name="photo_choices">
+        <item>Take Picture</item>
+        <item>Choose Picture</item>
+    </string-array>
+
+    <string-array name="photo_choices_remove">
+        <item>Take Picture</item>
+        <item>Choose Picture</item>
+        <item>Remove</item>
+    </string-array>
+
     <!--Dialog Labels-->
     <string name="ok_label">OK</string>
 
