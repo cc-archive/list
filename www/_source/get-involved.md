@@ -19,7 +19,7 @@ All our code is released under the [GNU Affero GPL](https://www.gnu.org/licenses
 * We are looking for PHP and Java developers to help with the development work of The List.
 * We are looking for designers who want to help us make The List app in its various guises more attractive and improve the user experience.
 * We are looking for documenters to help write good user and developer guides to The List.
-  * We have [one developers guide already](https://thelist.creativecommons.org/hacking/webapp/).
+  * We have [one developers guide already](https://github.com/creativecommons/list/blob/master/docs/getting-started.md).
 * We're looking for people to help build and package The List app in various app stores and marketplaces.
 * Want to port The List to iOS? FirefoxOS? Meego? Windows Phone? Palm? Get in touch.
 
