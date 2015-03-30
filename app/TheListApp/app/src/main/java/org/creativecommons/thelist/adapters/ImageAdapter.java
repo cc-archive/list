@@ -54,8 +54,8 @@ public class ImageAdapter extends PagerAdapter {
 
         Picasso.with(activity)
                 .load(imagePaths.get(position))
-                .placeholder(R.drawable.progress_view) //TODO: switch drawable
-                .error(R.drawable.progress_view)
+                .placeholder(R.drawable.progress_view_large) //TODO: switch drawable
+                .error(R.drawable.progress_view_large)
                 .into(imgDisplay);
 
 
