@@ -229,5 +229,4 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
     <string name="single_choice_text">Choose</string>
     <string name="add_item_menu_label">Request an Item</string>
-
 </resources>
