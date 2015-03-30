@@ -74,6 +74,9 @@ public class ListApplication extends Application {
         SharedPreferences sharedPrefCreate = getApplicationContext().getSharedPreferences
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
+        //Set Survey Count
+        sharedPref.setSurveyCount(0);
+
         //Check OptOut status (must happen once per app open/restart)
         if(!(listUser.isTempUser())){ //Logged in
             Log.v(TAG, "LIST ON CREATE: LOGGED IN");

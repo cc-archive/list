@@ -51,6 +51,9 @@ public class SharedPreferencesMethods {
     public static final String USER_KEY = "ekey";
     public static final String ANALYTICS_OPTOUT = "analyticsOptOut";
     public static final String ANALYTICS_VIEWED = "analyticsViewed";
+    public static final String SURVEY_COUNT = "surveyCount";
+    public static final String SURVEY_TAKEN = "surveyTaken";
+
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
@@ -86,6 +89,20 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(ANALYTICS_VIEWED, bol);
+        editor.apply();
+    }
+
+    public void setSurveyCount(int count){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(SURVEY_COUNT, count);
+        editor.apply();
+    }
+
+    public void setSurveyTaken(Boolean bol){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(SURVEY_TAKEN, bol);
         editor.apply();
     }
 
@@ -135,9 +152,28 @@ public class SharedPreferencesMethods {
     public Boolean getAnalyticsViewed(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-
         if(sharedPref.contains(SharedPreferencesMethods.ANALYTICS_VIEWED)) {
             return sharedPref.getBoolean(ANALYTICS_VIEWED, false); //defaults to false
+        } else {
+            return false;
+        }
+    }
+
+    public int getSurveyCount(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(SharedPreferencesMethods.SURVEY_COUNT)) {
+            return sharedPref.getInt(SURVEY_COUNT, 0); //defaults to false
+        } else {
+            return 0;
+        }
+    }
+
+    public Boolean getSurveyTaken(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(SharedPreferencesMethods.SURVEY_TAKEN)) {
+            return sharedPref.getBoolean(SURVEY_TAKEN, false); //defaults to false
         } else {
             return false;
         }

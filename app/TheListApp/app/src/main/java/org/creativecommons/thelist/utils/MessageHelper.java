@@ -24,7 +24,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -68,6 +67,18 @@ public class MessageHelper {
                             .callback(callback)
                             .show();
     } //enableFeatureDialog
+
+    public void takeSurveyDialog(Context context, String title, String message,
+                                 MaterialDialog.ButtonCallback callback){
+                    new MaterialDialog.Builder(context)
+                            .title(title)
+                            .content(message)
+                            .positiveText("I’ll help out")
+                            .negativeText("I’ll pass")
+                            //.autoDismiss(false)
+                            .callback(callback)
+                            .show();
+    } //takeSurveyDialog
 
 
     //Send Android System Notifications

@@ -12,6 +12,7 @@
     <string name="title_activity_start">Start The List</string>
     <string name="title_activity_gallery">Gallery</string>
     <string name="title_activity_image">Gallery</string>
+    <string name="title_activity_about">About The App</string>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
@@ -45,6 +46,15 @@
 
     <!--Dialog Labels-->
     <string name="ok_label">OK</string>
+    <string name="general_negative_text">Disable</string>
+    <string name="general_positive_text">Enable</string>
+
+    <!--Dialog Text-->
+    <string name="dialog_ga_title">Use Google Analytics?</string>
+    <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
+    <string name="dialog_survey_title">What do you think of the app?</string>
+    <string name="dialog_survey_message">Help us make a better app by checking out our super short survey! We really want to hear your feedback.</string>
+    <string name="dialog_survey_link">https://docs.google.com/forms/d/1efaniKex5kte-7_02L8FW8WxxybU9XfYRuWnCpu84eE/viewform</string>
 
     <!-- Onboarding Explainers -->
     <string-array name="onboarding_explainers">
@@ -145,7 +155,7 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="login_fragment_text">Login to your Creative Commons account</string>
     <string name="signUpButton_label">CREATE MY ACCOUNT</string>
     <string name="existing_account_text">I ALREADY HAVE AN ACCOUNT</string>
-    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php">Actually, I need an account</a></string>
+    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php">I need an account</a> | <a href="https://login.creativecommons.org/pass.php?worlds-a-dress">Forgot Password</a></string>
 
     <!-- Terms Fragment -->
     <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
@@ -176,31 +186,22 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
     <string name="gallery_callback_exception_message">" must implement GalleryFragment.GalleryListener"</string>
 
-
     <!-- Fragment/Activity Bundle Keys -->
     <string name="item_id_bundle_key">item</string>
     <string name="uri_bundle_key">uri</string>
     <string name="action_settings">Settings</string>
     <string name="action_done">DONE</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_login_bundle_key">isMenuLogin</string>
     <string name="account_menu_login_label">Login to your CCID</string>
     <string name="login_error_exception_title">Our bad!</string>
     <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
     <string name="about_theapp_menu_label">About the app</string>
-    <string name="hello_world">Hello world!</string>
     <string name="ccid_account_label">Creative Commons</string>
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
-    <string name="title_activity_about">About The App</string>
-    <string name="general_negative_text">Disable</string>
-    <string name="general_positive_text">Enable</string>
-    <string name="dialog_ga_title">Use Google Analytics?</string>
-    <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
     <string name="app_version">Version 0.4.1 (March 19th 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
-
 
 </resources>

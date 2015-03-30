@@ -237,6 +237,41 @@ public class MainActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
 
+        if(!mSharedPref.getSurveyTaken()){
+            int surveyCount = mSharedPref.getSurveyCount();
+
+            //Check if should display survey item
+            if(surveyCount % 4 == 0 && surveyCount != 0 || !(mCurrentUser.isTempUser()) && surveyCount == 1){
+                mMessageHelper.takeSurveyDialog(mContext, getString(R.string.dialog_survey_title),
+                        getString(R.string.dialog_survey_message),
+                        new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onPositive(MaterialDialog dialog) {
+                                super.onPositive(dialog);
+
+                                //Set survey taken
+                                mSharedPref.setSurveyTaken(true);
+
+                                //Go to link
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.dialog_survey_link)));
+                                startActivity(browserIntent);
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onNegative(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                dialog.dismiss();
+                            }
+                        });
+            } //survey check
+
+            //Increase count
+            mSharedPref.setSurveyCount(surveyCount + 1);
+            Log.v(TAG, "SURVEY COUNT: " + String.valueOf(surveyCount));
+        } //surveyTaken
+
         //Update menu for login/logout options
         invalidateOptionsMenu();
 

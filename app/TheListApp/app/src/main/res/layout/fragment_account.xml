@@ -85,6 +85,7 @@
             <Button android:id="@+id/loginButton"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:textColor="@color/app_white"
                 android:text="@string/login_button_label"
                 android:layout_below="@+id/accountPassword"/>
 
@@ -102,6 +103,7 @@
                 android:padding="5dp"
                 android:layout_marginBottom="0dp"
                 android:textColorLink="@color/secondary_text_material_dark"
+                android:textColor="@color/secondary_text_material_dark"
                 android:text="@string/new_account_text"
                 android:id="@+id/signUp"
                 android:layout_below="@+id/loginButton" />
