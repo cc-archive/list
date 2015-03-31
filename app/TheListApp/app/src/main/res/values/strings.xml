@@ -200,7 +200,7 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
-    <string name="app_version">Version 0.4.1 (March 19th 2015)</string>
+    <string name="app_version">Version 0.8 (March 31st 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
 
