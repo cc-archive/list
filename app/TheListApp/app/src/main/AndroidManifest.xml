@@ -117,6 +117,8 @@
         <activity
             android:name=".activities.AddItemActivity"
             android:label="@string/title_activity_add_item"
+            android:theme="@style/ListThemeNoActionBar"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

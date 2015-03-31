@@ -18,6 +18,7 @@
     <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
 </resources>

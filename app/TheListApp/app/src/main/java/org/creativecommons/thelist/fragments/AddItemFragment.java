@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,7 +28,9 @@ import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.AddItemActivity;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -49,6 +53,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     public static final String TAG = AddItemFragment.class.getSimpleName();
 
     Context mContext;
+    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
     protected Uri mMediaUri;
@@ -59,6 +64,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
     //UI Elements
     private ImageButton mAddImage;
+    private EditText mItemNameField;
     private Spinner mCategorySpinner;
     private android.support.v7.widget.Toolbar mBottomToolbar;
 
@@ -66,11 +72,9 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
     // --------------------------------------------------------
 
-
     public AddItemFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,21 +88,60 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        mCurrentUser = new ListUser(mContext);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
         //UI Elements
+        mItemNameField = (EditText) getView().findViewById(R.id.add_item_edittext);
         mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
         mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
+        mBottomToolbar.setSubtitle("Add Item");
         mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
 
         mPhotoAdded = false;
 
+        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
+        if(toolbar != null){
+            ((AddItemActivity) getActivity()).setSupportActionBar(toolbar);
+            ((AddItemActivity) getActivity()).getSupportActionBar()
+                    .setTitle(getString(R.string.title_activity_add_item));
+            ((AddItemActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Log.v(TAG, "GET TOOLBAR ADD ITEM");
+        }
+
+//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
+//        if (toolbar != null) {
+//            getActivity().setSupportActionBar(toolbar);
+//            Log.v(TAG, "GET TOOLBAR ADD ITEM");
+//        }
+
         mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                //handle menu items //TODO: make send request
-                //TODO: check for all required values existing
+                int id = item.getItemId();
+
+                if (id == R.id.action_item_done) {
+                    //TODO: Start Item Upload
+                    Log.v(TAG, "DONE WITH ITEM");
+
+                    final String itemName = mItemNameField.getText().toString().trim();
+
+                    //Has item name been added?
+                    if(itemName.isEmpty()){
+                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+                                mContext.getString(R.string.dialog_missing_item_name));
+                        return true;
+                      //Has category been selected?
+                    } else if(catId.equals("0")){
+                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+                                mContext.getString(R.string.dialog_missing_item_cat));
+                        return true;
+                    } else {
+                        startItemUpload(itemName);
+                        return true;
+                    }
+                } //if action done
                 return true;
             }
         });
@@ -217,6 +260,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                         case 2:
                             Picasso.with(mContext).load(R.drawable.progress_view).into(mAddImage); //TODO: update with new image
                             mPhotoAdded = false;
+                            mMediaUri = null;
                     }
                 }
                 private Uri getOutputMediaFileUri(int mediaType) {
@@ -304,6 +348,30 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                 break;
         } //switch
     } //onActivityResult
+
+
+    public void startItemUpload(final String itemName){
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(String authtoken) {
+                mRequestMethods.addMakerItem(itemName, catId, mMediaUri,
+                        new RequestMethods.RequestCallback() {
+                            @Override
+                            public void onSuccess() {
+                                //TODO: if request succeeds
+
+                            }
+                            @Override
+                            public void onFail() {
+                                //TODO: if request fails
+                                mMessageHelper.showDialog(mContext,
+                                        mContext.getString(R.string.oops_label),
+                                        mContext.getString(R.string.dialog_item_upload_fail));
+                            }
+                        });
+            } //onSuccess
+        }); //getToken
+    } //startItemUpload
 
     @Override
     public void onDetach() {

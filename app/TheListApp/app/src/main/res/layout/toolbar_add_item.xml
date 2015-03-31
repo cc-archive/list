@@ -1,0 +1,30 @@
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_add_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+    <!--<ImageButton android:id="@+id/add_item_example_image"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/add_item_placeholder"-->
+        <!--android:background="@null"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:clickable="true"-->
+        <!--android:contentDescription="Add an example image (optional)"/>-->
+
+    <!--<ImageButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/pinButton"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:drawable="@drawable/add_item_placeholder"-->
+        <!--android:clickable="true"/>-->
+
+</android.support.v7.widget.Toolbar>

@@ -1,54 +1,67 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="org.creativecommons.thelist.fragments.AddItemFragment">
-
-    <ImageButton android:id="@+id/add_item_example_image"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:src="@drawable/progress_view"
-        android:background="@null"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:contentDescription="Add an example image (optional)"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="org.creativecommons.thelist.fragments.AddItemFragment"
+        android:weightSum="7">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4">
 
-        <EditText android:id="@+id/add_item_edittext"
+            <include layout="@layout/toolbar_add_item"/>
+
+            <ImageButton android:id="@+id/add_item_example_image"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/add_item_placeholder"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:contentDescription="Add an example image (optional)"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:hint="Item Name"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:layout_marginBottom="8dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <Spinner
-            android:id="@+id/category_spinner"
-            android:layout_below="@id/add_item_edittext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:prompt="@string/category_prompt" />
-    </RelativeLayout>
+            <EditText android:id="@+id/add_item_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:hint="Item Name"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_marginBottom="8dp"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_weight="1">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_bottom"
+            <Spinner
+                android:id="@+id/category_spinner"
+                android:layout_below="@+id/add_item_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:prompt="@string/category_prompt" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorSecondary"/>
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="@color/colorSecondary"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -30,10 +29,12 @@ public class AddItemActivity extends ActionBarActivity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_add_item);
+//        if (toolbar != null) {
+//            setSupportActionBar(toolbar);
+//            getSupportActionBar().setTitle(R.string.title_activity_add_item);
+//            Log.v(TAG, "GET TOOLBAR ADD ITEM");
+//        }
 
         //UI Elements
         mFrameLayout = (FrameLayout) findViewById(R.id.add_item_fragment_container);

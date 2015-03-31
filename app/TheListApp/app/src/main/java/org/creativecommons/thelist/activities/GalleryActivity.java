@@ -21,9 +21,9 @@ package org.creativecommons.thelist.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
@@ -34,7 +34,6 @@ import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GalleryActivity extends ActionBarActivity implements GalleryFragment.GalleryListener {
     public static final String TAG = GalleryActivity.class.getSimpleName();
