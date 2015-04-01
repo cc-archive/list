@@ -17,6 +17,7 @@
 
 */
 
+
 package org.creativecommons.thelist.adapters;
 
 public class DrawerItem {

@@ -16,6 +16,7 @@
     <string name="title_activity_add_item">Create an Item</string>
     <string name="title_activity_drawer">The List</string>
 
+
     <!-- Drawer Navigation Labels -->
     <string-array name="drawer_navigation_labels">
         <item>My List</item>
@@ -239,6 +240,7 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="app_version">Version 0.8 (March 31st 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
+
     <string name="single_choice_text">Choose</string>
     <string name="add_item_menu_label">Request an Item</string>
     <string name="dialog_missing_item_name">Looks like you’re missing a name for your item.</string>
@@ -248,4 +250,5 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <!--Navigation Drawer-->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
 </resources>
