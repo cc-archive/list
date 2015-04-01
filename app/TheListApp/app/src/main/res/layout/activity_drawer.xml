@@ -22,10 +22,10 @@
 
     </RelativeLayout>
 
-    <!--<FrameLayout-->
-        <!--android:id="@+id/content_frame"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
+    <FrameLayout
+        android:id="@+id/main_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/nav_drawer_width"

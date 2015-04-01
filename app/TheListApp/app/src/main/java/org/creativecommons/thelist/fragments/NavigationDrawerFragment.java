@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -54,18 +55,25 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        mContext = getActivity();
-        mSharedPref = new SharedPreferencesMethods(mContext);
-
-        //UI Elements
-        mDrawerRecyclerView = (RecyclerView)getActivity().findViewById(R.id.drawer_recyclerView);
-        mAdapter = new DrawerAdapter(getActivity(), getData());
-
-        mUserLearnedDrawer = mSharedPref.getUserLearnedDrawer();
         mFromSavedInstanceState = savedInstanceState != null ? true : false;
 
     } //onCreate
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mContext = getActivity();
+        mSharedPref = new SharedPreferencesMethods(mContext);
+
+        //RecyclerView
+        mAdapter = new DrawerAdapter(mContext, getData());
+        mDrawerRecyclerView = (RecyclerView)getActivity().findViewById(R.id.drawer_recyclerView);
+        mDrawerRecyclerView.setAdapter(mAdapter);
+        mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mUserLearnedDrawer = mSharedPref.getUserLearnedDrawer();
+    } //onActivityCreated
 
     public void setUp(int drawerId, DrawerLayout drawerLayout, Toolbar toolbar) {
         containerView = getActivity().findViewById(drawerId);
@@ -108,16 +116,12 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
     public List<DrawerItem> getData() {
         //load only static data inside a drawer
         List<DrawerItem> data = new ArrayList<>();
-        int[] icons = {R.drawable.ic_action_search_orange, R.drawable.ic_action_trending_orange, R.drawable.ic_action_upcoming_orange};
-        String[] titles = getResources().getStringArray(R.array.drawer_tabs);
+        String[] titles = getResources().getStringArray(R.array.drawer_navigation_labels);
         for (int i = 0; i < titles.length; i++) {
             DrawerItem drawerItem = new DrawerItem();
-            drawerItem.itemName = titles[i];
-            drawerItem.icon = icons[i];
+            drawerItem.setItemName(titles[i]);
             data.add(drawerItem);
         }
         return data;
     }
-
-
-}
+} //NavigationDrawerFragment

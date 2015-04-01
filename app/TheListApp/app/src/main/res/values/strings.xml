@@ -16,6 +16,16 @@
     <string name="title_activity_add_item">Create an Item</string>
     <string name="title_activity_drawer">The List</string>
 
+    <!-- Drawer Navigation Labels -->
+    <string-array name="drawer_navigation_labels">
+        <item>My List</item>
+        <item>My Photos</item>
+        <item>Request an Item</item>
+        <item>About The App</item>
+        <item>Settings</item>
+        <item>Log Out</item>
+    </string-array>
+
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
     <string name="login_menu_label">Log In</string>
