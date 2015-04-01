@@ -54,6 +54,7 @@ public class SharedPreferencesMethods {
     public static final String SURVEY_COUNT = "surveyCount";
     public static final String SURVEY_TAKEN = "surveyTaken";
 
+    public static final String DRAWER_USER_LEARNED = "userLearnedDrawer";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
@@ -61,13 +62,20 @@ public class SharedPreferencesMethods {
     //SET PREFERENCES
     //----------------------------------------------------------
 
-    //Save Any Preference
+    //Save String Preference (generic)
     public void saveSharedPreference(String key, String value){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.apply();
-        Log.v("ADDED AND SAVED ITEM: ", value);
+    }
+
+    //Save Boolean Preference (generic)
+    public void savedSharedPreference(String key, boolean value){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
     }
 
     public void setUserID(String id){
@@ -174,6 +182,27 @@ public class SharedPreferencesMethods {
 
         if(sharedPref.contains(SharedPreferencesMethods.SURVEY_TAKEN)) {
             return sharedPref.getBoolean(SURVEY_TAKEN, false); //defaults to false
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean getUserLearnedDrawer(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(DRAWER_USER_LEARNED)) {
+            return sharedPref.getBoolean(DRAWER_USER_LEARNED, false); //defaults to false
+        } else {
+            return false;
+        }
+    }
+
+    //getSharedPreferenceBoolean (generic)
+    public Boolean getSharedPreference(String key){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(key)) {
+            return sharedPref.getBoolean(key, false); //defaults to false
         } else {
             return false;
         }

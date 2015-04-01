@@ -14,6 +14,7 @@
     <string name="title_activity_image">Gallery</string>
     <string name="title_activity_about">About The App</string>
     <string name="title_activity_add_item">Create an Item</string>
+    <string name="title_activity_drawer">The List</string>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
@@ -233,4 +234,8 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="dialog_missing_item_name">Looks like you’re missing a name for your item.</string>
     <string name="dialog_missing_item_cat">Don’t forget to select a category that best suits your item.</string>
     <string name="dialog_item_upload_fail">Looks like was a problem adding your item. Can you try again?</string>
+
+    <!--Navigation Drawer-->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>
