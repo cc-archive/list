@@ -142,7 +142,6 @@ public final class RequestMethods {
     } //getRandomItemRequest
 
     //GET User List Items
-
     public void getUserItems(final ResponseCallback callback){
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
@@ -179,6 +178,141 @@ public final class RequestMethods {
             }
         });
     } //getUserListItems
+
+
+    // --------------------------------------------------------
+    // MAKER LIST REQUESTS
+    // --------------------------------------------------------
+
+    public void getMakerItems(final String itemName,
+                              final String category, final ResponseCallback callback){
+
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.GET_MAKER_LIST + mCurrentUser.getUserID();
+                Log.v(TAG, " > getMakerItems, url: " + url);
+
+                JsonArrayRequest getMakerItemsRequest = new JsonArrayRequest(url,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                callback.onSuccess(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onFail(error);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(getMakerItemsRequest);
+            }
+        });
+    } //getMakerItems
+
+    //WITHOUT PHOTO
+    public void addMakerItem(final String itemName, final String category,
+                            final RequestCallback callback) {
+
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+
+                //TODO: add legit url
+                String url = ApiConstants.ADD_MAKER_ITEM + mSharedPref.getUserId() + "/";
+
+                //Upload Request
+                StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.v(TAG, "addMakerItem > onResponse: " + response);
+                                callback.onSuccess();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //TODO: add switch for all possible error codes
+                        callback.onFail();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(addMakerItemRequest);
+            }
+        });
+    } //addMakerItem (no photo)
+
+    //WITH PHOTO
+    public void addMakerItem(final String itemName, final String category,
+                            final Uri photoUri, final RequestCallback callback){
+
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+
+                final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
+
+                //TODO: add legit url
+                String url = ApiConstants.ADD_MAKER_ITEM + mSharedPref.getUserId() + "/";
+
+                //Upload Request
+                StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.v(TAG, "addMakerItem > onResponse: " + response);
+                                callback.onSuccess();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //TODO: add switch for all possible error codes
+                        callback.onFail();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(addMakerItemRequest);
+            }
+        });
+    } //addMakerItem + photo
 
 
     // --------------------------------------------------------
@@ -413,7 +547,7 @@ public final class RequestMethods {
         });
     } //getUserPhotos
 
-    public void uploadPhoto(String itemID, Uri photoUri, final RequestCallback callback) {
+    public void uploadPhoto(final String itemID, final Uri photoUri, final RequestCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.photoNetworkFailMessage();
             return;
@@ -424,13 +558,12 @@ public final class RequestMethods {
             return;
         }
 
-        final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
-        final String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;
-
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
+                final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
+                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;
 
                 //Upload Request
                 StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
