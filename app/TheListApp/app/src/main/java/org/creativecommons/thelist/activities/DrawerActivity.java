@@ -11,6 +11,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
 
 public class DrawerActivity extends ActionBarActivity {
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,49 @@ public class DrawerActivity extends ActionBarActivity {
 
         drawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
     }
+
+//    private void displayView(int position) {
+//        // update the main content by replacing fragments
+//        Fragment fragment = null;
+//        switch (position) {
+//            case 0:
+//                fragment = new HomeFragment();
+//                break;
+//            case 1:
+//                fragment = new FindPeopleFragment();
+//                break;
+//            case 2:
+//                fragment = new PhotosFragment();
+//                break;
+//            case 3:
+//                fragment = new CommunityFragment();
+//                break;
+//            case 4:
+//                fragment = new PagesFragment();
+//                break;
+//            case 5:
+//                fragment = new WhatsHotFragment();
+//                break;
+//
+//            default:
+//                break;
+//        }
+//
+//        if (fragment != null) {
+//            FragmentManager fragmentManager = getFragmentManager();
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.main_content_container, fragment).commit();
+//
+//            // update selected item and title, then close the drawer
+//            mDrawerList.setItemChecked(position, true);
+//            mDrawerList.setSelection(position);
+//            setTitle(navMenuTitles[position]);
+//            mDrawerLayout.closeDrawer(mDrawerList);
+//        } else {
+//            // error in creating fragment
+//            Log.e(TAG, "Error in creating fragment");
+//        }
+//    } //displayView
 
 
     @Override
