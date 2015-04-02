@@ -6,26 +6,20 @@
     android:layout_height="match_parent"
     tools:context="org.creativecommons.thelist.activities.DrawerActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <include
             android:id="@+id/app_bar"
             layout="@layout/app_bar" />
-        
-        <TextView
-            android:layout_below="@+id/app_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="hello world"/>
 
-    </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/main_content_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <FrameLayout
+            android:id="@+id/main_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/nav_drawer_width"
@@ -33,6 +27,5 @@
         android:layout_gravity="start"
         app:layout="@layout/fragment_navigation_drawer"
         android:name="org.creativecommons.thelist.fragments.NavigationDrawerFragment" />
-
 
 </android.support.v4.widget.DrawerLayout>

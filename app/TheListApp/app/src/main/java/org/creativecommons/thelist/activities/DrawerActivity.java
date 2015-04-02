@@ -19,23 +19,44 @@
 
 package org.creativecommons.thelist.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.fragments.AddItemFragment;
+import org.creativecommons.thelist.fragments.GalleryFragment;
+import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
 
-public class DrawerActivity extends ActionBarActivity {
-    public static final String TAG = MainActivity.class.getSimpleName();
+import java.util.ArrayList;
+
+public class DrawerActivity extends ActionBarActivity implements
+        NavigationDrawerFragment.NavigationDrawerListener, GalleryFragment.GalleryListener {
+    public static final String TAG = MyListFragment.class.getSimpleName();
+
+    DrawerLayout mDrawerLayout;
+    View mDrawerView;
+
+    // --------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
+
+        //UI Elements
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerView = findViewById(R.id.navigation_drawer);
+
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
         if (toolbar != null) {
@@ -47,51 +68,93 @@ public class DrawerActivity extends ActionBarActivity {
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         drawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
-    }
 
-//    private void displayView(int position) {
-//        // update the main content by replacing fragments
-//        Fragment fragment = null;
-//        switch (position) {
-//            case 0:
-//                fragment = new HomeFragment();
-//                break;
-//            case 1:
-//                fragment = new FindPeopleFragment();
-//                break;
-//            case 2:
-//                fragment = new PhotosFragment();
-//                break;
-//            case 3:
-//                fragment = new CommunityFragment();
-//                break;
-//            case 4:
-//                fragment = new PagesFragment();
-//                break;
-//            case 5:
-//                fragment = new WhatsHotFragment();
-//                break;
-//
-//            default:
-//                break;
-//        }
-//
-//        if (fragment != null) {
-//            FragmentManager fragmentManager = getFragmentManager();
-//            fragmentManager.beginTransaction()
-//                    .replace(R.id.main_content_container, fragment).commit();
-//
-//            // update selected item and title, then close the drawer
-//            mDrawerList.setItemChecked(position, true);
-//            mDrawerList.setSelection(position);
-//            setTitle(navMenuTitles[position]);
-//            mDrawerLayout.closeDrawer(mDrawerList);
-//        } else {
-//            // error in creating fragment
-//            Log.e(TAG, "Error in creating fragment");
-//        }
-//    } //displayView
+        //If there is no savedInstanceState, load in default fragment
+        if(savedInstanceState == null){
+            MyListFragment listFragment = new MyListFragment();
+            //load default view
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_content_container, listFragment)
+                    .commit();
 
+        }
+    } //onCreate
+
+    // --------------------------------------------------------
+    //Drawer Fragment
+    // --------------------------------------------------------
+
+    @Override
+    public void onDrawerClicked(int position) {
+//        <item>My List</item>
+//        <item>My Photos</item>
+//        <item>Request an Item</item>
+//        <item>About The App</item>
+//        <item>Settings</item>
+//        <item>Log Out</item>
+
+        Fragment fragment = null;
+        switch(position) {
+            case 0:
+                //Go to MainActivity
+                Intent mainIntent = new Intent(DrawerActivity.this, MainActivity.class);
+                startActivity(mainIntent);
+                break;
+            case 1:
+                fragment = new GalleryFragment();
+                break;
+            case 2:
+                fragment = new AddItemFragment();
+                break;
+            case 3:
+                Intent catIntent = new Intent(DrawerActivity.this, CategoryListActivity.class);
+                startActivity(catIntent);
+                break;
+            case 4:
+                Intent aboutIntent = new Intent(DrawerActivity.this, AboutActivity.class);
+                startActivity(aboutIntent);
+                break;
+            case 5:
+                Log.v(TAG, "LOG OUT");
+                break;
+            default:
+                break;
+        } //switch
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_content_container, fragment)
+                    .commit();
+
+            // update selected item and title, then close the drawer
+            mDrawerLayout.closeDrawer(mDrawerView);
+        } else {
+            // error in creating fragment
+            Log.e(TAG, "Error in creating fragment");
+        }
+    } //onDrawerClicked
+
+
+    // --------------------------------------------------------
+    // Gallery Fragment
+    // --------------------------------------------------------
+
+    @Override
+    public void viewImage(ArrayList<String> urls, int position) {
+        //Start detailed view
+        Intent intent = new Intent(DrawerActivity.this, ImageActivity.class);
+        intent.putExtra("position", position);
+        intent.putStringArrayListExtra("urls", urls);
+        startActivity(intent);
+    } //viewImage
+
+
+
+    // --------------------------------------------------------
+    // Main Menu
+    // --------------------------------------------------------
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

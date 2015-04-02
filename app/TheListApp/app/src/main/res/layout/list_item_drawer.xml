@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp">
@@ -15,29 +14,9 @@
     <TextView android:id="@+id/drawer_item_title"
         android:layout_marginLeft="72dp"
         android:text="This is a test"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"/>
 
 </RelativeLayout>
-=======
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView android:id="@+id/drawer_item_icon"
-        android:padding="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_camera_alt_black_24dp"/>
-
-    <TextView android:id="@+id/drawer_item_title"
-        android:padding="8dp"
-        android:text="This is a test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"/>
-
-</LinearLayout>
->>>>>>> 879ab7609ca9c846a564985f779914ae1de09ac6

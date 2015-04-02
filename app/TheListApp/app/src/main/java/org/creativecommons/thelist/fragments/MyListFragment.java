@@ -1,25 +1,9 @@
-/* The List powered by Creative Commons
+package org.creativecommons.thelist.fragments;
 
-   Copyright (C) 2014, 2015 Creative Commons
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU Affero General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU Affero General Public License for more details.
-
-   You should have received a copy of the GNU Affero General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
-package org.creativecommons.thelist.activities;
-
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,16 +13,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
@@ -57,12 +39,12 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -82,9 +64,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
-public class MainActivity extends ActionBarActivity {
-    public static final String TAG = MainActivity.class.getSimpleName();
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MyListFragment extends android.support.v4.app.Fragment {
+    public static final String TAG = MyListFragment.class.getSimpleName();
     protected Context mContext;
 
     //Helper Methods
@@ -118,37 +102,39 @@ public class MainActivity extends ActionBarActivity {
     protected FrameLayout mFrameLayout;
     protected TextView mEmptyView;
 
-    //Checks
-    //TODO: check if still needed
-    //private boolean photoToBeUploaded;
-    //private boolean menuLogin;
-
     // --------------------------------------------------------
 
+
+    public MyListFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mContext = this;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_my_list, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mContext = getActivity();
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
-        mCurrentUser = new ListUser(MainActivity.this);
+        mCurrentUser = new ListUser(getActivity());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
-
-        //Google Analytics Tracker
-        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
+        Activity activity = getActivity();
 
         //Load UI Elements
-        mProgressBar = (ProgressBar) findViewById(R.id.feedProgressBar);
-        mUploadProgressBar = (RelativeLayout) findViewById(R.id.photoProgressBar);
-        mEmptyView = (TextView) findViewById(R.id.empty_list_label);
-        mFrameLayout = (FrameLayout)findViewById(R.id.overlay_fragment_container);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
+        mUploadProgressBar = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
+        mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
+        mFrameLayout = (FrameLayout)activity.findViewById(R.id.overlay_fragment_container);
+        mFab = (FloatingActionButton) activity.findViewById(R.id.fab);
         mFab.setEnabled(false);
         mFab.setVisibility(View.GONE);
         mFab.hide();
@@ -156,20 +142,21 @@ public class MainActivity extends ActionBarActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent hitMeIntent = new Intent(MainActivity.this, RandomActivity.class);
+                //TODO: don’t do this
+                Intent hitMeIntent = new Intent(getActivity(), RandomActivity.class);
                 startActivity(hitMeIntent);
             }
         });
 
         //RecyclerView
-        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.feedSwipeRefresh);
-        mRecyclerView = (RecyclerView)findViewById(R.id.feedRecyclerView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.feedSwipeRefresh);
+        mRecyclerView = (RecyclerView)activity.findViewById(R.id.feedRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         //TODO: Try dividers in layout instead?
 //        RecyclerView.ItemDecoration itemDecoration =
 //                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
 //        mRecyclerView.addItemDecoration(itemDecoration);
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(mContext);
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -182,19 +169,22 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-    } //onCreate
 
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        //Log.v(TAG, "ON RESTART CALLED");
-        if(!mCurrentUser.isTempUser() && mCurrentUser.getAnalyticsOptOut() != null){
-            mSharedPref.setAnalyticsViewed(true);
-        }
-    }
+    } //onActivityCreated
 
+    //TODO: figure out where this goes in a fragment
+//    @Override
+//    protected void onRestart(){
+//        super.onRestart();
+//        //Log.v(TAG, "ON RESTART CALLED");
+//        if(!mCurrentUser.isTempUser() && mCurrentUser.getAnalyticsOptOut() != null){
+//            mSharedPref.setAnalyticsViewed(true);
+//        }
+//    }
+
+    //TODO: is this the right place to do this in a fragment?
     @Override
-    protected void onStart(){
+    public void onStart(){
         super.onStart();
 
         if(!mCurrentUser.isTempUser() && !mSharedPref.getAnalyticsViewed()){
@@ -223,15 +213,7 @@ public class MainActivity extends ActionBarActivity {
             mSharedPref.setAnalyticsViewed(true);
             Log.v(TAG, "SET ANALYTICS VIEWED TRUE");
         }
-
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     } //onStart
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
 
     @Override
     public void onResume() {
@@ -273,7 +255,8 @@ public class MainActivity extends ActionBarActivity {
         } //surveyTaken
 
         //Update menu for login/logout options
-        invalidateOptionsMenu();
+        //TODO: get login-logout working
+        //getActivity().invalidateOptionsMenu();
 
         if(!mFab.isVisible()){
             mFab.show();
@@ -384,7 +367,9 @@ public class MainActivity extends ActionBarActivity {
                     try {
                         listItem.setItemID(String.valueOf(itemIds.getInt(i)));
                         listItem.setMessageHelper(mMessageHelper);
-                        listItem.setMainListActivity(MainActivity.this);
+                        //TODO: needs to be mainactivity in the MainListItem class
+                        listItem.setMainListActivity(getActivity());
+                        listItem.setMyListFragment(this);
                         listItem.createNewUserListItem();
                     } catch (JSONException e) {
                         Log.v(TAG, e.getMessage());
@@ -406,7 +391,7 @@ public class MainActivity extends ActionBarActivity {
     //For temp users displayUserItems:
     // Check if all items have been returned from API before displaying list
     public void CheckComplete() {
-        Log.v("Check complete", "start");
+        Log.d(TAG, " > CheckComplete");
         for(int i = 0; i < mItemList.size(); i++) {
             if (!mItemList.get(i).completed) {
                 return;
@@ -419,51 +404,50 @@ public class MainActivity extends ActionBarActivity {
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
 
-
     //----------------------------------------------
     //RECYCLERVIEW – LIST ITEM INTERACTION
     //----------------------------------------------
 
     private void initRecyclerView(){
         SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
-                        mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
-                            @Override
-                            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
-                                    mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-                                    //Get item details for UNDO
-                                    lastDismissedItemPosition = position;
-                                    mLastDismissedItem = mItemList.get(position);
+                mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+            @Override
+            public boolean canDismiss(int position) {
+                return true;
+            }
+            @Override
+            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                for (int position : reverseSortedPositions) {
+                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
+                    mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
+                    //Get item details for UNDO
+                    lastDismissedItemPosition = position;
+                    mLastDismissedItem = mItemList.get(position);
 
-                                    //What happens when item is swiped offscreen
-                                    mItemList.remove(mLastDismissedItem);
-                                    //TODO: should this be after snackbar removal?
-                                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
+                    //What happens when item is swiped offscreen
+                    mItemList.remove(mLastDismissedItem);
+                    //TODO: should this be after snackbar removal?
+                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
 
-                                    // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
-                                    mFeedAdapter.notifyDataSetChanged();
+                    // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
+                    mFeedAdapter.notifyDataSetChanged();
 
-                                    //Snackbar message
-                                    showSnackbar();
-                                }
-                            }
-                        });
+                    //Snackbar message
+                    showSnackbar();
+                }
+            }
+        });
         mRecyclerView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
         mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
 
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setItems(R.array.listItem_choices, mDialogListener);
                         AlertDialog dialog = builder.create();
                         dialog.show();
@@ -474,7 +458,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }));
     } //initRecyclerView
-
 
     //----------------------------------------------
     //SNACKBAR – UNDO ITEM DELETION
@@ -504,6 +487,7 @@ public class MainActivity extends ActionBarActivity {
                         }) //action button’s listener
                         .eventListener(new EventListener() {
                             Interpolator interpolator = new MaterialInterpolator();
+
                             @Override
                             public void onShow(Snackbar snackbar) {
                                 TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
@@ -514,9 +498,11 @@ public class MainActivity extends ActionBarActivity {
                                 tsa.setDuration(300);
                                 mFab.startAnimation(tsa);
                             }
+
                             @Override
                             public void onShown(Snackbar snackbar) {
                             }
+
                             @Override
                             public void onDismiss(Snackbar snackbar) {
 
@@ -529,22 +515,22 @@ public class MainActivity extends ActionBarActivity {
                                 tsa2.setDuration(300);
                                 mFab.startAnimation(tsa2);
                             }
+
                             @Override
                             public void onDismissed(Snackbar snackbar) {
                                 //TODO: QA
                                 //If no more items
-                                if(mItemList.isEmpty()){
+                                if (mItemList.isEmpty()) {
                                     mEmptyView.setVisibility(View.VISIBLE);
                                 }
                                 //If fab is hidden (bug fix?)
-                                if(!mFab.isVisible()){
+                                if (!mFab.isVisible()) {
                                     mFab.show();
                                 }
                             }
                         }) //event listener
-                , MainActivity.this);
+                , getActivity());
     } //showSnackbar
-
 
     //----------------------------------------------
     //TAKING PHOTO/PHOTO SELECTION
@@ -561,7 +547,7 @@ public class MainActivity extends ActionBarActivity {
                             mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             if (mMediaUri == null) {
                                 // Display an error
-                                Toast.makeText(MainActivity.this, R.string.error_external_storage,
+                                Toast.makeText(getActivity(), R.string.error_external_storage,
                                         Toast.LENGTH_LONG).show();
                             }
                             else {
@@ -584,7 +570,7 @@ public class MainActivity extends ActionBarActivity {
                         // get the URI
 
                         // 1. Get the external storage directory
-                        String appName = MainActivity.this.getString(R.string.app_name);
+                        String appName = getActivity().getString(R.string.app_name);
                         File mediaStorageDir = new File(
                                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                                 appName);
@@ -632,12 +618,12 @@ public class MainActivity extends ActionBarActivity {
 
     //Once photo taken or selected then do this:
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode){
             case PhotoConstants.PICK_PHOTO_REQUEST:
             case PhotoConstants.TAKE_PHOTO_REQUEST:
-                if(resultCode == RESULT_OK) {
+                if(resultCode == Activity.RESULT_OK) {
                     //photoToBeUploaded = true;
                     mItemToBeUploaded = mCurrentItem;
                     uploadItemPosition = activeItemPosition;
@@ -655,18 +641,17 @@ public class MainActivity extends ActionBarActivity {
                     //Add photo to the Gallery (listen for broadcast and let gallery take action)
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(mMediaUri);
-                    sendBroadcast(mediaScanIntent);
+                    getActivity().sendBroadcast(mediaScanIntent);
 
                     startPhotoUpload();
                 } //RESULT OK
-                else if(resultCode != RESULT_CANCELED) { //result other than ok or cancelled
+                else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
                     //Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "> onActivityResult > resultCode != canceled");
                 }
                 break;
         } //switch
     } //onActivityResult
-
 
     //----------------------------------------------
     //PHOTO UPLOAD
@@ -742,102 +727,4 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
     } //performUpload
-
-    //----------------------------------------------
-    //MENU + MENU HELPER METHODS
-    //----------------------------------------------
-
-    private void updateMenuTitles(){
-        MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
-
-        if(mCurrentUser.getAccountCount() > 0){
-            switchAccounts.setVisible(false);
-            //TODO: uncomment when Switch Accounts works
-            //switchAccounts.setTitle("Switch Accounts");
-        } else {
-            switchAccounts.setTitle("Add Account");
-        }
-    } //updateMenuTitles
-
-    private void handleUserAccount(){
-        //TODO: bring up account picker dialog w/ new option
-        if(mCurrentUser.getAccountCount() > 0){
-            mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
-                @Override
-                public void onSuccess(String authtoken) {
-                    Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
-                            "got authtoken: " + authtoken);
-                }
-            });
-        } else {
-            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
-                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
-                    @Override
-                    public void onSuccess(String authtoken) {
-                        Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
-                                "got authtoken: " + authtoken);
-                    }
-                });
-        }
-    } //handleUserAccount
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        this.menu = menu;
-
-        //Show add or switch account based on login status + available accounts
-        updateMenuTitles();
-        return true;
-        //return super.onCreateOptionsMenu(menu);
-    } //onCreateOptionsMenu
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch(item.getItemId()){
-            case R.id.switch_accounts:
-                    handleUserAccount();
-                return true;
-            case R.id.gallery:
-                Intent galleryIntent = new Intent(MainActivity.this, GalleryActivity.class);
-                startActivity(galleryIntent);
-                return true;
-            case R.id.pick_categories:
-                Intent pickCategoriesIntent = new Intent(MainActivity.this, CategoryListActivity.class);
-                startActivity(pickCategoriesIntent);
-                return true;
-            case R.id.about_theapp:
-                Intent aboutAppIntent = new Intent(MainActivity.this,AboutActivity.class);
-                startActivity(aboutAppIntent);
-                return true;
-            case R.id.add_item:
-                Intent addItemIntent = new Intent(MainActivity.this, AddItemActivity.class);
-                startActivity(addItemIntent);
-                return true;
-            case R.id.remove_accounts:
-                if(mCurrentUser.isTempUser()){
-                    mSharedPref.ClearAllSharedPreferences();
-                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                    startActivity(startIntent);
-                } else {
-                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                        @Override
-                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-                        public void onSuccess(String authtoken) {
-                            mSharedPref.ClearAllSharedPreferences();
-                            Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                            startActivity(startIntent);
-                        }
-                    });
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    } //onOptionsItemsSelected
-} //MainActivity
+} //MyListFragment

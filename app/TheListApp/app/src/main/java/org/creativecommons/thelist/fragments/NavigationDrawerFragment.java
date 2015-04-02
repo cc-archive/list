@@ -20,7 +20,7 @@
 package org.creativecommons.thelist.fragments;
 
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -35,14 +35,12 @@ import android.view.ViewGroup;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.DrawerAdapter;
 import org.creativecommons.thelist.adapters.DrawerItem;
+import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
 
     private Context mContext;
@@ -58,10 +56,30 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
     private boolean mUserLearnedDrawer;
     private boolean mFromSavedInstanceState;
 
+    //Interface with Activity
+    public NavigationDrawerListener mCallback;
+
+    // --------------------------------------------------------
+
+    public interface NavigationDrawerListener {
+        public void onDrawerClicked (int position);
+    }
+
     public NavigationDrawerFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (NavigationDrawerListener) activity;
+        } catch(ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + activity.getString(R.string.R_string_drawer_callback_exception_message));
+        }
+    } //onAttach
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +107,18 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
         mAdapter = new DrawerAdapter(mContext, getData());
         mDrawerRecyclerView = (RecyclerView)getActivity().findViewById(R.id.drawer_recyclerView);
         mDrawerRecyclerView.setAdapter(mAdapter);
+        mDrawerRecyclerView.setHasFixedSize(true);
         mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mDrawerRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        //TODO: on item click load fragment
+                        mCallback.onDrawerClicked(position);
+                    }
+                }));
+
 
         mUserLearnedDrawer = mSharedPref.getUserLearnedDrawer();
     } //onActivityCreated
@@ -143,4 +172,7 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
         }
         return data;
     }
+
+
+
 } //NavigationDrawerFragment

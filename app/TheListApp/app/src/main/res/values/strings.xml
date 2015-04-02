@@ -250,5 +250,9 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <!--Navigation Drawer-->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="R.string.drawer_callback_exception_message">must implement NavigationDrawerFragment.NavigationDrawerListener</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

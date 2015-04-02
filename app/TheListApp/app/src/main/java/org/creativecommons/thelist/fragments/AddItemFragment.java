@@ -3,7 +3,6 @@ package org.creativecommons.thelist.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.AddItemActivity;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -46,9 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AddItemFragment extends android.support.v4.app.Fragment {
     public static final String TAG = AddItemFragment.class.getSimpleName();
 
@@ -101,14 +95,14 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
         mPhotoAdded = false;
 
-        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
-        if(toolbar != null){
-            ((AddItemActivity) getActivity()).setSupportActionBar(toolbar);
-            ((AddItemActivity) getActivity()).getSupportActionBar()
-                    .setTitle(getString(R.string.title_activity_add_item));
-            ((AddItemActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            Log.v(TAG, "GET TOOLBAR ADD ITEM");
-        }
+//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
+//        if(toolbar != null){
+//            ((AddItemActivity) getActivity()).setSupportActionBar(toolbar);
+//            ((AddItemActivity) getActivity()).getSupportActionBar()
+//                    .setTitle(getString(R.string.title_activity_add_item));
+//            ((AddItemActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            Log.v(TAG, "GET TOOLBAR ADD ITEM");
+//        }
 
 //        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
 //        if (toolbar != null) {
