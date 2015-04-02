@@ -31,7 +31,7 @@
     <integer name="ga_sessionTimeout">300</integer>
 
     <!-- The screen names that will appear in reports -->
-    <screenName name="org.creativecommons.thelist.activities.MainActivity">Main Feed</screenName>
+    <screenName name="org.creativecommons.thelist.misc.MainActivity">Main Feed</screenName>
     <screenName name="org.creativecommons.thelist.activities.RandomActivity">Random Item Suggestions</screenName>
     <screenName name="org.creativecommons.thelist.activities.CategoryListActivity">Pick Categories</screenName>
     <screenName name="org.creativecommons.thelist.activities.StartActivity">Start Screen</screenName>

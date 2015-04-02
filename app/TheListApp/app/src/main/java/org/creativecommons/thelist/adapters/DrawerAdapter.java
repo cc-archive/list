@@ -70,23 +70,25 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         holder.itemTitle.setText(d.getItemName());
 
         switch(position){
-            case 0:
-                holder.itemIcon.setImageResource(R.drawable.abc_btn_check_material);
+            case 0: //The List
+                holder.itemIcon.setImageResource(R.drawable.ic_view_list_grey600_24dp);
                 break;
-            case 1:
-                holder.itemIcon.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+            case 1: //My Photos
+                holder.itemIcon.setImageResource(R.drawable.ic_photo_grey600_24dp);
                 break;
-            case 2:
-                holder.itemIcon.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+            case 2: //My Categories
+                holder.itemIcon.setImageResource(R.drawable.ic_bookmark_grey600_24dp);
                 break;
-            case 3:
-                holder.itemIcon.setImageResource(R.drawable.ic_camera_alt_grey600_24dp);
+            case 3: //Request an Item
+                holder.itemIcon.setImageResource(R.drawable.ic_add_to_photos_grey600_24dp);
                 break;
-            case 4:
-                holder.itemIcon.setImageResource(R.drawable.ic_check_white_24dp);
+            case 4: //About the App
+                holder.itemIcon.setImageResource(R.drawable.ic_info_grey600_24dp);
                 break;
-            case 5:
-                holder.itemIcon.setImageResource(R.drawable.ic_check_black_36dp);
+            case 5: //Give Feedback
+                holder.itemIcon.setImageResource(R.drawable.ic_question_answer_grey600_24dp);
+                break;
+            default:
                 break;
         }
 

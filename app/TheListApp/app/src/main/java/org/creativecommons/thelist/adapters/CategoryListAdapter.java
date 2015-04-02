@@ -22,7 +22,6 @@ package org.creativecommons.thelist.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,11 +93,9 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Set checkmarkView visibility
         if(c.getCategoryChecked()){
-            Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE BEING SET TO VISIBLE");
             holder.checkmarkView.setVisibility(View.VISIBLE);
             //holder.checkableLayout.setChecked(true);
         } else {
-            Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE INVISIBLE");
             holder.checkmarkView.setVisibility(View.GONE);
             //holder.checkableLayout.setChecked(false);
         }

@@ -4,7 +4,7 @@
     <!-- Activity Titles -->
     <string name="app_name">The List</string>
     <string name="title_activity_main">Your List</string>
-    <string name="title_activity_category_list">Pick Categories</string>
+    <string name="title_activity_category_list">My Categories</string>
     <string name="title_activity_random">Hit Me</string>
     <string name="title_activity_login">Log In</string>
     <string name="title_activity_explainer">What’s up with the List?</string>
@@ -21,10 +21,11 @@
     <string-array name="drawer_navigation_labels">
         <item>My List</item>
         <item>My Photos</item>
+        <item>My Categories</item>
         <item>Request an Item</item>
+
         <item>About The App</item>
-        <item>Settings</item>
-        <item>Log Out</item>
+        <item>Give Feedback</item>
     </string-array>
 
     <!-- Menu Button Labels -->

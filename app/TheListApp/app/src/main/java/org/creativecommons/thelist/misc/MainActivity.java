@@ -17,7 +17,7 @@
 
 */
 
-package org.creativecommons.thelist.activities;
+package org.creativecommons.thelist.misc;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -57,6 +57,12 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.AboutActivity;
+import org.creativecommons.thelist.activities.AddItemActivity;
+import org.creativecommons.thelist.activities.CategoryListActivity;
+import org.creativecommons.thelist.activities.GalleryActivity;
+import org.creativecommons.thelist.activities.RandomActivity;
+import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;

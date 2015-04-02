@@ -341,7 +341,7 @@ public class CategoryListActivity extends ActionBarActivity {
                 mSharedPref.saveSharedPreference
                         (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
             }
-            Intent intent = new Intent(CategoryListActivity.this, MainActivity.class);
+            Intent intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
             startActivity(intent);
             return true;
         }

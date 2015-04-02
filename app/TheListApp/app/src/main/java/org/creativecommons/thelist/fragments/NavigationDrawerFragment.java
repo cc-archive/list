@@ -119,8 +119,8 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
                     }
                 }));
 
-
         mUserLearnedDrawer = mSharedPref.getUserLearnedDrawer();
+
     } //onActivityCreated
 
     public void setUp(int drawerId, DrawerLayout drawerLayout, Toolbar toolbar) {

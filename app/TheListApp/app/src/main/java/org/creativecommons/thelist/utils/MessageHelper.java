@@ -28,7 +28,7 @@ import android.support.v4.app.NotificationCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
+import org.creativecommons.thelist.activities.DrawerActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -101,7 +101,7 @@ public class MessageHelper {
                 .setContentText(message)
                 .setTicker(ticker);
 
-        Intent resultIntent = new Intent(mContext, MainActivity.class);
+        Intent resultIntent = new Intent(mContext, DrawerActivity.class);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
         stackBuilder.addParentStack(StartActivity.class);
         stackBuilder.addNextIntent(resultIntent);

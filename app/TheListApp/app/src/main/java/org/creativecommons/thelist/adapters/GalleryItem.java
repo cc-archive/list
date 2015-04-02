@@ -1,10 +1,5 @@
 package org.creativecommons.thelist.adapters;
 
-import android.content.Context;
-
-import org.creativecommons.thelist.activities.MainActivity;
-import org.creativecommons.thelist.utils.MessageHelper;
-
 public class GalleryItem {
     private String itemName, makerName, itemID, url;
     private boolean error, progress;

@@ -19,7 +19,9 @@
 
 package org.creativecommons.thelist.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,14 +30,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.AddItemFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
+import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 
@@ -43,8 +49,15 @@ public class DrawerActivity extends ActionBarActivity implements
         NavigationDrawerFragment.NavigationDrawerListener, GalleryFragment.GalleryListener {
     public static final String TAG = MyListFragment.class.getSimpleName();
 
-    DrawerLayout mDrawerLayout;
-    View mDrawerView;
+    private Context mContext;
+    private ListUser mCurrentUser;
+    private SharedPreferencesMethods mSharedPref;
+
+    //UI Elements
+    private DrawerLayout mDrawerLayout;
+    private View mDrawerView;
+    private String[] mDrawerTitles;
+    private Menu menu;
 
     // --------------------------------------------------------
 
@@ -53,10 +66,14 @@ public class DrawerActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        mContext = this;
+        mCurrentUser = new ListUser(DrawerActivity.this);
+        mSharedPref = new SharedPreferencesMethods(mContext);
+
         //UI Elements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerView = findViewById(R.id.navigation_drawer);
-
+        mDrawerTitles = getResources().getStringArray(R.array.drawer_navigation_labels);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
         if (toolbar != null) {
@@ -67,7 +84,8 @@ public class DrawerActivity extends ActionBarActivity implements
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        drawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
+        drawerFragment.setUp(R.id.navigation_drawer,
+                (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
 
         //If there is no savedInstanceState, load in default fragment
         if(savedInstanceState == null){
@@ -87,36 +105,41 @@ public class DrawerActivity extends ActionBarActivity implements
 
     @Override
     public void onDrawerClicked(int position) {
-//        <item>My List</item>
-//        <item>My Photos</item>
-//        <item>Request an Item</item>
-//        <item>About The App</item>
-//        <item>Settings</item>
-//        <item>Log Out</item>
+//        <item>My List</item> 0
+//        <item>My Photos</item> 1
+//        <item>My Categories</item> 2
+//        <item>Request an Item</item> 3
+//
+//        <item>About The App</item> 4
+//        <item>Give Feedback</item> 5
 
         Fragment fragment = null;
         switch(position) {
             case 0:
-                //Go to MainActivity
-                Intent mainIntent = new Intent(DrawerActivity.this, MainActivity.class);
-                startActivity(mainIntent);
+                fragment = new MyListFragment();
                 break;
             case 1:
                 fragment = new GalleryFragment();
                 break;
             case 2:
-                fragment = new AddItemFragment();
-                break;
-            case 3:
                 Intent catIntent = new Intent(DrawerActivity.this, CategoryListActivity.class);
                 startActivity(catIntent);
+                break;
+            case 3:
+                fragment = new AddItemFragment();
                 break;
             case 4:
                 Intent aboutIntent = new Intent(DrawerActivity.this, AboutActivity.class);
                 startActivity(aboutIntent);
                 break;
             case 5:
-                Log.v(TAG, "LOG OUT");
+                //Set survey taken
+                mSharedPref.setSurveyTaken(true);
+
+                //Go to link
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.dialog_survey_link)));
+                startActivity(browserIntent);
                 break;
             default:
                 break;
@@ -129,6 +152,7 @@ public class DrawerActivity extends ActionBarActivity implements
                     .commit();
 
             // update selected item and title, then close the drawer
+            getSupportActionBar().setTitle(mDrawerTitles[position]);
             mDrawerLayout.closeDrawer(mDrawerView);
         } else {
             // error in creating fragment
@@ -153,13 +177,55 @@ public class DrawerActivity extends ActionBarActivity implements
 
 
     // --------------------------------------------------------
-    // Main Menu
+    // Main Menu + Helpers
     // --------------------------------------------------------
+
+
+
+    private void updateMenuTitles(){
+        MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
+
+        if(mCurrentUser.getAccountCount() > 0){
+            switchAccounts.setVisible(false);
+            //TODO: uncomment when Switch Accounts works
+            //switchAccounts.setTitle("Switch Accounts");
+        } else {
+            switchAccounts.setTitle("Add Account");
+        }
+    } //updateMenuTitles
+
+    private void handleUserAccount(){
+        //TODO: bring up account picker dialog w/ new option
+        if(mCurrentUser.getAccountCount() > 0){
+            mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
+                            "got authtoken: " + authtoken);
+                }
+            });
+        } else {
+            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                        @Override
+                        public void onSuccess(String authtoken) {
+                            Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
+                                    "got authtoken: " + authtoken);
+                        }
+                    });
+        }
+    } //handleUserAccount
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_drawer, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_drawer, menu);
+        this.menu = menu;
+
+        //Show add or switch account based on login status + available accounts
+        updateMenuTitles();
+
         return true;
     }
 
@@ -170,11 +236,33 @@ public class DrawerActivity extends ActionBarActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.about_theapp:
+                Intent aboutAppIntent = new Intent(DrawerActivity.this, AboutActivity.class);
+                startActivity(aboutAppIntent);
+                return true;
+            case R.id.switch_accounts:
+                handleUserAccount();
+                return true;
+            case R.id.remove_accounts:
+                if (mCurrentUser.isTempUser()) {
+                    mSharedPref.ClearAllSharedPreferences();
+                    Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
+                    startActivity(startIntent);
+                } else {
+                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                        @Override
+                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+                        public void onSuccess(String authtoken) {
+                            mSharedPref.ClearAllSharedPreferences();
+                            Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
+                            startActivity(startIntent);
+                        }
+                    });
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }
