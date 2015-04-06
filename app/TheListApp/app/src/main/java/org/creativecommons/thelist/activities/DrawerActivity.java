@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -72,6 +73,7 @@ public class DrawerActivity extends ActionBarActivity implements
 
         //UI Elements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         mDrawerView = findViewById(R.id.navigation_drawer);
         mDrawerTitles = getResources().getStringArray(R.array.drawer_navigation_labels);
 
@@ -86,6 +88,7 @@ public class DrawerActivity extends ActionBarActivity implements
 
         drawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
 
         //If there is no savedInstanceState, load in default fragment
         if(savedInstanceState == null){
@@ -98,6 +101,12 @@ public class DrawerActivity extends ActionBarActivity implements
 
         }
     } //onCreate
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
 
     // --------------------------------------------------------
     //Drawer Fragment

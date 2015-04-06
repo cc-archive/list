@@ -35,9 +35,6 @@ import java.util.List;
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerViewHolder>  {
     private LayoutInflater inflater;
     private List<DrawerItem> drawerItems; //Collections.emptyList()
-    private static final int DEFAULT_VIEW = 1;
-    public static final int ERROR_VIEW = 0;
-    public static final int PROGRESS_VIEW = 2;
 
     public DrawerAdapter(Context context, List<DrawerItem> listItems) {
         this.drawerItems = listItems;

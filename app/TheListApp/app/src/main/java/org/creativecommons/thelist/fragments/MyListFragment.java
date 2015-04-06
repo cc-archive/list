@@ -45,6 +45,7 @@ import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -153,9 +154,9 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         mRecyclerView = (RecyclerView)activity.findViewById(R.id.feedRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         //TODO: Try dividers in layout instead?
-//        RecyclerView.ItemDecoration itemDecoration =
-//                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
-//        mRecyclerView.addItemDecoration(itemDecoration);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(mContext);
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);

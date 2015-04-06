@@ -153,7 +153,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onStart(){
         super.onStart();
-        if(!(mCurrentUser.isTempUser())) {
+        if(!(mCurrentUser.isTempUser()) && mCurrentUser.getAccount() != null) {
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
             //Redirect to MainActivity

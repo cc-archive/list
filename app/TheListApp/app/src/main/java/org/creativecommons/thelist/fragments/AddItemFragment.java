@@ -95,21 +95,6 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
         mPhotoAdded = false;
 
-//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
-//        if(toolbar != null){
-//            ((AddItemActivity) getActivity()).setSupportActionBar(toolbar);
-//            ((AddItemActivity) getActivity()).getSupportActionBar()
-//                    .setTitle(getString(R.string.title_activity_add_item));
-//            ((AddItemActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            Log.v(TAG, "GET TOOLBAR ADD ITEM");
-//        }
-
-//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
-//        if (toolbar != null) {
-//            getActivity().setSupportActionBar(toolbar);
-//            Log.v(TAG, "GET TOOLBAR ADD ITEM");
-//        }
-
         mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

@@ -72,7 +72,7 @@
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".misc.MainActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".misc.MainActivity" />
