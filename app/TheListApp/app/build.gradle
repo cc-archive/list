@@ -36,4 +36,5 @@ dependencies {
     compile 'ch.acra:acra:4.6.1'
     compile 'org.lucasr.dspec:dspec:0.1.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.rengwuxian.materialedittext:library:2.0.3'
 }

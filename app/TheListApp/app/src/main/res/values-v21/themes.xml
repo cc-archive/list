@@ -13,13 +13,15 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
         <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
 </resources>

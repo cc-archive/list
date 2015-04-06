@@ -61,9 +61,9 @@
             android:name=".activities.CategoryListActivity"
             android:label="@string/title_activity_category_list"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".activities.DrawerActivity" />-->
         </activity>
         <activity
             android:name=".activities.RandomActivity"

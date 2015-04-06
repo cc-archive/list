@@ -139,8 +139,6 @@ public class DrawerActivity extends ActionBarActivity implements
     public void onResume() {
         super.onResume();
 
-
-
     } //onResume
 
     // --------------------------------------------------------
@@ -209,6 +207,24 @@ public class DrawerActivity extends ActionBarActivity implements
         }
     } //onDrawerClicked
 
+    @Override
+    public void onAccountClicked() {
+        if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
+            handleUserAccount();
+        } else {
+            //Log out user
+            mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                @Override
+                //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+                public void onSuccess(String authtoken) {
+                    mSharedPref.ClearAllSharedPreferences();
+                    Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
+                    startActivity(startIntent);
+                }
+            });
+        }
+    }
+
 
     // --------------------------------------------------------
     // Gallery Fragment
@@ -231,17 +247,17 @@ public class DrawerActivity extends ActionBarActivity implements
 
 
 
-    private void updateMenuTitles(){
-        MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
-
-        if(mCurrentUser.getAccountCount() > 0){
-            switchAccounts.setVisible(false);
-            //TODO: uncomment when Switch Accounts works
-            //switchAccounts.setTitle("Switch Accounts");
-        } else {
-            switchAccounts.setTitle("Add Account");
-        }
-    } //updateMenuTitles
+//    private void updateMenuTitles(){
+//        MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
+//
+//        if(mCurrentUser.getAccountCount() > 0){
+//            switchAccounts.setVisible(false);
+//            //TODO: uncomment when Switch Accounts works
+//            //switchAccounts.setTitle("Switch Accounts");
+//        } else {
+//            switchAccounts.setTitle("Add Account");
+//        }
+//    } //updateMenuTitles
 
     private void handleUserAccount(){
         //TODO: bring up account picker dialog w/ new option
@@ -273,7 +289,7 @@ public class DrawerActivity extends ActionBarActivity implements
         this.menu = menu;
 
         //Show add or switch account based on login status + available accounts
-        updateMenuTitles();
+        //updateMenuTitles();
 
         return true;
     }
@@ -290,9 +306,9 @@ public class DrawerActivity extends ActionBarActivity implements
                 Intent aboutAppIntent = new Intent(DrawerActivity.this, AboutActivity.class);
                 startActivity(aboutAppIntent);
                 return true;
-            case R.id.switch_accounts:
-                handleUserAccount();
-                return true;
+//            case R.id.switch_accounts:
+//                handleUserAccount();
+//                return true;
             case R.id.remove_accounts:
                 if (mCurrentUser.isTempUser()) {
                     mSharedPref.ClearAllSharedPreferences();

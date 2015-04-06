@@ -87,7 +87,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         mRequestMethods = new RequestMethods(mContext);
 
         //UI Elements
-        mItemNameField = (EditText) getView().findViewById(R.id.add_item_edittext);
+        mItemNameField = (EditText) getView().findViewById(R.id.add_item_title);
         mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
         mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
         mBottomToolbar.setSubtitle("Add Item");
