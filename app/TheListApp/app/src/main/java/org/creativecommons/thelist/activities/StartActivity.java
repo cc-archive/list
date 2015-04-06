@@ -162,8 +162,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else { //TEMP USER
-            //Display Google Analytics Message
 
+            //Display Google Analytics Message
             Boolean optOut = mSharedPref.getAnalyticsOptOut();
             Log.v(TAG, "OPTOUT" + String.valueOf(optOut));
             if(optOut == null){

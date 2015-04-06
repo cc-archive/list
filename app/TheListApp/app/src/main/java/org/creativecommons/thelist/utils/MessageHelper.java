@@ -39,6 +39,7 @@ public class MessageHelper {
 
     //Notifications
     final AtomicInteger notificationID = new AtomicInteger(0);
+    public static final String INTENT_ACTION = "OPEN_GALLERY";
 
     //Set Context
     public MessageHelper(Context mc) {
@@ -99,16 +100,19 @@ public class MessageHelper {
                 .setSmallIcon(R.drawable.ic_camera_alt_white_24dp)
                 .setContentTitle(title)
                 .setContentText(message)
+                .setAutoCancel(true)
                 .setTicker(ticker);
 
         Intent resultIntent = new Intent(mContext, DrawerActivity.class);
+        resultIntent.setAction(INTENT_ACTION);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
         stackBuilder.addParentStack(StartActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_CANCEL_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
 

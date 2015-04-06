@@ -60,7 +60,10 @@
         <activity
             android:name=".activities.CategoryListActivity"
             android:label="@string/title_activity_category_list"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DrawerActivity" />
         </activity>
         <activity
             android:name=".activities.RandomActivity"
@@ -75,7 +78,7 @@
             android:parentActivityName=".activities.DrawerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".misc.MainActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
         <activity
             android:name=".activities.GalleryActivity"
@@ -83,7 +86,7 @@
             android:parentActivityName=".misc.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".misc.MainActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- Authenticator -->

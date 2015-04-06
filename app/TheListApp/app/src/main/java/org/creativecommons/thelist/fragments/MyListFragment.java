@@ -3,7 +3,6 @@ package org.creativecommons.thelist.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -65,9 +64,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MyListFragment extends android.support.v4.app.Fragment {
     public static final String TAG = MyListFragment.class.getSimpleName();
     protected Context mContext;
@@ -301,6 +297,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
                     mItemList.clear();
+                    
 
                     for(int i=0; i < response.length(); i++) {
                         try {
