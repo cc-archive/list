@@ -11,8 +11,7 @@ if (file_exists($path)) {
    readfile($path);
    }
 else {
-   header("Content-type: image/png");
-   readfile("../shark.png");
-http_response_code(404);
+   header("Location: https://thelist.creativecommons.org/app/shark.png;");
+   http_response_code(404);
 }
 ?>
