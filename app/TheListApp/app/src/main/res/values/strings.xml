@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Activity Titles -->
-    <string name="app_name">The List</string>
+    <string name="app_name">The List powered by Creative Commons</string>
     <string name="title_activity_main">Your List</string>
     <string name="title_activity_category_list">Pick Categories</string>
     <string name="title_activity_random">Hit Me</string>
@@ -71,8 +71,8 @@
 
     <!-- Onboarding Explainers -->
     <string-array name="onboarding_explainers">
-        <item>The List is a collaborative project to build a global collection of images that anyone can use</item>
-        <item>Photos you share with The List will be available for any person or organization to
+        <item>The List powered by Creative Commons is a collaborative project to build a global collection of images that anyone can use</item>
+        <item>Photos you share with the app will be available for any person or organization to
             use, as long as they give you credit</item>
         <item>You’ll be helping creators tell their stories – on Wikipedia, social media, in the
             news, or in campaigns.\n\nTogether we are building a commons of creativity and knowledge
@@ -99,21 +99,20 @@
     <!--About the App single text-->
     <string name="about_app">This app is developed by Creative Commons.\n\n
         <a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
-        \n\nThrough The List,
+        \n\nThrough the app,
         organizations will provide lists of locations, people, and events that
         they need photographs of. And when users are in the right place at the right time, they can
         claim an item from the list and publish a photograph of it.
         \n\n<b>Licensing and Attribution</b>
-        \nAll images created and uploaded using the List can be used and
+        \nAll images created and uploaded using the app can be used and
         re-used by anyone, so long as they attribute the work of the author.<br />
-        The List uses Creative Commons’ CC BY “for attribution” license.
+        The List powered by Creative Commons uses <a href="https://creativecommons.org/licenses/by/4.0/">the Attribution 4.0 license</a>.
         \n\n<b>Terms of Service</b>
         \nSee <a href="https://thelist.creativecommons.org/app/alpha-tos.html">The List terms of service</a>.
         \n\n<b>How to help and file a bug</b>
-        \nThe List is an free software project
-        of Creative Commons. Contributions are welcome; from writing code to filing bugs.
+        \nThe List powered by Creative Commons is an free software project. Contributions are welcome; from writing code to filing bugs.
         Our GitHub repo is <a href="https://github.com/creativecommons/list">https://github.com/creativecommons/list</a>.
-        \n\n<a href="https://github.com/creativecommons/list/archive/master.zip">Download The List Source Code</a>\n\n
+        \n\n<a href="https://github.com/creativecommons/list/archive/master.zip">Download the source code</a>\n\n
         &#169; 2014, 2015 Creative Commons Corporation. \nPortions based on GNU FM,\n
         &#169; 2009-2015 Free Software Foundation, Inc
         \n\nThis program is free software: you can redistribute it and/or modify it under the terms
@@ -135,7 +134,7 @@ Yannick Lung\n
         \n\n
 Some icons have been edited.
 \n\n
-Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a>.
+Icons are licensed under <a href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a>.
         \n\n<b>Partners</b>
         \nThe app is created with the generous support of the
         <a href="http://www.knightfoundation.org/">Knight Foundation</a>, and partners like the
@@ -190,7 +189,7 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
     <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
     <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">
-        Use of this alpha release of The List is subject to these terms and conditions</a></string>
+        Use of this alpha release of The List powered by Creative Commons is subject to these terms and conditions</a></string>
 
     <!--Add Item Fragment-->
     <string name="category_prompt">Choose a category</string>
