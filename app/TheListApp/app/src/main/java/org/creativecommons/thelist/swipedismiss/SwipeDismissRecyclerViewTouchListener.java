@@ -264,6 +264,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 mDownView = null;
                 mDownPosition = ListView.INVALID_POSITION;
                 mSwiping = false;
+                Log.v("CANCEL", "CANCEL");
                 break;
             } //ACTION_CANCEL
 
@@ -329,6 +330,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 mDownY = 0;
                 mDownView = null;
                 mDownPosition = ListView.INVALID_POSITION;
+                Log.v("UP", "UP");
                 mSwiping = false;
                 break;
             } //ACTION_UP

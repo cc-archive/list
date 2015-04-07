@@ -223,52 +223,7 @@ public final class RequestMethods {
         });
     } //getMakerItems
 
-    //WITHOUT PHOTO
-    public void addMakerItem(final String itemName, final String category,
-                            final RequestCallback callback) {
-
-        if(!(isNetworkAvailable())){
-            mMessageHelper.networkFailMessage();
-            return;
-        }
-
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
-            @Override
-            public void onSuccess(final String authtoken) {
-                RequestQueue queue = Volley.newRequestQueue(mContext);
-
-                //TODO: add legit url
-                String url = ApiConstants.ADD_MAKER_ITEM + mSharedPref.getUserId() + "/";
-
-                //Upload Request
-                StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Log.v(TAG, "addMakerItem > onResponse: " + response);
-                                callback.onSuccess();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //TODO: add switch for all possible error codes
-                        callback.onFail();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put(ApiConstants.USER_TOKEN, authtoken);
-                        return params;
-                    }
-                };
-                queue.add(addMakerItemRequest);
-            }
-        });
-    } //addMakerItem (no photo)
-
-    //WITH PHOTO
-    public void addMakerItem(final String itemName, final String category,
+    public void addMakerItem(final String itemName, final String category, final String description,
                             final Uri photoUri, final RequestCallback callback){
 
         if(!(isNetworkAvailable())){
@@ -304,6 +259,9 @@ public final class RequestMethods {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.MAKER_ITEM_NAME, itemName);
+                        params.put(ApiConstants.MAKER_ITEM_NAME, category);
+                        params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
                         params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
                         params.put(ApiConstants.USER_TOKEN, authtoken);
                         return params;

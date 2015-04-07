@@ -59,6 +59,8 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     //UI Elements
     private ImageButton mAddImage;
     private EditText mItemNameField;
+    private EditText mDescriptionField;
+    private String mDescription;
     private Spinner mCategorySpinner;
     private android.support.v7.widget.Toolbar mBottomToolbar;
 
@@ -88,6 +90,8 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
         //UI Elements
         mItemNameField = (EditText) getView().findViewById(R.id.add_item_title);
+        mDescriptionField = (EditText) getView().findViewById(R.id.add_item_description);
+        mDescription = null;
         mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
         mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
         mBottomToolbar.setSubtitle("Add Item");
@@ -105,6 +109,11 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                     Log.v(TAG, "DONE WITH ITEM");
 
                     final String itemName = mItemNameField.getText().toString().trim();
+                    final String itemDescription = mDescriptionField.getText().toString().trim();
+
+                    if(itemDescription.length() > 1){
+                        mDescription = itemDescription;
+                    }
 
                     //Has item name been added?
                     if(itemName.isEmpty()){
@@ -117,7 +126,8 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                                 mContext.getString(R.string.dialog_missing_item_cat));
                         return true;
                     } else {
-                        startItemUpload(itemName);
+                        startItemUpload(itemName, mDescription);
+
                         return true;
                     }
                 } //if action done
@@ -329,11 +339,11 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     } //onActivityResult
 
 
-    public void startItemUpload(final String itemName){
+    public void startItemUpload(final String itemName, final String description){
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(String authtoken) {
-                mRequestMethods.addMakerItem(itemName, catId, mMediaUri,
+                mRequestMethods.addMakerItem(itemName, catId, description, mMediaUri,
                         new RequestMethods.RequestCallback() {
                             @Override
                             public void onSuccess() {
