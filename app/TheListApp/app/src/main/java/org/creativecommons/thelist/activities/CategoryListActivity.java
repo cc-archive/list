@@ -44,6 +44,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.CheckableRelativeLayout;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -175,17 +176,21 @@ public class CategoryListActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
+                CheckableRelativeLayout checkableLayout = (CheckableRelativeLayout)view.findViewById(R.id.checkable_layout);
+
                 //Get item clicked + its category id
                 CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(position);
                 String catId = String.valueOf(item.getCategoryID());
 
                 if(mGridView.isItemChecked(position)) {
-                    checkmarkView.setVisibility(View.VISIBLE);
+                    //checkmarkView.setVisibility(View.VISIBLE);
+                    checkableLayout.getBackground().setAlpha(128);
                     item.setCategoryChecked(true);
                     mRequestMethods.addCategory(catId);
                     //Log.v(TAG, "ADDED " + catId);
                 } else {
-                    checkmarkView.setVisibility(View.GONE);
+                    //checkmarkView.setVisibility(View.GONE);
+                    checkableLayout.getBackground().setAlpha(255);
                     item.setCategoryChecked(false);
                     mRequestMethods.removeCategory(catId);
                     //Log.v(TAG, "REMOVED " + catId);

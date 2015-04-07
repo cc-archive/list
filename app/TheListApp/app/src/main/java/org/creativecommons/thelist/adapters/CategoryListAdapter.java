@@ -73,7 +73,6 @@ public class CategoryListAdapter extends BaseAdapter {
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
             holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
 
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder)convertView.getTag();
@@ -83,8 +82,8 @@ public class CategoryListAdapter extends BaseAdapter {
         CategoryListItem c = categoryListItems.get(position);
         //Item Name
         holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
-        //Item Background Color
 
+        //Item Background Color
         if(c.getCategoryColour() != null){
             holder.checkableLayout.setBackgroundColor((Color.parseColor(c.getCategoryColour())));
         } else {
@@ -93,11 +92,13 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Set checkmarkView visibility
         if(c.getCategoryChecked()){
-            holder.checkmarkView.setVisibility(View.VISIBLE);
-            //holder.checkableLayout.setChecked(true);
+            //holder.checkmarkView.setVisibility(View.VISIBLE);
+            //holder.checkableLayout.setBackgroundColor((Color.parseColor(c.getCategoryColour())));
+            holder.checkableLayout.getBackground().setAlpha(100);
+
         } else {
-            holder.checkmarkView.setVisibility(View.GONE);
-            //holder.checkableLayout.setChecked(false);
+            //holder.checkmarkView.setVisibility(View.GONE);
+            holder.checkableLayout.getBackground().setAlpha(255);
         }
 
         return convertView;
