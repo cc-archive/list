@@ -297,7 +297,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
                     mItemList.clear();
-                    
+
 
                     for(int i=0; i < response.length(); i++) {
                         try {
@@ -407,6 +407,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     //----------------------------------------------
 
     private void initRecyclerView(){
+
         SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
                 mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
             @Override

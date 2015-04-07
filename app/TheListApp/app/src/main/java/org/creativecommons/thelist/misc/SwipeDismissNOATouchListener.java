@@ -2,6 +2,7 @@
 
 /*
  * Copyright 2012 Roman Nurik
+ * Copyright 2012 Jake Wharton (<10 API Support)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.example.android.swipedismiss;
+package org.creativecommons.thelist.misc;
 
 import android.util.Log;
 import android.view.MotionEvent;

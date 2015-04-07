@@ -90,6 +90,8 @@ public class DrawerActivity extends ActionBarActivity implements
                 (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
+
+        //TODO: direct to gallery if intent comes from notification (2.0)
 //        Intent notificationIntent = getIntent();
 //
 //        if(notificationIntent != null){
@@ -138,14 +140,6 @@ public class DrawerActivity extends ActionBarActivity implements
     @Override
     public void onResume() {
         super.onResume();
-
-//        MyListFragment listFragment = new MyListFragment();
-//        //load default view
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.main_content_container, listFragment)
-//                .commit();
-
     } //onResume
 
     // --------------------------------------------------------
@@ -159,38 +153,30 @@ public class DrawerActivity extends ActionBarActivity implements
 
     @Override
     public void onDrawerClicked(int position) {
-//        <item>My List</item> 0
-//        <item>My Photos</item> 1
-//        <item>My Categories</item> 2
-//        <item>Request an Item</item> 3
-//
-//        <item>About The App</item> 4
-//        <item>Give Feedback</item> 5
-
         Fragment fragment = null;
         switch(position) {
-            case 0:
+            case 0: //My List
                 fragment = new MyListFragment();
                 break;
-            case 1:
+            case 1: //My Photos
                 fragment = new GalleryFragment();
                 break;
-            case 2:
+            case 2: //My Categories
                 Intent catIntent = new Intent(DrawerActivity.this, CategoryListActivity.class);
                 startActivity(catIntent);
                 break;
-            case 3:
+            case 3: //Request An Item
                 fragment = new AddItemFragment();
                 break;
-            case 4:
+            case 4: //About The App
                 Intent aboutIntent = new Intent(DrawerActivity.this, AboutActivity.class);
                 startActivity(aboutIntent);
                 break;
-            case 5:
+            case 5: //Give Feedback
                 //Set survey taken
                 mSharedPref.setSurveyTaken(true);
 
-                //Go to link
+                //Go to Google Form
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse(getString(R.string.dialog_survey_link)));
                 startActivity(browserIntent);
@@ -230,8 +216,7 @@ public class DrawerActivity extends ActionBarActivity implements
                 }
             });
         }
-    }
-
+    } //onAccountClicked
 
     // --------------------------------------------------------
     // Gallery Fragment
@@ -247,24 +232,9 @@ public class DrawerActivity extends ActionBarActivity implements
     } //viewImage
 
 
-
     // --------------------------------------------------------
     // Main Menu + Helpers
     // --------------------------------------------------------
-
-
-
-//    private void updateMenuTitles(){
-//        MenuItem switchAccounts = menu.findItem(R.id.switch_accounts);
-//
-//        if(mCurrentUser.getAccountCount() > 0){
-//            switchAccounts.setVisible(false);
-//            //TODO: uncomment when Switch Accounts works
-//            //switchAccounts.setTitle("Switch Accounts");
-//        } else {
-//            switchAccounts.setTitle("Add Account");
-//        }
-//    } //updateMenuTitles
 
     private void handleUserAccount(){
         //TODO: bring up account picker dialog w/ new option
@@ -302,10 +272,7 @@ public class DrawerActivity extends ActionBarActivity implements
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_drawer, menu);
-        this.menu = menu;
-
-        //Show add or switch account based on login status + available accounts
-        //updateMenuTitles();
+        this.menu = menu; //keep this in case of later use
 
         return true;
     }
@@ -322,9 +289,6 @@ public class DrawerActivity extends ActionBarActivity implements
                 Intent aboutAppIntent = new Intent(DrawerActivity.this, AboutActivity.class);
                 startActivity(aboutAppIntent);
                 return true;
-//            case R.id.switch_accounts:
-//                handleUserAccount();
-//                return true;
             case R.id.remove_accounts:
                 if (mCurrentUser.isTempUser()) {
                     mSharedPref.ClearAllSharedPreferences();
