@@ -139,6 +139,13 @@ public class DrawerActivity extends ActionBarActivity implements
     public void onResume() {
         super.onResume();
 
+//        MyListFragment listFragment = new MyListFragment();
+//        //load default view
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.main_content_container, listFragment)
+//                .commit();
+
     } //onResume
 
     // --------------------------------------------------------
@@ -276,6 +283,15 @@ public class DrawerActivity extends ActionBarActivity implements
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
                                     "got authtoken: " + authtoken);
+
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+
+                            MyListFragment listFragment = new MyListFragment();
+                            //load default view
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.main_content_container, listFragment)
+                                    .commit();
                         }
                     });
         }

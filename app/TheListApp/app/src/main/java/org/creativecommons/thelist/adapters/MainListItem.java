@@ -120,6 +120,7 @@ public class MainListItem {
 
     public void setMainListActivity(Activity a) {
         mActivity = a;
+        mContext = a;
     }
 
     public void createNewUserListItem() {
