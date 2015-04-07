@@ -83,7 +83,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             super(itemView);
             checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)itemView.findViewById(R.id.checkable_layout);
             categoryNameLabel = (TextView)itemView.findViewById(R.id.category);
-            checkmarkView = (ImageView)itemView.findViewById(R.id.checkmark);
+            //checkmarkView = (ImageView)itemView.findViewById(R.id.checkmark);
         }
     }
 }

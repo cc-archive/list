@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
@@ -71,7 +70,7 @@ public class CategoryListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
-            holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
+            //holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
 
             convertView.setTag(holder);
         } else {
@@ -95,10 +94,12 @@ public class CategoryListAdapter extends BaseAdapter {
             //holder.checkmarkView.setVisibility(View.VISIBLE);
             //holder.checkableLayout.setBackgroundColor((Color.parseColor(c.getCategoryColour())));
             holder.checkableLayout.getBackground().setAlpha(100);
+            holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.secondary_text_material_dark));
 
         } else {
             //holder.checkmarkView.setVisibility(View.GONE);
             holder.checkableLayout.getBackground().setAlpha(255);
+            holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.primary_text_default_material_dark));
         }
 
         return convertView;
@@ -107,6 +108,6 @@ public class CategoryListAdapter extends BaseAdapter {
     private static class ViewHolder {
         org.creativecommons.thelist.utils.CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
-        ImageView checkmarkView;
+        //ImageView checkmarkView;
     }
 }

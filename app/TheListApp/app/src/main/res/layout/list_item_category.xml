@@ -19,14 +19,14 @@
         android:id="@+id/category"
         android:gravity="center"
         android:layout_centerInParent="true"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:id="@+id/checkmark"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_check_black_36dp"
-        android:contentDescription="checkmark" />
+    <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="invisible"-->
+        <!--android:id="@+id/checkmark"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:src="@drawable/ic_check_black_36dp"-->
+        <!--android:contentDescription="checkmark" />-->
 </org.creativecommons.thelist.utils.CheckableRelativeLayout>
