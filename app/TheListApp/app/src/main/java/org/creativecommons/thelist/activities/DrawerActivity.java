@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -35,12 +36,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.AddItemFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
+import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
@@ -70,6 +75,9 @@ public class DrawerActivity extends ActionBarActivity implements
         mContext = this;
         mCurrentUser = new ListUser(DrawerActivity.this);
         mSharedPref = new SharedPreferencesMethods(mContext);
+
+        //Google Analytics Tracker
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //UI Elements
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -154,19 +162,42 @@ public class DrawerActivity extends ActionBarActivity implements
     @Override
     public void onDrawerClicked(int position) {
         Fragment fragment = null;
+
+        Tracker t = ((ListApplication) getApplication()).getTracker(
+                ListApplication.TrackerName.GLOBAL_TRACKER);
+
         switch(position) {
             case 0: //My List
                 fragment = new MyListFragment();
+
+                // Set screen name.
+                t.setScreenName("My List");
+                // Send a screen view.
+                t.send(new HitBuilders.ScreenViewBuilder().build());
+
                 break;
             case 1: //My Photos
                 fragment = new GalleryFragment();
+
+                // Set screen name.
+                t.setScreenName("My Photos");
+                // Send a screen view.
+                t.send(new HitBuilders.ScreenViewBuilder().build());
+
                 break;
             case 2: //My Categories
                 Intent catIntent = new Intent(DrawerActivity.this, CategoryListActivity.class);
                 startActivity(catIntent);
+
                 break;
             case 3: //Request An Item
                 fragment = new AddItemFragment();
+
+                // Set screen name.
+                t.setScreenName("Request an Item");
+                // Send a screen view.
+                t.send(new HitBuilders.ScreenViewBuilder().build());
+
                 break;
             case 4: //About The App
                 Intent aboutIntent = new Intent(DrawerActivity.this, AboutActivity.class);
@@ -175,6 +206,11 @@ public class DrawerActivity extends ActionBarActivity implements
             case 5: //Give Feedback
                 //Set survey taken
                 mSharedPref.setSurveyTaken(true);
+
+                // Set screen name.
+                t.setScreenName("Give Feedback");
+                // Send a screen view.
+                t.send(new HitBuilders.ScreenViewBuilder().build());
 
                 //Go to Google Form
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
@@ -189,6 +225,7 @@ public class DrawerActivity extends ActionBarActivity implements
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.main_content_container, fragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
 
             // update selected item and title, then close the drawer
