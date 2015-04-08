@@ -450,10 +450,10 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         builder.setItems(R.array.listItem_choices, mDialogListener);
                         AlertDialog dialog = builder.create();
                         dialog.show();
+
                         //Get item details for photo upload
                         activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
-                        //Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
                     }
                 }));
     } //initRecyclerView

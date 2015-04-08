@@ -15,76 +15,102 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
-        tools:context="org.creativecommons.thelist.fragments.AddItemFragment"
-        android:weightSum="7">
+        tools:context="org.creativecommons.thelist.fragments.AddItemFragment">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3">
+        <!--<RelativeLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0">-->
 
-            <ImageButton android:id="@+id/add_item_example_image"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:src="@drawable/add_item_placeholder"
-                android:background="@null"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:contentDescription="Add an example image (optional)"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
-
-            <!--<EditText android:id="@+id/add_item_title"-->
+            <!--<ImageButton android:id="@+id/add_item_example_image"-->
                 <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Title"-->
-                <!--android:hint="Item Name"-->
-                <!--android:maxLines="1"-->
-                <!--android:singleLine="true"-->
-                <!--android:layout_marginBottom="8dp"/>-->
+                <!--android:layout_height="200dp"-->
+                <!--android:src="@drawable/add_item_placeholder"-->
+                <!--android:background="@null"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:contentDescription="Add an example image (optional)"-->
+                <!--android:layout_marginBottom="@dimen/activity_vertical_margin"/>-->
+        <!--</RelativeLayout>-->
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/add_item_title"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:paddingBottom="8dp"
-                android:hint="Item Name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                app:met_baseColor="@color/secondary_text_material_light"
-                app:met_floatingLabel="normal"
-                app:met_primaryColor="@color/colorSecondary" />
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            android:layout_weight="1">
 
-            <Spinner
-                android:id="@+id/category_spinner"
-                android:layout_below="@+id/add_item_title"
+            <RelativeLayout android:id="@+id/image_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/category_prompt" />
+                android:layout_height="wrap_content">
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/add_item_description"
-                android:layout_below="@id/category_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:minHeight="72dp"
-                android:hint="Description (optional)"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                app:met_baseColor="@color/secondary_text_material_light"
-                app:met_floatingLabel="normal"
-                app:met_maxCharacters="120"
-                app:met_primaryColor="@color/colorSecondary" />
-        </RelativeLayout>
+                <ImageButton android:id="@+id/add_item_example_image"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:src="@drawable/add_item_placeholder"
+                    android:background="@null"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Add an example image (optional)"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+                <!-- Dummy view -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+
+                <RelativeLayout android:id="@+id/content_container"
+                    android:layout_below="@id/add_item_example_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/add_item_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="80dp"
+                        android:paddingBottom="8dp"
+                        android:hint="Item Name"
+                        android:singleLine="true"
+                        android:imeOptions="actionNext"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        app:met_baseColor="@color/secondary_text_material_light"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/colorSecondary" />
+
+                    <Spinner
+                        android:id="@+id/category_spinner"
+                        android:layout_below="@+id/add_item_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:prompt="@string/category_prompt" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/add_item_description"
+                        android:layout_below="@id/category_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="16dp"
+                        android:minHeight="72dp"
+                        android:hint="Description (optional)"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        app:met_baseColor="@color/secondary_text_material_light"
+                        app:met_floatingLabel="normal"
+                        app:met_maxCharacters="120"
+                        app:met_primaryColor="@color/colorSecondary" />
+
+                    </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"
