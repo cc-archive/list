@@ -2,6 +2,7 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,6 +49,7 @@ import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
+import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -439,6 +441,21 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         // we don't look for swipes.
         LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
         mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setItems(R.array.listItem_choices, mDialogListener);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        //Get item details for photo upload
+                        activeItemPosition = position;
+                        mCurrentItem = mItemList.get(position);
+                        //Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
+                    }
+                }));
     } //initRecyclerView
 
     //----------------------------------------------
