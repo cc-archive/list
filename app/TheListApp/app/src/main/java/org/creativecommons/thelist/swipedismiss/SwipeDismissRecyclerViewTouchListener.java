@@ -20,9 +20,9 @@ package org.creativecommons.thelist.swipedismiss;
 
 import android.graphics.Rect;
 import android.os.SystemClock;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -108,6 +108,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private boolean mPaused;
 
     private int lastKnownFirst = 0;
+    private SwipeRefreshLayout mRefreshLayout;
     //private final Object mAnimationLock = new Object();
     /**
      * The callback interface used by {@link SwipeDismissRecyclerViewTouchListener} to inform its client
@@ -149,7 +150,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * @param callbacks The callback to trigger when the user has indicated that she would like to
      *                  dismiss one or more list items.
      */
-    public SwipeDismissRecyclerViewTouchListener(RecyclerView recyclerView, DismissCallbacks callbacks) {
+    public SwipeDismissRecyclerViewTouchListener
+    (RecyclerView recyclerView, final SwipeRefreshLayout layout, DismissCallbacks callbacks) {
         ViewConfiguration vc = ViewConfiguration.get(recyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
         mMinFlingVelocity = vc.getScaledMinimumFlingVelocity() * 16;
@@ -157,6 +159,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
         mAnimationTime = recyclerView.getContext().getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
         mRecyclerView = recyclerView;
+        mRefreshLayout = layout;
         mCallbacks = callbacks;
     }
 
@@ -178,7 +181,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      *
      * @see SwipeDismissRecyclerViewTouchListener
      */
-    public RecyclerView.OnScrollListener makeScrollListener(RecyclerView.LayoutManager layoutManager, final FloatingActionButton fab) {
+    public RecyclerView.OnScrollListener makeScrollListener
+    (RecyclerView.LayoutManager layoutManager, final FloatingActionButton fab) {
         return new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -264,7 +268,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 mDownView = null;
                 mDownPosition = ListView.INVALID_POSITION;
                 mSwiping = false;
-                Log.v("CANCEL", "CANCEL");
+                mRefreshLayout.setEnabled(true);
                 break;
             } //ACTION_CANCEL
 
@@ -330,8 +334,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 mDownY = 0;
                 mDownView = null;
                 mDownPosition = ListView.INVALID_POSITION;
-                Log.v("UP", "UP");
                 mSwiping = false;
+                mRefreshLayout.setEnabled(true);
                 break;
             } //ACTION_UP
 
@@ -345,6 +349,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
                 float deltaY = motionEvent.getRawY() - mDownY;
                 if (Math.abs(deltaX) > mSlop && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
                     mSwiping = true;
+                    mRefreshLayout.setEnabled(false);
                     mSwipingSlop = (deltaX > 0 ? mSlop : -mSlop);
                     mRecyclerView.requestDisallowInterceptTouchEvent(true);
 

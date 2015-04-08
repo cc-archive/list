@@ -407,7 +407,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     private void initRecyclerView(){
 
         SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
-                mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+                mRecyclerView, mSwipeRefreshLayout, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
             @Override
             public boolean canDismiss(int position) {
                 return true;
