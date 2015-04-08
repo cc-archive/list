@@ -306,10 +306,10 @@ public class RandomActivity extends Activity {
                             mBackground.setBackgroundColor(getResources().getColor(R.color.objects_500));
                             break;
                         default:
-                            setButtonTheme(mYesButton, R.drawable.checkmark_default,
-                                    R.drawable.checkmark_pressed, R.drawable.checkmark_pressed);
-                            setButtonTheme(mNoButton, R.drawable.x_default,
-                                    R.drawable.x_pressed, R.drawable.x_pressed);
+                            setButtonTheme(mYesButton, R.drawable.check_default_default,
+                                    R.drawable.check_pressed_default, R.drawable.check_pressed_default);
+                            setButtonTheme(mNoButton, R.drawable.x_default_default,
+                                    R.drawable.x_pressed_default, R.drawable.x_pressed_default);
 
                             mTextView.setTextColor(getResources().getColor(R.color.default_100));
                             mDoneButton.setTextColor(getResources().getColor(R.color.default_100));
