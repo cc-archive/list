@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.TouchImageView;
+import org.creativecommons.thelist.layouts.TouchImageView;
 
 import java.util.ArrayList;
 

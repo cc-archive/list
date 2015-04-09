@@ -32,7 +32,7 @@ import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.utils.SpinnerObject;
+import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -365,6 +365,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                         //TODO: if request succeeds
                         mMessageHelper.notifyUploadSuccess(itemName);
                     }
+
                     @Override
                     public void onFail() {
                         //TODO: if request fails

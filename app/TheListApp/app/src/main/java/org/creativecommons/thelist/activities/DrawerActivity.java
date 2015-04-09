@@ -164,11 +164,13 @@ public class DrawerActivity extends ActionBarActivity implements
         Fragment fragment = null;
 
         Tracker t = ((ListApplication) getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
+                ListApplication.TrackerName.APP_TRACKER);
 
         switch(position) {
             case 0: //My List
                 fragment = new MyListFragment();
+
+
 
                 // Set screen name.
                 t.setScreenName("My List");

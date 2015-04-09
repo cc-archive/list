@@ -16,7 +16,7 @@
     <!--TODO: add header image-->
     <ImageView android:id="@+id/drawer_image"
         android:layout_width="@dimen/nav_drawer_width"
-        android:layout_height="140dp"
+        android:layout_height="178dp"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:layout_alignParentTop="true"

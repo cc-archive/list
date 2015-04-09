@@ -29,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class CategoryListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_category, parent, false);
             holder = new ViewHolder();
-            holder.checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
+            holder.checkableLayout = (CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
             //holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
 
@@ -106,7 +107,7 @@ public class CategoryListAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
-        org.creativecommons.thelist.utils.CheckableRelativeLayout checkableLayout;
+        CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
         //ImageView checkmarkView;
     }

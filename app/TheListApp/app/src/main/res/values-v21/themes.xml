@@ -16,7 +16,10 @@
         <item name="android:windowTranslucentStatus">true</item>
 
         <item name="android:editTextStyle">@style/EditTextStyle</item>
-        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="ListThemeStatus" parent="ListTheme">
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <style name="ListThemeNoActionBar" parent="ListTheme">

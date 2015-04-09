@@ -45,7 +45,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.CheckableRelativeLayout;
+import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;

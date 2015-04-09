@@ -35,5 +35,6 @@
          https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="nav_drawer_width">280dp</dimen>
+    <dimen name="app_bar_top_padding">24dp</dimen>
 
 </resources>

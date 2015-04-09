@@ -44,7 +44,7 @@ import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.utils.DividerItemDecoration;
+import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;

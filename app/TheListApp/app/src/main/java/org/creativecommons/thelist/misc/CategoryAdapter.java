@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListItem;
+import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 
 import java.util.List;
 
@@ -75,13 +76,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
-        org.creativecommons.thelist.utils.CheckableRelativeLayout checkableLayout;
+        CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
         ImageView checkmarkView;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-            checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)itemView.findViewById(R.id.checkable_layout);
+            checkableLayout = (CheckableRelativeLayout)itemView.findViewById(R.id.checkable_layout);
             categoryNameLabel = (TextView)itemView.findViewById(R.id.category);
             //checkmarkView = (ImageView)itemView.findViewById(R.id.checkmark);
         }
