@@ -69,6 +69,7 @@ public class MessageHelper {
                             .show();
     } //enableFeatureDialog
 
+    //Take Survey Dialog
     public void takeSurveyDialog(Context context, String title, String message,
                                  MaterialDialog.ButtonCallback callback){
                     new MaterialDialog.Builder(context)
@@ -80,6 +81,16 @@ public class MessageHelper {
                             .callback(callback)
                             .show();
     } //takeSurveyDialog
+
+    //Single Input Dialog
+    public void singleInputDialog
+    (Context context, String title, String message, MaterialDialog.InputCallback callback) {
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .content(message)
+                .input("add a url", "", callback)
+                .show();
+    } //Single Input Dialog
 
     //Single Choice Dialog
     public void showSingleChoiceDialog(Context context, String title, String[] items,
@@ -162,6 +173,14 @@ public class MessageHelper {
         sendNotification(mContext, "The List",
                 "There was a problem uploading" + itemName ,
                 itemName + " upload failed");
+    }
+
+    public void notifyMakerItemUploadSuccess(String itemName){
+
+    }
+
+    public void notifyMakerItemUploadFail(String itemName){
+
     }
 
     //DIALOGS

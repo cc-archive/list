@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
@@ -51,6 +52,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
     protected Uri mMediaUri;
+    protected Uri mLinkUri;
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
@@ -126,7 +128,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                                 mContext.getString(R.string.dialog_missing_item_cat));
                         return true;
                     } else {
-                        startItemUpload(itemName, mDescription);
+                        startItemUpload(itemName, mDescription, mLinkUri);
 
                         return true;
                     }
@@ -243,13 +245,28 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                         case 1: // Choose picture
                             Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             choosePhotoIntent.setType("image/*");
-                            //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
                         case 2:
+                            //TODO: add input dialog
+                            mMessageHelper.singleInputDialog(mContext, "Add a link", "Add an example image via url", new MaterialDialog.InputCallback() {
+                                @Override
+                                public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+
+                                    mLinkUri = Uri.parse(charSequence.toString());
+
+                                    //Do something with input
+                                    //TODO: add placeholder for failed image
+                                    Picasso.with(mContext).load(mLinkUri)
+                                            .placeholder(R.drawable.progress_view_large) //failed to find image
+                                            .into(mAddImage);
+                                }
+                            });
+                        case 3:
                             Picasso.with(mContext).load(R.drawable.progress_view).into(mAddImage); //TODO: update with new image
                             mPhotoAdded = false;
                             mMediaUri = null;
+
                     }
                 }
                 private Uri getOutputMediaFileUri(int mediaType) {
@@ -339,27 +356,26 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     } //onActivityResult
 
 
-    public void startItemUpload(final String itemName, final String description){
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
-            @Override
-            public void onSuccess(String authtoken) {
-                mRequestMethods.addMakerItem(itemName, catId, description, mMediaUri,
-                        new RequestMethods.RequestCallback() {
-                            @Override
-                            public void onSuccess() {
-                                //TODO: if request succeeds
+    public void startItemUpload(final String itemName, final String description, final Uri linkuri){
 
-                            }
-                            @Override
-                            public void onFail() {
-                                //TODO: if request fails
-                                mMessageHelper.showDialog(mContext,
-                                        mContext.getString(R.string.oops_label),
-                                        mContext.getString(R.string.dialog_item_upload_fail));
-                            }
-                        });
-            } //onSuccess
-        }); //getToken
+        mRequestMethods.addMakerItem(itemName, catId, description, mMediaUri,
+                new RequestMethods.RequestCallback() {
+                    @Override
+                    public void onSuccess() {
+                        //TODO: if request succeeds
+                        mMessageHelper.notifyUploadSuccess(itemName);
+                    }
+                    @Override
+                    public void onFail() {
+                        //TODO: if request fails
+                        mMessageHelper.notifyUploadSuccess(itemName);
+
+//                        mMessageHelper.showDialog(mContext,
+//                                mContext.getString(R.string.oops_label),
+//                                mContext.getString(R.string.dialog_item_upload_fail));
+                    }
+                });
+
     } //startItemUpload
 
     @Override
