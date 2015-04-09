@@ -10,11 +10,13 @@
 
 * Why do users value attribution and contributing to the greater good? Recognition is one, but most users just want the commons to grow, and see our app as a way of doing that. If they could see their images being used by other people, most people say they'd use our app regularly to build the commons.
 
-* Choose categories
-* Add items to your list
-* Upload an image
-* View gallery
-* Make a suggestion
+* Demo:
+
+ * Choose categories
+ * Add items to your list
+ * Upload an image
+ * View gallery
+ * Make a suggestion
 
 * Developed in 100% in public, GitHub
 
