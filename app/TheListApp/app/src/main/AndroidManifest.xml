@@ -132,7 +132,6 @@
             android:name=".activities.DrawerActivity"
             android:label="@string/title_activity_drawer"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan"
             android:theme="@style/ListThemeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

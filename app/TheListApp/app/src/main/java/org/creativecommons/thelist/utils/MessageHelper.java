@@ -83,7 +83,7 @@ public class MessageHelper {
 
     //Single Choice Dialog
     public void showSingleChoiceDialog(Context context, String title, String[] items,
-                                       MaterialDialog.ListCallback callback){
+                                       MaterialDialog.ListCallbackSingleChoice callback){
         new MaterialDialog.Builder(context)
                 .title(title)
                 .items(items)

@@ -20,21 +20,21 @@
         android:orientation="vertical"
         tools:context="org.creativecommons.thelist.fragments.AddItemFragment">
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="0">-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0">
 
-            <!--<ImageButton android:id="@+id/add_item_example_image"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="200dp"-->
-                <!--android:src="@drawable/add_item_placeholder"-->
-                <!--android:background="@null"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:contentDescription="Add an example image (optional)"-->
-                <!--android:layout_marginBottom="@dimen/activity_vertical_margin"/>-->
-        <!--</RelativeLayout>-->
+            <ImageButton android:id="@+id/add_item_example_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/add_item_placeholder"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:contentDescription="Add an example image (optional)"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+        </RelativeLayout>
 
         <ScrollView
             android:layout_width="wrap_content"
@@ -46,16 +46,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton android:id="@+id/add_item_example_image"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:src="@drawable/add_item_placeholder"
-                    android:background="@null"
-                    android:scaleType="centerCrop"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="Add an example image (optional)"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+                <!--<ImageButton android:id="@+id/add_item_example_image"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="200dp"-->
+                    <!--android:src="@drawable/add_item_placeholder"-->
+                    <!--android:background="@null"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:adjustViewBounds="true"-->
+                    <!--android:contentDescription="Add an example image (optional)"-->
+                    <!--android:layout_marginBottom="@dimen/activity_vertical_margin"/>-->
 
                 <!-- Dummy view -->
                 <View

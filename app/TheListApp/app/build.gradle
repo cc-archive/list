@@ -31,7 +31,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.nispok:snackbar:2.7.4'
     compile 'com.melnykov:floatingactionbutton:1.1.0'
-    compile 'com.afollestad:material-dialogs:0.6.3.1'
+    compile 'com.afollestad:material-dialogs:0.7.1.0'
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'ch.acra:acra:4.6.1'
     compile 'org.lucasr.dspec:dspec:0.1.1'
