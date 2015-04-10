@@ -164,13 +164,11 @@ public class DrawerActivity extends ActionBarActivity implements
         Fragment fragment = null;
 
         Tracker t = ((ListApplication) getApplication()).getTracker(
-                ListApplication.TrackerName.APP_TRACKER);
+                ListApplication.TrackerName.GLOBAL_TRACKER);
 
         switch(position) {
             case 0: //My List
                 fragment = new MyListFragment();
-
-
 
                 // Set screen name.
                 t.setScreenName("My List");
@@ -210,7 +208,7 @@ public class DrawerActivity extends ActionBarActivity implements
                 mSharedPref.setSurveyTaken(true);
 
                 // Set screen name.
-                t.setScreenName("Give Feedback");
+                t.setScreenName("Give M");
                 // Send a screen view.
                 t.send(new HitBuilders.ScreenViewBuilder().build());
 

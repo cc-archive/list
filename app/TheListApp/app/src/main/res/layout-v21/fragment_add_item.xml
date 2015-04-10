@@ -12,6 +12,7 @@
     <!--See the License for the specific language governing permissions and-->
     <!--limitations under the License.-->
 
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -117,10 +118,10 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize">
 
-        <TextView android:id="@+id/add_item_button"
+        <Button android:id="@+id/add_item_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/flat_button_dark"
+            style="?android:attr/borderlessButtonStyle"
             android:padding="0dp"
             android:layout_margin="0dp"
             android:layout_alignParentRight="true"
@@ -129,3 +130,4 @@
     </RelativeLayout>
 
 </RelativeLayout>
+

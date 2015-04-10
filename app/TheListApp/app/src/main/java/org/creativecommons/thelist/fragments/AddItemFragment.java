@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,12 +26,12 @@ import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,47 +94,47 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         mDescriptionField = (EditText) getView().findViewById(R.id.add_item_description);
         mDescription = null;
         mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
-        mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
-        mBottomToolbar.setSubtitle("Add Item");
-        mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
+        //mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
+        //mBottomToolbar.setSubtitle("Add Item");
+        //mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
 
         mPhotoAdded = false;
 
-        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.action_item_done) {
-                    //TODO: Start Item Upload
-                    Log.v(TAG, "DONE WITH ITEM");
-
-                    final String itemName = mItemNameField.getText().toString().trim();
-                    final String itemDescription = mDescriptionField.getText().toString().trim();
-
-                    if(itemDescription.length() > 1){
-                        mDescription = itemDescription;
-                    }
-
-                    //Has item name been added?
-                    if(itemName.isEmpty()){
-                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
-                                mContext.getString(R.string.dialog_missing_item_name));
-                        return true;
-                      //Has category been selected?
-                    } else if(catId.equals("0")){
-                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
-                                mContext.getString(R.string.dialog_missing_item_cat));
-                        return true;
-                    } else {
-                        startItemUpload(itemName, mDescription, mLinkUri);
-
-                        return true;
-                    }
-                } //if action done
-                return true;
-            }
-        });
+//        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//
+//                if (id == R.id.action_item_done) {
+//                    //TODO: Start Item Upload
+//                    Log.v(TAG, "DONE WITH ITEM");
+//
+//                    final String itemName = mItemNameField.getText().toString().trim();
+//                    final String itemDescription = mDescriptionField.getText().toString().trim();
+//
+//                    if(itemDescription.length() > 1){
+//                        mDescription = itemDescription;
+//                    }
+//
+//                    //Has item name been added?
+//                    if(itemName.isEmpty()){
+//                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+//                                mContext.getString(R.string.dialog_missing_item_name));
+//                        return true;
+//                      //Has category been selected?
+//                    } else if(catId.equals("0")){
+//                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+//                                mContext.getString(R.string.dialog_missing_item_cat));
+//                        return true;
+//                    } else {
+//                        startItemUpload(itemName, mDescription, mLinkUri);
+//
+//                        return true;
+//                    }
+//                } //if action done
+//                return true;
+//            }
+//        });
 
         //Set Spinner Content
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
