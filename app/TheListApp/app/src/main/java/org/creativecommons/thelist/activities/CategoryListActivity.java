@@ -44,8 +44,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
-import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
+import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -309,6 +309,40 @@ public class CategoryListActivity extends ActionBarActivity {
         }
     } //updateList
 
+    public void saveUserCategories(){
+        SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+        int length = positions.size();
+        //Array of user selected categories
+        List<Integer> userCategories = new ArrayList<>();
+
+        for(int i = 0; i < length; i++) {
+            int itemPosition = positions.keyAt(i);
+            boolean value = positions.get(itemPosition);
+
+            if(value) {
+                CategoryListItem catItem = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
+                int catId = catItem.getCategoryID();
+                userCategories.add(catId);
+                Log.v(TAG, "ITEM ADDED");
+            }
+        }
+
+        if(mCurrentUser.isTempUser()){ //TEMP USER
+            //Save user categories to shared preferences
+            mSharedPref.saveSharedPreference
+                    (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
+        }
+
+        Intent intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
+        startActivity(intent);
+    }
+
+    //onBackPressed
+    @Override
+    public void onBackPressed() {
+        saveUserCategories();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -326,30 +360,7 @@ public class CategoryListActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
-            SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-            int length = positions.size();
-            //Array of user selected categories
-            List<Integer> userCategories = new ArrayList<>();
-
-            for(int i = 0; i < length; i++) {
-                int itemPosition = positions.keyAt(i);
-                boolean value = positions.get(itemPosition);
-
-                if(value) {
-                    CategoryListItem catItem = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
-                    int catId = catItem.getCategoryID();
-                    userCategories.add(catId);
-                    Log.v(TAG, "ITEM ADDED");
-                }
-            }
-
-            if(mCurrentUser.isTempUser()){ //TEMP USER
-                //Save user categories to shared preferences
-                mSharedPref.saveSharedPreference
-                        (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
-            }
-            Intent intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
-            startActivity(intent);
+            saveUserCategories();
             return true;
         }
         return super.onOptionsItemSelected(item);
