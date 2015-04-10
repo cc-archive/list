@@ -30,12 +30,12 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:weightSum="7">
+            android:weightSum="10">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3">
+                android:layout_weight="4">
 
                 <ImageButton android:id="@+id/add_item_example_image"
                     android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             </RelativeLayout>
 
             <RelativeLayout android:id="@+id/content_container"
-                android:layout_weight="4"
+                android:layout_weight="6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -65,15 +65,13 @@
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/add_item_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minWidth="200dp"
-                    android:minHeight="80dp"
                     android:paddingBottom="8dp"
                     android:hint="Item Name"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                     app:met_baseColor="@color/secondary_text_material_light"
                     app:met_floatingLabel="normal"
                     app:met_primaryColor="@color/colorSecondary" />
@@ -81,7 +79,7 @@
                 <Spinner
                     android:id="@+id/category_spinner"
                     android:layout_below="@+id/add_item_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:prompt="@string/category_prompt" />
 
@@ -120,7 +118,7 @@
         <TextView android:id="@+id/add_item_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/flat_button_dark"
+            style="@style/flat_button_light"
             android:padding="0dp"
             android:layout_margin="0dp"
             android:layout_alignParentRight="true"

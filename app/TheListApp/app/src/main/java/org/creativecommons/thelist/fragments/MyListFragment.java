@@ -298,7 +298,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
                     mItemList.clear();
 
-
                     for(int i=0; i < response.length(); i++) {
                         try {
                             JSONObject singleListItem = response.getJSONObject(i);

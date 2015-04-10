@@ -97,8 +97,6 @@
     <!--<style name="about_text_title" parent="@style/text_list_item_title">-->
     <!--</style>-->
 
-
-
     <!--Fragment Styles-->
     <style name="fragment_layout_main">
         <item name="android:layout_width">match_parent</item>

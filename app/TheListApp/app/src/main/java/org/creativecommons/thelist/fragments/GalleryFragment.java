@@ -41,6 +41,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryAdapter;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -58,6 +59,7 @@ public class GalleryFragment extends Fragment {
     Context mContext;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
+    private ListUser mCurrentUser;
 
     //UI Elements
     private TextView mEmptyView;
@@ -104,22 +106,26 @@ public class GalleryFragment extends Fragment {
     } //onCreateView
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         mContext = getActivity();
+        mCurrentUser = new ListUser(mContext);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
+        Activity activity = getActivity();
+
         //UI Elements
-        mEmptyView = (TextView)getView().findViewById(R.id.empty_gallery_label);
-        mProgressBar = (ProgressBar)getView().findViewById(R.id.gallery_progressBar);
+        mEmptyView = (TextView)getActivity().findViewById(R.id.empty_gallery_label);
+        mProgressBar = (ProgressBar)getActivity().findViewById(R.id.gallery_progressBar);
 
         //RecyclerView
-        mSwipeRefreshLayout = (SwipeRefreshLayout)getView().findViewById(R.id.gallerySwipeRefresh);
-        mRecyclerView = (RecyclerView)getView().findViewById(R.id.galleryRecyclerView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.gallerySwipeRefresh);
+        mRecyclerView = (RecyclerView)activity.findViewById(R.id.galleryRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.hasFixedSize();
-        mGridLayoutManager = new GridLayoutManager(getActivity(), 3);
+        mGridLayoutManager = new GridLayoutManager(activity, 3);
         mGalleryAdapter = new GalleryAdapter(mContext, mPhotoList);
         mRecyclerView.setAdapter(mGalleryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
@@ -147,51 +153,64 @@ public class GalleryFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    } //onActivityCreated
+
+    @Override
+    public void onResume() {
+        super.onResume();
     } //onResume
 
     public void refreshItems(){
-        mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
-            @Override
-            public void onSuccess(JSONArray response) {
-                Log.v(TAG, " > getUserPhotos > onSuccess" + response.toString());
+        if(!mCurrentUser.isTempUser()){
+            mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
+                @Override
+                public void onSuccess(JSONArray response) {
+                    Log.v(TAG, " > getUserPhotos > onSuccess" + response.toString());
+                    mPhotoList.clear();
 
-                mPhotoList.clear();
-                mEmptyView.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.GONE);
+                    for(int i = 0; i < response.length(); i++){
+                        GalleryItem galleryItem = new GalleryItem();
 
-                for(int i = 0; i < response.length(); i++){
-                    GalleryItem galleryItem = new GalleryItem();
+                        try {
+                            JSONObject singlePhotoItem = response.getJSONObject(i);
+                            String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
+                            galleryItem.setUrl(photoUrl);
 
-                    try {
-                        JSONObject singlePhotoItem = response.getJSONObject(i);
-                        String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
-                        galleryItem.setUrl(photoUrl);
-
-                        if(photoUrl == null){
-                            galleryItem.setProgress(true);
+                            if(photoUrl == null){
+                                galleryItem.setProgress(true);
+                            }
+                            mPhotoList.add(galleryItem);
+                        } catch (JSONException e) {
+                            Log.v(TAG, e.getMessage());
                         }
-                    } catch (JSONException e) {
-                        Log.v(TAG, e.getMessage());
                     }
-                    mPhotoList.add(galleryItem);
-                }
 
-                if(mPhotoList.size() == 0){
-                    //TODO: show textView
-                    mEmptyView.setVisibility(View.VISIBLE);
+                    Log.v(TAG, "PHOTOLIST RESPONSE " + mPhotoList);
 
-                } else {
-                    //TODO: hide textView
-                    mEmptyView.setVisibility(View.GONE);
-                    Collections.reverse(mPhotoList);
-                    mGalleryAdapter.notifyDataSetChanged();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+
+                    if(mPhotoList.size() == 0){
+                        //TODO: show textView
+                        mEmptyView.setText(R.string.empty_gallery_label_logged_in);
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        Log.v(TAG, "VIEW IS EMPTY");
+                    } else {
+                        //TODO: hide textView
+                        mEmptyView.setVisibility(View.GONE);
+                        Log.v(TAG, "VIEW HAS PHOTO ITEMS");
+                        Collections.reverse(mPhotoList);
+                        mGalleryAdapter.notifyDataSetChanged();
+                    }
                 }
-            }
-            @Override
-            public void onFail(VolleyError error) {
-                Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
-            }
-        });
+                @Override
+                public void onFail(VolleyError error) {
+                    Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
+                }
+            });
+        } else {
+            mEmptyView.setText(mContext.getString(R.string.empty_gallery_label_temp));
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     } //refreshItems
 
     @Override

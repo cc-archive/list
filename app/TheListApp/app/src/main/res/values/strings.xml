@@ -61,13 +61,13 @@
     <string-array name="photo_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <item>Add a Link</item>
+        <!--<item>Add a Link</item>-->
     </string-array>
 
     <string-array name="photo_choices_remove">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <item>Add a Link</item>
+        <!--<item>Add a Link</item>-->
         <item>Remove</item>
     </string-array>
 
@@ -258,5 +258,7 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
+    <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
 
 </resources>

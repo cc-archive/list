@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,7 +22,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
@@ -63,7 +63,6 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     private EditText mDescriptionField;
     private String mDescription;
     private Spinner mCategorySpinner;
-    private android.support.v7.widget.Toolbar mBottomToolbar;
 
     private Boolean mPhotoAdded;
 
@@ -89,16 +88,21 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
+        Activity activity = getActivity();
+
         //UI Elements
-        mItemNameField = (EditText) getView().findViewById(R.id.add_item_title);
-        mDescriptionField = (EditText) getView().findViewById(R.id.add_item_description);
+        mItemNameField = (EditText) activity.findViewById(R.id.add_item_title);
+        mDescriptionField = (EditText) activity.findViewById(R.id.add_item_description);
         mDescription = null;
-        mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
-        //mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
-        //mBottomToolbar.setSubtitle("Add Item");
-        //mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
+        mCategorySpinner = (Spinner) activity.findViewById(R.id.category_spinner);
 
         mPhotoAdded = false;
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        } //Lollipop
 
 //        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
 //            @Override
@@ -135,6 +139,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 //                return true;
 //            }
 //        });
+
 
         //Set Spinner Content
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
@@ -194,7 +199,6 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart(){
         super.onStart();
-
     } //onStart (only do once per fragment creation)
 
     @Override
@@ -246,26 +250,24 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                             choosePhotoIntent.setType("image/*");
                             startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
-                        case 2:
-                            //TODO: add input dialog
-                            mMessageHelper.singleInputDialog(mContext, "Add a link", "Add an example image via url", new MaterialDialog.InputCallback() {
-                                @Override
-                                public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
-
-                                    mLinkUri = Uri.parse(charSequence.toString());
-
-                                    //Do something with input
-                                    //TODO: add placeholder for failed image
-                                    Picasso.with(mContext).load(mLinkUri)
-                                            .placeholder(R.drawable.progress_view_large) //failed to find image
-                                            .into(mAddImage);
-                                }
-                            });
-                        case 3:
+//                        case 2:
+//                            mMessageHelper.singleInputDialog(mContext, "Add a link", "Add an example image via url", new MaterialDialog.InputCallback() {
+//                                @Override
+//                                public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+//
+//                                    mLinkUri = Uri.parse(charSequence.toString());
+//
+//                                    //Do something with input
+//                                    //TODO: add placeholder for failed image
+//                                    Picasso.with(mContext).load(mLinkUri)
+//                                            .placeholder(R.drawable.progress_view_large) //failed to find image
+//                                            .into(mAddImage);
+//                                }
+//                            });
+                        case 2: //TODO: make case 3
                             Picasso.with(mContext).load(R.drawable.progress_view).into(mAddImage); //TODO: update with new image
                             mPhotoAdded = false;
                             mMediaUri = null;
-
                     }
                 }
                 private Uri getOutputMediaFileUri(int mediaType) {
