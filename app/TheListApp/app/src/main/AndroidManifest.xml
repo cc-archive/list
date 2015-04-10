@@ -79,7 +79,7 @@
             android:name=".activities.ImageActivity"
             android:label="@string/title_activity_image"
             android:launchMode="singleTask"
-            android:parentActivityName=".activities.GalleryActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.creativecommons.thelist.activities.DrawerActivity" />
