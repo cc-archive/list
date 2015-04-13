@@ -622,7 +622,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             case PhotoConstants.PICK_PHOTO_REQUEST:
             case PhotoConstants.TAKE_PHOTO_REQUEST:
                 if(resultCode == Activity.RESULT_OK) {
-                    //photoToBeUploaded = true;
                     mItemToBeUploaded = mCurrentItem;
                     uploadItemPosition = activeItemPosition;
 
@@ -688,6 +687,17 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
     public void performUpload(){
         mUploadProgressBar.setVisibility(View.VISIBLE);
+
+        //Hide progress bar if it takes too much time
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(mUploadProgressBar.getVisibility() == View.VISIBLE) {
+//                    mUploadProgressBar.setVisibility(View.GONE);
+//                }
+//            }
+//        }, 2000);
+
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
@@ -696,23 +706,15 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                         mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
                         mItemToBeUploaded = null;
-                        //photoToBeUploaded = false;
-                        displayUserItems();
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mUploadProgressBar.setVisibility(View.GONE);
-                            }
-                        }, 500); //could add a time check from visible to invisible, heh.
+                        displayUserItems();
+                        mUploadProgressBar.setVisibility(View.GONE);
                     }
                     @Override
                     public void onFail() {
                         Log.d(TAG, "On Upload Fail");
 
                         mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
-                        //photoToBeUploaded = false;
-                        //mItemlist.add(uploadItemPosition);
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
