@@ -625,13 +625,13 @@ class UserList {
 
     static function addUserSuggestion ($userid, $title, $description, $filename) {
 
-        $query = "INSERT INTO UserSuggestions (userid, filename, title, description) VALUES (%s,%s, %s, %s)";
+        $query = "INSERT INTO UserSuggestions (userid, filename, categoryid, description) VALUES (%s,%s, %s, %s)";
 
         try {
             $res = $adodb->Execute(sprintf($query,
             $adodb->qstr($userid),
             $adodb->qstr($filename),
-            $adodb->qstr($title),
+            $adodb->qstr($categoryid),
             $adodb->qstr($description)
             ));
 
