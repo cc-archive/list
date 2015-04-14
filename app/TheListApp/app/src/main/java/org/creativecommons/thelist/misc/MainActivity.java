@@ -452,7 +452,7 @@ public class MainActivity extends ActionBarActivity {
 //                                    mFeedAdapter.notifyDataSetChanged();
 //
 //                                    //Snackbar message
-//                                    showSnackbar();
+//                                    showItemDeletionSnackbar();
 //                                }
 //                            }
 //                        });
@@ -517,6 +517,12 @@ public class MainActivity extends ActionBarActivity {
                                 tsa.setDuration(300);
                                 mFab.startAnimation(tsa);
                             }
+
+                            @Override
+                            public void onShowByReplace(Snackbar snackbar) {
+
+                            }
+
                             @Override
                             public void onShown(Snackbar snackbar) {
                             }
@@ -532,6 +538,12 @@ public class MainActivity extends ActionBarActivity {
                                 tsa2.setDuration(300);
                                 mFab.startAnimation(tsa2);
                             }
+
+                            @Override
+                            public void onDismissByReplace(Snackbar snackbar) {
+
+                            }
+
                             @Override
                             public void onDismissed(Snackbar snackbar) {
                                 //TODO: QA
@@ -546,7 +558,7 @@ public class MainActivity extends ActionBarActivity {
                             }
                         }) //event listener
                 , MainActivity.this);
-    } //showSnackbar
+    } //showItemDeletionSnackbar
 
 
     //----------------------------------------------

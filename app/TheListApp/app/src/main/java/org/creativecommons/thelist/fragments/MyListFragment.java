@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,6 +35,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
@@ -42,9 +44,9 @@ import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
-import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -431,7 +433,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     mFeedAdapter.notifyDataSetChanged();
 
                     //Snackbar message
-                    showSnackbar();
+                    showItemDeletionSnackbar();
                 }
             }
         });
@@ -458,10 +460,10 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     } //initRecyclerView
 
     //----------------------------------------------
-    //SNACKBAR – UNDO ITEM DELETION
+    //SNACKBARS
     //----------------------------------------------
 
-    public void showSnackbar(){
+    public void showItemDeletionSnackbar(){
         SnackbarManager.show(
                 //also includes duration: SHORT, LONG, INDEFINITE
                 Snackbar.with(mContext)
@@ -498,6 +500,11 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             }
 
                             @Override
+                            public void onShowByReplace(Snackbar snackbar) {
+
+                            }
+
+                            @Override
                             public void onShown(Snackbar snackbar) {
                             }
 
@@ -515,8 +522,12 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             }
 
                             @Override
+                            public void onDismissByReplace(Snackbar snackbar) {
+
+                            }
+
+                            @Override
                             public void onDismissed(Snackbar snackbar) {
-                                //TODO: QA
                                 //If no more items
                                 if (mItemList.isEmpty()) {
                                     mEmptyView.setVisibility(View.VISIBLE);
@@ -528,7 +539,69 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             }
                         }) //event listener
                 , getActivity());
-    } //showSnackbar
+    } //showItemDeletionSnackbar
+
+    public void showPhotoUploadSnackbar(String text, String actiontext, ActionClickListener listener){
+        SnackbarManager.show(
+                //also includes duration: SHORT, LONG, INDEFINITE
+                Snackbar.with(mContext)
+                        .text(text) //text to display
+                        .actionColor(getResources().getColor(R.color.colorSecondary))
+                        .actionLabel(actiontext.toUpperCase())
+                        .type(SnackbarType.MULTI_LINE)
+                        .actionListener(listener)
+                        //action button’s listener
+                        .eventListener(new EventListener() {
+                            Interpolator interpolator = new MaterialInterpolator();
+
+                            @Override
+                            public void onShow(Snackbar snackbar) {
+                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
+                                        -snackbar.getHeight());
+                                tsa.setInterpolator(interpolator);
+                                tsa.setFillAfter(true);
+                                tsa.setFillEnabled(true);
+                                tsa.setDuration(300);
+                                mFab.startAnimation(tsa);
+                            }
+
+                            @Override
+                            public void onShowByReplace(Snackbar snackbar) {
+
+                            }
+
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                            }
+
+                            @Override
+                            public void onDismiss(Snackbar snackbar) {
+
+                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
+                                        -snackbar.getHeight(), 0);
+                                tsa2.setInterpolator(interpolator);
+                                tsa2.setFillAfter(true);
+                                tsa2.setFillEnabled(true);
+                                tsa2.setStartOffset(100);
+                                tsa2.setDuration(300);
+                                mFab.startAnimation(tsa2);
+                            }
+
+                            @Override
+                            public void onDismissByReplace(Snackbar snackbar) {
+
+                            }
+
+                            @Override
+                            public void onDismissed(Snackbar snackbar) {
+                                //If fab is hidden (bug fix?)
+                                if (!mFab.isVisible()) {
+                                    mFab.show();
+                                }
+                            }
+                        }) //event listener
+                , getActivity());
+    } //showPhotoUploadSnackbar
 
     //----------------------------------------------
     //TAKING PHOTO/PHOTO SELECTION
@@ -688,31 +761,45 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     public void performUpload(){
         mUploadProgressBar.setVisibility(View.VISIBLE);
 
-        //Hide progress bar if it takes too much time
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(mUploadProgressBar.getVisibility() == View.VISIBLE) {
-//                    mUploadProgressBar.setVisibility(View.GONE);
-//                }
-//            }
-//        }, 2000);
+        //Hide progress bar if it takes too much time to upload
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(mUploadProgressBar.getVisibility() == View.VISIBLE) {
+                    mUploadProgressBar.setVisibility(View.GONE);
+                }
+            }
+        }, 2000);
 
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
                     public void onSuccess() {
-                        Log.d(TAG, "On Upload Success");
+                        Log.d(TAG, "On Photo Upload Success");
 
                         mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
-                        mItemToBeUploaded = null;
 
                         displayUserItems();
                         mUploadProgressBar.setVisibility(View.GONE);
-                    }
+
+                        //Show snackbar confirmation
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                            showPhotoUploadSnackbar(mItemToBeUploaded.getItemName() + " uploaded",
+                                    "dismiss", new ActionClickListener() {
+                                @Override
+                                public void onActionClicked(Snackbar snackbar) {
+                                    snackbar.dismiss();
+                                    mFab.show();
+                                }
+                            });
+                        }
+
+                        mItemToBeUploaded = null;
+
+                    } //onSuccess
                     @Override
                     public void onFail() {
-                        Log.d(TAG, "On Upload Fail");
+                        Log.d(TAG, "On Photo Upload Fail");
 
                         mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
 
@@ -724,6 +811,18 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                 //TODO: add visual indication that item failed
                             }
                         }, 500);
+
+                        //Show snackbar confirmation
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                            showPhotoUploadSnackbar("upload failed",
+                                    "retry", new ActionClickListener() {
+                                        @Override
+                                        public void onActionClicked(Snackbar snackbar) {
+                                            performUpload();
+                                        }
+                                    });
+                        }
+
                     }
                 });
     } //performUpload

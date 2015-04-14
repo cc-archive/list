@@ -325,12 +325,10 @@ public class SharedPreferencesMethods {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(listOfValues);
             JsonArray array = element.getAsJsonArray();
-            Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
 
             for (int i = 0; i < array.size(); i++) {
                 String singleCat = array.get(i).getAsString();
                 if (singleCat.equals(catId)) {
-                    Log.v("CATEGORY TO REMOVE IS: ", singleCat);
                     array.remove(i);
                 }
             }
