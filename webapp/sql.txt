@@ -128,7 +128,7 @@ INSERT into List (makerid, title) values (4, "Flowers");
 INSERT into List (makerid, title) values (4, "A body of water");
 
 INSERT into List (makerid, title) values (5, "Coffee");
-INSERT into List (makerid, title) values (5, "Pizza")
+INSERT into List (makerid, title) values (5, "Pizza");
 INSERT into List (makerid, title) values (5, "Beer");
 INSERT into List (makerid, title) values (5, "Wine");
 INSERT into List (makerid, title) values (5, "A sandwich");
