@@ -144,7 +144,6 @@ INSERT into List (makerid, title) values (6, "Science equipment");
 INSERT into List (makerid, title) values (6, "Tools");
 INSERT into List (makerid, title) values (6, "Kitchen utensils");
 
-
 UPDATE List SET category = 1 where makerid = 1;
 UPDATE List SET category = 2 where makerid = 2;
 UPDATE List SET category = 3 where makerid = 3;
