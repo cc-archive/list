@@ -2,6 +2,7 @@ drop table if exists Users;
 drop table if exists UserList;
 drop table if exists Photos;
 drop table if exists UserSessions;
+drop table if exists UserSuggestions;
 drop table if exists HowToPopularity;
 
 CREATE TABLE UserSessions (
