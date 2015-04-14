@@ -52,6 +52,7 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
     private SharedPreferencesMethods mSharedPref;
 
     //UI Elements
+    private TextView mAccountName;
     private RelativeLayout mAccountButton;
     private ImageView mAccountButtonIcon;
     private TextView mAccountButtonLabel;
@@ -115,10 +116,13 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
         mCurrentUser = new ListUser(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
+        Activity parent = getActivity();
+
         //UI Elements
-        mAccountButton = (RelativeLayout) getActivity().findViewById(R.id.drawer_account_button);
-        mAccountButtonLabel = (TextView) getActivity().findViewById(R.id.drawer_account_label);
-        mAccountButtonIcon = (ImageView) getActivity().findViewById(R.id.drawer_account_icon);
+        mAccountName = (TextView) parent.findViewById(R.id.drawer_account_name);
+        mAccountButton = (RelativeLayout) parent.findViewById(R.id.drawer_account_button);
+        mAccountButtonLabel = (TextView) parent.findViewById(R.id.drawer_account_label);
+        mAccountButtonIcon = (ImageView) parent.findViewById(R.id.drawer_account_icon);
 
         mAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +133,7 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
 
         //RecyclerView
         mAdapter = new DrawerAdapter(mContext, getData());
-        mDrawerRecyclerView = (RecyclerView)getActivity().findViewById(R.id.drawer_recyclerView);
+        mDrawerRecyclerView = (RecyclerView)parent.findViewById(R.id.drawer_recyclerView);
         mDrawerRecyclerView.setAdapter(mAdapter);
         mDrawerRecyclerView.setHasFixedSize(true);
         mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -152,13 +156,14 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
         super.onResume();
 
         if(mCurrentUser.isTempUser()){ //TEMP USER
-            //TODO: show log in
+            mAccountName.setVisibility(View.GONE);
             mAccountButtonLabel.setText("Log In");
             mAccountButtonIcon.setImageResource(R.drawable.ic_login_grey600_24dp);
 
 
         } else { //LOGGED IN USER
-            //TODO: show log out
+            mAccountName.setVisibility(View.VISIBLE);
+            mAccountName.setText(mCurrentUser.getAccountName());
             mAccountButtonLabel.setText("Log Out");
             mAccountButtonIcon.setImageResource(R.drawable.ic_logout_grey600_24dp);
         }
@@ -168,6 +173,7 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
     public void setUp(int drawerId, DrawerLayout drawerLayout, Toolbar toolbar) {
         containerView = getActivity().findViewById(drawerId);
         mDrawerLayout = drawerLayout;
+
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close){
 

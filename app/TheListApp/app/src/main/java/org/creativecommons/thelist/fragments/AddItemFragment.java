@@ -2,7 +2,6 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -63,6 +63,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     private EditText mDescriptionField;
     private String mDescription;
     private Spinner mCategorySpinner;
+    private RelativeLayout mStickyFooter;
 
     private Boolean mPhotoAdded;
 
@@ -88,20 +89,25 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
 
         //UI Elements
         mItemNameField = (EditText) activity.findViewById(R.id.add_item_title);
         mDescriptionField = (EditText) activity.findViewById(R.id.add_item_description);
         mDescription = null;
         mCategorySpinner = (Spinner) activity.findViewById(R.id.category_spinner);
+        mStickyFooter = (RelativeLayout)getActivity().findViewById(R.id.add_item_sticky_footer);
+
+        ArrayList<EditText> editList = new ArrayList<>();
+        editList.add(mItemNameField);
+        editList.add(mDescriptionField);
 
         mPhotoAdded = false;
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-
-            //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
+//            for (EditText view : editList){
+//                view.setOnFocusChangeListener(focusListener);
+//            }
         } //Lollipop
 
 //        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -204,26 +210,6 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        //UI Elements
-        mAddImage = (ImageButton) getView().findViewById(R.id.add_item_example_image);
-
-        //Click Listener to get sample image
-        mAddImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                if(mPhotoAdded){
-                    builder.setItems(R.array.photo_choices_remove, mDialogListener);
-                } else {
-                    builder.setItems(R.array.photo_choices, mDialogListener);
-                }
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
     } //onResume
 
     //Show dialog when List Item is tapped
@@ -379,6 +365,18 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                 });
 
     } //startItemUpload
+
+//    private View.OnFocusChangeListener focusListener = new View.OnFocusChangeListener(){
+//        public void onFocusChange(View v, boolean hasFocus){
+//            if(hasFocus){
+//                //mStickyFooter.setVisibility(View.GONE);
+//                Log.v(TAG, "EDITTEXT IS GONE");
+//            } else {
+//                //mStickyFooter.setVisibility(View.VISIBLE);
+//                Log.v(TAG, "EDITTEXT IS VISIBLE");
+//            }
+//        }
+//    };
 
     @Override
     public void onDetach() {

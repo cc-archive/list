@@ -41,7 +41,6 @@ import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.fragments.AddItemFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
@@ -191,13 +190,8 @@ public class DrawerActivity extends ActionBarActivity implements
 
                 break;
             case 3: //Request An Item
-                fragment = new AddItemFragment();
-
-                // Set screen name.
-                t.setScreenName("Request an Item");
-                // Send a screen view.
-                t.send(new HitBuilders.ScreenViewBuilder().build());
-
+                Intent reqIntent = new Intent(DrawerActivity.this, AddItemActivity.class);
+                startActivity(reqIntent);
                 break;
             case 4: //About The App
                 Intent aboutIntent = new Intent(DrawerActivity.this, AboutActivity.class);

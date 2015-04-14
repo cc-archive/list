@@ -102,6 +102,17 @@
                 android:value=".activities.DrawerActivity" />
         </activity>
 
+        <activity
+            android:name=".activities.AddItemActivity"
+            android:label="@string/title_activity_add_item"
+            android:theme="@style/ListThemeStatus"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.DrawerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DrawerActivity" />
+        </activity>
+
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <!-- Authenticator -->

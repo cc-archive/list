@@ -13,19 +13,24 @@
     android:clickable="true"
     tools:context="org.creativecommons.thelist.fragments.NavigationDrawerFragment">
 
-    <!--TODO: add header image-->
-    <ImageView android:id="@+id/drawer_image"
+    <include layout="@layout/drawer_header"
+        android:id="@+id/drawer_header"
+        android:layout_height="178dp"
         android:layout_width="@dimen/nav_drawer_width"
-        android:layout_height="140dp"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/navigation_drawer_image"/>
+        android:layout_alignParentTop="true"/>
+
+    <!--<ImageView android:id="@+id/drawer_image"-->
+        <!--android:layout_width="@dimen/nav_drawer_width"-->
+        <!--android:layout_height="140dp"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:src="@drawable/navigation_drawer_image"/>-->
     
     <android.support.v7.widget.RecyclerView
         android:id="@+id/drawer_recyclerView"
         android:background="@color/app_white"
-        android:layout_below="@id/drawer_image"
+        android:layout_below="@id/drawer_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

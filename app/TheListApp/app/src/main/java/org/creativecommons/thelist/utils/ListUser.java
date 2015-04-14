@@ -142,6 +142,16 @@ public class ListUser implements ServerAuthenticate {
         return availableAccounts.length;
     }
 
+    public String getAccountName(){
+        Account account = getAccount();
+
+        if(account != null){
+            return account.name;
+        } else {
+            return mContext.getString(R.string.drawer_account_name_not_found);
+        }
+    }
+
     /**
      * Get auth token for existing account, if the account doesn’t exist, create new CCID account
      * You must already have a valid ID

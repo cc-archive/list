@@ -260,5 +260,6 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
     <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
+    <string name="drawer_account_name_not_found">Account name not found</string>
 
 </resources>
