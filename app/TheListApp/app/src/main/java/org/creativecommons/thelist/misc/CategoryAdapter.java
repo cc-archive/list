@@ -83,7 +83,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         public CategoryViewHolder(View itemView) {
             super(itemView);
             checkableLayout = (CheckableRelativeLayout)itemView.findViewById(R.id.checkable_layout);
-            categoryNameLabel = (TextView)itemView.findViewById(R.id.category);
+            categoryNameLabel = (TextView)itemView.findViewById(R.id.category_title);
             //checkmarkView = (ImageView)itemView.findViewById(R.id.checkmark);
         }
     }

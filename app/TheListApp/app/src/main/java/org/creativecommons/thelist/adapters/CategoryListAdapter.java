@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
@@ -70,8 +71,8 @@ public class CategoryListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.list_item_category, parent, false);
             holder = new ViewHolder();
             holder.checkableLayout = (CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
-            holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
-            //holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
+            holder.checkmarkView = (ImageView)convertView.findViewById(R.id.category_checkmark);
+            holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category_title);
 
             convertView.setTag(holder);
         } else {
@@ -92,13 +93,12 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Set checkmarkView visibility
         if(c.getCategoryChecked()){
-            //holder.checkmarkView.setVisibility(View.VISIBLE);
-            //holder.checkableLayout.setBackgroundColor((Color.parseColor(c.getCategoryColour())));
+            holder.checkmarkView.setVisibility(View.VISIBLE);
             holder.checkableLayout.getBackground().setAlpha(100);
             holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.secondary_text_material_dark));
 
         } else {
-            //holder.checkmarkView.setVisibility(View.GONE);
+            holder.checkmarkView.setVisibility(View.GONE);
             holder.checkableLayout.getBackground().setAlpha(255);
             holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.primary_text_default_material_dark));
         }
@@ -109,6 +109,6 @@ public class CategoryListAdapter extends BaseAdapter {
     private static class ViewHolder {
         CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
-        //ImageView checkmarkView;
+        ImageView checkmarkView;
     }
 }
