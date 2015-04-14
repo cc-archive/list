@@ -96,19 +96,14 @@ alter table Makers add unique (name);
 alter table Makers add unique (uri);
 alter table List add unique (uri);
 
-insert into Makers (name, uri) values ('Matt Lee Foundation', 'http://mattl.us');
-insert into Makers (name, uri) values ('Elliotpedia', 'http://elliot.biz');
-insert into Makers (name, uri) values (‘The Fashion Trust', 'pulponline.com');
-insert into Makers (name, uri) values ("The Domestic Zoo", 'zoo.biz');
-insert into Makers (name, uri) values ("Planet Gastronomy",'gastro.net');
-insert into Makers (name, uri) values ("The Objects Museum",'obj.biz');
+insert into Makers (name, uri) values ('Creative Commons', 'http://creativecommons.org');
 
 INSERT into Categories (approved, makerid, title, color) values (1, 1, "People", "ff9800");
-INSERT into Categories (approved, makerid, title, color) values (1, 2, "Places & Cities", “f44336");
-INSERT into Categories (approved, makerid, title, color) values (1, 3, "Clothing & Fashion", "3f51b5");
-INSERT into Categories (approved, makerid, title, color) values (1, 4, "Nature & Animals", "4caf50");
-INSERT into Categories (approved, makerid, title, color) values (1, 5, "Food & Drink", "2196f3");
-INSERT into Categories (approved, makerid, title, color) values (1, 6, "Objects", “e91e63");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Places & Cities", “f44336");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Clothing & Fashion", "3f51b5");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Nature & Animals", "4caf50");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Food & Drink", "2196f3");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Objects", “e91e63");
 
 INSERT into List (makerid, title) values (1, "Matt Lee");
 
