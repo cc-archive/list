@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/helper_message"
+        android:visibility="gone"
+        android:id="@+id/category_helper_message"/>
+
     <GridView
         android:layout_width="fill_parent"
         android:layout_height="0dp"

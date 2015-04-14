@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -107,6 +108,24 @@ public class CategoryListActivity extends ActionBarActivity {
         //Set List Adapter
         mGridView = (GridView) findViewById(R.id.categoryGrid);
         adapter = new CategoryListAdapter(this,mCategoryList);
+
+        //Set up Helper Message if new user
+        if(!mSharedPref.getCategoryHelperViewed()){
+
+            //UI Elements
+            final View helperMessage = findViewById(R.id.category_helper_message);
+            ImageButton helperCloseButton = (ImageButton) findViewById(R.id.helper_close_button);
+
+            helperCloseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    helperMessage.setVisibility(View.GONE);
+                    mSharedPref.setCategoryHelperViewed(true);
+                }
+            });
+
+            helperMessage.setVisibility(View.VISIBLE);
+        }
 
         //Get Categories
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {

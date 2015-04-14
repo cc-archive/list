@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/nav_drawer_width"
     android:layout_height="178dp"
-    android:background="@drawable/navigation_drawer_image"
+    android:background="@drawable/nav_drawer_header"
     android:orientation="vertical"
     android:weightSum="1">
 

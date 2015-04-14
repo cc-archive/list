@@ -261,5 +261,6 @@ Icons are licensed under <a href="http://creativecommons.org/licenses/by/3.0/">C
     <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
     <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
     <string name="drawer_account_name_not_found">Account name not found</string>
+    <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
 
 </resources>
