@@ -46,7 +46,7 @@ primary KEY (id)
 CREATE TABLE UserSuggestions (
 id int(11) NOT NULL auto_increment,
 userid int(11) NOT NULL,
-filename varchar(255) NOT NULL,
+filename varchar(255),
 category int(11),
 description varchar(255),
 title varchar(255),
