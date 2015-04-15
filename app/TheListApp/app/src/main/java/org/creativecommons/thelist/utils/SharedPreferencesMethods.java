@@ -53,7 +53,9 @@ public class SharedPreferencesMethods {
     public static final String ANALYTICS_VIEWED = "analyticsViewed";
     public static final String SURVEY_COUNT = "surveyCount";
     public static final String SURVEY_TAKEN = "surveyTaken";
+    public static final String CATEGORY_HELPER_VIEWED = "categoryHelperViewed";
 
+    public static final String DRAWER_USER_LEARNED = "userLearnedDrawer";
 
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
@@ -61,13 +63,20 @@ public class SharedPreferencesMethods {
     //SET PREFERENCES
     //----------------------------------------------------------
 
-    //Save Any Preference
+    //Save String Preference (generic)
     public void saveSharedPreference(String key, String value){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(key, value);
         editor.apply();
-        Log.v("ADDED AND SAVED ITEM: ", value);
+    }
+
+    //Save Boolean Preference (generic)
+    public void savedSharedPreference(String key, boolean value){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
     }
 
     public void setUserID(String id){
@@ -103,6 +112,13 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(SURVEY_TAKEN, bol);
+        editor.apply();
+    }
+
+    public void setCategoryHelperViewed(Boolean bol){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(CATEGORY_HELPER_VIEWED, bol);
         editor.apply();
     }
 
@@ -174,6 +190,37 @@ public class SharedPreferencesMethods {
 
         if(sharedPref.contains(SharedPreferencesMethods.SURVEY_TAKEN)) {
             return sharedPref.getBoolean(SURVEY_TAKEN, false); //defaults to false
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean getCategoryHelperViewed(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(SharedPreferencesMethods.CATEGORY_HELPER_VIEWED)) {
+            return sharedPref.getBoolean(CATEGORY_HELPER_VIEWED, false); //defaults to false
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean getUserLearnedDrawer(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(DRAWER_USER_LEARNED)) {
+            return sharedPref.getBoolean(DRAWER_USER_LEARNED, false); //defaults to false
+        } else {
+            return false;
+        }
+    }
+
+    //getSharedPreferenceBoolean (generic)
+    public Boolean getSharedPreference(String key){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(key)) {
+            return sharedPref.getBoolean(key, false); //defaults to false
         } else {
             return false;
         }
@@ -278,12 +325,10 @@ public class SharedPreferencesMethods {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(listOfValues);
             JsonArray array = element.getAsJsonArray();
-            Log.v("ARRAY FROM SHAREDPREF: ", array.toString());
 
             for (int i = 0; i < array.size(); i++) {
                 String singleCat = array.get(i).getAsString();
                 if (singleCat.equals(catId)) {
-                    Log.v("CATEGORY TO REMOVE IS: ", singleCat);
                     array.remove(i);
                 }
             }
@@ -316,6 +361,10 @@ public class SharedPreferencesMethods {
         ClearSharedPreference(CATEGORY_PREFERENCE_KEY);
         ClearSharedPreference(LIST_ITEM_PREFERENCE_KEY);
         ClearSharedPreference(USER_ID_PREFERENCE_KEY);
+        ClearSharedPreference(SURVEY_TAKEN);
+        ClearSharedPreference(SURVEY_COUNT);
+        ClearSharedPreference(ANALYTICS_VIEWED);
+        ClearSharedPreference(CATEGORY_HELPER_VIEWED);
     } //Clearall
 
 } //SharedPreferenceMethods

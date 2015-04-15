@@ -22,7 +22,6 @@ package org.creativecommons.thelist.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -189,7 +188,7 @@ public class RandomActivity extends Activity {
                 //Clear ItemList
                 mItemList.clear();
 
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, DrawerActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -226,7 +225,7 @@ public class RandomActivity extends Activity {
                     //Clear ItemList
                     mItemList.clear();
 
-                    Intent intent = new Intent(RandomActivity.this, MainActivity.class);
+                    Intent intent = new Intent(RandomActivity.this, DrawerActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -234,7 +233,7 @@ public class RandomActivity extends Activity {
                 } else {
                     mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
                     mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
-                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME).toLowerCase();
+                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
                     mCategoryID = mListItemData.getString(ApiConstants.ITEM_CATEGORY);
 
@@ -307,10 +306,10 @@ public class RandomActivity extends Activity {
                             mBackground.setBackgroundColor(getResources().getColor(R.color.objects_500));
                             break;
                         default:
-                            setButtonTheme(mYesButton, R.drawable.checkmark_default,
-                                    R.drawable.checkmark_pressed, R.drawable.checkmark_pressed);
-                            setButtonTheme(mNoButton, R.drawable.x_default,
-                                    R.drawable.x_pressed, R.drawable.x_pressed);
+                            setButtonTheme(mYesButton, R.drawable.check_default_default,
+                                    R.drawable.check_pressed_default, R.drawable.check_pressed_default);
+                            setButtonTheme(mNoButton, R.drawable.x_default_default,
+                                    R.drawable.x_pressed_default, R.drawable.x_pressed_default);
 
                             mTextView.setTextColor(getResources().getColor(R.color.default_100));
                             mDoneButton.setTextColor(getResources().getColor(R.color.default_100));

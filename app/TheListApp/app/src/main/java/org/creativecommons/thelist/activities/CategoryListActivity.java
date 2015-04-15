@@ -33,9 +33,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -43,6 +45,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.CategoryListAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
+import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
@@ -105,6 +108,24 @@ public class CategoryListActivity extends ActionBarActivity {
         //Set List Adapter
         mGridView = (GridView) findViewById(R.id.categoryGrid);
         adapter = new CategoryListAdapter(this,mCategoryList);
+
+        //Set up Helper Message if new user
+        if(!mSharedPref.getCategoryHelperViewed()){
+
+            //UI Elements
+            final View helperMessage = findViewById(R.id.category_helper_message);
+            ImageButton helperCloseButton = (ImageButton) findViewById(R.id.helper_close_button);
+
+            helperCloseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    helperMessage.setVisibility(View.GONE);
+                    mSharedPref.setCategoryHelperViewed(true);
+                }
+            });
+
+            helperMessage.setVisibility(View.VISIBLE);
+        }
 
         //Get Categories
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
@@ -174,18 +195,26 @@ public class CategoryListActivity extends ActionBarActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
+                //ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
+                CheckableRelativeLayout checkableLayout = (CheckableRelativeLayout)view.findViewById(R.id.checkable_layout);
+                ImageView checkIcon = (ImageView) view.findViewById(R.id.category_checkmark);
+                TextView categoryNameLabel = (TextView)view.findViewById(R.id.category_title);
+
                 //Get item clicked + its category id
                 CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(position);
                 String catId = String.valueOf(item.getCategoryID());
 
                 if(mGridView.isItemChecked(position)) {
-                    checkmarkView.setVisibility(View.VISIBLE);
+                    checkableLayout.getBackground().setAlpha(128);
+                    checkIcon.setVisibility(View.VISIBLE);
+                    categoryNameLabel.setTextColor(getResources().getColor(R.color.secondary_text_material_dark));
                     item.setCategoryChecked(true);
                     mRequestMethods.addCategory(catId);
                     //Log.v(TAG, "ADDED " + catId);
                 } else {
-                    checkmarkView.setVisibility(View.GONE);
+                    checkableLayout.getBackground().setAlpha(255);
+                    checkIcon.setVisibility(View.GONE);
+                    categoryNameLabel.setTextColor(getResources().getColor(R.color.primary_text_default_material_dark));
                     item.setCategoryChecked(false);
                     mRequestMethods.removeCategory(catId);
                     //Log.v(TAG, "REMOVED " + catId);
@@ -302,6 +331,40 @@ public class CategoryListActivity extends ActionBarActivity {
         }
     } //updateList
 
+    public void saveUserCategories(){
+        SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+        int length = positions.size();
+        //Array of user selected categories
+        List<Integer> userCategories = new ArrayList<>();
+
+        for(int i = 0; i < length; i++) {
+            int itemPosition = positions.keyAt(i);
+            boolean value = positions.get(itemPosition);
+
+            if(value) {
+                CategoryListItem catItem = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
+                int catId = catItem.getCategoryID();
+                userCategories.add(catId);
+                Log.v(TAG, "ITEM ADDED");
+            }
+        }
+
+        if(mCurrentUser.isTempUser()){ //TEMP USER
+            //Save user categories to shared preferences
+            mSharedPref.saveSharedPreference
+                    (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
+        }
+
+        Intent intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
+        startActivity(intent);
+    }
+
+    //onBackPressed
+    @Override
+    public void onBackPressed() {
+        saveUserCategories();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -319,30 +382,7 @@ public class CategoryListActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
-            SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-            int length = positions.size();
-            //Array of user selected categories
-            List<Integer> userCategories = new ArrayList<>();
-
-            for(int i = 0; i < length; i++) {
-                int itemPosition = positions.keyAt(i);
-                boolean value = positions.get(itemPosition);
-
-                if(value) {
-                    CategoryListItem catItem = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
-                    int catId = catItem.getCategoryID();
-                    userCategories.add(catId);
-                    Log.v(TAG, "ITEM ADDED");
-                }
-            }
-
-            if(mCurrentUser.isTempUser()){ //TEMP USER
-                //Save user categories to shared preferences
-                mSharedPref.saveSharedPreference
-                        (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
-            }
-            Intent intent = new Intent(CategoryListActivity.this, MainActivity.class);
-            startActivity(intent);
+            saveUserCategories();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -31,14 +31,17 @@
     <integer name="ga_sessionTimeout">300</integer>
 
     <!-- The screen names that will appear in reports -->
-    <screenName name="org.creativecommons.thelist.activities.MainActivity">Main Feed</screenName>
+    <screenName name="org.creativecommons.thelist.activities.DrawerActivity">Main Feed</screenName>
     <screenName name="org.creativecommons.thelist.activities.RandomActivity">Random Item Suggestions</screenName>
     <screenName name="org.creativecommons.thelist.activities.CategoryListActivity">Pick Categories</screenName>
     <screenName name="org.creativecommons.thelist.activities.StartActivity">Start Screen</screenName>
     <screenName name="org.creativecommons.thelist.activities.AboutActivity">About The App</screenName>
     <screenName name="org.creativecommons.thelist.activities.AccountActivity">Log Into Your CCID</screenName>
-    <screenName name="org.creativecommons.thelist.activities.GalleryActivity">Gallery</screenName>
+    <screenName name="org.creativecommons.thelist.activities.ImageActivity">Gallery</screenName>
 
+    <screenName name="org.creativecommons.thelist.fragments.MyListFragment">My List</screenName>
+    <screenName name="org.creativecommons.thelist.fragments.AddItemFragment">Request an Item</screenName>
+    <screenName name="org.creativecommons.thelist.fragments.GalleryFragment">My Photos</screenName>
 
 
     <!-- If ga_autoActivityTracking is enabled, an alternate screen name can be specified to

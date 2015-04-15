@@ -33,7 +33,7 @@
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/secondary_text_default_material_light"
-        android:text="Hey, looks like your gallery is empty. Upload some photos!"
+        android:text="@string/empty_gallery_label_logged_in"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

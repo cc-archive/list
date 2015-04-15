@@ -77,8 +77,13 @@ public class ListApplication extends Application {
         //Set Survey Count
         sharedPref.setSurveyCount(0);
 
+        //If user has id, but no account valid account, reset sharedPreferences (fully log user out)
+        if(!(listUser.isTempUser()) && listUser.getAccount() == null){
+            sharedPref.ClearAllSharedPreferences();
+        }
+
         //Check OptOut status (must happen once per app open/restart)
-        if(!(listUser.isTempUser())){ //Logged in
+        if(!(listUser.isTempUser()) && listUser.getAccount() != null){ //Logged in
             Log.v(TAG, "LIST ON CREATE: LOGGED IN");
             //Get optOut value from the account (if there is no value this should return null)
             Boolean optOut = listUser.getAnalyticsOptOut();

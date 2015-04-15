@@ -18,7 +18,7 @@
 
 */
 
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.layouts;
 
 import android.content.Context;
 import android.graphics.Matrix;

@@ -28,7 +28,7 @@ import android.support.v4.app.NotificationCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
+import org.creativecommons.thelist.activities.DrawerActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,6 +39,7 @@ public class MessageHelper {
 
     //Notifications
     final AtomicInteger notificationID = new AtomicInteger(0);
+    public static final String INTENT_ACTION = "OPEN_GALLERY";
 
     //Set Context
     public MessageHelper(Context mc) {
@@ -68,6 +69,7 @@ public class MessageHelper {
                             .show();
     } //enableFeatureDialog
 
+    //Take Survey Dialog
     public void takeSurveyDialog(Context context, String title, String message,
                                  MaterialDialog.ButtonCallback callback){
                     new MaterialDialog.Builder(context)
@@ -80,9 +82,19 @@ public class MessageHelper {
                             .show();
     } //takeSurveyDialog
 
+    //Single Input Dialog
+    public void singleInputDialog
+    (Context context, String title, String message, MaterialDialog.InputCallback callback) {
+        new MaterialDialog.Builder(context)
+                .title(title)
+                .content(message)
+                .input("add a url", "", callback)
+                .show();
+    } //Single Input Dialog
+
     //Single Choice Dialog
     public void showSingleChoiceDialog(Context context, String title, String[] items,
-                                       MaterialDialog.ListCallback callback){
+                                       MaterialDialog.ListCallbackSingleChoice callback){
         new MaterialDialog.Builder(context)
                 .title(title)
                 .items(items)
@@ -99,16 +111,19 @@ public class MessageHelper {
                 .setSmallIcon(R.drawable.ic_camera_alt_white_24dp)
                 .setContentTitle(title)
                 .setContentText(message)
+                .setAutoCancel(true)
                 .setTicker(ticker);
 
-        Intent resultIntent = new Intent(mContext, MainActivity.class);
+        Intent resultIntent = new Intent(mContext, DrawerActivity.class);
+        resultIntent.setAction(INTENT_ACTION);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
         stackBuilder.addParentStack(StartActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_CANCEL_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
 
@@ -158,6 +173,14 @@ public class MessageHelper {
         sendNotification(mContext, "The List",
                 "There was a problem uploading" + itemName ,
                 itemName + " upload failed");
+    }
+
+    public void notifyMakerItemUploadSuccess(String itemName){
+
+    }
+
+    public void notifyMakerItemUploadFail(String itemName){
+
     }
 
     //DIALOGS

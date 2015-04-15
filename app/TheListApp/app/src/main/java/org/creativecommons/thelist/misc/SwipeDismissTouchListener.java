@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.creativecommons.thelist.swipedismiss;
+package org.creativecommons.thelist.misc;
 
 import android.app.ListActivity;
 import android.app.ListFragment;
@@ -39,7 +39,7 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * (i.e. you're using
  * {@link ListView#setOnItemClickListener(AdapterView.OnItemClickListener)}
  * or an equivalent listener on {@link ListActivity} or
- * {@link ListFragment}, use {@link SwipeDismissRecyclerViewTouchListener} instead.</em></p>
+ * {@link ListFragment}, use {@link org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener} instead.</em></p>
  *
  * <p>Example usage:</p>
  *
@@ -57,7 +57,7 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * <p>This class Requires API level 12 or later due to use of {@link
  * android.view.ViewPropertyAnimator}.</p>
  *
- * @see SwipeDismissRecyclerViewTouchListener
+ * @see org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener
  */
 public class SwipeDismissTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values

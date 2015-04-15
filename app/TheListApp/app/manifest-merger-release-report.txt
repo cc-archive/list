@@ -68,7 +68,7 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 		ADDED from AndroidManifest.xml:20:9
 	android:name
 		ADDED from AndroidManifest.xml:15:9
-activity#org.creativecommons.thelist.activities.MainActivity
+activity#org.creativecommons.thelist.misc.MainActivity
 ADDED from AndroidManifest.xml:21:9
 	android:label
 		ADDED from AndroidManifest.xml:23:13

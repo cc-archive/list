@@ -2,25 +2,23 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,13 +26,12 @@ import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.AddItemActivity;
+import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.utils.SpinnerObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,9 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AddItemFragment extends android.support.v4.app.Fragment {
     public static final String TAG = AddItemFragment.class.getSimpleName();
 
@@ -57,6 +51,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
     protected Uri mMediaUri;
+    protected Uri mLinkUri;
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
@@ -65,8 +60,10 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     //UI Elements
     private ImageButton mAddImage;
     private EditText mItemNameField;
+    private EditText mDescriptionField;
+    private String mDescription;
     private Spinner mCategorySpinner;
-    private android.support.v7.widget.Toolbar mBottomToolbar;
+    private RelativeLayout mStickyFooter;
 
     private Boolean mPhotoAdded;
 
@@ -92,59 +89,63 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
+        final Activity activity = getActivity();
+
         //UI Elements
-        mItemNameField = (EditText) getView().findViewById(R.id.add_item_edittext);
-        mCategorySpinner = (Spinner) getView().findViewById(R.id.category_spinner);
-        mBottomToolbar = (android.support.v7.widget.Toolbar) getView().findViewById(R.id.toolbar_bottom);
-        mBottomToolbar.setSubtitle("Add Item");
-        mBottomToolbar.inflateMenu(R.menu.menu_toolbar_add_item);
+        mItemNameField = (EditText) activity.findViewById(R.id.add_item_title);
+        mDescriptionField = (EditText) activity.findViewById(R.id.add_item_description);
+        mDescription = null;
+        mCategorySpinner = (Spinner) activity.findViewById(R.id.category_spinner);
+        mStickyFooter = (RelativeLayout)getActivity().findViewById(R.id.add_item_sticky_footer);
+
+        ArrayList<EditText> editList = new ArrayList<>();
+        editList.add(mItemNameField);
+        editList.add(mDescriptionField);
 
         mPhotoAdded = false;
 
-        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
-        if(toolbar != null){
-            ((AddItemActivity) getActivity()).setSupportActionBar(toolbar);
-            ((AddItemActivity) getActivity()).getSupportActionBar()
-                    .setTitle(getString(R.string.title_activity_add_item));
-            ((AddItemActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            Log.v(TAG, "GET TOOLBAR ADD ITEM");
-        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+//            for (EditText view : editList){
+//                view.setOnFocusChangeListener(focusListener);
+//            }
+        } //Lollipop
 
-//        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_add_item);
-//        if (toolbar != null) {
-//            getActivity().setSupportActionBar(toolbar);
-//            Log.v(TAG, "GET TOOLBAR ADD ITEM");
-//        }
+//        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//
+//                if (id == R.id.action_item_done) {
+//                    //TODO: Start Item Upload
+//                    Log.v(TAG, "DONE WITH ITEM");
+//
+//                    final String itemName = mItemNameField.getText().toString().trim();
+//                    final String itemDescription = mDescriptionField.getText().toString().trim();
+//
+//                    if(itemDescription.length() > 1){
+//                        mDescription = itemDescription;
+//                    }
+//
+//                    //Has item name been added?
+//                    if(itemName.isEmpty()){
+//                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+//                                mContext.getString(R.string.dialog_missing_item_name));
+//                        return true;
+//                      //Has category been selected?
+//                    } else if(catId.equals("0")){
+//                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+//                                mContext.getString(R.string.dialog_missing_item_cat));
+//                        return true;
+//                    } else {
+//                        startItemUpload(itemName, mDescription, mLinkUri);
+//
+//                        return true;
+//                    }
+//                } //if action done
+//                return true;
+//            }
+//        });
 
-        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.action_item_done) {
-                    //TODO: Start Item Upload
-                    Log.v(TAG, "DONE WITH ITEM");
-
-                    final String itemName = mItemNameField.getText().toString().trim();
-
-                    //Has item name been added?
-                    if(itemName.isEmpty()){
-                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
-                                mContext.getString(R.string.dialog_missing_item_name));
-                        return true;
-                      //Has category been selected?
-                    } else if(catId.equals("0")){
-                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
-                                mContext.getString(R.string.dialog_missing_item_cat));
-                        return true;
-                    } else {
-                        startItemUpload(itemName);
-                        return true;
-                    }
-                } //if action done
-                return true;
-            }
-        });
 
         //Set Spinner Content
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
@@ -204,32 +205,11 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart(){
         super.onStart();
-
     } //onStart (only do once per fragment creation)
 
     @Override
     public void onResume() {
         super.onResume();
-
-        //UI Elements
-        mAddImage = (ImageButton) getView().findViewById(R.id.add_item_example_image);
-
-        //Click Listener to get sample image
-        mAddImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                if(mPhotoAdded){
-                    builder.setItems(R.array.photo_choices_remove, mDialogListener);
-                } else {
-                    builder.setItems(R.array.photo_choices, mDialogListener);
-                }
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
     } //onResume
 
     //Show dialog when List Item is tapped
@@ -254,10 +234,23 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                         case 1: // Choose picture
                             Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             choosePhotoIntent.setType("image/*");
-                            //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
-                        case 2:
+//                        case 2:
+//                            mMessageHelper.singleInputDialog(mContext, "Add a link", "Add an example image via url", new MaterialDialog.InputCallback() {
+//                                @Override
+//                                public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
+//
+//                                    mLinkUri = Uri.parse(charSequence.toString());
+//
+//                                    //Do something with input
+//                                    //TODO: add placeholder for failed image
+//                                    Picasso.with(mContext).load(mLinkUri)
+//                                            .placeholder(R.drawable.progress_view_large) //failed to find image
+//                                            .into(mAddImage);
+//                                }
+//                            });
+                        case 2: //TODO: make case 3
                             Picasso.with(mContext).load(R.drawable.progress_view).into(mAddImage); //TODO: update with new image
                             mPhotoAdded = false;
                             mMediaUri = null;
@@ -350,28 +343,40 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     } //onActivityResult
 
 
-    public void startItemUpload(final String itemName){
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
-            @Override
-            public void onSuccess(String authtoken) {
-                mRequestMethods.addMakerItem(itemName, catId, mMediaUri,
-                        new RequestMethods.RequestCallback() {
-                            @Override
-                            public void onSuccess() {
-                                //TODO: if request succeeds
+    public void startItemUpload(final String itemName, final String description, final Uri linkuri){
 
-                            }
-                            @Override
-                            public void onFail() {
-                                //TODO: if request fails
-                                mMessageHelper.showDialog(mContext,
-                                        mContext.getString(R.string.oops_label),
-                                        mContext.getString(R.string.dialog_item_upload_fail));
-                            }
-                        });
-            } //onSuccess
-        }); //getToken
+        mRequestMethods.addMakerItem(itemName, catId, description, mMediaUri,
+                new RequestMethods.RequestCallback() {
+                    @Override
+                    public void onSuccess() {
+                        //TODO: if request succeeds
+                        mMessageHelper.notifyUploadSuccess(itemName);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        //TODO: if request fails
+                        mMessageHelper.notifyUploadSuccess(itemName);
+
+//                        mMessageHelper.showDialog(mContext,
+//                                mContext.getString(R.string.oops_label),
+//                                mContext.getString(R.string.dialog_item_upload_fail));
+                    }
+                });
+
     } //startItemUpload
+
+//    private View.OnFocusChangeListener focusListener = new View.OnFocusChangeListener(){
+//        public void onFocusChange(View v, boolean hasFocus){
+//            if(hasFocus){
+//                //mStickyFooter.setVisibility(View.GONE);
+//                Log.v(TAG, "EDITTEXT IS GONE");
+//            } else {
+//                //mStickyFooter.setVisibility(View.VISIBLE);
+//                Log.v(TAG, "EDITTEXT IS VISIBLE");
+//            }
+//        }
+//    };
 
     @Override
     public void onDetach() {

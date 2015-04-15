@@ -72,12 +72,18 @@
     <!--Hint/Disabled 26% Black-->
     <color name="hint_disabled_text_material_light">@color/abc_primary_text_disable_only_material_light</color>
 
+    <!--Divider Black 12%-->
+    <color name="divider_material_black">@color/md_divider_black</color>
+
     <!-- White 87% -->
     <color name="primary_text_default_material_dark">#deffffff</color>
     <!-- White 38% -->
     <color name="secondary_text_material_dark">#61ffffff</color>
     <!--Hint/Disabled 30% White-->
     <color name="hint_disabled_text_material_dark">@color/abc_primary_text_disable_only_material_dark</color>
+
+    <!--Divider Black 12%-->
+    <color name="divider_material_white">@color/md_divider_white</color>
 
     <!--Background Colours-->
     <color name="translucent_background">#D9000000</color>

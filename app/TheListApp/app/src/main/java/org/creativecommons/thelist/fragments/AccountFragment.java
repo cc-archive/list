@@ -24,23 +24,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.authentication.ListAuthenticator;
-import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 
@@ -55,7 +52,8 @@ import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_US
 public class AccountFragment extends android.support.v4.app.Fragment {
     public static final String TAG = AccountFragment.class.getSimpleName();
 
-    Context mContext;
+    private Context mContext;
+    private Activity mActivity;
     private MessageHelper mMessageHelper;
 
     //private final int REQ_SIGNUP = 1;
@@ -96,15 +94,27 @@ public class AccountFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         mContext = getActivity();
+        mActivity = getActivity();
         mMessageHelper = new MessageHelper(mContext);
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            //set adjustpan
+            mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        } //Lollipop
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         //Get account information
-        String accountName = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_NAME);
-        final String accountType = getActivity().getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-        mAuthTokenType = getActivity().getIntent().getStringExtra(ARG_AUTH_TYPE);
+        String accountName = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_NAME);
+        final String accountType = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
+        mAuthTokenType = mActivity.getIntent().getStringExtra(ARG_AUTH_TYPE);
         if (mAuthTokenType == null)
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
@@ -113,13 +123,13 @@ public class AccountFragment extends android.support.v4.app.Fragment {
         }
 
         //UI Elements
-        final Button cancelButton = (Button) getView().findViewById(R.id.cancelButton);
-        final Button loginButton = (Button) getView().findViewById(R.id.loginButton);
-        final Button signUpButton = (Button) getView().findViewById(R.id.signUpButton);
-        final EditText accountEmailField = (EditText)getView().findViewById(R.id.accountName);
-        final EditText accountPasswordField = (EditText)getView().findViewById(R.id.accountPassword);
+        final Button cancelButton = (Button) mActivity.findViewById(R.id.cancelButton);
+        final Button loginButton = (Button) mActivity.findViewById(R.id.loginButton);
+        final Button signUpButton = (Button) mActivity.findViewById(R.id.signUpButton);
+        final EditText accountEmailField = (EditText)mActivity.findViewById(R.id.accountName);
+        final EditText accountPasswordField = (EditText)mActivity.findViewById(R.id.accountPassword);
             accountPasswordField.setTypeface(Typeface.DEFAULT);
-        final TextView newAccountButton = (TextView) getView().findViewById(R.id.signUp);
+        final TextView newAccountButton = (TextView) mActivity.findViewById(R.id.signUp);
 
         //Try Login on Click
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +142,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                     mMessageHelper.showDialog(mContext,getString(R.string.login_error_title),
                             getString(R.string.login_error_message));
                 } else {
-                    ListUser mCurrentUser = new ListUser(getActivity());
+                    ListUser mCurrentUser = new ListUser(mActivity);
                     try {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.AuthCallback() {

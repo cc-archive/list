@@ -17,9 +17,8 @@
 
 */
 
-package org.creativecommons.thelist.activities;
+package org.creativecommons.thelist.misc;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,17 +56,21 @@ import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.AboutActivity;
+import org.creativecommons.thelist.activities.AddItemActivity;
+import org.creativecommons.thelist.activities.CategoryListActivity;
+import org.creativecommons.thelist.activities.GalleryActivity;
+import org.creativecommons.thelist.activities.RandomActivity;
+import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.adapters.FeedAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
-import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -173,7 +176,7 @@ public class MainActivity extends ActionBarActivity {
         mFeedAdapter = new FeedAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        initRecyclerView();
+        //initRecyclerView();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -384,7 +387,7 @@ public class MainActivity extends ActionBarActivity {
                     try {
                         listItem.setItemID(String.valueOf(itemIds.getInt(i)));
                         listItem.setMessageHelper(mMessageHelper);
-                        listItem.setMainActivity(MainActivity.this);
+                        listItem.setMainListActivity(MainActivity.this);
                         listItem.createNewUserListItem();
                     } catch (JSONException e) {
                         Log.v(TAG, e.getMessage());
@@ -424,56 +427,56 @@ public class MainActivity extends ActionBarActivity {
     //RECYCLERVIEW – LIST ITEM INTERACTION
     //----------------------------------------------
 
-    private void initRecyclerView(){
-        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
-                        mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
-                            @Override
-                            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
-                                    mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-                                    //Get item details for UNDO
-                                    lastDismissedItemPosition = position;
-                                    mLastDismissedItem = mItemList.get(position);
-
-                                    //What happens when item is swiped offscreen
-                                    mItemList.remove(mLastDismissedItem);
-                                    //TODO: should this be after snackbar removal?
-                                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
-
-                                    // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
-                                    mFeedAdapter.notifyDataSetChanged();
-
-                                    //Snackbar message
-                                    showSnackbar();
-                                }
-                            }
-                        });
-        mRecyclerView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
-        LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
-        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
-
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
-                new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setItems(R.array.listItem_choices, mDialogListener);
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
-                        //Get item details for photo upload
-                        activeItemPosition = position;
-                        mCurrentItem = mItemList.get(position);
-                        //Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
-                    }
-                }));
-    } //initRecyclerView
+//    private void initRecyclerView(){
+//        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
+//                        mRecyclerView, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
+//                            @Override
+//                            public boolean canDismiss(int position) {
+//                                return true;
+//                            }
+//                            @Override
+//                            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
+//                                for (int position : reverseSortedPositions) {
+//                                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
+//                                    mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
+//                                    //Get item details for UNDO
+//                                    lastDismissedItemPosition = position;
+//                                    mLastDismissedItem = mItemList.get(position);
+//
+//                                    //What happens when item is swiped offscreen
+//                                    mItemList.remove(mLastDismissedItem);
+//                                    //TODO: should this be after snackbar removal?
+//                                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
+//
+//                                    // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
+//                                    mFeedAdapter.notifyDataSetChanged();
+//
+//                                    //Snackbar message
+//                                    showItemDeletionSnackbar();
+//                                }
+//                            }
+//                        });
+//        mRecyclerView.setOnTouchListener(touchListener);
+//        // Setting this scroll listener is required to ensure that during ListView scrolling,
+//        // we don't look for swipes.
+//        LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
+//        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
+//
+//        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
+//                new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                        builder.setItems(R.array.listItem_choices, mDialogListener);
+//                        AlertDialog dialog = builder.create();
+//                        dialog.show();
+//                        //Get item details for photo upload
+//                        activeItemPosition = position;
+//                        mCurrentItem = mItemList.get(position);
+//                        //Log.v(TAG + "CURRENT ITEM", mCurrentItem.toString());
+//                    }
+//                }));
+//    } //initRecyclerView
 
 
     //----------------------------------------------
@@ -514,6 +517,12 @@ public class MainActivity extends ActionBarActivity {
                                 tsa.setDuration(300);
                                 mFab.startAnimation(tsa);
                             }
+
+                            @Override
+                            public void onShowByReplace(Snackbar snackbar) {
+
+                            }
+
                             @Override
                             public void onShown(Snackbar snackbar) {
                             }
@@ -529,6 +538,12 @@ public class MainActivity extends ActionBarActivity {
                                 tsa2.setDuration(300);
                                 mFab.startAnimation(tsa2);
                             }
+
+                            @Override
+                            public void onDismissByReplace(Snackbar snackbar) {
+
+                            }
+
                             @Override
                             public void onDismissed(Snackbar snackbar) {
                                 //TODO: QA
@@ -543,7 +558,7 @@ public class MainActivity extends ActionBarActivity {
                             }
                         }) //event listener
                 , MainActivity.this);
-    } //showSnackbar
+    } //showItemDeletionSnackbar
 
 
     //----------------------------------------------

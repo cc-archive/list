@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.creativecommons.thelist.utils.CheckableRelativeLayout
+<org.creativecommons.thelist.layouts.CheckableRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minHeight="180dp"
@@ -9,24 +10,32 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/checkable_layout">
-    <CheckedTextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAppearance="@style/text_body2"
-        android:textColor="@color/primary_text_default_material_dark"
-        android:maxLines="2"
-        android:text="hello"
-        android:id="@+id/category"
+        android:orientation="vertical"
         android:gravity="center"
-        android:layout_centerInParent="true"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:id="@+id/checkmark"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_check_black_36dp"
-        android:contentDescription="checkmark" />
-</org.creativecommons.thelist.utils.CheckableRelativeLayout>
+        android:layout_centerInParent="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/category_checkmark"
+            android:visibility="invisible"
+            android:alpha="0.5"
+            android:src="@drawable/ic_check_circle_white_24dp"
+            android:contentDescription="checkmark" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:textAppearance="@style/text_body2"
+            android:textColor="@color/primary_text_default_material_dark"
+            android:maxLines="2"
+            android:text="hello"
+            android:id="@+id/category_title"/>
+
+    </LinearLayout>
+
+
+</org.creativecommons.thelist.layouts.CheckableRelativeLayout>

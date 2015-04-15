@@ -22,7 +22,6 @@ package org.creativecommons.thelist.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 
 import java.util.List;
 
@@ -70,10 +70,9 @@ public class CategoryListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_category, parent, false);
             holder = new ViewHolder();
-            holder.checkableLayout = (org.creativecommons.thelist.utils.CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
-            holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category);
-            holder.checkmarkView = (ImageView)convertView.findViewById(R.id.checkmark);
-
+            holder.checkableLayout = (CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
+            holder.checkmarkView = (ImageView)convertView.findViewById(R.id.category_checkmark);
+            holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category_title);
 
             convertView.setTag(holder);
         } else {
@@ -84,8 +83,8 @@ public class CategoryListAdapter extends BaseAdapter {
         CategoryListItem c = categoryListItems.get(position);
         //Item Name
         holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
-        //Item Background Color
 
+        //Item Background Color
         if(c.getCategoryColour() != null){
             holder.checkableLayout.setBackgroundColor((Color.parseColor(c.getCategoryColour())));
         } else {
@@ -94,20 +93,21 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Set checkmarkView visibility
         if(c.getCategoryChecked()){
-            Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE BEING SET TO VISIBLE");
             holder.checkmarkView.setVisibility(View.VISIBLE);
-            //holder.checkableLayout.setChecked(true);
+            holder.checkableLayout.getBackground().setAlpha(100);
+            holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.secondary_text_material_dark));
+
         } else {
-            Log.v("CATEGORY LIST ADAPTER", "CHECK MARK VIEWS ARE INVISIBLE");
             holder.checkmarkView.setVisibility(View.GONE);
-            //holder.checkableLayout.setChecked(false);
+            holder.checkableLayout.getBackground().setAlpha(255);
+            holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.primary_text_default_material_dark));
         }
 
         return convertView;
     }
 
     private static class ViewHolder {
-        org.creativecommons.thelist.utils.CheckableRelativeLayout checkableLayout;
+        CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
         ImageView checkmarkView;
     }

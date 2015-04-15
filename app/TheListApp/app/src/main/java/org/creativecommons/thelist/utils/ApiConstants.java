@@ -53,6 +53,11 @@ public final class ApiConstants {
     public static final String ITEM_COMPLETED = "complete";
     //public static final String EXAMPLE_URL = "exampleUrl";
 
+    //Add List Item
+    public static final String MAKER_ITEM_NAME = "itemName";
+    public static final String MAKER_ITEM_CATEGORY = "categoryid";
+    public static final String MAKER_ITEM_DESCRIPTION = "description";
+
     //List Item Request
     public static final String POST_ITEM_ID = "listid";
     public static final String POST_USER_ID = "userid";

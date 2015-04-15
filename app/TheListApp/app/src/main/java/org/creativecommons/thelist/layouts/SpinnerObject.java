@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.layouts;
 
 public class SpinnerObject {
     public String name;

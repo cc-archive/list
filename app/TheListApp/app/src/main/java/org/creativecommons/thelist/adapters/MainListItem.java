@@ -19,6 +19,7 @@
 
 package org.creativecommons.thelist.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -28,11 +29,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +41,8 @@ public class MainListItem {
     private String itemName, makerName, itemID, categoryID;
     private boolean error, progress;
     private Context mContext;
-    private MainActivity mainActivity;
+    private Activity mActivity;
+    private MyListFragment myListFragment;
     private MessageHelper mMessageHelper;
     public boolean completed = false;
 
@@ -113,12 +114,17 @@ public class MainListItem {
         mMessageHelper = mh;
     }
 
-    public void setMainActivity(MainActivity m) {
-        mainActivity = m;
+    public void setMyListFragment(MyListFragment m){
+        myListFragment = m;
+    }
+
+    public void setMainListActivity(Activity a) {
+        mActivity = a;
+        mContext = a;
     }
 
     public void createNewUserListItem() {
-        RequestQueue queue = Volley.newRequestQueue(mainActivity);
+        RequestQueue queue = Volley.newRequestQueue(mContext);
         String itemRequesturl = ApiConstants.GET_SINGLE_ITEM + String.valueOf(itemID);
 
         JsonArrayRequest newUserListRequest = new JsonArrayRequest(itemRequesturl,
@@ -134,7 +140,7 @@ public class MainListItem {
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
                         Log.v("ITEM ADDED NAME: ", getItemName());
                         completed = true;
-                        mainActivity.CheckComplete();
+                        myListFragment.CheckComplete();
                     } catch (JSONException e) {
                         Log.v("MainListItem", e.getMessage());
                     }

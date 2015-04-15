@@ -4,7 +4,7 @@
     <!-- Activity Titles -->
     <string name="app_name">The List powered by Creative Commons</string>
     <string name="title_activity_main">Your List</string>
-    <string name="title_activity_category_list">Pick Categories</string>
+    <string name="title_activity_category_list">My Categories</string>
     <string name="title_activity_random">Hit Me</string>
     <string name="title_activity_login">Log In</string>
     <string name="title_activity_explainer">What’s up with the List?</string>
@@ -14,6 +14,19 @@
     <string name="title_activity_image">Gallery</string>
     <string name="title_activity_about">About The App</string>
     <string name="title_activity_add_item">Create an Item</string>
+    <string name="title_activity_drawer">The List</string>
+
+
+    <!-- Drawer Navigation Labels -->
+    <string-array name="drawer_navigation_labels">
+        <item>My List</item>
+        <item>My Photos</item>
+        <item>My Categories</item>
+        <item>Request an Item</item>
+
+        <item>About The App</item>
+        <item>Give Feedback</item>
+    </string-array>
 
     <!-- Menu Button Labels -->
     <string name="log_out_menu_label">Log Out</string>
@@ -48,11 +61,13 @@
     <string-array name="photo_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
+        <!--<item>Add a Link</item>-->
     </string-array>
 
     <string-array name="photo_choices_remove">
         <item>Take Picture</item>
         <item>Choose Picture</item>
+        <!--<item>Add a Link</item>-->
         <item>Remove</item>
     </string-array>
 
@@ -131,6 +146,7 @@ Design Modo\n
 Stephen Hutchings\n
 Timonthy Miller\n
 Yannick Lung\n
+Austin Andrews\n
         \n\n
 Some icons have been edited.
 \n\n
@@ -227,9 +243,23 @@ Icons are licensed under <a href="https://creativecommons.org/licenses/by/3.0/">
     <string name="app_version">Version 0.8 (March 31st 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
+
     <string name="single_choice_text">Choose</string>
     <string name="add_item_menu_label">Request an Item</string>
     <string name="dialog_missing_item_name">Looks like you’re missing a name for your item.</string>
     <string name="dialog_missing_item_cat">Don’t forget to select a category that best suits your item.</string>
     <string name="dialog_item_upload_fail">Looks like was a problem adding your item. Can you try again?</string>
+
+    <!--Navigation Drawer-->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="R.string.drawer_callback_exception_message">must implement NavigationDrawerFragment.NavigationDrawerListener</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
+    <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
+    <string name="drawer_account_name_not_found">Account name not found</string>
+    <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
+
 </resources>

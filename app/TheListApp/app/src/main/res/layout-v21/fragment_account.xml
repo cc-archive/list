@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/fragment_layout_main"
+    android:paddingTop="36dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <Button
+        style="@style/flat_button_dark"
+        android:text="@string/cancel_button_label"
+        android:id="@+id/cancelButton"
+        android:layout_weight="0"
+        android:layout_gravity="right" />
+
+    <RelativeLayout
+        android:id="@+id/section_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/terms_logo"
+            android:id="@+id/login_icon"
+            android:contentDescription="@string/cc_logo_contentDescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:id="@+id/section_text"
+        android:paddingTop="20dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:text="@string/login_fragment_title"
+            android:id="@+id/account_title"
+            style="@style/fragment_title" />
+        <TextView
+            style="@style/fragment_text"
+            android:text="@string/login_fragment_text"
+            android:id="@+id/random_item_text"
+            android:layout_below="@+id/account_title"
+            android:textColor="@color/primary_text_default_material_dark" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_fields"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="10dp">
+
+            <!-- Dummy view -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+
+            <EditText android:id="@+id/accountName"
+                style="@style/input_fields"
+                android:hint="@string/email_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:textCursorDrawable="@null"/>
+
+            <EditText android:id="@+id/accountPassword"
+                style="@style/input_fields"
+                android:ems="10"
+                android:layout_below="@+id/accountName"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                android:hint="@string/password_hint"
+                android:layout_marginBottom="10dp"
+                android:textCursorDrawable="@null"/>
+
+            <Button android:id="@+id/loginButton"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textColor="@color/app_white"
+                android:text="@string/login_button_label"
+                android:layout_below="@+id/accountPassword"/>
+
+            <!--TODO: fix ime options when sign up is enabled-->
+            <Button android:id="@+id/signUpButton"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/signUpButton_label"
+                android:padding="10dp"/>
+
+            <TextView
+                style="@style/clickable_text"
+                android:padding="5dp"
+                android:layout_marginBottom="0dp"
+                android:textColorLink="@color/secondary_text_material_dark"
+                android:textColor="@color/secondary_text_material_dark"
+                android:text="@string/new_account_text"
+                android:id="@+id/signUp"
+                android:layout_below="@+id/loginButton" />
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>
