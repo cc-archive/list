@@ -2,7 +2,7 @@
 
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons Corporation
 
    based on:
 
@@ -210,6 +210,40 @@ with('/api/users', function () {
 
 });
 
+with('/api/suggestions', function () {
+
+    respond('POST', '/[:userid]', function ($request, $response) {
+
+        $userid = $request->userid;
+        $categoryid = $request->param('categoryid');
+        $description = $request->param('description');
+        $title = $request->param('title');
+        
+        $filedata = $request->param('filedata');
+
+        if ($filedata) {
+            $filedata = base64_decode($filedata);
+        }
+
+        if (strlen($filedata) > 50) {
+
+        $tmp = "" . tempnam("../list-uploads/", "suggest-me-" . $userid . "-");
+
+        $image = fopen($tmp, "w") or die("Unable to open file!");
+        fwrite($image, $filedata);
+        fclose($image);
+        
+        $filename = $tmp;
+
+        }
+
+        $list = new UserList;       
+        
+        $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description, $title);
+        
+    });
+
+});
 
 with('/api/makers', function () {
 
@@ -343,42 +377,6 @@ with('/api/photos', function() {
 
 });
 
-with('/api/suggestions', function () {
-
-    respond('POST', '/[:userid]/', function ($request, $response) {
-
-        $userid = $request->userid;
-        $categoryid = $request->categoryid;
-        $description = $request->description;
-        
-        $filedata = $request->param('filedata');
-
-        $filedata = base64_decode($filedata);
-
-        if (strlen($filedata) > 50) {
-
-        $tmp = "" . tempnam("../list-uploads/", "suggest-me-" . $userid . "-");
-
-        $image = fopen($tmp, "w") or die("Unable to open file!");
-        fwrite($image, $filedata);
-        fclose($image);
-        
-        $list = new UserList;       
-        $filename = $tmp;
-                    
-        $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description);
-
-        }
-
-        else {
-
-            http_response_code(400);
-        }
-        
-    });
-
-});
-
 with('/api', function () {
 
     respond('GET', '/', function ($request, $response) {
@@ -389,7 +387,6 @@ with('/api', function () {
     });
 
 });
-
 
 
 dispatch();

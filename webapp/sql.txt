@@ -46,9 +46,10 @@ primary KEY (id)
 CREATE TABLE UserSuggestions (
 id int(11) NOT NULL auto_increment,
 userid int(11) NOT NULL,
-filename varchar(255) NOT NULL,
+filename varchar(255),
 category int(11),
 description varchar(255),
+title varchar(255),
 primary KEY (id)
 );
 
@@ -108,37 +109,37 @@ INSERT into Categories (approved, makerid, title, color) values (1, 1, "Objects"
 
 INSERT into List (category, title) values (1, "Matt Lee");
 
-INSERT into List (category, title) values (2, "A park");
-INSERT into List (category, title) values (2, "A playground");
-INSERT into List (category, title) values (2, "An office building");
-INSERT into List (category, title) values (2, "A food truck");
-INSERT into List (category, title) values (2, "A bus stop");
+INSERT into List (category, title) values (2, "a park");
+INSERT into List (category, title) values (2, "a playground");
+INSERT into List (category, title) values (2, "an office building");
+INSERT into List (category, title) values (2, "a food truck");
+INSERT into List (category, title) values (2, "a bus stop");
 
-INSERT into List (category, title) values (3, "A pair of shorts");
-INSERT into List (category, title) values (3, "A funny t-shirt");
-INSERT into List (category, title) values (3, "A hat");
-INSERT into List (category, title) values (3, "A winter coat");
-INSERT into List (category, title) values (3, "An umbrella");
-INSERT into List (category, title) values (3, "A cool pair of shoes");
+INSERT into List (category, title) values (3, "a pair of shorts");
+INSERT into List (category, title) values (3, "a funny t-shirt");
+INSERT into List (category, title) values (3, "a hat");
+INSERT into List (category, title) values (3, "a winter coat");
+INSERT into List (category, title) values (3, "an umbrella");
+INSERT into List (category, title) values (3, "a cool pair of shoes");
 
-INSERT into List (category, title) values (4, "A tree");
-INSERT into List (category, title) values (4, "A dog");
-INSERT into List (category, title) values (4, "A cat");
-INSERT into List (category, title) values (4, "Flowers");
-INSERT into List (category, title) values (4, "A body of water");
+INSERT into List (category, title) values (4, "a tree");
+INSERT into List (category, title) values (4, "a dog");
+INSERT into List (category, title) values (4, "a cat");
+INSERT into List (category, title) values (4, "flowers");
+INSERT into List (category, title) values (4, "a body of water");
 
-INSERT into List (category, title) values (5, "Coffee");
-INSERT into List (category, title) values (5, "Pizza");
-INSERT into List (category, title) values (5, "Beer");
-INSERT into List (category, title) values (5, "Wine");
-INSERT into List (category, title) values (5, "A sandwich");
-INSERT into List (category, title) values (5, "A salad");
+INSERT into List (category, title) values (5, "coffee");
+INSERT into List (category, title) values (5, "pizza");
+INSERT into List (category, title) values (5, "beer");
+INSERT into List (category, title) values (5, "wine");
+INSERT into List (category, title) values (5, "a sandwich");
+INSERT into List (category, title) values (5, "a salad");
 
-INSERT into List (category, title) values (6, "A bicycle");
-INSERT into List (category, title) values (6, "A lamp");
-INSERT into List (category, title) values (6, "Science equipment");
-INSERT into List (category, title) values (6, "Tools");
-INSERT into List (category, title) values (6, "Kitchen utensils");
+INSERT into List (category, title) values (6, "a bicycle");
+INSERT into List (category, title) values (6, "a lamp");
+INSERT into List (category, title) values (6, "science equipment");
+INSERT into List (category, title) values (6, "tools");
+INSERT into List (category, title) values (6, "kitchen utensils");
 
 UPDATE List SET makerid = 1;
 
