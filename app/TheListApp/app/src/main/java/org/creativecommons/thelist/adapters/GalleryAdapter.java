@@ -86,7 +86,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                 break;
             case DEFAULT_VIEW:
                 Picasso.with(mContext)
-                        .load(g.getUrl() + "/200")
+                        .load(g.getUrl() + "/300")
                         .placeholder(R.drawable.progress_view) //TODO: switch drawable
                         .error(R.drawable.progress_view)
                         .into(holder.photoView);

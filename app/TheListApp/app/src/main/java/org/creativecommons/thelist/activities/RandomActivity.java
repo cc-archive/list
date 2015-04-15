@@ -233,7 +233,7 @@ public class RandomActivity extends Activity {
                 } else {
                     mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
                     mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
-                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME).toLowerCase();
+                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
                     mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
                     mCategoryID = mListItemData.getString(ApiConstants.ITEM_CATEGORY);
 

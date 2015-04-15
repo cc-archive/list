@@ -174,6 +174,7 @@ public class GalleryFragment extends Fragment {
                         try {
                             JSONObject singlePhotoItem = response.getJSONObject(i);
                             String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
+                            Log.v(TAG, photoUrl);
                             galleryItem.setUrl(photoUrl);
 
                             if(photoUrl == null){

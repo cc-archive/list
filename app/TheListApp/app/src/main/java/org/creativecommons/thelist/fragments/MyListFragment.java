@@ -792,7 +792,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                     mFab.show();
                                 }
                             });
-                        }
+                        } //5.0 Snackbar
 
                         mItemToBeUploaded = null;
 
@@ -821,9 +821,8 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                             performUpload();
                                         }
                                     });
-                        }
-
-                    }
+                        } //5.0 snackbar
+                    } //onFail
                 });
     } //performUpload
 
