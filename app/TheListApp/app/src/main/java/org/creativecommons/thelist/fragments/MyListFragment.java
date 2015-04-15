@@ -290,6 +290,8 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     //----------------------------------------------
 
     private void displayUserItems() {
+
+
         JSONArray itemIds;
 
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
@@ -306,7 +308,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
                                 MainListItem listItem = new MainListItem();
                                 listItem.setItemName
-                                        (singleListItem.getString(ApiConstants.ITEM_NAME));
+                                        (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID
@@ -425,8 +427,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                     //What happens when item is swiped offscreen
                     mItemList.remove(mLastDismissedItem);
-                    //TODO: should this be after snackbar removal?
-                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID());
+                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
 
                     // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
                     mFeedAdapter.notifyDataSetChanged();
@@ -465,7 +466,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     public void showItemDeletionSnackbar(){
         SnackbarManager.show(
                 //also includes duration: SHORT, LONG, INDEFINITE
-                Snackbar.with(mContext)
+                Snackbar.with(mContext.getApplicationContext())
                         .text("Item deleted") //text to display
                         .actionColor(getResources().getColor(R.color.colorSecondary))
                         .actionLabel("undo".toUpperCase())
@@ -543,7 +544,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     public void showPhotoUploadSnackbar(String text, String actiontext, ActionClickListener listener){
         SnackbarManager.show(
                 //also includes duration: SHORT, LONG, INDEFINITE
-                Snackbar.with(mContext)
+                Snackbar.with(mContext.getApplicationContext())
                         .text(text) //text to display
                         .actionColor(getResources().getColor(R.color.colorSecondary))
                         .actionLabel(actiontext.toUpperCase())
@@ -600,6 +601,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         }) //event listener
                 , getActivity());
     } //showPhotoUploadSnackbar
+
 
     //----------------------------------------------
     //TAKING PHOTO/PHOTO SELECTION
@@ -767,7 +769,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     mUploadProgressBar.setVisibility(View.GONE);
                 }
             }
-        }, 2000);
+        }, 3000);
 
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
@@ -782,14 +784,14 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                         //Show snackbar confirmation
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                            mFab.setEnabled(false);
                             mItemToBeUploaded = null;
 
                             showPhotoUploadSnackbar("Photo Uploaded",
                                     "dismiss", new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
-                                    snackbar.dismiss();
+                                    mFab.setEnabled(false);
+                                    //snackbar.dismiss();
 
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
@@ -834,5 +836,12 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     } //onFail
                 });
     } //performUpload
+
+
+    //Helper Methods
+
+    private String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
 
 } //MyListFragment

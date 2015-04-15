@@ -223,7 +223,7 @@ public final class RequestMethods {
         });
     } //getMakerItems
 
-    public void addMakerItem(final String itemName, final String category, final String description,
+    public void addMakerItem(final String title, final String category, final String description,
                             final Uri photoUri, final RequestCallback callback){
 
         if(!(isNetworkAvailable())){
@@ -236,10 +236,8 @@ public final class RequestMethods {
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
 
-                final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
-
                 //TODO: add legit url
-                String url = ApiConstants.ADD_MAKER_ITEM + mSharedPref.getUserId() + "/";
+                String url = ApiConstants.ADD_MAKER_ITEM + '/' + mCurrentUser.getUserID();
 
                 //Upload Request
                 StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
@@ -259,11 +257,20 @@ public final class RequestMethods {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<String, String>();
-                        params.put(ApiConstants.MAKER_ITEM_NAME, itemName);
-                        params.put(ApiConstants.MAKER_ITEM_NAME, category);
-                        params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
-                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+
+                        if(description != null) {
+                            params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
+                        }
+
+                        if(photoUri != null){
+                            String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
+                            params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                        }
+
+                        params.put(ApiConstants.MAKER_ITEM_NAME, title);
+                        params.put(ApiConstants.MAKER_ITEM_CATEGORY, category);
                         params.put(ApiConstants.USER_TOKEN, authtoken);
+
                         return params;
                     }
                 };

@@ -45,11 +45,23 @@
                     android:background="@null"
                     android:scaleType="centerCrop"
                     android:adjustViewBounds="true"
-                    android:contentDescription="Add an example image (optional)"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+                    android:contentDescription="Add an example image (optional)"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout android:id="@+id/makerItemProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible">
+                <com.gc.materialdesign.views.ProgressBarIndeterminate
+                    android:id="@+id/progressBarIndeterminate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1E88E5"/>
             </RelativeLayout>
 
             <RelativeLayout android:id="@+id/content_container"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_weight="4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,6 +109,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
                     android:hint="Description (optional)"
+                    app:met_singleLineEllipsis="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     app:met_baseColor="@color/secondary_text_material_light"
                     app:met_floatingLabel="normal"
@@ -105,11 +118,17 @@
                     app:met_primaryColor="@color/colorSecondary" />
             </RelativeLayout>
 
-            <include layout="@layout/sticky_footer"
-                android:layout_weight="1"
-                android:layout_height="?actionBarSize"
-                android:layout_width="fill_parent"
-                android:layout_gravity="bottom"/>
+            <RelativeLayout android:id="@+id/add_item_sticky_footer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <include layout="@layout/sticky_footer"
+                    android:layout_height="?actionBarSize"
+                    android:layout_width="fill_parent"
+                    android:layout_gravity="bottom"/>
+            </RelativeLayout>
+
+
 
         </LinearLayout>
     </ScrollView>

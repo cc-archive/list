@@ -54,7 +54,7 @@ public final class ApiConstants {
     //public static final String EXAMPLE_URL = "exampleUrl";
 
     //Add List Item
-    public static final String MAKER_ITEM_NAME = "itemName";
+    public static final String MAKER_ITEM_NAME = "title";
     public static final String MAKER_ITEM_CATEGORY = "categoryid";
     public static final String MAKER_ITEM_DESCRIPTION = "description";
 
@@ -113,7 +113,7 @@ public final class ApiConstants {
 
     //MAKERLIST
     public static final String GET_MAKER_LIST =  URL + "//"; //TODO: insert proper url
-    public static final String ADD_MAKER_ITEM = URL + "//"; //TODO: insert proper url
+    public static final String ADD_MAKER_ITEM = URL + "/suggestions";
 
     //USERCATEGORIES
     //(+ UserID)

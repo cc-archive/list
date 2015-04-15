@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -53,19 +54,22 @@ public class AddItemActivity extends ActionBarActivity {
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
     protected Uri mMediaUri;
-    protected Uri mLinkUri;
+    //protected Uri mLinkUri;
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
     String catId;
 
     //UI Elements
+    private RelativeLayout mMakerItemProgressBar;
     private ImageButton mAddImage;
     private EditText mItemNameField;
     private EditText mDescriptionField;
     private String mDescription;
     private Spinner mCategorySpinner;
     private RelativeLayout mStickyFooter;
+    private RelativeLayout mStickyFooterContainer;
+    private Button mDoneButton;
 
     private Boolean mPhotoAdded;
 
@@ -86,12 +90,15 @@ public class AddItemActivity extends ActionBarActivity {
         mRequestMethods = new RequestMethods(mContext);
 
         //UI Elements
+        mMakerItemProgressBar = (RelativeLayout) findViewById(R.id.makerItemProgressBar);
         mItemNameField = (EditText) findViewById(R.id.add_item_title);
         mDescriptionField = (EditText) findViewById(R.id.add_item_description);
         mDescription = null;
         mCategorySpinner = (Spinner) findViewById(R.id.category_spinner);
         mAddImage = (ImageButton) findViewById(R.id.add_item_example_image);
         mStickyFooter = (RelativeLayout)findViewById(R.id.add_item_sticky_footer);
+        mStickyFooterContainer = (RelativeLayout) findViewById(R.id.sticky_footer_container);
+        mDoneButton = (Button) findViewById(R.id.add_item_button);
 
         ArrayList<EditText> editList = new ArrayList<>();
         editList.add(mItemNameField);
@@ -152,6 +159,32 @@ public class AddItemActivity extends ActionBarActivity {
 
             }
         });
+
+        mDoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final String itemName = mItemNameField.getText().toString().trim();
+                final String itemDescription = mDescriptionField.getText().toString().trim();
+
+                if(itemDescription.length() > 1){
+                    mDescription = itemDescription;
+                }
+
+                //Has item name been added?
+                if(itemName.isEmpty()){
+                    mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+                            mContext.getString(R.string.dialog_missing_item_name));
+                    //Has category been selected?
+                } else if(catId.equals("0")){
+                    mMessageHelper.showDialog(mContext, mContext.getString(R.string.oops_label),
+                            mContext.getString(R.string.dialog_missing_item_cat));
+                } else {
+                    startItemUpload(itemName, mDescription);
+                }
+            }
+        });
+
     } //onCreate
 
     @Override
@@ -306,23 +339,26 @@ public class AddItemActivity extends ActionBarActivity {
         } //switch
     } //onActivityResult
 
-    public void startItemUpload(final String itemName, final String description, final Uri linkuri){
-        mRequestMethods.addMakerItem(itemName, catId, description, mMediaUri,
+    public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
+
+        mMakerItemProgressBar.setVisibility(View.VISIBLE);
+        mStickyFooterContainer.setVisibility(View.INVISIBLE);
+
+        mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
                     public void onSuccess() {
-                        //TODO: if request succeeds
-                        mMessageHelper.notifyUploadSuccess(itemName);
+                        mMessageHelper.notifyUploadSuccess(title);
+                        mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+
+                        finish();
                     }
 
                     @Override
                     public void onFail() {
-                        //TODO: if request fails
-                        mMessageHelper.notifyUploadSuccess(itemName);
+                        mMessageHelper.notifyUploadFail(title);
+                        mMakerItemProgressBar.setVisibility(View.INVISIBLE);
 
-//                        mMessageHelper.showDialog(mContext,
-//                                mContext.getString(R.string.oops_label),
-//                                mContext.getString(R.string.dialog_item_upload_fail));
                     }
                 });
 

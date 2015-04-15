@@ -497,6 +497,7 @@ public class ListUser implements ServerAuthenticate {
     } //addItemToUserList
 
     //REMOVE SINGLE item from user list
+    //TODO: move to RequestMethods + add callbacks
     public void removeItemFromUserList(final String itemID){
 
         if(isTempUser()){
@@ -529,10 +530,9 @@ public class ListUser implements ServerAuthenticate {
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            //TODO: Add “not successful“ toast
                             Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
                             mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
-                                    mContext.getString(R.string.error_message));
+                                    "There was a problem deleting your item.");
                         }
                     }) {
                         @Override
