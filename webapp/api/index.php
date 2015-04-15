@@ -350,6 +350,7 @@ with('/api/suggestions', function () {
         $userid = $request->userid;
         $categoryid = $request->categoryid;
         $description = $request->description;
+        $title = $request->title;
         
         $filedata = $request->param('filedata');
 
@@ -366,7 +367,7 @@ with('/api/suggestions', function () {
         $list = new UserList;       
         $filename = $tmp;
                     
-        $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description);
+        $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description, $title);
 
         }
 

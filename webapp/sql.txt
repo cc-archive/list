@@ -49,6 +49,7 @@ userid int(11) NOT NULL,
 filename varchar(255) NOT NULL,
 category int(11),
 description varchar(255),
+title varchar(255),
 primary KEY (id)
 );
 
