@@ -212,7 +212,7 @@ with('/api/users', function () {
 
 with('/api/suggestions', function () {
 
-    respond('POST', '/[:userid]/', function ($request, $response) {
+    respond('POST', '/[:userid]', function ($request, $response) {
 
         $userid = $request->userid;
         $categoryid = $request->param('categoryid');
