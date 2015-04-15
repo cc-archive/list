@@ -35,7 +35,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.melnykov.fab.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
@@ -548,7 +547,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         .text(text) //text to display
                         .actionColor(getResources().getColor(R.color.colorSecondary))
                         .actionLabel(actiontext.toUpperCase())
-                        .type(SnackbarType.MULTI_LINE)
                         .actionListener(listener)
                         //action button’s listener
                         .eventListener(new EventListener() {
@@ -784,14 +782,25 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                         //Show snackbar confirmation
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                            showPhotoUploadSnackbar(mItemToBeUploaded.getItemName() + " uploaded",
+                            mFab.setEnabled(false);
+                            mItemToBeUploaded = null;
+
+                            showPhotoUploadSnackbar("Photo Uploaded",
                                     "dismiss", new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
                                     snackbar.dismiss();
-                                    mFab.show();
+
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mFab.show();
+                                            mFab.setEnabled(true);
+                                        }
+                                    }, 500);
                                 }
                             });
+
                         } //5.0 Snackbar
 
                         mItemToBeUploaded = null;

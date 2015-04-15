@@ -4,30 +4,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/feedSwipeRefresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout android:id="@+id/photoProgressBar"
+            android:layout_marginTop="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <RelativeLayout android:id="@+id/photoProgressBar"
-                android:layout_width="match_parent"
+            android:layout_above="@id/feedSwipeRefresh"
+            android:visibility="gone">
+            <com.gc.materialdesign.views.ProgressBarIndeterminate
+                android:id="@+id/progressBarIndeterminate"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible">
-                <com.gc.materialdesign.views.ProgressBarIndeterminate
-                    android:id="@+id/progressBarIndeterminate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#1E88E5"/>
-            </RelativeLayout>
+                android:background="#1E88E5"/>
+        </RelativeLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/feedSwipeRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <android.support.v7.widget.RecyclerView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/feedRecyclerView"/>
-        </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
