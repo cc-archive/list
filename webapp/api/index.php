@@ -233,12 +233,11 @@ with('/api/suggestions', function () {
         fwrite($image, $filedata);
         fclose($image);
         
-        $list = new UserList;       
         $filename = $tmp;
 
         }
 
-        error_log($userid);
+        $list = new UserList;       
         
         $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description, $title);
         
