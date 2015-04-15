@@ -366,17 +366,10 @@ with('/api/suggestions', function () {
         
         $list = new UserList;       
         $filename = $tmp;
-                    
+
+        }
+        
         $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description, $title);
-
-        echo "hello";
-
-        }
-
-        else {
-
-            http_response_code(400);
-        }
         
     });
 
@@ -392,7 +385,6 @@ with('/api', function () {
     });
 
 });
-
 
 
 dispatch();
