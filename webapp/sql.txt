@@ -2,6 +2,7 @@ drop table if exists Users;
 drop table if exists UserList;
 drop table if exists Photos;
 drop table if exists UserSessions;
+drop table if exists UserSuggestions;
 drop table if exists HowToPopularity;
 
 CREATE TABLE UserSessions (
@@ -39,6 +40,15 @@ userid int(11) NOT NULL,
 filename varchar(255) NOT NULL,
 url varchar(255),
 listitem int(11) NOT NULL,
+primary KEY (id)
+);
+
+CREATE TABLE UserSuggestions (
+id int(11) NOT NULL auto_increment,
+userid int(11) NOT NULL,
+filename varchar(255) NOT NULL,
+category int(11),
+description varchar(255),
 primary KEY (id)
 );
 
@@ -87,175 +97,49 @@ alter table Makers add unique (name);
 alter table Makers add unique (uri);
 alter table List add unique (uri);
 
-insert into Makers (name, uri) values ('Matt Lee Foundation', 'http://mattl.us');
-insert into Makers (name, uri) values ('Elliotpedia', 'http://elliot.biz');
-insert into Makers (name, uri) values (‘The Fashion Trust', 'pulponline.com');
-insert into Makers (name, uri) values ("The Domestic Zoo", 'zoo.biz');
-insert into Makers (name, uri) values ("Planet Gastronomy",'gastro.net');
-insert into Makers (name, uri) values ("The Objects Museum",'obj.biz');
+insert into Makers (name, uri) values ('Creative Commons', 'http://creativecommons.org');
 
 INSERT into Categories (approved, makerid, title, color) values (1, 1, "People", "ff9800");
-INSERT into Categories (approved, makerid, title, color) values (1, 2, "Places & Cities", “f44336");
-INSERT into Categories (approved, makerid, title, color) values (1, 3, "Clothing & Fashion", "3f51b5");
-INSERT into Categories (approved, makerid, title, color) values (1, 4, "Nature & Animals", "4caf50");
-INSERT into Categories (approved, makerid, title, color) values (1, 5, "Food", "2196f3");
-INSERT into Categories (approved, makerid, title, color) values (1, 6, "Objects", “e91e63");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Places & Cities", "f44336");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Clothing & Fashion", "3f51b5");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Nature & Animals", "4caf50");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Food & Drink", "2196f3");
+INSERT into Categories (approved, makerid, title, color) values (1, 1, "Objects", "e91e63");
 
-INSERT into List (makerid, title) values (1, "Sitting on a bench");
-INSERT into List (makerid, title) values (1, "Sipping coffee");
-INSERT into List (makerid, title) values (1, "Under an umbrella");
-INSERT into List (makerid, title) values (1, "A hardcore runner");
-INSERT into List (makerid, title) values (1, "A gaggle of cyclists");
-INSERT into List (makerid, title) values (1, "Laughing alone with salad");
-INSERT into List (makerid, title) values (1, "The lonely commuter");
-INSERT into List (makerid, title) values (1, "Picnicking");
-INSERT into List (makerid, title) values (1, "Waiting in line");
-INSERT into List (makerid, title) values (1, "Love");
-INSERT into List (makerid, title) values (1, "Hanging out");
-INSERT into List (makerid, title) values (1, "Family vacation");
-INSERT into List (makerid, title) values (1, "Going to a concert");
-INSERT into List (makerid, title) values (1, "Business handshake");
-INSERT into List (makerid, title) values (1, "Business person with megaphone");
-INSERT into List (makerid, title) values (1, "Smoke break");
-INSERT into List (makerid, title) values (1, "Huddling over hot chocolate");
-INSERT into List (makerid, title) values (1, "Walking with purpose");
-INSERT into List (makerid, title) values (1, "Studying at the library");
-INSERT into List (makerid, title) values (1, "Perusing");
+INSERT into List (category, title) values (1, "Matt Lee");
 
-INSERT into List (makerid, title) values (2, "A Skyscraper");
-INSERT into List (makerid, title) values (2, "Downtown");
-INSERT into List (makerid, title) values (2, "A house full of character");
-INSERT into List (makerid, title) values (2, "A storefront");
-INSERT into List (makerid, title) values (2, "Community centre”);
-INSERT into List (makerid, title) values (2, "A trendy cafe");
-INSERT into List (makerid, title) values (2, "The intimidating gym");
-INSERT into List (makerid, title) values (2, "An elevator");
-INSERT into List (makerid, title) values (2, "A construction site");
-INSERT into List (makerid, title) values (2, "An abandoned building");
-INSERT into List (makerid, title) values (2, "Graffiti");
-INSERT into List (makerid, title) values (2, "Your favourite street corner");
-INSERT into List (makerid, title) values (2, "The local pub");
-INSERT into List (makerid, title) values (2, "Graffitied street signs");
-INSERT into List (makerid, title) values (2, "A firetruck");
-INSERT into List (makerid, title) values (2, "Fire hydrants");
-INSERT into List (makerid, title) values (2, "Fancy restaurants from the outside");
-INSERT into List (makerid, title) values (2, "Bakery windows");
-INSERT into List (makerid, title) values (2, "Popular restaurant patios");
-INSERT into List (makerid, title) values (2, "A row of townhouses");
-INSERT into List (makerid, title) values (2, "Beautiful roofs");
-INSERT into List (makerid, title) values (2, "View from a roof");
-INSERT into List (makerid, title) values (2, "The financial district");
-INSERT into List (makerid, title) values (2, "A town’s main street");
-INSERT into List (makerid, title) values (2, "A interesting cul-de-sac");
-INSERT into List (makerid, title) values (2, "A well-cared for garden");
+INSERT into List (category, title) values (2, "A park");
+INSERT into List (category, title) values (2, "A playground");
+INSERT into List (category, title) values (2, "An office building");
+INSERT into List (category, title) values (2, "A food truck");
+INSERT into List (category, title) values (2, "A bus stop");
 
-INSERT into List (makerid, title) values (3, "Oxfords");
-INSERT into List (makerid, title) values (3, "Hipster eyewear");
-INSERT into List (makerid, title) values (3, "Bow tie");
-INSERT into List (makerid, title) values (3, "Three piece suit");
-INSERT into List (makerid, title) values (3, "Terrible Jeggings");
-INSERT into List (makerid, title) values (3, "Colourful socks");
-INSERT into List (makerid, title) values (3, "Cleats");
-INSERT into List (makerid, title) values (3, "A classy evening gown");
-INSERT into List (makerid, title) values (3, "New shoes");
-INSERT into List (makerid, title) values (3, "Comfy old shoes");
-INSERT into List (makerid, title) values (3, "Embarrassing clothing");
-INSERT into List (makerid, title) values (3, "Something your grandmother would wear");
-INSERT into List (makerid, title) values (3, "Tiny sneakers");
-INSERT into List (makerid, title) values (3, "A relatively warm scarf");
-INSERT into List (makerid, title) values (3, "A crowded rack of coats");
-INSERT into List (makerid, title) values (3, "Faux fur anything");
-INSERT into List (makerid, title) values (3, "A military beret");
-INSERT into List (makerid, title) values (3, "A boyish cap");
-INSERT into List (makerid, title) values (3, "A toque");
-INSERT into List (makerid, title) values (3, "A sharp uniform");
-INSERT into List (makerid, title) values (3, "Well-worn fedoras");
-INSERT into List (makerid, title) values (3, "A fascinator");
-INSERT into List (makerid, title) values (3, "Team jerseys");
+INSERT into List (category, title) values (3, "A pair of shorts");
+INSERT into List (category, title) values (3, "A funny t-shirt");
+INSERT into List (category, title) values (3, "A hat");
+INSERT into List (category, title) values (3, "A winter coat");
+INSERT into List (category, title) values (3, "An umbrella");
+INSERT into List (category, title) values (3, "A cool pair of shoes");
 
-INSERT into List (makerid, title) values (4, "A forest");
-INSERT into List (makerid, title) values (4, "A squirrel");
-INSERT into List (makerid, title) values (4, "A bird in flight");
-INSERT into List (makerid, title) values (4, "An empty field");
-INSERT into List (makerid, title) values (4, "Fish that just don’t care");
-INSERT into List (makerid, title) values (4, "Sandy shores");
-INSERT into List (makerid, title) values (4, "A body of water");
-INSERT into List (makerid, title) values (4, "Snowflakes");
-INSERT into List (makerid, title) values (4, "Fresh snow");
-INSERT into List (makerid, title) values (4, "The Weather");
-INSERT into List (makerid, title) values (4, "The effect of winter winds");
-INSERT into List (makerid, title) values (4, "Peering through dense fog");
-INSERT into List (makerid, title) values (4, "Sunshine");
-INSERT into List (makerid, title) values (4, "A sad indoor plant");
-INSERT into List (makerid, title) values (4, "A sweeping sunset");
-INSERT into List (makerid, title) values (4, "Blades of grass");
-INSERT into List (makerid, title) values (4, "A sprouting plant");
-INSERT into List (makerid, title) values (4, "Bugs on leaves");
-INSERT into List (makerid, title) values (4, "a line of ants");
-INSERT into List (makerid, title) values (4, "Pets in cages");
-INSERT into List (makerid, title) values (4, "A rabbit nibbling");
-INSERT into List (makerid, title) values (4, "Beetles");
-INSERT into List (makerid, title) values (4, "Moth wings");
-INSERT into List (makerid, title) values (4, "A lizard tank");
+INSERT into List (category, title) values (4, "A tree");
+INSERT into List (category, title) values (4, "A dog");
+INSERT into List (category, title) values (4, "A cat");
+INSERT into List (category, title) values (4, "Flowers");
+INSERT into List (category, title) values (4, "A body of water");
 
-INSERT into List (makerid, title) values (5, "Croissants");
-INSERT into List (makerid, title) values (5, "Unappetizing lunch platters");
-INSERT into List (makerid, title) values (5, "Wine");
-INSERT into List (makerid, title) values (5, “Beer”);
-INSERT into List (makerid, title) values (5, "A little pizza shop");
-INSERT into List (makerid, title) values (5, "An ordinary breakfast");
-INSERT into List (makerid, title) values (5, "Cake");
-INSERT into List (makerid, title) values (5, "The dinner table");
-INSERT into List (makerid, title) values (5, "Your favourite meal");
-INSERT into List (makerid, title) values (5, "Pancakes");
-INSERT into List (makerid, title) values (5, "Bar food");
-INSERT into List (makerid, title) values (5, "Fancy cheese");
-INSERT into List (makerid, title) values (5, "Appetizers");
-INSERT into List (makerid, title) values (5, "Lasagna");
-INSERT into List (makerid, title) values (5, "A nourishing dish");
-INSERT into List (makerid, title) values (5, "Cooking");
-INSERT into List (makerid, title) values (5, "Soup from a can");
-INSERT into List (makerid, title) values (5, "Anything homemade");
-INSERT into List (makerid, title) values (5, "Hearty chili");
-INSERT into List (makerid, title) values (5, "A mom-packed lunch");
-INSERT into List (makerid, title) values (5, "The finest of bento boxes");
-INSERT into List (makerid, title) values (5, "An assortment of candy");
+INSERT into List (category, title) values (5, "Coffee");
+INSERT into List (category, title) values (5, "Pizza");
+INSERT into List (category, title) values (5, "Beer");
+INSERT into List (category, title) values (5, "Wine");
+INSERT into List (category, title) values (5, "A sandwich");
+INSERT into List (category, title) values (5, "A salad");
 
-INSERT into List (makerid, title) values (6, "Lopsided chairs");
-INSERT into List (makerid, title) values (6, "Various knick-knacks");
-INSERT into List (makerid, title) values (6, "An elegant lamp");
-INSERT into List (makerid, title) values (6, "A horde of trophies");
-INSERT into List (makerid, title) values (6, "Interesting paper weights");
-INSERT into List (makerid, title) values (6, "something your cat plays with");
-INSERT into List (makerid, title) values (6, "Nicely crafted bottles");
-INSERT into List (makerid, title) values (6, "Old-fashioned tins");
-INSERT into List (makerid, title) values (6, "The good silver");
-INSERT into List (makerid, title) values (6, "Empty jars");
-INSERT into List (makerid, title) values (6, "Ribbon");
-INSERT into List (makerid, title) values (6, "A ridiculous coffee table decoration");
-INSERT into List (makerid, title) values (6, "A ceramic vase");
-INSERT into List (makerid, title) values (6, "Wooden blocks");
-INSERT into List (makerid, title) values (6, "Tiny plastic figures");
-INSERT into List (makerid, title) values (6, "Kindergarten art");
-INSERT into List (makerid, title) values (6, "The contents of your trash can");
-INSERT into List (makerid, title) values (6, "A happy bookshelf");
-INSERT into List (makerid, title) values (6, "A laser pointer");
-INSERT into List (makerid, title) values (6, "Duct tape in action");
-INSERT into List (makerid, title) values (6, "A beautiful guitar");
-INSERT into List (makerid, title) values (6, "A drum kit");
-INSERT into List (makerid, title) values (6, "Obnoxious wooden bowls");
-INSERT into List (makerid, title) values (6, "Something made for grandma");
-INSERT into List (makerid, title) values (6, "Christmas tree decorations");
-INSERT into List (makerid, title) values (6, "Well-placed stickers");
-INSERT into List (makerid, title) values (6, "A family heirloom");
-INSERT into List (makerid, title) values (6, "A classic arcade machine");
-INSERT into List (makerid, title) values (6, "Sweet LEGO sets");
+INSERT into List (category, title) values (6, "A bicycle");
+INSERT into List (category, title) values (6, "A lamp");
+INSERT into List (category, title) values (6, "Science equipment");
+INSERT into List (category, title) values (6, "Tools");
+INSERT into List (category, title) values (6, "Kitchen utensils");
 
-UPDATE List SET category = 1 where makerid = 1;
-UPDATE List SET category = 2 where makerid = 2;
-UPDATE List SET category = 3 where makerid = 3;
-UPDATE List SET category = 4 where makerid = 4;
-UPDATE List SET category = 5 where makerid = 5;
-UPDATE List SET category = 6 where makerid = 6;
+UPDATE List SET makerid = 1;
 
 UPDATE List SET approved = 1;

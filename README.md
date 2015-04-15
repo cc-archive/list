@@ -1,7 +1,7 @@
 The List powered by Creative Commons
 ====================================
 
-[![Stories in Ready](https://badge.waffle.io/creativecommons/list.svg?label=ready&title=Ready)](http://waffle.io/creativecommons/list) 
+[![Stories in Ready](https://badge.waffle.io/creativecommons/list.svg?&title=Open issues)](http://waffle.io/creativecommons/list) 
 
 No one can be everywhere at once. But *everyone* can.
 

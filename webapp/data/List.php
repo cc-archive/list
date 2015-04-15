@@ -607,6 +607,45 @@ class UserList {
         return $res;
 
     }
-    
+
+    static function getUserSuggestions ($userid) {
+
+        global $adodb;
+
+        $query = "SELECT * from UserSuggestions WHERE userid=?";
+        $params = array();
+        $params[] = $userid;
+
+        $res = $adodb->CacheGetAll(5, $query, $params);
+
+        return $res;
+
+    }
+
+
+    static function addUserSuggestion ($userid, $title, $description, $filename) {
+
+        $query = "INSERT INTO UserSuggestions (userid, filename, categoryid, description) VALUES (%s,%s, %s, %s)";
+
+        try {
+            $res = $adodb->Execute(sprintf($query,
+            $adodb->qstr($userid),
+            $adodb->qstr($filename),
+            $adodb->qstr($categoryid),
+            $adodb->qstr($description)
+            ));
+
+            $adodb->CacheFlush();
+            
+        } catch (Exception $e) {
+            
+            echo $e;
+
+            echo "There was an error";
+            
+            return null;
+        }
+
+    }
                
 }

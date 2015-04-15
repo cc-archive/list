@@ -343,6 +343,42 @@ with('/api/photos', function() {
 
 });
 
+with('/api/suggestions', function () {
+
+    respond('POST', '/[:userid]/', function ($request, $response) {
+
+        $userid = $request->userid;
+        $categoryid = $request->categoryid;
+        $description = $request->description;
+        
+        $filedata = $request->param('filedata');
+
+        $filedata = base64_decode($filedata);
+
+        if (strlen($filedata) > 50) {
+
+        $tmp = "" . tempnam("../list-uploads/", "suggest-me-" . $userid . "-");
+
+        $image = fopen($tmp, "w") or die("Unable to open file!");
+        fwrite($image, $filedata);
+        fclose($image);
+        
+        $list = new UserList;       
+        $filename = $tmp;
+                    
+        $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description);
+
+        }
+
+        else {
+
+            http_response_code(400);
+        }
+        
+    });
+
+});
+
 with('/api', function () {
 
     respond('GET', '/', function ($request, $response) {
