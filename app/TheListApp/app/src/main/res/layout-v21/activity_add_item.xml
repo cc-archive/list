@@ -118,7 +118,7 @@
                     app:met_primaryColor="@color/colorSecondary" />
             </RelativeLayout>
 
-            <RelativeLayout android:id="@+id/add_item_sticky_footer"
+            <RelativeLayout android:id="@+id/sticky_footer_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
