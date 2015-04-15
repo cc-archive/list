@@ -2,7 +2,7 @@
 
 /* The List powered by Creative Commons
 
-   Copyright (C) 2014 Creative Commons
+   Copyright (C) 2014, 2015 Creative Commons Corporation
 
    based on:
 
@@ -348,9 +348,9 @@ with('/api/suggestions', function () {
     respond('POST', '/[:userid]/', function ($request, $response) {
 
         $userid = $request->userid;
-        $categoryid = $request->categoryid;
-        $description = $request->description;
-        $title = $request->title;
+        $categoryid = $request->param('categoryid');
+        $description = $request->param('description');
+        $title = $request->param('title');
         
         $filedata = $request->param('filedata');
 
@@ -368,6 +368,8 @@ with('/api/suggestions', function () {
         $filename = $tmp;
                     
         $result = $list->addUserSuggestion($userid, $filename, $categoryid, $description, $title);
+
+        echo "hello";
 
         }
 
