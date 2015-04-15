@@ -14,7 +14,7 @@
     <string name="title_activity_image">Gallery</string>
     <string name="title_activity_about">About The App</string>
     <string name="title_activity_add_item">Create an Item</string>
-    <string name="title_activity_drawer">The List</string>
+    <string name="title_activity_drawer">My List</string>
 
 
     <!-- Drawer Navigation Labels -->
