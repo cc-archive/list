@@ -32,8 +32,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -299,47 +297,47 @@ public class DrawerActivity extends ActionBarActivity implements
         }
     } //handleUserAccount
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_drawer, menu);
-        this.menu = menu; //keep this in case of later use
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch(item.getItemId()) {
-            case R.id.about_theapp:
-                Intent aboutAppIntent = new Intent(DrawerActivity.this, AboutActivity.class);
-                startActivity(aboutAppIntent);
-                return true;
-            case R.id.remove_accounts:
-                if (mCurrentUser.isTempUser()) {
-                    mSharedPref.ClearAllSharedPreferences();
-                    Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
-                    startActivity(startIntent);
-                } else {
-                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                        @Override
-                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-                        public void onSuccess(String authtoken) {
-                            mSharedPref.ClearAllSharedPreferences();
-                            Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
-                            startActivity(startIntent);
-                        }
-                    });
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_drawer, menu);
+//        this.menu = menu; //keep this in case of later use
+//
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        switch(item.getItemId()) {
+//            case R.id.about_theapp:
+//                Intent aboutAppIntent = new Intent(DrawerActivity.this, AboutActivity.class);
+//                startActivity(aboutAppIntent);
+//                return true;
+//            case R.id.remove_accounts:
+//                if (mCurrentUser.isTempUser()) {
+//                    mSharedPref.ClearAllSharedPreferences();
+//                    Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
+//                    startActivity(startIntent);
+//                } else {
+//                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+//                        @Override
+//                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+//                        public void onSuccess(String authtoken) {
+//                            mSharedPref.ClearAllSharedPreferences();
+//                            Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
+//                            startActivity(startIntent);
+//                        }
+//                    });
+//                }
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 }

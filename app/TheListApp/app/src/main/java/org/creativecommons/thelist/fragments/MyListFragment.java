@@ -221,11 +221,11 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
 
-        if(!mSharedPref.getSurveyTaken()){
+        if(mSharedPref.getUploadCount() > 4 && !mSharedPref.getSurveyTaken()){
             int surveyCount = mSharedPref.getSurveyCount();
 
             //Check if should display survey item
-            if(surveyCount % 4 == 0 && surveyCount != 0 || !(mCurrentUser.isTempUser()) && surveyCount == 1){
+            if(surveyCount % 10 == 0){
                 mMessageHelper.takeSurveyDialog(mContext, getString(R.string.dialog_survey_title),
                         getString(R.string.dialog_survey_message),
                         new MaterialDialog.ButtonCallback() {
@@ -253,7 +253,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
             //Increase count
             mSharedPref.setSurveyCount(surveyCount + 1);
-            Log.v(TAG, "SURVEY COUNT: " + String.valueOf(surveyCount));
         } //surveyTaken
 
         //Update menu for login/logout options
@@ -766,6 +765,11 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     } //startPhotoUpload
 
     public void performUpload(){
+
+        //Set upload count
+        int uploadCount = mSharedPref.getUploadCount();
+        mSharedPref.setUploadCount(uploadCount+1);
+
         mUploadProgressBar.setVisibility(View.VISIBLE);
 
         //Hide progress bar if it takes too much time to upload
@@ -843,7 +847,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     } //onFail
                 });
     } //performUpload
-
 
     //Helper Methods
     public static String capitalize(final String line) {

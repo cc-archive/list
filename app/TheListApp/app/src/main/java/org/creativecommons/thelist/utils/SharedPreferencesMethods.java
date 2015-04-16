@@ -53,6 +53,7 @@ public class SharedPreferencesMethods {
     public static final String ANALYTICS_VIEWED = "analyticsViewed";
     public static final String SURVEY_COUNT = "surveyCount";
     public static final String SURVEY_TAKEN = "surveyTaken";
+    private static final String UPLOAD_COUNT = "uploadCount";
     public static final String CATEGORY_HELPER_VIEWED = "categoryHelperViewed";
 
     public static final String DRAWER_USER_LEARNED = "userLearnedDrawer";
@@ -105,6 +106,13 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(SURVEY_COUNT, count);
+        editor.apply();
+    }
+
+    public void setUploadCount(int count){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(UPLOAD_COUNT, count);
         editor.apply();
     }
 
@@ -179,7 +187,17 @@ public class SharedPreferencesMethods {
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         if(sharedPref.contains(SharedPreferencesMethods.SURVEY_COUNT)) {
-            return sharedPref.getInt(SURVEY_COUNT, 0); //defaults to false
+            return sharedPref.getInt(SURVEY_COUNT, 0); //defaults to 0
+        } else {
+            return 0;
+        }
+    }
+
+    public int getUploadCount(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(sharedPref.contains(SharedPreferencesMethods.UPLOAD_COUNT)) {
+            return sharedPref.getInt(UPLOAD_COUNT, 0); //defaults to 0
         } else {
             return 0;
         }
