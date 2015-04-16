@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -496,13 +495,13 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                             @Override
                             public void onShow(Snackbar snackbar) {
-                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
-                                        -snackbar.getHeight());
-                                tsa.setInterpolator(interpolator);
-                                tsa.setFillAfter(true);
-                                tsa.setFillEnabled(true);
-                                tsa.setDuration(300);
-                                mFab.startAnimation(tsa);
+//                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
+//                                        -snackbar.getHeight());
+//                                tsa.setInterpolator(interpolator);
+//                                tsa.setFillAfter(true);
+//                                tsa.setFillEnabled(true);
+//                                tsa.setDuration(300);
+//                                mFab.startAnimation(tsa);
                             }
 
                             @Override
@@ -517,14 +516,14 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             @Override
                             public void onDismiss(Snackbar snackbar) {
 
-                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
-                                        -snackbar.getHeight(), 0);
-                                tsa2.setInterpolator(interpolator);
-                                tsa2.setFillAfter(true);
-                                tsa2.setFillEnabled(true);
-                                tsa2.setStartOffset(100);
-                                tsa2.setDuration(300);
-                                mFab.startAnimation(tsa2);
+//                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
+//                                        -snackbar.getHeight(), 0);
+//                                tsa2.setInterpolator(interpolator);
+//                                tsa2.setFillAfter(true);
+//                                tsa2.setFillEnabled(true);
+//                                tsa2.setStartOffset(100);
+//                                tsa2.setDuration(300);
+//                                mFab.startAnimation(tsa2);
                             }
 
                             @Override
@@ -548,6 +547,9 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     } //showItemDeletionSnackbar
 
     public void showPhotoUploadSnackbar(String text, String actiontext, ActionClickListener listener){
+
+        mFab.setEnabled(false);
+
         SnackbarManager.show(
                 //also includes duration: SHORT, LONG, INDEFINITE
                 Snackbar.with(mContext.getApplicationContext())
@@ -561,13 +563,13 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                             @Override
                             public void onShow(Snackbar snackbar) {
-                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
-                                        -snackbar.getHeight());
-                                tsa.setInterpolator(interpolator);
-                                tsa.setFillAfter(true);
-                                tsa.setFillEnabled(true);
-                                tsa.setDuration(300);
-                                mFab.startAnimation(tsa);
+//                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
+//                                        -snackbar.getHeight());
+//                                tsa.setInterpolator(interpolator);
+//                                tsa.setFillAfter(true);
+//                                tsa.setFillEnabled(true);
+//                                tsa.setDuration(300);
+//                                mFab.startAnimation(tsa);
                             }
 
                             @Override
@@ -582,14 +584,16 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             @Override
                             public void onDismiss(Snackbar snackbar) {
 
-                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
-                                        -snackbar.getHeight(), 0);
-                                tsa2.setInterpolator(interpolator);
-                                tsa2.setFillAfter(true);
-                                tsa2.setFillEnabled(true);
-                                tsa2.setStartOffset(100);
-                                tsa2.setDuration(300);
-                                mFab.startAnimation(tsa2);
+//                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
+//                                        -snackbar.getHeight(), 0);
+//                                tsa2.setInterpolator(interpolator);
+//                                tsa2.setFillAfter(true);
+//                                tsa2.setFillEnabled(true);
+//                                tsa2.setStartOffset(100);
+//                                tsa2.setDuration(300);
+//                                mFab.startAnimation(tsa2);
+
+                                mFab.setEnabled(true);
                             }
 
                             @Override
@@ -802,7 +806,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                         @Override
                                         public void onActionClicked(Snackbar snackbar) {
                                             mFab.setEnabled(false);
-                                            //snackbar.dismiss();
+                                            snackbar.dismiss();
 
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override

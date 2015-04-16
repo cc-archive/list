@@ -52,17 +52,21 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
+    <RelativeLayout
+        android:layout_above="@+id/snackbar_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        fab:fab_colorNormal="@color/FAB_NORMAL_COLOR"
-        fab:fab_colorPressed="@color/FAB_PRESSED_COLOR" />
-    <!--fab:fab_colorRipple="@color/FOCUSED_STATE_COLOR" />-->
+        android:layout_height="wrap_content">
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_white_24dp"
+            fab:fab_colorNormal="@color/FAB_NORMAL_COLOR"
+            fab:fab_colorPressed="@color/FAB_PRESSED_COLOR" />
+        <!--fab:fab_colorRipple="@color/FOCUSED_STATE_COLOR" />-->
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/snackbar_container"

@@ -349,15 +349,25 @@ public class CategoryListActivity extends ActionBarActivity {
             }
         }
 
+        Intent intent;
+
         if(mCurrentUser.isTempUser()){ //TEMP USER
             //Save user categories to shared preferences
             mSharedPref.saveSharedPreference
                     (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
-        }
 
-        Intent intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
-        startActivity(intent);
-    }
+            if(mSharedPref.getUserItemCount() == 0){
+                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+                startActivity(intent);
+            } else {
+                intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
+                startActivity(intent);
+            }
+        } else {
+            intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
+            startActivity(intent);
+        }
+    } //saveUserCategories
 
     //onBackPressed
     @Override
