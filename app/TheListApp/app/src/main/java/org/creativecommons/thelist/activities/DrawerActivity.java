@@ -140,6 +140,7 @@ public class DrawerActivity extends ActionBarActivity implements
             fragmentManager.beginTransaction()
                     .replace(R.id.main_content_container, listFragment)
                     .commit();
+            getSupportActionBar().setTitle(getString(R.string.title_activity_drawer));
 
         }
     } //onCreate

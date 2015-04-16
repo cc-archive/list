@@ -135,7 +135,7 @@ public class MainListItem {
                     try {
                         //Log.v("CREATE ITEM RESPONSE", response.toString());
                         JSONObject jsonObject = response.getJSONObject(0);
-                        setItemName(jsonObject.getString(ApiConstants.ITEM_NAME));
+                        setItemName(MyListFragment.capitalize(jsonObject.getString(ApiConstants.ITEM_NAME)));
                         setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
                         Log.v("ITEM ADDED NAME: ", getItemName());
