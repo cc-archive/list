@@ -6,7 +6,9 @@ permalink: /downloads/
 
 Downloads for The List app
 
-<p><a href="https://github.com/creativecommons/list/releases/download/1.0/the_list-1.0.apk" class="btn btn-success btn-lg">Download latest version (1.0)</a></p>
+### Download directly from GitHub
+
+<p><a href="https://github.com/creativecommons/list/releases/download/1.0/the_list-1.0.apk" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-download"></span> Download latest version (1.0)</a></p>
 
 ### Get beta versions from Google Play
 
