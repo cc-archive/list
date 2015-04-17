@@ -12,7 +12,7 @@ Downloads for The List app
 
 1. [Join our Google+ community](https://plus.google.com/communities/102795983782763259834)
 
-2. Once you join, you should be able to [join the beta at Google Play](https://play.google.com/apps/testing/org.creativecommons.thelist) and download the app.
+2. Once you join (<b>after a 15-30 minute wait</b>) you should be able to [join the beta at Google Play](https://play.google.com/apps/testing/org.creativecommons.thelist) and download the app.
 
 If you have any problems with this process, please let us know via GitHub issues or by emailing <info@creativecommons.org>.
 
