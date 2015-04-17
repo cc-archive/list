@@ -14,6 +14,8 @@ Downloads for The List app
 
 2. Once you join, you should be able to [join the beta at Google Play](https://play.google.com/apps/testing/org.creativecommons.thelist) and download the app.
 
+If you have any problems with this process, please let us know via GitHub issues or by emailing <info@creativecommons.org>.
+
 ### All public releases
 
 * [Version 0.8, March 31st 2015](https://github.com/creativecommons/list/releases/download/0.8/app-release.apk)
