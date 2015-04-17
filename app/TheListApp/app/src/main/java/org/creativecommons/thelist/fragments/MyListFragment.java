@@ -272,6 +272,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             return;
         }
 
+
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
             Log.v(TAG, " > User is logged in");
             displayUserItems();
@@ -292,7 +293,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     //----------------------------------------------
 
     private void displayUserItems() {
-
 
         JSONArray itemIds;
 
