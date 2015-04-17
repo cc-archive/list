@@ -8,6 +8,12 @@ Downloads for The List app
 
 <p><a href="https://github.com/creativecommons/list/releases/download/1.0/the_list-1.0.apk" class="btn btn-success btn-lg">Download latest version (1.0)</a></p>
 
+### Get beta versions from Google Play
+
+1. [Join our Google+ community](https://plus.google.com/communities/102795983782763259834)
+
+2. Once you join, you should be able to [join the beta at Google Play](https://play.google.com/apps/testing/org.creativecommons.thelist) and download the app.
+
 ### All public releases
 
 * [Version 0.8, March 31st 2015](https://github.com/creativecommons/list/releases/download/0.8/app-release.apk)
