@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="org.creativecommons.thelist.activities.DrawerActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,7 +19,7 @@
             android:id="@+id/main_content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/nav_drawer_width"
