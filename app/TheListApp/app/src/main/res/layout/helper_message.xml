@@ -20,8 +20,7 @@
         android:paddingRight="8dp"
         android:layout_weight="6"
         android:textColor="@color/app_white"
-        android:text="@string/category_picker_helper_text"
-        android:maxLines="2" />
+        android:text="@string/category_picker_helper_text" />
 
     <ImageButton android:id="@+id/helper_close_button"
         android:background="@null"
