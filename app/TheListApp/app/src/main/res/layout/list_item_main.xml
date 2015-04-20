@@ -10,7 +10,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/list_item_padding"
             android:paddingBottom="@dimen/list_item_padding"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -40,7 +40,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_camera_alt_grey600_24dp"/>
     </RelativeLayout>
     <!--TODO: get touch feedback working-->
