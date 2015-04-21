@@ -24,8 +24,10 @@ SOFTWARE.
 package org.creativecommons.thelist.utils;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
 
@@ -107,28 +109,53 @@ public class FileHelper {
 		return reducedData;
 	}
 
-	public static String getFileName(Context context, Uri uri, String fileType) {
-		String fileName = "uploaded_file.";
-		
-		if (fileType.equals(PhotoConstants.MEDIA_TYPE_IMAGE)) {
-			fileName += "png";
-		}
-		else {
-			// For video, we want to get the actual file extension
-			if (uri.getScheme().equals("content")) {
-				// do it using the mime type
-				String mimeType = context.getContentResolver().getType(uri);
-				int slashIndex = mimeType.indexOf("/");
-				String fileExtension = mimeType.substring(slashIndex + 1);
-				fileName += fileExtension;
-			}
-			else {
-				fileName = uri.getLastPathSegment();
-			}
-		}
-		
-		return fileName;
-	}
+    public static String getFileName(Context context, Uri uri){
+        getFileType(context, uri);
+
+        Cursor returnCursor =
+                context.getContentResolver().query(uri, null, null, null, null);
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+
+        String fileName = returnCursor.getString(nameIndex);
+
+        Log.v(TAG,"> getFileName: " + returnCursor.getString(nameIndex));
+        return fileName;
+
+    }
+
+    public static String getFileType(Context context, Uri uri){
+        String mimeType = context.getContentResolver().getType(uri);
+
+        Log.v(TAG,"> getFileType: " + mimeType);
+        return mimeType;
+
+    }
+
+
+//	public static String getFileName(Context context, Uri uri, String fileType) {
+//		String fileName = "uploaded_file.";
+//
+//		if (fileType.equals(PhotoConstants.MEDIA_TYPE_IMAGE)) {
+//			fileName += "png";
+//		}
+//		else {
+//			// For video, we want to get the actual file extension
+//			if (uri.getScheme().equals("content")) {
+//				// do it using the mime type
+//				String mimeType = context.getContentResolver().getType(uri);
+//				int slashIndex = mimeType.indexOf("/");
+//				String fileExtension = mimeType.substring(slashIndex + 1);
+//				fileName += fileExtension;
+//			}
+//			else {
+//				fileName = uri.getLastPathSegment();
+//			}
+//		}
+//
+//		return fileName;
+//	}
+
 
     public static long getFileSize(Uri uri){
         File photo = new File(uri.getPath());

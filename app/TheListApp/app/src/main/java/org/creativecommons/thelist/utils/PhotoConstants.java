@@ -27,4 +27,6 @@ public class PhotoConstants {
 
     public static final int FILE_SIZE_LIMIT = 1024*1024*10; //10 MB
 
+    public static final String FILE_TYPE = "image/jpeg";
+
 }

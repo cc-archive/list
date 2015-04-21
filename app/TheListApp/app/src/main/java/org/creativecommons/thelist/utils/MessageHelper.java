@@ -195,8 +195,13 @@ public class MessageHelper {
                 mContext.getString(R.string.upload_failed_text_filesize));
     }
 
+    public void photoFileTypeFailMessage(){
+        showDialog(mContext, "Are you sure this is a jpeg?", "Currently The List only accepts " +
+                "jpeg images. Try converting your photo or uploading a different image!");
+    }
+
     public void photoFailMessage(){
-        //TODO: message if file format is not jpg?
+
     }
 
 } //MessageHelper

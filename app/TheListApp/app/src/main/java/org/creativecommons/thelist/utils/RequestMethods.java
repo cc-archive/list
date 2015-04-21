@@ -523,6 +523,11 @@ public final class RequestMethods {
             return;
         }
 
+        if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
+            mMessageHelper.photoFileTypeFailMessage();
+            return;
+        }
+
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(final String authtoken) {

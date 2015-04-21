@@ -715,7 +715,10 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     else {
                         mMediaUri = data.getData();
                     }
-                    Log.i(TAG,"Media URI:" + mMediaUri);
+
+                    Log.v(TAG,"Media URI:" + mMediaUri);
+
+
 
                     //TODO: make sure for sure auth will exist for this to happen
                     //Add photo to the Gallery (listen for broadcast and let gallery take action)
