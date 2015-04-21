@@ -4,7 +4,9 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.creativecommons.thelist.activities.DrawerActivity">
+    android:fitsSystemWindows="true"
+    android:elevation="7dp"
+    tools:context="org.creativecommons.thelist.activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
         <FrameLayout
             android:id="@+id/main_content_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <fragment android:id="@+id/navigation_drawer"

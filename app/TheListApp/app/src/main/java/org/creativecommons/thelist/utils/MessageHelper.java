@@ -28,7 +28,7 @@ import android.support.v4.app.NotificationCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.DrawerActivity;
+import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -114,7 +114,7 @@ public class MessageHelper {
                 .setAutoCancel(true)
                 .setTicker(ticker);
 
-        Intent resultIntent = new Intent(mContext, DrawerActivity.class);
+        Intent resultIntent = new Intent(mContext, MainActivity.class);
         resultIntent.setAction(INTENT_ACTION);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);

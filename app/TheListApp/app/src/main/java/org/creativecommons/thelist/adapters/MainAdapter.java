@@ -33,14 +33,14 @@ import org.creativecommons.thelist.R;
 
 import java.util.List;
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewholder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.FeedViewholder> {
     private LayoutInflater inflater;
     private List<MainListItem> listItems; //Collections.emptyList()
     private static final int DEFAULT_VIEW = 1;
     public static final int ERROR_VIEW = 0;
     public static final int PROGRESS_VIEW = 2;
 
-    public FeedAdapter(Context context, List<MainListItem> listItems) {
+    public MainAdapter(Context context, List<MainListItem> listItems) {
         this.listItems = listItems;
         inflater = LayoutInflater.from(context);
     }

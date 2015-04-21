@@ -188,7 +188,7 @@ public class RandomActivity extends Activity {
                 //Clear ItemList
                 mItemList.clear();
 
-                Intent intent = new Intent(mContext, DrawerActivity.class);
+                Intent intent = new Intent(mContext, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -225,7 +225,7 @@ public class RandomActivity extends Activity {
                     //Clear ItemList
                     mItemList.clear();
 
-                    Intent intent = new Intent(RandomActivity.this, DrawerActivity.class);
+                    Intent intent = new Intent(RandomActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

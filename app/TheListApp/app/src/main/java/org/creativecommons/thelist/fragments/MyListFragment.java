@@ -39,7 +39,7 @@ import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.RandomActivity;
-import org.creativecommons.thelist.adapters.FeedAdapter;
+import org.creativecommons.thelist.adapters.MainAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.layouts.DividerItemDecoration;
@@ -158,7 +158,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(mContext);
-        mFeedAdapter = new FeedAdapter(mContext, mItemList);
+        mFeedAdapter = new MainAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         initRecyclerView();

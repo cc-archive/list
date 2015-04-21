@@ -360,11 +360,11 @@ public class CategoryListActivity extends ActionBarActivity {
                 intent = new Intent(CategoryListActivity.this, RandomActivity.class);
                 startActivity(intent);
             } else {
-                intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
+                intent = new Intent(CategoryListActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         } else {
-            intent = new Intent(CategoryListActivity.this, DrawerActivity.class);
+            intent = new Intent(CategoryListActivity.this, MainActivity.class);
             startActivity(intent);
         }
     } //saveUserCategories

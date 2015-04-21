@@ -62,7 +62,7 @@ import org.creativecommons.thelist.activities.CategoryListActivity;
 import org.creativecommons.thelist.activities.GalleryActivity;
 import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.activities.StartActivity;
-import org.creativecommons.thelist.adapters.FeedAdapter;
+import org.creativecommons.thelist.adapters.MainAdapter;
 import org.creativecommons.thelist.adapters.MainListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -131,7 +131,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_old);
         mContext = this;
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
 //                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
 //        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
-        mFeedAdapter = new FeedAdapter(mContext, mItemList);
+        mFeedAdapter = new MainAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         //initRecyclerView();

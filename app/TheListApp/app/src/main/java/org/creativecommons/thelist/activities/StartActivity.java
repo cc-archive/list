@@ -117,7 +117,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "I have an account > Got an authtoken");
                             //TODO: is this actually needed?
-                            Intent intent = new Intent(StartActivity.this, DrawerActivity.class);
+                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -129,7 +129,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         public void onSuccess(String authtoken) {
                             Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
                             //TODO: is this actually needed?
-                            Intent intent = new Intent(StartActivity.this, DrawerActivity.class);
+                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -157,7 +157,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
             //Redirect to MainActivity
-            Intent intent = new Intent(this, DrawerActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -209,7 +209,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     @Override
     public void onUserSignedIn(Bundle userData) {
-        Intent intent = new Intent(StartActivity.this, DrawerActivity.class);
+        Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -217,7 +217,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     @Override
     public void onUserSignedUp(Bundle userData) {
-        Intent intent = new Intent(StartActivity.this, DrawerActivity.class);
+        Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

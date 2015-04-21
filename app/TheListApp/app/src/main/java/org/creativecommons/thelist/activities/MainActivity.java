@@ -48,7 +48,7 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 
-public class DrawerActivity extends ActionBarActivity implements
+public class MainActivity extends ActionBarActivity implements
         NavigationDrawerFragment.NavigationDrawerListener, GalleryFragment.GalleryListener {
     public static final String TAG = MyListFragment.class.getSimpleName();
 
@@ -67,10 +67,10 @@ public class DrawerActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer);
+        setContentView(R.layout.activity_main);
 
         mContext = this;
-        mCurrentUser = new ListUser(DrawerActivity.this);
+        mCurrentUser = new ListUser(MainActivity.this);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
@@ -184,16 +184,16 @@ public class DrawerActivity extends ActionBarActivity implements
 
                 break;
             case 2: //My Categories
-                Intent catIntent = new Intent(DrawerActivity.this, CategoryListActivity.class);
+                Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
                 startActivity(catIntent);
 
                 break;
             case 3: //Request An Item
-                Intent reqIntent = new Intent(DrawerActivity.this, AddItemActivity.class);
+                Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
                 startActivity(reqIntent);
                 break;
             case 4: //About The App
-                Intent aboutIntent = new Intent(DrawerActivity.this, AboutActivity.class);
+                Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(aboutIntent);
                 break;
             case 5: //Give Feedback
@@ -241,7 +241,7 @@ public class DrawerActivity extends ActionBarActivity implements
                 //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
                 public void onSuccess(String authtoken) {
                     mSharedPref.ClearAllSharedPreferences();
-                    Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
+                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
                     startActivity(startIntent);
                 }
             });
@@ -255,7 +255,7 @@ public class DrawerActivity extends ActionBarActivity implements
     @Override
     public void viewImage(ArrayList<String> urls, int position) {
         //Start detailed view
-        Intent intent = new Intent(DrawerActivity.this, ImageActivity.class);
+        Intent intent = new Intent(MainActivity.this, ImageActivity.class);
         intent.putExtra("position", position);
         intent.putStringArrayListExtra("urls", urls);
         startActivity(intent);
