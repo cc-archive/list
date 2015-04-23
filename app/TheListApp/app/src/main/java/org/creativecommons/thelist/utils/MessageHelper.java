@@ -24,6 +24,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -158,7 +159,16 @@ public class MessageHelper {
     }
 
     // --------------------------------------------------------
-    // PHOTO REQUEST MESSAGES
+    // GALLERY MESSAGES
+    // --------------------------------------------------------
+
+    public void galleryNetworkFailMessage(){
+        showDialog(mContext, mContext.getString(R.string.upload_failed_title_network),
+                "The gallery is only available offline");
+    }
+
+    // --------------------------------------------------------
+    // PHOTO UPLOAD MESSAGES
     // --------------------------------------------------------
 
     //NOTIFICATIONS
@@ -185,17 +195,17 @@ public class MessageHelper {
 
     //DIALOGS
 
-    public void photoNetworkFailMessage(){
+    public void photoUploadNetworkFailMessage(){
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_network),
                 mContext.getString(R.string.upload_failed_text_network));
     }
 
-    public void photoSizeFailMessage(){
+    public void photoUploadSizeFailMessage(){
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_filesize),
                 mContext.getString(R.string.upload_failed_text_filesize));
     }
 
-    public void photoFileTypeFailMessage(){
+    public void photoUploadFileTypeFailMessage(){
         showDialog(mContext, "Are you sure this is a jpeg?", "Currently The List only accepts " +
                 "jpeg images. Try converting your photo or uploading a different image!");
     }
@@ -203,5 +213,14 @@ public class MessageHelper {
     public void photoFailMessage(){
 
     }
+
+    //TOASTS
+    public void toastNeedInternet(){
+        Toast.makeText(mContext, "You need internet to access this feature",
+                Toast.LENGTH_SHORT).show();
+    }
+
+
+
 
 } //MessageHelper

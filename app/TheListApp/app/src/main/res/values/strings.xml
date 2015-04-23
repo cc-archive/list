@@ -112,23 +112,6 @@
         <item>#FFC107</item>
     </string-array>
 
-    <!--About the App html text-->
-    <string name="about_app">
-        <![CDATA[
-        <p>
-        This app is developed by Creative Commons.<br>
-        <a href="https://donate.creativecommons.org/">Please consider making a donation today.</a>
-        </p>
-
-        <h4>Hello World</h4>
-
-        <p>Through the app, organizations will provide lists of locations, people, and events that
-        they need photographs of. And when users are in the right place at the right time, they can
-        claim an item from the list and publish a photograph of it.</p>
-
-        ]]>
-    </string>
-
     <string name="start_button_label">I’M NEW TO THE LIST</string>
     <string name="general_error">Sorry there was an error!</string>
     <string name="email_hint">Email</string>
@@ -230,5 +213,7 @@
     <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
     <string name="drawer_account_name_not_found">Account name not found</string>
     <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
+
+    <string name="ellipsis">…</string>
 
 </resources>

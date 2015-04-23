@@ -33,14 +33,14 @@ import org.creativecommons.thelist.R;
 
 import java.util.List;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.FeedViewholder> {
+public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.FeedViewholder> {
     private LayoutInflater inflater;
-    private List<MainListItem> listItems; //Collections.emptyList()
+    private List<UserListItem> listItems; //Collections.emptyList()
     private static final int DEFAULT_VIEW = 1;
     public static final int ERROR_VIEW = 0;
     public static final int PROGRESS_VIEW = 2;
 
-    public MainAdapter(Context context, List<MainListItem> listItems) {
+    public UserListAdapter(Context context, List<UserListItem> listItems) {
         this.listItems = listItems;
         inflater = LayoutInflater.from(context);
     }
@@ -52,7 +52,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.FeedViewholder
 
     @Override
     public int getItemViewType(int position){
-        MainListItem l = listItems.get(position);
+        UserListItem l = listItems.get(position);
 
         if(l.getError()){
             return ERROR_VIEW;
@@ -71,7 +71,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.FeedViewholder
     @Override
     public void onBindViewHolder(FeedViewholder holder, int position) {
         //Getting Data for the row
-        MainListItem l = listItems.get(position);
+        UserListItem l = listItems.get(position);
         holder.itemView.setVisibility(View.VISIBLE);
         holder.nameLabel.setText(l.getItemName());
         //Log.v("NAME LABEL", String.valueOf(l.getItemName()));

@@ -62,8 +62,8 @@ import org.creativecommons.thelist.activities.CategoryListActivity;
 import org.creativecommons.thelist.activities.GalleryActivity;
 import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.activities.StartActivity;
-import org.creativecommons.thelist.adapters.MainAdapter;
-import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.adapters.UserListAdapter;
+import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
@@ -96,13 +96,13 @@ public class MainActivity extends ActionBarActivity {
     MessageHelper mMessageHelper;
     ListUser mCurrentUser;
 
-    protected MainListItem mCurrentItem;
+    protected UserListItem mCurrentItem;
     protected int activeItemPosition;
 
-    protected MainListItem mItemToBeUploaded;
+    protected UserListItem mItemToBeUploaded;
     protected int uploadItemPosition;
 
-    protected MainListItem mLastDismissedItem;
+    protected UserListItem mLastDismissedItem;
     protected int lastDismissedItemPosition;
     protected Uri mMediaUri;
 
@@ -111,7 +111,7 @@ public class MainActivity extends ActionBarActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<MainListItem> mItemList = new ArrayList<>();
+    private List<UserListItem> mItemList = new ArrayList<>();
 
     //UI Elements
     private Menu menu;
@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
 //                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
 //        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(this);
-        mFeedAdapter = new MainAdapter(mContext, mItemList);
+        mFeedAdapter = new UserListAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         //initRecyclerView();
@@ -315,7 +315,7 @@ public class MainActivity extends ActionBarActivity {
         JSONArray itemIds;
 
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
-            mRequestMethods.getUserItems(new RequestMethods.ResponseCallback() {
+            mRequestMethods.getUserItems(new RequestMethods.UserListCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
@@ -326,7 +326,7 @@ public class MainActivity extends ActionBarActivity {
                             JSONObject singleListItem = response.getJSONObject(i);
                             //Only show items in the user’s list that have not been completed
                             if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
-                                MainListItem listItem = new MainListItem();
+                                UserListItem listItem = new UserListItem();
                                 listItem.setItemName
                                         (singleListItem.getString(ApiConstants.ITEM_NAME));
                                 listItem.setMakerName
@@ -335,7 +335,7 @@ public class MainActivity extends ActionBarActivity {
                                         (singleListItem.getString(ApiConstants.ITEM_ID));
                                 mItemList.add(listItem);
                             } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
-                                MainListItem listItem = new MainListItem();
+                                UserListItem listItem = new UserListItem();
                                 listItem.setItemName
                                         (singleListItem.getString(ApiConstants.ITEM_NAME));
                                 listItem.setMakerName
@@ -372,6 +372,11 @@ public class MainActivity extends ActionBarActivity {
                 public void onFail(VolleyError error) {
                     Log.d(TAG , "> getUserItems > onFail: " + error.toString());
                 }
+
+                @Override
+                public void onUserOffline(List<UserListItem> response) {
+
+                }
             });
         }
         else { //IF USER IS A TEMP
@@ -383,7 +388,7 @@ public class MainActivity extends ActionBarActivity {
             if (itemIds != null && itemIds.length() > 0) {
                 for (int i = 0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
-                    MainListItem listItem = new MainListItem();
+                    UserListItem listItem = new UserListItem();
                     try {
                         listItem.setItemID(String.valueOf(itemIds.getInt(i)));
                         listItem.setMessageHelper(mMessageHelper);
@@ -756,7 +761,7 @@ public class MainActivity extends ActionBarActivity {
                         }, 500);
                     }
                 });
-    } //performUpload
+    } //performPhotoUpload
 
     //----------------------------------------------
     //MENU + MENU HELPER METHODS

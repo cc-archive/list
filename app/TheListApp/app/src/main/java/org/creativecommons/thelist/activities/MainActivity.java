@@ -44,6 +44,8 @@ import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
@@ -55,6 +57,8 @@ public class MainActivity extends ActionBarActivity implements
     private Context mContext;
     private ListUser mCurrentUser;
     private SharedPreferencesMethods mSharedPref;
+    private RequestMethods mRequestMethods;
+    private MessageHelper mMessageHelper;
 
     //UI Elements
     private DrawerLayout mDrawerLayout;
@@ -72,6 +76,8 @@ public class MainActivity extends ActionBarActivity implements
         mContext = this;
         mCurrentUser = new ListUser(MainActivity.this);
         mSharedPref = new SharedPreferencesMethods(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mMessageHelper = new MessageHelper(mContext);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
@@ -159,6 +165,7 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onDrawerClicked(int position) {
+
         Fragment fragment = null;
 
         Tracker t = ((ListApplication) getApplication()).getTracker(
@@ -175,6 +182,11 @@ public class MainActivity extends ActionBarActivity implements
 
                 break;
             case 1: //My Photos
+                if(!mRequestMethods.isNetworkAvailable()){
+                    mMessageHelper.toastNeedInternet();
+                    return;
+                }
+
                 fragment = new GalleryFragment();
 
                 // Set screen name.
@@ -184,11 +196,21 @@ public class MainActivity extends ActionBarActivity implements
 
                 break;
             case 2: //My Categories
+                if(!mRequestMethods.isNetworkAvailable()){
+                    mMessageHelper.toastNeedInternet();
+                    return;
+                }
+
                 Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
                 startActivity(catIntent);
 
                 break;
             case 3: //Request An Item
+                if(!mRequestMethods.isNetworkAvailable()){
+                    mMessageHelper.toastNeedInternet();
+                    return;
+                }
+
                 Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
                 startActivity(reqIntent);
                 break;
@@ -340,4 +362,5 @@ public class MainActivity extends ActionBarActivity implements
 //                return super.onOptionsItemSelected(item);
 //        }
 //    }
+
 }

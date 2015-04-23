@@ -39,7 +39,7 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
@@ -71,7 +71,7 @@ public class RandomActivity extends Activity {
     String mItemID;
     String mCategoryID;
 
-    private List<MainListItem> mItemList;
+    private List<UserListItem> mItemList;
 
     int itemPositionCount = 0;
 
@@ -132,7 +132,7 @@ public class RandomActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //Add items to ItemList
-                MainListItem listItem = new MainListItem();
+                UserListItem listItem = new UserListItem();
                 listItem.setItemID(mItemID);
                 listItem.setItemName(mItemName);
                 listItem.setMakerName(mMakerName);
@@ -370,7 +370,7 @@ public class RandomActivity extends Activity {
 //    ------------------------------------------------------------------------------------------
 
     //Parse List Objects of List Items and return list of Item IDS
-    public List<String> getItemIds(List<MainListItem> list){
+    public List<String> getItemIds(List<UserListItem> list){
         List<String>arrayList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             String singleID = list.get(i).getItemID();

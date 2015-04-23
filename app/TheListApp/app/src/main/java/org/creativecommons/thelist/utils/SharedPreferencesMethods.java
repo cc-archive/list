@@ -24,33 +24,44 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import org.creativecommons.thelist.adapters.UserListItem;
 import org.json.JSONArray;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SharedPreferencesMethods {
     public static final String TAG = SharedPreferencesMethods.class.getSimpleName();
 
-    protected Context mContext;
-    protected AccountManager am;
+    private Context mContext;
+    private AccountManager am;
+    private Gson mGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public SharedPreferencesMethods(Context context) {
         mContext = context;
         am = AccountManager.get(mContext);
     }
 
+    Type UserListItem = new TypeToken<List<UserListItem>>(){}.getType();
+
     //SharedPreferences Constants
     public static final String CATEGORY_PREFERENCE_KEY = "category";
     public static final String LIST_ITEM_PREFERENCE_KEY = "item";
     public static final String USER_ID_PREFERENCE_KEY = "id";
     public static final String USER_KEY = "ekey";
+    public static final String USER_OFFLINE_LIST = "userOfflineList";
+
     public static final String ANALYTICS_OPTOUT = "analyticsOptOut";
     public static final String ANALYTICS_VIEWED = "analyticsViewed";
+
     public static final String SURVEY_COUNT = "surveyCount";
     public static final String SURVEY_TAKEN = "surveyTaken";
     private static final String UPLOAD_COUNT = "uploadCount";
@@ -61,7 +72,7 @@ public class SharedPreferencesMethods {
     public static final String APP_PREFERENCES_KEY = "org.creativecommons.thelist.43493255t43";
 
     //----------------------------------------------------------
-    //SET PREFERENCES
+    //SAVE PREFERENCES
     //----------------------------------------------------------
 
     //Save String Preference (generic)
@@ -130,6 +141,16 @@ public class SharedPreferencesMethods {
         editor.apply();
     }
 
+    public void saveOfflineUserList(List<UserListItem> itemList){
+        String userList = mGson.toJson(itemList, UserListItem);
+        Log.v(TAG, "USERLIST: " + userList);
+
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(USER_OFFLINE_LIST + getUserId(), userList);
+        editor.apply();
+    }
+
     public void saveKey(String key){
         saveSharedPreference(USER_KEY + getUserId(), key);
     }
@@ -152,7 +173,7 @@ public class SharedPreferencesMethods {
 
     public String getKey(){
         SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
-        if(sharedPref.contains(SharedPreferencesMethods.USER_KEY)){
+        if(sharedPref.contains(SharedPreferencesMethods.USER_KEY + getUserId())){
             return sharedPref.getString(USER_KEY + getUserId(), null);
         } else {
             return null;
@@ -230,6 +251,22 @@ public class SharedPreferencesMethods {
             return sharedPref.getBoolean(DRAWER_USER_LEARNED, false); //defaults to false
         } else {
             return false;
+        }
+    }
+
+    public List<UserListItem> getOfflineUserList(){
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        if(sharedPref.contains(SharedPreferencesMethods.USER_OFFLINE_LIST + getUserId())){
+            String stringUserList = sharedPref.getString(USER_OFFLINE_LIST + getUserId(), null);
+            List<UserListItem> itemList = mGson.fromJson(stringUserList, UserListItem);
+
+            for(UserListItem t : itemList){
+                Log.v(TAG, t.getItemName());
+            }
+
+            return itemList;
+        } else {
+            return null;
         }
     }
 

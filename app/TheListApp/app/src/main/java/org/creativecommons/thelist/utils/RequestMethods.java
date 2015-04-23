@@ -34,10 +34,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.adapters.UserListItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class RequestMethods {
@@ -65,6 +67,12 @@ public final class RequestMethods {
     public interface ResponseCallback {
         void onSuccess(JSONArray response);
         void onFail(VolleyError error);
+    }
+
+    public interface UserListCallback {
+        void onSuccess(JSONArray response);
+        void onFail(VolleyError error);
+        void onUserOffline(List<UserListItem> response);
     }
 
     //Check if thar be internets (public helper)
@@ -142,8 +150,9 @@ public final class RequestMethods {
     } //getRandomItemRequest
 
     //GET User List Items
-    public void getUserItems(final ResponseCallback callback){
+    public void getUserItems(final UserListCallback callback){
         if(!(isNetworkAvailable())){
+            callback.onUserOffline(mSharedPref.getOfflineUserList());
             mMessageHelper.networkFailMessage();
             return;
         }
@@ -475,7 +484,7 @@ public final class RequestMethods {
 
     public void getUserPhotos(final ResponseCallback callback) {
         if (!(isNetworkAvailable())) {
-            mMessageHelper.photoNetworkFailMessage();
+            mMessageHelper.galleryNetworkFailMessage();
             return;
         }
 
@@ -514,17 +523,17 @@ public final class RequestMethods {
 
     public void uploadPhoto(final String itemID, final Uri photoUri, final RequestCallback callback) {
         if(!(isNetworkAvailable())){
-            mMessageHelper.photoNetworkFailMessage();
+            mMessageHelper.photoUploadNetworkFailMessage();
             return;
         }
 
         if(FileHelper.getFileSize(photoUri) > 8){
-            mMessageHelper.photoSizeFailMessage();
+            mMessageHelper.photoUploadSizeFailMessage();
             return;
         }
 
         if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
-            mMessageHelper.photoFileTypeFailMessage();
+            mMessageHelper.photoUploadFileTypeFailMessage();
             return;
         }
 
@@ -566,5 +575,13 @@ public final class RequestMethods {
             }
         });
     } //uploadPhoto
+
+    // --------------------------------------------------------
+    // UPLOAD ASYNC
+    // --------------------------------------------------------
+
+
+
+
 
 } //RequestMethods

@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.annotations.Expose;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.fragments.MyListFragment;
@@ -37,19 +38,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainListItem {
-    private String itemName, makerName, itemID, categoryID;
-    private boolean error, progress;
+public class UserListItem {
+    @Expose private String itemName, makerName, itemID, categoryID;
+
+    @Expose private boolean error, progress;
+
     private Context mContext;
     private Activity mActivity;
     private MyListFragment myListFragment;
     private MessageHelper mMessageHelper;
-    public boolean completed = false;
 
-    public MainListItem() {
+    @Expose public boolean completed = false;
+
+    public UserListItem() {
     }
 
-    public MainListItem(String id, String name, String maker) {
+    public UserListItem(String id, String name, String maker) {
         this.itemID = itemID;
         this.itemName = name;
         this.makerName = maker;
@@ -133,16 +137,15 @@ public class MainListItem {
                 public void onResponse(JSONArray response) {
                     //Handle Data
                     try {
-                        //Log.v("CREATE ITEM RESPONSE", response.toString());
                         JSONObject jsonObject = response.getJSONObject(0);
                         setItemName(MyListFragment.capitalize(jsonObject.getString(ApiConstants.ITEM_NAME)));
                         setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
-                        Log.v("ITEM ADDED NAME: ", getItemName());
+                        //Log.v("ITEM ADDED NAME: ", getItemName());
                         completed = true;
                         myListFragment.CheckComplete();
                     } catch (JSONException e) {
-                        Log.v("MainListItem", e.getMessage());
+                        Log.v("UserListItem", e.getMessage());
                     }
 
                 }
@@ -157,4 +160,4 @@ public class MainListItem {
         queue.add(newUserListRequest);
     }
 
-} //MainListItem
+} //UserListItem

@@ -10,15 +10,20 @@
         android:orientation="vertical">
 
         <RelativeLayout android:id="@+id/photoProgressBar"
-            android:layout_marginTop="0dp"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
+            <!--<TextView android:id="@+id/upload_text"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/upload_progress"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Body2"-->
+                <!--android:text="Uploading"/>-->
             <com.gc.materialdesign.views.ProgressBarIndeterminate
                 android:id="@+id/progressBarIndeterminate"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="#1E88E5"/>
+                android:layout_height="wrap_content"/>
         </RelativeLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout

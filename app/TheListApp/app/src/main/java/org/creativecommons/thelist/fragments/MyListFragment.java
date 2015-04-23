@@ -1,6 +1,5 @@
 package org.creativecommons.thelist.fragments;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -39,8 +38,8 @@ import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.RandomActivity;
-import org.creativecommons.thelist.adapters.MainAdapter;
-import org.creativecommons.thelist.adapters.MainListItem;
+import org.creativecommons.thelist.adapters.UserListAdapter;
+import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
@@ -74,13 +73,13 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     MessageHelper mMessageHelper;
     ListUser mCurrentUser;
 
-    protected MainListItem mCurrentItem;
+    protected UserListItem mCurrentItem;
     protected int activeItemPosition;
 
-    protected MainListItem mItemToBeUploaded;
+    protected UserListItem mItemToBeUploaded;
     protected int uploadItemPosition;
 
-    protected MainListItem mLastDismissedItem;
+    protected UserListItem mLastDismissedItem;
     protected int lastDismissedItemPosition;
     protected Uri mMediaUri;
 
@@ -90,13 +89,17 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     private RecyclerView.Adapter mFeedAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ViewGroup snackbarContainer;
-    private List<MainListItem> mItemList = new ArrayList<>();
+    private List<UserListItem> mItemList = new ArrayList<>();
+
+    //Upload Elements
+    private RelativeLayout mUploadProgressBarContainer;
+    private TextView mUploadText;
+    long totalSize;
 
     //UI Elements
     private Menu menu;
     private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
-    protected RelativeLayout mUploadProgressBar;
     protected FrameLayout mFrameLayout;
     protected TextView mEmptyView;
 
@@ -127,14 +130,18 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
         Activity activity = getActivity();
 
-
         snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
 
         //Load UI Elements
+        totalSize = 0;
         mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
-        mUploadProgressBar = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
+        mUploadProgressBarContainer = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
+        //mUploadProgressBar = (com.gc.materialdesign.views.ProgressBarDeterminate) activity.findViewById(R.id.upload_progress);
+        //mUploadText = (TextView) activity.findViewById(R.id.upload_text);
+
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
         mFrameLayout = (FrameLayout)activity.findViewById(R.id.overlay_fragment_container);
+
         mFab = (FloatingActionButton) activity.findViewById(R.id.fab);
         mFab.setEnabled(false);
         mFab.setVisibility(View.GONE);
@@ -143,10 +150,16 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: don’t do this
+
+                if(!mRequestMethods.isNetworkAvailable()){
+                    mMessageHelper.toastNeedInternet();
+                    return;
+                }
+
                 Intent hitMeIntent = new Intent(getActivity(), RandomActivity.class);
                 startActivity(hitMeIntent);
-            }
+
+            } //onClick
         });
 
         //RecyclerView
@@ -158,7 +171,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(mContext);
-        mFeedAdapter = new MainAdapter(mContext, mItemList);
+        mFeedAdapter = new UserListAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         initRecyclerView();
@@ -170,20 +183,8 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             }
         });
 
-
     } //onActivityCreated
 
-    //TODO: figure out where this goes in a fragment
-//    @Override
-//    protected void onRestart(){
-//        super.onRestart();
-//        //Log.v(TAG, "ON RESTART CALLED");
-//        if(!mCurrentUser.isTempUser() && mCurrentUser.getAnalyticsOptOut() != null){
-//            mSharedPref.setAnalyticsViewed(true);
-//        }
-//    }
-
-    //TODO: is this the right place to do this in a fragment?
     @Override
     public void onStart(){
         super.onStart();
@@ -220,7 +221,8 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     public void onResume() {
         super.onResume();
 
-        if(mSharedPref.getUploadCount() > 4 && !mSharedPref.getSurveyTaken()){
+        if(mRequestMethods.isNetworkAvailable() && mSharedPref.getUploadCount() > 4
+                && !mSharedPref.getSurveyTaken()){
             int surveyCount = mSharedPref.getSurveyCount();
 
             //Check if should display survey item
@@ -254,10 +256,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             mSharedPref.setSurveyCount(surveyCount + 1);
         } //surveyTaken
 
-        //Update menu for login/logout options
-        //TODO: get login-logout working
-        //getActivity().invalidateOptionsMenu();
-
         if(!mFab.isVisible()){
             mFab.show();
         }
@@ -268,10 +266,9 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             }
         }, 500);
 
-        if(mItemToBeUploaded != null){
+        if(mItemToBeUploaded != null && mRequestMethods.isNetworkAvailable()){
             return;
         }
-
 
         if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
             Log.v(TAG, " > User is logged in");
@@ -297,10 +294,12 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         JSONArray itemIds;
 
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
-            mRequestMethods.getUserItems(new RequestMethods.ResponseCallback() {
+
+            mRequestMethods.getUserItems(new RequestMethods.UserListCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
+
                     mItemList.clear();
 
                     for(int i=0; i < response.length(); i++) {
@@ -308,7 +307,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             JSONObject singleListItem = response.getJSONObject(i);
                             //Only show items in the user’s list that have not been completed
                             if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
-                                MainListItem listItem = new MainListItem();
+                                UserListItem listItem = new UserListItem();
                                 listItem.setItemName
                                         (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
@@ -317,7 +316,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                         (singleListItem.getString(ApiConstants.ITEM_ID));
                                 mItemList.add(listItem);
                             } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
-                                MainListItem listItem = new MainListItem();
+                                UserListItem listItem = new UserListItem();
                                 listItem.setItemName
                                         (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
@@ -339,13 +338,16 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     mFab.setVisibility(View.VISIBLE);
 
                     if(mItemList.size() == 0){
+
                         //TODO: show textView
+                        mEmptyView.setText("Hey, looks like your list is empty.\nAdd some items!");
                         mEmptyView.setVisibility(View.VISIBLE);
 
                     } else {
                         //TODO: hide textView
                         mEmptyView.setVisibility(View.GONE);
                         Collections.reverse(mItemList);
+
                         mFeedAdapter.notifyDataSetChanged();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -353,6 +355,33 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 @Override
                 public void onFail(VolleyError error) {
                     Log.d(TAG , "> getUserItems > onFail: " + error.toString());
+                }
+                @Override
+                public void onUserOffline(List<UserListItem> response) {
+
+                    if(response == null){
+                        Log.v(TAG, "RESPONSE IS NULL");
+                        return;
+                    }
+
+                    mItemList.clear();
+
+                    for(UserListItem m : response){
+                        mItemList.add(m);
+                    }
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mFab.show();
+                    mFab.setVisibility(View.VISIBLE);
+
+                    if(mItemList.size() == 0 || mItemList == null){
+                        mEmptyView.setText("Sorry we couldn’t find your most recent list. \n" +
+                                "We’ll try again when you’re online.");
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    }
+
+                    mFeedAdapter.notifyDataSetChanged();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             });
         }
@@ -365,11 +394,10 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             if (itemIds != null && itemIds.length() > 0) {
                 for (int i = 0; i < itemIds.length(); i++) {
                     //TODO: do I need to set ItemID here?
-                    MainListItem listItem = new MainListItem();
+                    UserListItem listItem = new UserListItem();
                     try {
                         listItem.setItemID(String.valueOf(itemIds.getInt(i)));
                         listItem.setMessageHelper(mMessageHelper);
-                        //TODO: needs to be mainactivity in the MainListItem class
                         listItem.setMainListActivity(getActivity());
                         listItem.setMyListFragment(this);
                         listItem.createNewUserListItem();
@@ -383,6 +411,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
             } else {
                 mProgressBar.setVisibility(View.INVISIBLE);
+                mEmptyView.setText("Hey, looks like your list is empty.\nAdd some items!");
                 mEmptyView.setVisibility(View.VISIBLE);
                 mFab.show();
                 mFab.setVisibility(View.VISIBLE);
@@ -422,6 +451,13 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
                 for (int position : reverseSortedPositions) {
                     // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
+
+                    if(!mRequestMethods.isNetworkAvailable()){
+                        mMessageHelper.toastNeedInternet();
+                        mFeedAdapter.notifyDataSetChanged();
+                        return;
+                    }
+
                     mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
                     //Get item details for UNDO
                     lastDismissedItemPosition = position;
@@ -449,14 +485,16 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setItems(R.array.listItem_choices, mDialogListener);
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
 
-                        //Get item details for photo upload
-                        activeItemPosition = position;
-                        mCurrentItem = mItemList.get(position);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setItems(R.array.listItem_choices, mDialogListener);
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            //Get item details for photo upload
+                            activeItemPosition = position;
+                            mCurrentItem = mItemList.get(position);
+
                     }
                 }));
     } //initRecyclerView
@@ -622,6 +660,12 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
+                    if(!mRequestMethods.isNetworkAvailable()){
+                        mMessageHelper.toastNeedInternet();
+                        return;
+                    }
+
                     switch(which) {
                         case 0:
                             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -750,7 +794,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                     mItemList.remove(mItemToBeUploaded);
                     mFeedAdapter.notifyDataSetChanged();
-                    performUpload();
+                    performPhotoUpload();
                 }
             });
         } else {
@@ -762,7 +806,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             try {
                                 mItemList.remove(mItemToBeUploaded);
                                 mFeedAdapter.notifyDataSetChanged();
-                                performUpload();
+                                performPhotoUpload();
                             } catch (Exception e) {
                                 Log.d(TAG,"addAccount > " + e.getMessage());
                             }
@@ -771,23 +815,24 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         }
     } //startPhotoUpload
 
-    public void performUpload(){
-
+    public void performPhotoUpload(){
         //Set upload count
         int uploadCount = mSharedPref.getUploadCount();
         mSharedPref.setUploadCount(uploadCount+1);
 
-        mUploadProgressBar.setVisibility(View.VISIBLE);
+        //mUploadText.setText("Uploading " + mItemToBeUploaded.getItemName() + "…");
+        mUploadProgressBarContainer.setVisibility(View.VISIBLE);
+
 
         //Hide progress bar if it takes too much time to upload
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(mUploadProgressBar.getVisibility() == View.VISIBLE) {
-                    mUploadProgressBar.setVisibility(View.GONE);
-                }
-            }
-        }, 3000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
+//                    mUploadProgressBarContainer.setVisibility(View.GONE);
+//                }
+//            }
+//        }, 3000);
 
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
@@ -798,7 +843,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
 
                         displayUserItems();
-                        mUploadProgressBar.setVisibility(View.GONE);
+                        mUploadProgressBarContainer.setVisibility(View.GONE);
 
                         //Show snackbar confirmation
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -835,7 +880,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mUploadProgressBar.setVisibility(View.GONE);
+                                mUploadProgressBarContainer.setVisibility(View.GONE);
                                 displayUserItems();
                                 //TODO: add visual indication that item failed
                             }
@@ -847,17 +892,24 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                     "retry", new ActionClickListener() {
                                         @Override
                                         public void onActionClicked(Snackbar snackbar) {
-                                            performUpload();
+                                            performPhotoUpload();
                                         }
                                     });
                         } //5.0 snackbar
                     } //onFail
-                });
-    } //performUpload
+        });
+    } //performPhotoUpload
 
     //Helper Methods
     public static String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
+
+    @Override
+    public void onPause() {
+        //Save most recent list to sharedPreferences
+        mSharedPref.saveOfflineUserList(mItemList);
+        super.onPause();
     }
 
 } //MyListFragment
