@@ -22,7 +22,6 @@ package org.creativecommons.thelist.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
@@ -30,6 +29,7 @@ import android.widget.FrameLayout;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 
@@ -62,17 +62,16 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
         //auto load loginFragment
         GalleryFragment galleryFragment = new GalleryFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.gallery_fragment_container,galleryFragment, "GALLERY_FRAGMENT") //TODO: get rid of frag tag
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.gallery_fragment_container, galleryFragment)
                 .commit();
         mFrameLayout.setClickable(true);
     }
 
     @Override
-    public void viewImage(ArrayList<String> urls, int position) {
+    public void viewImage(ArrayList<GalleryItem> photos, int position) {
         Intent intent = new Intent(GalleryActivity.this, ImageActivity.class);
         intent.putExtra("position", position);
-        intent.putStringArrayListExtra("urls", urls);
+        intent.putParcelableArrayListExtra("photos", photos);
         startActivity(intent);
     } //viewImage
 

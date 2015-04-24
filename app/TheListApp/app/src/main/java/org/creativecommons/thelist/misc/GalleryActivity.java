@@ -20,7 +20,6 @@
 package org.creativecommons.thelist.misc;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -30,7 +29,7 @@ import android.widget.FrameLayout;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.ImageActivity;
+import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 
@@ -63,18 +62,14 @@ public class GalleryActivity extends ActionBarActivity implements GalleryFragmen
         //auto load loginFragment
         GalleryFragment galleryFragment = new GalleryFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.gallery_fragment_container,galleryFragment, "GALLERY_FRAGMENT") //TODO: get rid of frag tag
+                .add(R.id.gallery_fragment_container,galleryFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
         mFrameLayout.setClickable(true);
     }
 
     @Override
-    public void viewImage(ArrayList<String> urls, int position) {
-        Intent intent = new Intent(GalleryActivity.this, ImageActivity.class);
-        intent.putExtra("position", position);
-        intent.putStringArrayListExtra("urls", urls);
-        startActivity(intent);
+    public void viewImage(ArrayList<GalleryItem> photoObjects, int position) {
     } //viewImage
 
     @Override

@@ -21,10 +21,15 @@
         <!--Temporary fix For Android 5.0 status bar problems-->
     </style>
 
+    <!--<style name="ListThemeTransparentActionBar" parent="ListTheme">-->
+        <!--<item name="android:actionBarStyle">@style/ActionBarTransparent</item>-->
+    <!--</style>-->
+
     <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
     </style>
 
 

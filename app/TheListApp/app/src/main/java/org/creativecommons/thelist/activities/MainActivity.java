@@ -38,6 +38,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
@@ -74,6 +75,7 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
         mCurrentUser = new ListUser(MainActivity.this);
         mSharedPref = new SharedPreferencesMethods(mContext);
         mRequestMethods = new RequestMethods(mContext);
@@ -182,10 +184,6 @@ public class MainActivity extends ActionBarActivity implements
 
                 break;
             case 1: //My Photos
-                if(!mRequestMethods.isNetworkAvailable()){
-                    mMessageHelper.toastNeedInternet();
-                    return;
-                }
 
                 fragment = new GalleryFragment();
 
@@ -275,11 +273,15 @@ public class MainActivity extends ActionBarActivity implements
     // --------------------------------------------------------
 
     @Override
-    public void viewImage(ArrayList<String> urls, int position) {
+    public void viewImage(ArrayList<GalleryItem> photoObjects, int position) {
+
+        Bundle b = new Bundle();
+        b.putParcelableArrayList("photos", photoObjects);
+        b.putInt("position", position);
+
         //Start detailed view
         Intent intent = new Intent(MainActivity.this, ImageActivity.class);
-        intent.putExtra("position", position);
-        intent.putStringArrayListExtra("urls", urls);
+        intent.putExtras(b);
         startActivity(intent);
     } //viewImage
 

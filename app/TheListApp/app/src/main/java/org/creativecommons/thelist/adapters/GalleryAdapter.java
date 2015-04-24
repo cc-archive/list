@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.utils.RequestMethods;
 
 import java.util.List;
 
@@ -36,14 +37,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     public static final String TAG = GalleryAdapter.class.getSimpleName();
 
     private Context mContext;
+    private RequestMethods mRequestMethods;
     private LayoutInflater inflater;
     private List<GalleryItem> galleryItems;
-    private static final int DEFAULT_VIEW = 1;
-    public static final int ERROR_VIEW = 0;
-    public static final int PROGRESS_VIEW = 2;
+//    private static final int DEFAULT_VIEW = 1;
+//    public static final int ERROR_VIEW = 0;
+//    public static final int PROGRESS_VIEW = 2;
 
     public GalleryAdapter(Context context, List<GalleryItem> galleryItems){
+
         mContext = context;
+        //For debugging
+        //Picasso.with(mContext).setIndicatorsEnabled(true);
+        mRequestMethods = new RequestMethods(mContext);
         this.galleryItems = galleryItems;
         inflater = LayoutInflater.from(context);
     }
@@ -51,19 +57,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     @Override
     public int getItemCount() {
         return galleryItems.size();
-    }
-
-    @Override
-    public int getItemViewType(int position){
-        GalleryItem g = galleryItems.get(position);
-
-        if(g.getError()){
-            return ERROR_VIEW;
-        } else if(g.getProgress()) {
-            return PROGRESS_VIEW;
-        } else {
-            return DEFAULT_VIEW;
-        }
     }
 
     @Override
@@ -78,24 +71,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         //Getting data for the row
         GalleryItem g = galleryItems.get(position);
 
-        //Set different views
-        switch(getItemViewType(position)){
-            case ERROR_VIEW:
-                //TODO: set error view
-                holder.photoView.setImageResource(R.drawable.error_view);
-                break;
-            case DEFAULT_VIEW:
-                Picasso.with(mContext)
-                        .load(g.getUrl() + "/300")
-                        .placeholder(R.drawable.progress_view) //TODO: switch drawable
-                        .error(R.drawable.progress_view)
-                        .into(holder.photoView);
-                break;
-            case PROGRESS_VIEW:
-                //TODO: add progress drawable
-               holder.photoView.setImageResource(R.drawable.progress_view);
-               break;
-        }
+        Picasso.with(mContext)
+                .load(g.getUrl() + "/300")
+                .placeholder(R.drawable.progress_view)
+                .error(R.drawable.progress_view)
+                .into(holder.photoView);
+
         holder.itemView.setTag(g);
     }
 

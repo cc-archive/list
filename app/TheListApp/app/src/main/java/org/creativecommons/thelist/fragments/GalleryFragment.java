@@ -51,7 +51,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class GalleryFragment extends Fragment {
     public static final String TAG = GalleryFragment.class.getSimpleName();
@@ -70,7 +69,7 @@ public class GalleryFragment extends Fragment {
     private GalleryAdapter mGalleryAdapter;
     private GridLayoutManager mGridLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private List<GalleryItem> mPhotoList = new ArrayList<>();
+    private ArrayList<GalleryItem> mPhotoList = new ArrayList<>();
 
     //Interface with Activity + ListUser
     public GalleryListener mCallback;
@@ -79,7 +78,7 @@ public class GalleryFragment extends Fragment {
 
     //LISTENERS
     public interface GalleryListener {
-        public void viewImage(ArrayList<String> urls, int position);
+        public void viewImage(ArrayList<GalleryItem> photoObjects, int position);
     }
 
     public GalleryFragment() {
@@ -133,13 +132,22 @@ public class GalleryFragment extends Fragment {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        ArrayList<String> urls = new ArrayList<>();
 
-                        for(int i = 0; i < mPhotoList.size(); i++){
-                            GalleryItem singlePhoto = mPhotoList.get(i);
-                            urls.add(singlePhoto.getUrl() + "/800"); //TODO: test this! when 1024 images are generated
+                        if(!mRequestMethods.isNetworkAvailable()){
+                            mMessageHelper.toastNeedInternet();
+                            return;
                         }
-                        mCallback.viewImage(urls, position); //TODO: eventually set url for large image
+
+                        mCallback.viewImage(mPhotoList, position);
+
+                        //Create list of image urls to pass to viewPager
+//                        ArrayList<String> urls = new ArrayList<>();
+//
+//                        for(int i = 0; i < mPhotoList.size(); i++){
+//                            GalleryItem singlePhoto = mPhotoList.get(i);
+//                            urls.add(singlePhoto.getUrl() + "/800");
+//                        }
+//                        mCallback.viewImage(urls, position);
                     }
                 }));
 
@@ -174,12 +182,16 @@ public class GalleryFragment extends Fragment {
                         try {
                             JSONObject singlePhotoItem = response.getJSONObject(i);
                             String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
-                            Log.v(TAG, photoUrl);
+                            String itemName = singlePhotoItem.getString(ApiConstants.USER_PHOTO_TITLE);
+                            String makerName = singlePhotoItem.getString(ApiConstants.USER_PHOTO_MAKER); //TODO: set this in ApiConstants when it exists
+
+                            galleryItem.setItemName(itemName);
+                            galleryItem.setMakerName("Creative Commons");
                             galleryItem.setUrl(photoUrl);
 
-                            if(photoUrl == null){
-                                galleryItem.setProgress(true);
-                            }
+//                            if(photoUrl == null){
+//                                galleryItem.setProgress(true);
+//                            }
                             mPhotoList.add(galleryItem);
                         } catch (JSONException e) {
                             Log.v(TAG, e.getMessage());

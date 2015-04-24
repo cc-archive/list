@@ -67,7 +67,7 @@ public final class ApiConstants {
     public static final String MAKER_NAME = "name";
     public static final String MAKER_URI = "uri";
 
-    //Photo
+    //POST Photo
     public static final String PHOTO_ID = "id";
     public static final String PHOTO_ITEM_ID = "itemID";
     public static final String PHOTO_USER_ID = "userID";
@@ -75,8 +75,12 @@ public final class ApiConstants {
     public static final String POST_PHOTO_KEY = "filedata";
     public static final String USER_TOKEN = "skey";
 
+    //GET Photo
     //User Photo List
     public static final String USER_PHOTO_URL = "url";
+    public static final String USER_PHOTO_TITLE = "title";
+    public static final String USER_PHOTO_MAKER = "makerid";
+
 
     //Creative Commons API
     public static final String URL = "https://thelist.creativecommons.org/api";
