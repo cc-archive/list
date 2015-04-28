@@ -13,6 +13,7 @@ import org.creativecommons.thelist.adapters.ImageAdapter;
 import java.util.ArrayList;
 
 public class ImageActivity extends ActionBarActivity {
+    private static final String TAG = ImageActivity.class.getSimpleName();
 
     private ImageAdapter adapter;
     private ViewPager viewPager;
@@ -22,24 +23,24 @@ public class ImageActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
+        //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_transparent);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(R.id.imagePager);
-
+        //Get incoming data
         Bundle b = getIntent().getExtras();
         ArrayList<GalleryItem> photoObjects = b.getParcelableArrayList("photos");
         int position = b.getInt("position", 0);
 
+        //View Pager
+        viewPager = (ViewPager) findViewById(R.id.imagePager);
         adapter = new ImageAdapter(ImageActivity.this, photoObjects);
-
         viewPager.setAdapter(adapter);
 
         //displaying selected image first
         viewPager.setCurrentItem(position);
-    }
+    } //onCreate
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,4 +63,5 @@ public class ImageActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-}
+
+} //ImageActivity

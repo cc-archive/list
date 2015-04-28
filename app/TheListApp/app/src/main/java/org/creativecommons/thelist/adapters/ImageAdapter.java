@@ -14,15 +14,19 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.layouts.TouchImageView;
 
 import java.util.ArrayList;
+
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageAdapter extends PagerAdapter {
     public static final String TAG = ImageAdapter.class.getSimpleName();
 
     private Activity activity;
     private ArrayList<GalleryItem> photoObjects;
+    private PhotoViewAttacher mAttacher;
+    private PhotoView mImgDisplay;
     private LayoutInflater inflater;
 
     // constructor
@@ -44,35 +48,74 @@ public class ImageAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        TouchImageView imgDisplay;
-        TextView itemName;
-        TextView makerName;
 
         inflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewLayout = inflater.inflate(R.layout.layout_fullscreen_image, container,
                 false);
 
-        imgDisplay = (TouchImageView) viewLayout.findViewById(R.id.imgDisplay);
-        itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
-        makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
+        //Photoview Elements
+        //mImgDisplay = new PhotoView(container.getContext());
+        mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
+        mImgDisplay.setVisibility(View.VISIBLE);
+
+        final android.support.v7.widget.Toolbar galleryImage;
 
         GalleryItem g = photoObjects.get(position);
+        String photoUrl = g.getUrl() + "/800";
 
-        Log.v(TAG, g.getItemName() + " " + g.getUrl() + " " + g.getMakerName());
+        galleryImage = (android.support.v7.widget.Toolbar)
+                viewLayout.findViewById(R.id.gallery_image_container);
+
+        TextView itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
+        TextView makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
 
         itemName.setText(g.getItemName());
         makerName.setText("requested by " + g.getMakerName());
 
-        String photoUrl = g.getUrl() + "/800";
+        Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
 
         Picasso.with(activity)
                 .load(photoUrl)
-                .placeholder(R.drawable.progress_view_large) //TODO: switch drawable
+                .placeholder(R.drawable.progress_view_large)
                 .error(R.drawable.progress_view_large)
-                .into(imgDisplay);
+                .into(mImgDisplay, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.v(TAG, "Successful image load into PhotoView");
 
-        ((ViewPager) container).addView(viewLayout);
+                        if(mAttacher != null){
+                            Log.v(TAG, "ATTACHER NOT NULL");
+                            mAttacher.update();
+                        }else{
+                            Log.v(TAG, "ATTACHER IS NULL");
+
+                            mAttacher = new PhotoViewAttacher(mImgDisplay);
+
+                            Log.v(TAG, "NEW ATTACHER CREATED");
+                        }
+
+                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                            @Override
+                            public void onViewTap(View view, float x, float y) {
+                                Log.v(TAG, "TAPPED THAT VIEW");
+
+                                if(galleryImage.getVisibility() == View.INVISIBLE){
+                                    galleryImage.setVisibility(View.VISIBLE);
+                                } else {
+                                    galleryImage.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        });
+                    } //onSuccess
+
+                    @Override
+                    public void onError() {
+                        Log.v(TAG, "Error loading image into PhotoView");
+                    } //onError
+                });
+
+                ((ViewPager) container).addView(viewLayout);
 
         return viewLayout;
     }
@@ -82,4 +125,4 @@ public class ImageAdapter extends PagerAdapter {
         ((ViewPager) container).removeView((RelativeLayout) object);
 
     }
-}
+} //ImageAdapter

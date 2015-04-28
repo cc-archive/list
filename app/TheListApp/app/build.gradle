@@ -1,14 +1,5 @@
-//buildscript {
-//    repositories {
-//        jcenter()
-//    }
-//    dependencies {
-//        classpath 'com.github.forsety:adr:0.1'
-//    }
-//}
-//
 apply plugin: 'com.android.application'
-//apply plugin: 'com.github.forsety.adr'
+
 
 android {
     signingConfigs {
@@ -56,6 +47,8 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.4.1'
     compile 'org.apache.httpcomponents:httpmime:4.4.1'
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'com.github.chrisbanes.photoview:library:1.2.2'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 //    compile 'com.squareup.okhttp:okhttp:2.3.0'
 //    compile 'com.squareup.okio:okio:1.3.0'
 }

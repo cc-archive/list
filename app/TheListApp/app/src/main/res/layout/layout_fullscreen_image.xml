@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <org.creativecommons.thelist.layouts.TouchImageView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:scaleType=""/>-->
+
+    <uk.co.senab.photoview.PhotoView
         android:id="@+id/imgDisplay"
+        android:layout_alignParentTop="true"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"/>
 
-    <include layout="@layout/toolbar_gallery"
-        android:id="@+id/toolbar_gallery"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.Toolbar android:id="@+id/gallery_image_container"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@color/translucent_background"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView android:id="@+id/gallery_item_name"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_white"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:singleLine="true"/>
+
+            <TextView android:id="@+id/gallery_maker_name"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_white"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+</RelativeLayout>

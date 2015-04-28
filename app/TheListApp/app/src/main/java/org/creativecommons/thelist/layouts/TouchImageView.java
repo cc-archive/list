@@ -25,7 +25,6 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -55,6 +54,7 @@ public class TouchImageView extends ImageView {
     int oldMeasuredWidth, oldMeasuredHeight;
 
     ScaleGestureDetector mScaleDetector;
+    //GestureDetector.SimpleOnGestureListener mTapDetector;
 
     Context context;
 
@@ -72,6 +72,8 @@ public class TouchImageView extends ImageView {
         super.setClickable(true);
         this.context = context;
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+        //mTapDetector = new TapGestureListener();
+
         matrix = new Matrix();
         m = new float[9];
         setImageMatrix(matrix);
@@ -82,6 +84,7 @@ public class TouchImageView extends ImageView {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mScaleDetector.onTouchEvent(event);
+                //mTapDetector.onSingleTapUp(event);
                 PointF curr = new PointF(event.getX(), event.getY());
 
                 switch (event.getAction()) {
@@ -163,6 +166,17 @@ public class TouchImageView extends ImageView {
             return true;
         }
     }
+
+//    class TapGestureListener extends
+//            GestureDetector.SimpleOnGestureListener {
+//        private static final String DEBUG_TAG = "Gestures";
+//
+//        @Override
+//        public boolean onSingleTapUp(MotionEvent e) {
+//            Log.d(DEBUG_TAG,"onSingleTapUp: " + e.toString());
+//            return true;
+//        }
+//    }
 
     void fixTrans() {
         matrix.getValues(m);
