@@ -57,15 +57,28 @@ public class ImageAdapter extends PagerAdapter {
         //Photoview Elements
         //mImgDisplay = new PhotoView(container.getContext());
         mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
-        mImgDisplay.setVisibility(View.VISIBLE);
 
+        mAttacher = new PhotoViewAttacher(mImgDisplay);
         final android.support.v7.widget.Toolbar galleryImage;
-
-        GalleryItem g = photoObjects.get(position);
-        String photoUrl = g.getUrl() + "/800";
 
         galleryImage = (android.support.v7.widget.Toolbar)
                 viewLayout.findViewById(R.id.gallery_image_container);
+
+        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                Log.v(TAG, "TAPPED THAT VIEW");
+
+                if(galleryImage.getVisibility() == View.INVISIBLE){
+                    galleryImage.setVisibility(View.VISIBLE);
+                } else {
+                    galleryImage.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        GalleryItem g = photoObjects.get(position);
+        String photoUrl = g.getUrl() + "/800";
 
         TextView itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
         TextView makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
@@ -92,21 +105,21 @@ public class ImageAdapter extends PagerAdapter {
 
                             mAttacher = new PhotoViewAttacher(mImgDisplay);
 
+                            mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                                @Override
+                                public void onViewTap(View view, float x, float y) {
+                                    Log.v(TAG, "TAPPED THAT VIEW");
+
+                                    if(galleryImage.getVisibility() == View.INVISIBLE){
+                                        galleryImage.setVisibility(View.VISIBLE);
+                                    } else {
+                                        galleryImage.setVisibility(View.INVISIBLE);
+                                    }
+                                }
+                            });
+
                             Log.v(TAG, "NEW ATTACHER CREATED");
                         }
-
-                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                            @Override
-                            public void onViewTap(View view, float x, float y) {
-                                Log.v(TAG, "TAPPED THAT VIEW");
-
-                                if(galleryImage.getVisibility() == View.INVISIBLE){
-                                    galleryImage.setVisibility(View.VISIBLE);
-                                } else {
-                                    galleryImage.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                        });
                     } //onSuccess
 
                     @Override
