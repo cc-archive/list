@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.creativecommons.thelist.fragments.TermsFragment"
+    android:orientation="vertical"
+    android:weightSum="5"
+    style="@style/fragment_layout_main">
+
+    <TextView
+        style="@style/flat_button_dark"
+        android:id="@+id/cancelButton"
+        android:text="@string/cancel_button_label"
+        android:layout_weight="0"
+        android:layout_gravity="right" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:padding="10dp"
+        android:id="@+id/section_loading">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/terms_logo"
+            android:id="@+id/confirm_icon"
+            android:contentDescription="@string/cc_logo_contentDescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:paddingTop="25dp"
+        android:id="@+id/section_terms"
+        android:layout_marginTop="10dp">
+            <TextView
+                style="@style/fragment_title"
+                android:text="@string/terms_fragment_title"
+                android:id="@+id/account_title"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:maxLines="1" />
+            <TextView
+                android:id="@+id/random_item_text"
+                android:text="@string/terms_fragment_text"
+                android:textColor="@color/primary_text_default_material_dark"
+                style="@style/fragment_text" />
+             <!--TODO: Should have flat button styling-->
+            <TextView
+                style="@style/clickable_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_learn_more_label"
+                android:id="@+id/learnMoreButton"
+                android:layout_below="@+id/random_item_text"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:layout_marginTop="10dp"
+                android:gravity="center" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_checkbox_label"
+                android:button="@drawable/btn_check"
+                android:id="@+id/checkBox"
+                android:gravity="center"
+                android:textColor="@color/primary_text_default_material_dark"
+                android:layout_below="@+id/learnMoreButton"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="37dp" />
+
+            <Button
+                style="@style/flat_button_dark"
+                android:text="@string/terms_continue_button_label"
+                android:id="@+id/nextButton"
+                android:visibility="invisible"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+    </RelativeLayout>
+</LinearLayout>
