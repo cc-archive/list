@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -100,7 +99,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     private Menu menu;
     private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
-    protected FrameLayout mFrameLayout;
     protected TextView mEmptyView;
 
     // --------------------------------------------------------
@@ -140,7 +138,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         //mUploadText = (TextView) activity.findViewById(R.id.upload_text);
 
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
-        mFrameLayout = (FrameLayout)activity.findViewById(R.id.overlay_fragment_container);
 
         mFab = (FloatingActionButton) activity.findViewById(R.id.fab);
         mFab.setEnabled(false);
