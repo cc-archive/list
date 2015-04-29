@@ -87,7 +87,7 @@
 
     <!-- Onboarding Explainers -->
     <string-array name="onboarding_explainers">
-        <item>The List powered by Creative Commons is a collaborative project to build a global collection of images that anyone can use</item>
+        <item>The List Powered by Creative Commons is a collaborative project to build a global collection of images that anyone can use</item>
         <item>Photos you share with the app will be available for any person or organization to
             use, as long as they give you credit</item>
         <item>You’ll be helping creators tell their stories – on Wikipedia, social media, in the
@@ -156,8 +156,8 @@
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
     <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
-    <string name="alpha_release_terms_label"><a href="https://thelist.creativecommons.org/app/alpha-tos.html">
-        Use of this alpha release of The List powered by Creative Commons is subject to these terms and conditions</a></string>
+    <string name="alpha_release_terms_label"><a href="https://github.com/creativecommons/list/blob/master/docs/beta-TOS.md">
+        Use of this beta release of The List Powered by Creative Commons is subject to these terms and conditions</a></string>
 
     <!--Add Item Fragment-->
     <string name="category_prompt">Choose a category</string>
@@ -192,7 +192,7 @@
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
-    <string name="app_version">Version 1.0 (April 17 2015)</string>
+    <string name="app_version">Version 2.0 (May 1 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
 
@@ -208,7 +208,6 @@
     <string name="R.string.drawer_callback_exception_message">must implement NavigationDrawerFragment.NavigationDrawerListener</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
     <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
     <string name="drawer_account_name_not_found">Account name not found</string>

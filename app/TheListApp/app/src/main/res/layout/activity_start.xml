@@ -24,24 +24,18 @@
                 android:id="@+id/account_title"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:paddingBottom="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="130dp"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginTop="130dp"/>
 
-            <!--TODO: ADD TAGLINE-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:text="Some kind of tagline"
+                android:text="powered by Creative Commons"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/secondary_text_default_material_light"
                 android:id="@+id/intro"
                 android:gravity="center"
                 android:layout_below="@id/account_title"
-                android:paddingBottom="30dp" />
+                android:paddingBottom="50dp" />
 
             <Button
                 android:layout_height="wrap_content"
