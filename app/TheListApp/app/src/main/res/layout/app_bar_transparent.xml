@@ -5,7 +5,3 @@
     android:background="@android:color/transparent"
     app:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-    <!--android:paddingTop="@dimen/app_bar_top_padding"-->
-
-    <!--android:minHeight="?attr/actionBarSize"-->

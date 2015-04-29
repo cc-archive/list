@@ -103,41 +103,6 @@ public class MainActivity extends ActionBarActivity implements
                 (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
-
-        //TODO: direct to gallery if intent comes from notification (2.0)
-//        Intent notificationIntent = getIntent();
-//
-//        if(notificationIntent != null){
-//            try{
-//                String action = notificationIntent.getAction().toUpperCase();
-//
-//                if (action.equals(MessageHelper.INTENT_ACTION)) {
-//                    GalleryFragment galleryFragment = new GalleryFragment();
-//                    //load gallery view
-//                    FragmentManager fragmentManager = getSupportFragmentManager();
-//                    fragmentManager.beginTransaction()
-//                            .replace(R.id.main_content_container, galleryFragment)
-//                            .commit();
-//
-//                    // update selected item and title
-//                    getSupportActionBar().setTitle(mDrawerTitles[1]);
-//                    return;
-//                }
-//                else{
-//                    Log.d(TAG, "Intent was null");
-//                }
-//            }catch(Exception e) {
-//                Log.e(TAG, "Problem consuming action from intent", e);
-//                MyListFragment listFragment = new MyListFragment();
-//                //load default view
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.main_content_container, listFragment)
-//                        .commit();
-//                return;
-//            }
-//        }
-
         //If there is no savedInstanceState, load in default fragment
         if(savedInstanceState == null){
             MyListFragment listFragment = new MyListFragment();
