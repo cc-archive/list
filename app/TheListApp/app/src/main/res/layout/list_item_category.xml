@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.creativecommons.thelist.layouts.CheckableRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/checkable_layout"
         android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -8,26 +9,16 @@
         android:layout_centerVertical="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/checkable_layout">
+        android:layout_alignParentStart="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_centerInParent="true">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/category_checkmark"
-            android:visibility="invisible"
-            android:alpha="0.5"
-            android:src="@drawable/ic_check_circle_white_24dp"
-            android:contentDescription="checkmark" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:textAppearance="@style/text_body2"
             android:textColor="@color/primary_text_default_material_dark"
@@ -36,6 +27,5 @@
             android:id="@+id/category_title"/>
 
     </LinearLayout>
-
 
 </org.creativecommons.thelist.layouts.CheckableRelativeLayout>

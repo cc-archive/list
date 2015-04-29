@@ -5,4 +5,14 @@
         <attr name="android:textColor"/>
         <attr name="minTextSize" format="dimension" />
     </declare-styleable>
+
+    <!--<resources>-->
+        <!--<declare-styleable name="TriangleView">-->
+            <!--<attr name="leftLabel" format="string" />-->
+            <!--<attr name="rightLabel" format="string" />-->
+            <!--<attr name="leftLabelStyle" format="reference" />-->
+            <!--<attr name="rightLabelStyle" format="reference" />-->
+        <!--</declare-styleable>-->
+
+    <!--</resources>-->
 </resources>

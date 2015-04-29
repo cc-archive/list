@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -337,13 +338,11 @@ public final class RequestMethods {
                         new Response.Listener<JSONArray>() {
                             @Override
                             public void onResponse(JSONArray response) {
-                                //Log.v(TAG, "> getUserCategories > onResponse: " + response);
                                 callback.onSuccess(response);
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Log.d(TAG, "> getUserCategories > onErrorResponse: " + error.getMessage());
                         callback.onFail(error);
                     }
                 }) {
@@ -405,6 +404,7 @@ public final class RequestMethods {
                                 Log.v(TAG, "A CATEGORY IS BEING ADDED");
 
                                 mSharedPref.deleteUserCategoryPreference(catId);
+                                Toast.makeText(mContext,"category added", Toast.LENGTH_SHORT).show();
                             }
                         }, new Response.ErrorListener() {
                     @Override

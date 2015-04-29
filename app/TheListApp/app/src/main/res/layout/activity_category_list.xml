@@ -19,10 +19,4 @@
         android:clipToPadding="false"
         android:gravity="center"
         android:stretchMode="columnWidth" />
-    <!--<Button-->
-        <!--style="@style/button_snackbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_weight="0"-->
-        <!--android:text="@string/next_button_label"-->
-        <!--android:id="@+id/nextButton"/>-->
 </LinearLayout>
