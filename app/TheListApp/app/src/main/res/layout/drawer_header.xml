@@ -39,7 +39,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:src="@drawable/cc_logo"
+        android:src="@drawable/splash_cc_logo"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="38dp"
         android:id="@+id/circleView"
