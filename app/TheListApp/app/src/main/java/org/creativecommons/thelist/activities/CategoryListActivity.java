@@ -195,9 +195,8 @@ public class CategoryListActivity extends ActionBarActivity {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //ImageView checkmarkView = (ImageView)view.findViewById(R.id.checkmark);
                 CheckableRelativeLayout checkableLayout = (CheckableRelativeLayout)view.findViewById(R.id.checkable_layout);
-                //ImageView checkIcon = (ImageView) view.findViewById(R.id.category_checkmark);
+                ImageView checkIcon = (ImageView) view.findViewById(R.id.category_checkmark);
                 TextView categoryNameLabel = (TextView)view.findViewById(R.id.category_title);
 
                 //Get item clicked + its category id
@@ -206,14 +205,14 @@ public class CategoryListActivity extends ActionBarActivity {
 
                 if(mGridView.isItemChecked(position)) {
                     checkableLayout.getBackground().setAlpha(128);
-                    //checkIcon.setVisibility(View.VISIBLE);
+                    checkIcon.setVisibility(View.VISIBLE);
                     categoryNameLabel.setTextColor(getResources().getColor(R.color.secondary_text_material_dark));
                     item.setCategoryChecked(true);
                     mRequestMethods.addCategory(catId);
                     //Log.v(TAG, "ADDED " + catId);
                 } else {
                     checkableLayout.getBackground().setAlpha(255);
-                    //checkIcon.setVisibility(View.GONE);
+                    checkIcon.setVisibility(View.INVISIBLE);
                     categoryNameLabel.setTextColor(getResources().getColor(R.color.primary_text_default_material_dark));
                     item.setCategoryChecked(false);
                     mRequestMethods.removeCategory(catId);

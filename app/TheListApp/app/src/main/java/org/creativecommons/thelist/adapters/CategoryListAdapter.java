@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
@@ -71,6 +72,7 @@ public class CategoryListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.checkableLayout = (CheckableRelativeLayout)convertView.findViewById(R.id.checkable_layout);
             holder.categoryNameLabel = (TextView)convertView.findViewById(R.id.category_title);
+            holder.categoryCheckIcon = (ImageView)convertView.findViewById(R.id.category_checkmark);
 
             convertView.setTag(holder);
         } else {
@@ -91,12 +93,14 @@ public class CategoryListAdapter extends BaseAdapter {
 
         //Set checkmarkView visibility
         if(c.getCategoryChecked()){
-            holder.checkableLayout.getBackground().setAlpha(100);
+            holder.checkableLayout.getBackground().setAlpha(200);
             holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.secondary_text_material_dark));
+            holder.categoryCheckIcon.setVisibility(View.VISIBLE);
 
         } else {
             holder.checkableLayout.getBackground().setAlpha(255);
             holder.categoryNameLabel.setTextColor(activity.getResources().getColor(R.color.primary_text_default_material_dark));
+            holder.categoryCheckIcon.setVisibility(View.INVISIBLE);
         }
 
         return convertView;
@@ -105,5 +109,6 @@ public class CategoryListAdapter extends BaseAdapter {
     private static class ViewHolder {
         CheckableRelativeLayout checkableLayout;
         TextView categoryNameLabel;
+        ImageView categoryCheckIcon;
     }
 }
