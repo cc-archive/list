@@ -29,14 +29,14 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:id="@+id/linearLayout"
+        android:id="@+id/text_container"
         android:paddingTop="60dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="false">
 
-        <org.creativecommons.thelist.layouts.AutoResizeTextView2
+        <org.creativecommons.thelist.layouts.AutoResizeTextView
             android:id="@+id/random_item_text"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"

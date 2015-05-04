@@ -32,7 +32,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -40,6 +39,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.UserListItem;
+import org.creativecommons.thelist.layouts.AutoResizeTextView;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
@@ -76,7 +76,7 @@ public class RandomActivity extends Activity {
     int itemPositionCount = 0;
 
     //UI Elements
-    TextView mTextView;
+    AutoResizeTextView mTextView;
     ProgressBar mProgressBar;
     Button mDoneButton;
     ImageButton mYesButton;
@@ -102,7 +102,7 @@ public class RandomActivity extends Activity {
 
         //UI Elements
         mBackground = (RelativeLayout) findViewById(R.id.random_item_background);
-        mTextView = (TextView) findViewById(R.id.random_item_text);
+        mTextView = (AutoResizeTextView) findViewById(R.id.random_item_text);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mDoneButton = (Button) findViewById(R.id.doneButton);
 
@@ -316,6 +316,9 @@ public class RandomActivity extends Activity {
                             mBackground.setBackgroundColor(getResources().getColor(R.color.default_500));
                             break;
                     }
+
+//                    mTextView.setText("Matt Lee needs a picture of a very very very long sentence in this phone and stuff." +
+//                            "So much more stuff than you could ever imagine and there were rainbows and lollipops everywhere.");
 
                     mTextView.setText(mMakerName + " needs a picture of " + mItemName);
                     mYesButton.setVisibility(View.VISIBLE);
