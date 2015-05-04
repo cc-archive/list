@@ -26,7 +26,8 @@ public class ImageAdapter extends PagerAdapter {
     private Activity activity;
     private ArrayList<GalleryItem> photoObjects;
     private PhotoViewAttacher mAttacher;
-    private PhotoView mImgDisplay;
+    //private PhotoView mImgDisplay;
+    //private android.support.v7.widget.Toolbar mGalleryCaption;
     private LayoutInflater inflater;
 
     // constructor
@@ -55,27 +56,11 @@ public class ImageAdapter extends PagerAdapter {
                 false);
 
         //Photoview Elements
-        //mImgDisplay = new PhotoView(container.getContext());
-        mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
+        final PhotoView mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
 
-        mAttacher = new PhotoViewAttacher(mImgDisplay);
-        final android.support.v7.widget.Toolbar galleryImage;
+        final android.support.v7.widget.Toolbar galleryCaption = (android.support.v7.widget.Toolbar)
+                viewLayout.findViewById(R.id.gallery_caption_container);
 
-        galleryImage = (android.support.v7.widget.Toolbar)
-                viewLayout.findViewById(R.id.gallery_image_container);
-
-        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                Log.v(TAG, "TAPPED THAT VIEW");
-
-                if(galleryImage.getVisibility() == View.INVISIBLE){
-                    galleryImage.setVisibility(View.VISIBLE);
-                } else {
-                    galleryImage.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
 
         GalleryItem g = photoObjects.get(position);
         String photoUrl = g.getUrl() + "/800";
@@ -97,29 +82,23 @@ public class ImageAdapter extends PagerAdapter {
                     public void onSuccess() {
                         Log.v(TAG, "Successful image load into PhotoView");
 
-                        if(mAttacher != null){
-                            Log.v(TAG, "ATTACHER NOT NULL");
-                            mAttacher.update();
-                        }else{
-                            Log.v(TAG, "ATTACHER IS NULL");
+                        mAttacher = new PhotoViewAttacher(mImgDisplay);
 
-                            mAttacher = new PhotoViewAttacher(mImgDisplay);
+                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                            @Override
+                            public void onViewTap(View view, float x, float y) {
+                                Log.v(TAG, "TAPPED THAT VIEW");
 
-                            mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                                @Override
-                                public void onViewTap(View view, float x, float y) {
-                                    Log.v(TAG, "TAPPED THAT VIEW");
-
-                                    if(galleryImage.getVisibility() == View.INVISIBLE){
-                                        galleryImage.setVisibility(View.VISIBLE);
-                                    } else {
-                                        galleryImage.setVisibility(View.INVISIBLE);
-                                    }
+                                if(galleryCaption.getVisibility() == View.INVISIBLE){
+                                    galleryCaption.setVisibility(View.VISIBLE);
+                                } else {
+                                    galleryCaption.setVisibility(View.INVISIBLE);
                                 }
-                            });
+                            }
+                        });
 
-                            Log.v(TAG, "NEW ATTACHER CREATED");
-                        }
+                        Log.v(TAG, "NEW ATTACHER CREATED");
+                    //}
                     } //onSuccess
 
                     @Override

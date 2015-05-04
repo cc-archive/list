@@ -31,7 +31,6 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
-import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -50,7 +49,6 @@ public class AddItemActivity extends ActionBarActivity {
     public static final String TAG = AddItemActivity.class.getSimpleName();
 
     Context mContext;
-    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
     protected Uri mMediaUri;
@@ -67,7 +65,6 @@ public class AddItemActivity extends ActionBarActivity {
     private EditText mDescriptionField;
     private String mDescription;
     private Spinner mCategorySpinner;
-    private RelativeLayout mStickyFooter;
     private RelativeLayout mStickyFooterContainer;
     private Button mDoneButton;
 
@@ -85,7 +82,6 @@ public class AddItemActivity extends ActionBarActivity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-        mCurrentUser = new ListUser(mContext);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
@@ -96,7 +92,6 @@ public class AddItemActivity extends ActionBarActivity {
         mDescription = null;
         mCategorySpinner = (Spinner) findViewById(R.id.category_spinner);
         mAddImage = (ImageButton) findViewById(R.id.add_item_example_image);
-        mStickyFooter = (RelativeLayout)findViewById(R.id.add_item_sticky_footer);
         mStickyFooterContainer = (RelativeLayout) findViewById(R.id.sticky_footer_container);
         mDoneButton = (Button) findViewById(R.id.add_item_button);
 
@@ -342,24 +337,38 @@ public class AddItemActivity extends ActionBarActivity {
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
 
         mMakerItemProgressBar.setVisibility(View.VISIBLE);
-        mStickyFooterContainer.setVisibility(View.INVISIBLE);
+
+        mDoneButton.setEnabled(false);
+        mDoneButton.setTextColor(getResources().getColor(R.color.hint_disabled_text_material_light));
 
         mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
                     public void onSuccess() {
-                        mMessageHelper.notifyUploadSuccess(title);
-                        mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+                        //mMessageHelper.notifyUploadSuccess(title);
 
-                        finish();
-                    }
+                        //Delay success response so user can process what’s going on
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(mContext, "Your request was successfully sent!",
+                                        Toast.LENGTH_LONG).show();
+                                mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+
+                                Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }, 1000);
+                    } //onSuccess
 
                     @Override
                     public void onFail() {
-                        mMessageHelper.notifyUploadFail(title);
+                        //mMessageHelper.notifyUploadFail(title);
+                        Toast.makeText(mContext,
+                                "Looks like there was a problem sending your request. Try again!",
+                                Toast.LENGTH_LONG).show();
                         mMakerItemProgressBar.setVisibility(View.INVISIBLE);
-
-                    }
+                    } //onFail
                 });
 
     } //startItemUpload

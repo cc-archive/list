@@ -70,7 +70,8 @@
     <!-- Black 54% -->
     <color name="secondary_text_material_light">#8a000000</color>
     <!--Hint/Disabled 26% Black-->
-    <color name="hint_disabled_text_material_light">@color/abc_primary_text_disable_only_material_light</color>
+    <!--<color name="hint_disabled_text_material_light">@color/abc_primary_text_disable_only_material_light</color>-->
+    <color name="hint_disabled_text_material_light">#c4c6c8</color>
 
     <!--Divider Black 12%-->
     <color name="divider_material_black">@color/md_divider_black</color>

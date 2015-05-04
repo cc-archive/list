@@ -164,7 +164,7 @@ public class MessageHelper {
 
     public void galleryNetworkFailMessage(){
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_network),
-                "The gallery is only available offline");
+                "The gallery is only available online");
     }
 
     // --------------------------------------------------------

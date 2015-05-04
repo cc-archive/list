@@ -149,6 +149,10 @@ public class MainActivity extends ActionBarActivity implements
 
                 break;
             case 1: //My Photos
+                if(!mRequestMethods.isNetworkAvailable()){
+                    mMessageHelper.toastNeedInternet();
+                    return;
+                }
 
                 fragment = new GalleryFragment();
 
@@ -178,17 +182,14 @@ public class MainActivity extends ActionBarActivity implements
                 startActivity(reqIntent);
                 break;
             case 4: //About The App
+
                 Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(aboutIntent);
+
                 break;
             case 5: //Give Feedback
                 //Set survey taken
                 mSharedPref.setSurveyTaken(true);
-
-                // Set screen name.
-                t.setScreenName("Give M");
-                // Send a screen view.
-                t.send(new HitBuilders.ScreenViewBuilder().build());
 
                 //Go to Google Form
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
@@ -200,6 +201,8 @@ public class MainActivity extends ActionBarActivity implements
         } //switch
 
         if (fragment != null) {
+            mDrawerLayout.closeDrawer(mDrawerView);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.main_content_container, fragment)
@@ -208,7 +211,7 @@ public class MainActivity extends ActionBarActivity implements
 
             // update selected item and title, then close the drawer
             getSupportActionBar().setTitle(mDrawerTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerView);
+
         } else {
             // error in creating fragment
             Log.e(TAG, "Error in creating fragment");

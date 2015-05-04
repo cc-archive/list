@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="AutoResizeTextView">
+    <declare-styleable name="AutoResizeTextView2">
         <attr name="android:text"/>
         <attr name="android:textColor"/>
         <attr name="minTextSize" format="dimension" />

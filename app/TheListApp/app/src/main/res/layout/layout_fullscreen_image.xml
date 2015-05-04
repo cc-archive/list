@@ -7,12 +7,12 @@
     <uk.co.senab.photoview.PhotoView
         android:id="@+id/imgDisplay"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/gallery_image_container"
+        android:layout_above="@+id/gallery_caption_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scaleType="fitCenter"/>
 
-    <android.support.v7.widget.Toolbar android:id="@+id/gallery_image_container"
+    <android.support.v7.widget.Toolbar android:id="@+id/gallery_caption_container"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
