@@ -821,14 +821,14 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
 
         //Hide progress bar if it takes too much time to upload
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
-//                    mUploadProgressBarContainer.setVisibility(View.GONE);
-//                }
-//            }
-//        }, 3000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
+                    mUploadProgressBarContainer.setVisibility(View.GONE);
+                }
+            }
+        }, 3000);
 
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {

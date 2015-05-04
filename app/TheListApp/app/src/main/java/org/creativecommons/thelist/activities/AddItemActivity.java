@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -67,6 +68,7 @@ public class AddItemActivity extends ActionBarActivity {
     private Spinner mCategorySpinner;
     private RelativeLayout mStickyFooterContainer;
     private Button mDoneButton;
+    private FrameLayout mOverlay;
 
     private Boolean mPhotoAdded;
 
@@ -94,6 +96,8 @@ public class AddItemActivity extends ActionBarActivity {
         mAddImage = (ImageButton) findViewById(R.id.add_item_example_image);
         mStickyFooterContainer = (RelativeLayout) findViewById(R.id.sticky_footer_container);
         mDoneButton = (Button) findViewById(R.id.add_item_button);
+
+        //mOverlay = (FrameLayout) findViewById(R.id.add_item_overlay);
 
         ArrayList<EditText> editList = new ArrayList<>();
         editList.add(mItemNameField);
@@ -336,11 +340,16 @@ public class AddItemActivity extends ActionBarActivity {
 
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
 
+        //mOverlay.setBackgroundColor(getResources().getColor(R.color.translucent_background));
         mMakerItemProgressBar.setVisibility(View.VISIBLE);
 
+        //Disable button/editexts
         mDoneButton.setEnabled(false);
-        mDoneButton.setTextColor(getResources().getColor(R.color.hint_disabled_text_material_light));
+        mDescriptionField.setEnabled(false);
+        mItemNameField.setEnabled(false);
+        mCategorySpinner.setEnabled(false);
 
+        //Add Item Request
         mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
@@ -358,7 +367,7 @@ public class AddItemActivity extends ActionBarActivity {
                                 Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
-                        }, 1000);
+                        }, 1500);
                     } //onSuccess
 
                     @Override

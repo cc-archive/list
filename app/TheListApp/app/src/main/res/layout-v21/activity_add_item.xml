@@ -128,8 +128,13 @@
                     android:layout_gravity="bottom"/>
             </RelativeLayout>
 
-
-
         </LinearLayout>
     </ScrollView>
+
+    <!--TODO: create overlay-->
+    <!--<FrameLayout-->
+        <!--android:id="@+id/add_item_overlay"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</FrameLayout>-->
 </RelativeLayout>
