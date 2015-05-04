@@ -11,8 +11,9 @@
     <Button
         style="@style/flat_button_light"
         android:text="@string/action_done"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:layout_marginTop="16dp"
+        android:layout_marginRight="12dp"
         android:textColor="@color/secondary_text_material_light"
         android:id="@+id/doneButton"
         android:layout_alignParentRight="true"/>

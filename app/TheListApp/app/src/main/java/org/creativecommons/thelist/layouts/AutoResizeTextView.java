@@ -64,7 +64,7 @@ public class AutoResizeTextView extends TextView {
     private float mMinTextSize = MIN_TEXT_SIZE;
 
     // Text view line spacing multiplier
-    private float mSpacingMult = 1.5f;
+    private float mSpacingMult = 1.25f;
 
     // Text view additional line spacing
     private float mSpacingAdd = 0.0f;
