@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -837,42 +836,39 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                     public void onSuccess() {
                         Log.d(TAG, "On Photo Upload Success");
 
-                        mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
+                        //TODO: replace with upload bar notification
+                        //mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
 
                         displayUserItems();
                         mUploadProgressBarContainer.setVisibility(View.GONE);
 
                         //Show snackbar confirmation
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                            mItemToBeUploaded = null;
-
-                            showPhotoUploadSnackbar("Photo Uploaded",
-                                    "dismiss", new ActionClickListener() {
-                                        @Override
-                                        public void onActionClicked(Snackbar snackbar) {
-                                            mFab.setEnabled(false);
-                                            snackbar.dismiss();
-
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    mFab.show();
-                                                    mFab.setEnabled(true);
-                                                }
-                                            }, 500);
-                                        }
-                                    });
-
-                        } //5.0 Snackbar
-
                         mItemToBeUploaded = null;
+
+                        showPhotoUploadSnackbar("Photo Uploaded",
+                                "dismiss", new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        mFab.setEnabled(false);
+                                        snackbar.dismiss();
+
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mFab.show();
+                                                mFab.setEnabled(true);
+                                            }
+                                        }, 500);
+                                    }
+                                });
 
                     } //onSuccess
                     @Override
                     public void onFail() {
                         Log.d(TAG, "On Photo Upload Fail");
 
-                        mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
+                        //TODO: replace with upload bar notification
+                        //mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -884,15 +880,13 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         }, 500);
 
                         //Show snackbar confirmation
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                            showPhotoUploadSnackbar("upload failed",
-                                    "retry", new ActionClickListener() {
-                                        @Override
-                                        public void onActionClicked(Snackbar snackbar) {
-                                            performPhotoUpload();
-                                        }
-                                    });
-                        } //5.0 snackbar
+                        showPhotoUploadSnackbar("upload failed",
+                                "retry", new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        performPhotoUpload();
+                                    }
+                                });
                     } //onFail
         });
     } //performPhotoUpload
