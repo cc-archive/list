@@ -4,12 +4,12 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "org.creativecommons.thelist"
         minSdkVersion 11
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 3
         versionName "2.0"
     }

@@ -1,5 +1,6 @@
 package org.creativecommons.thelist.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.webkit.WebView;
@@ -27,6 +28,13 @@ public class AboutActivity extends ActionBarActivity {
         aboutAppText.loadUrl("file:///android_asset/about_the_app.html");
 
     } //onCreate
+
+    //onBackPressed
+    @Override
+    public void onBackPressed() {
+        Intent homeIntent = new Intent(AboutActivity.this, MainActivity.class);
+        startActivity(homeIntent);
+    }
 
     @Override
     public void onStart(){
