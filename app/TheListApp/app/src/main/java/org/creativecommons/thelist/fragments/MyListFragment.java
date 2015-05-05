@@ -812,6 +812,10 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     } //startPhotoUpload
 
     public void performPhotoUpload(){
+
+        mItemList.remove(mItemToBeUploaded);
+        mFeedAdapter.notifyDataSetChanged();
+
         //Set upload count
         int uploadCount = mSharedPref.getUploadCount();
         mSharedPref.setUploadCount(uploadCount+1);

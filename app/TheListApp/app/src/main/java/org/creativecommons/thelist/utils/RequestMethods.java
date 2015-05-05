@@ -241,7 +241,8 @@ public final class RequestMethods {
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        //Check for login: required for this request
+        mCurrentUser.getAuthed(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -285,6 +286,7 @@ public final class RequestMethods {
                     }
                 };
                 queue.add(addMakerItemRequest);
+
             }
         });
     } //addMakerItem + photo

@@ -90,6 +90,7 @@ public class ListUser implements ServerAuthenticate {
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         if(mSharedPref.getUserId() == null) {
+            Log.v(TAG, "USER IS IS: " + mSharedPref.getUserId());
             return true;
         } else {
             return false;
@@ -161,6 +162,7 @@ public class ListUser implements ServerAuthenticate {
         //sessionComplete = false;
 
         if(isTempUser()){
+            Log.v(TAG, "IS TEMP USER TRUE");
             addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
                 public void onSuccess(String authtoken) {
@@ -174,7 +176,14 @@ public class ListUser implements ServerAuthenticate {
 
             if(account == null){
                 Log.v(TAG, "getToken > getAccount > account is null");
-                return;
+
+                addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+                    @Override
+                    public void onSuccess(String authtoken) {
+                        Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
+                        callback.onSuccess(authtoken);
+                    }
+                });
             }
 
             am.getAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,

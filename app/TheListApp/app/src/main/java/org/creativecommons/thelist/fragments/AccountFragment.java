@@ -141,6 +141,8 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                                 new ListUser.AuthCallback() {
                                     @Override
                                     public void onSuccess(String authtoken) {
+                                        Log.v(TAG, "> userSignIn > onSuccess :" + authtoken);
+
                                         //TODO: authtoken stuff
                                         Bundle data = new Bundle();
 
