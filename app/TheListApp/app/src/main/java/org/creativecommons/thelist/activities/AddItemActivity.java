@@ -32,6 +32,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -49,10 +50,11 @@ import java.util.Locale;
 public class AddItemActivity extends ActionBarActivity {
     public static final String TAG = AddItemActivity.class.getSimpleName();
 
-    Context mContext;
+    private Context mContext;
+    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
-    protected Uri mMediaUri;
+    private Uri mMediaUri;
     //protected Uri mLinkUri;
 
     //Spinner List
@@ -84,6 +86,7 @@ public class AddItemActivity extends ActionBarActivity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
+        mCurrentUser = new ListUser(AddItemActivity.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
@@ -340,45 +343,50 @@ public class AddItemActivity extends ActionBarActivity {
 
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
 
-        //mOverlay.setBackgroundColor(getResources().getColor(R.color.translucent_background));
-        mMakerItemProgressBar.setVisibility(View.VISIBLE);
+        mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(String authtoken) {
+                //mOverlay.setBackgroundColor(getResources().getColor(R.color.translucent_background));
+                mMakerItemProgressBar.setVisibility(View.VISIBLE);
 
-        //Disable button/editexts
-        mDoneButton.setEnabled(false);
-        mDescriptionField.setEnabled(false);
-        mItemNameField.setEnabled(false);
-        mCategorySpinner.setEnabled(false);
+                //Disable button/editexts
+                mDoneButton.setEnabled(false);
+                mDescriptionField.setEnabled(false);
+                mItemNameField.setEnabled(false);
+                mCategorySpinner.setEnabled(false);
 
-        //Add Item Request
-        mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
-                new RequestMethods.RequestCallback() {
-                    @Override
-                    public void onSuccess() {
-                        //mMessageHelper.notifyUploadSuccess(title);
-
-                        //Delay success response so user can process what’s going on
-                        new android.os.Handler().postDelayed(new Runnable() {
+                //Add Item Request
+                mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
+                        new RequestMethods.RequestCallback() {
                             @Override
-                            public void run() {
-                                Toast.makeText(mContext, "Your request was successfully sent!",
+                            public void onSuccess() {
+                                //mMessageHelper.notifyUploadSuccess(title);
+
+                                //Delay success response so user can process what’s going on
+                                new android.os.Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, "Your request was successfully sent!",
+                                                Toast.LENGTH_LONG).show();
+                                        mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+
+                                        Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }, 1500);
+                            } //onSuccess
+
+                            @Override
+                            public void onFail() {
+                                //mMessageHelper.notifyUploadFail(title);
+                                Toast.makeText(mContext,
+                                        "Looks like there was a problem sending your request. Try again!",
                                         Toast.LENGTH_LONG).show();
                                 mMakerItemProgressBar.setVisibility(View.INVISIBLE);
-
-                                Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }, 1500);
-                    } //onSuccess
-
-                    @Override
-                    public void onFail() {
-                        //mMessageHelper.notifyUploadFail(title);
-                        Toast.makeText(mContext,
-                                "Looks like there was a problem sending your request. Try again!",
-                                Toast.LENGTH_LONG).show();
-                        mMakerItemProgressBar.setVisibility(View.INVISIBLE);
-                    } //onFail
-                });
+                            } //onFail
+                        });
+            }
+        });
 
     } //startItemUpload
 
