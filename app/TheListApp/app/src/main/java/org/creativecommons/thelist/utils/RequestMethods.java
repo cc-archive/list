@@ -242,7 +242,7 @@ public final class RequestMethods {
         }
 
         //Check for login: required for this request
-        mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);

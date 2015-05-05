@@ -162,6 +162,23 @@ public class AddItemActivity extends ActionBarActivity {
             }
         });
 
+        //Click Listener to get sample image
+        mAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                if(mPhotoAdded){
+                    builder.setItems(R.array.photo_choices_remove, mDialogListener);
+                } else {
+                    builder.setItems(R.array.photo_choices, mDialogListener);
+                }
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
         mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,22 +210,6 @@ public class AddItemActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        //Click Listener to get sample image
-        mAddImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-                if(mPhotoAdded){
-                    builder.setItems(R.array.photo_choices_remove, mDialogListener);
-                } else {
-                    builder.setItems(R.array.photo_choices, mDialogListener);
-                }
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
     }
 
     //Show dialog when List Item is tapped
@@ -342,7 +343,6 @@ public class AddItemActivity extends ActionBarActivity {
     } //onActivityResult
 
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
-
         mCurrentUser.getAuthed(new ListUser.AuthCallback() {
             @Override
             public void onSuccess(String authtoken) {

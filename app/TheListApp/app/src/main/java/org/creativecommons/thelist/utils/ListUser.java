@@ -90,7 +90,6 @@ public class ListUser implements ServerAuthenticate {
                 (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         if(mSharedPref.getUserId() == null) {
-            Log.v(TAG, "USER IS IS: " + mSharedPref.getUserId());
             return true;
         } else {
             return false;
@@ -332,8 +331,7 @@ public class ListUser implements ServerAuthenticate {
                 public void run(AccountManagerFuture<Bundle> future) {
                     try {
                         Bundle bnd = future.getResult();
-                        //TODO: does this addAccountExplicitly
-                        //addSavedItemsToUserList();
+
                         Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
                         callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
@@ -345,7 +343,7 @@ public class ListUser implements ServerAuthenticate {
         }, null);
     }
 
-    //Helper for testing (TODO: remove in public releases)
+    //Helper for testing
     public void removeAccounts(final AuthCallback callback){
         Account[] availableAccounts = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
         for(Account account:availableAccounts){

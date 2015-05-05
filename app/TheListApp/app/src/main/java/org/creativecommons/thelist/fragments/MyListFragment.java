@@ -38,7 +38,6 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.adapters.UserListAdapter;
 import org.creativecommons.thelist.adapters.UserListItem;
-import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -782,40 +781,19 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
     //Start Upload + Respond
     public void startPhotoUpload(){
-        if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
-            mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
-                @Override
-                public void onSuccess(String authtoken) {
-                    Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
+        mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(String authtoken) {
 
-                    mItemList.remove(mItemToBeUploaded);
-                    mFeedAdapter.notifyDataSetChanged();
-                    performPhotoUpload();
-                }
-            });
-        } else {
-            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
-                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
-                        @Override
-                        public void onSuccess(String authtoken) {
-                            Log.d(TAG, "> addNewAccount > onSuccess, authtoken: " + authtoken);
-                            try {
-                                mItemList.remove(mItemToBeUploaded);
-                                mFeedAdapter.notifyDataSetChanged();
-                                performPhotoUpload();
-                            } catch (Exception e) {
-                                Log.d(TAG,"addAccount > " + e.getMessage());
-                            }
-                        }
-                    });
-        }
+                mItemList.remove(mItemToBeUploaded);
+                mFeedAdapter.notifyDataSetChanged();
+                performPhotoUpload();
+
+            }
+        });
     } //startPhotoUpload
 
     public void performPhotoUpload(){
-
-        mItemList.remove(mItemToBeUploaded);
-        mFeedAdapter.notifyDataSetChanged();
-
         //Set upload count
         int uploadCount = mSharedPref.getUploadCount();
         mSharedPref.setUploadCount(uploadCount+1);
@@ -884,7 +862,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         }, 500);
 
                         //Show snackbar confirmation
-                        showPhotoUploadSnackbar("upload failed",
+                        showPhotoUploadSnackbar("Upload failed",
                                 "retry", new ActionClickListener() {
                                     @Override
                                     public void onActionClicked(Snackbar snackbar) {
