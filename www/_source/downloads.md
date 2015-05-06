@@ -8,7 +8,7 @@ Downloads for The List app
 
 ### Download directly from GitHub
 
-<p><a href="https://github.com/creativecommons/list/releases/download/1.0/the_list-1.0.apk" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-download"></span> Download latest version (1.0)</a></p>
+<p><a href="https://github.com/creativecommons/list/releases/download/2.0/the_list-2.0.apk" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-download"></span> Download latest version (2.0)</a></p>
 
 ### Get beta versions from Google Play
 
@@ -20,6 +20,7 @@ If you have any problems with this process, please let us know via GitHub issues
 
 ### All public releases
 
+* [Version 1.0, April 17th 2015](https://github.com/creativecommons/list/releases/download/1.0/the_list-1.0.apk)
 * [Version 0.8, March 31st 2015](https://github.com/creativecommons/list/releases/download/0.8/app-release.apk)
 * [Version 0.4.1, March 21st 2015](/releases/thelist-0.4.1.apk)
 * [Version 0.4.0, March 17th 2015](/releases/thelist-0.4.0.apk)
