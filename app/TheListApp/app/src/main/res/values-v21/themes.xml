@@ -24,7 +24,7 @@
     </style>
 
     <style name="ListThemeNoActionBar" parent="ListTheme">
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
 
