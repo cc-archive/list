@@ -140,8 +140,8 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.AuthCallback() {
                                     @Override
-                                    public void onSuccess(String authtoken) {
-                                        Log.v(TAG, "> userSignIn > onSuccess :" + authtoken);
+                                    public void onAuthed(String authtoken) {
+                                        Log.v(TAG, "> userSignIn > onAuthed :" + authtoken);
 
                                         //TODO: authtoken stuff
                                         Bundle data = new Bundle();
@@ -202,7 +202,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //                    try {
 //                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.AuthCallback() {
 //                            @Override
-//                            public void onSuccess(String authtoken) {
+//                            public void onAuthed(String authtoken) {
 //
 //                                Bundle data = new Bundle();
 //

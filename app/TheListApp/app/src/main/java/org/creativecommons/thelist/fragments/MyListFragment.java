@@ -347,7 +347,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         mFeedAdapter.notifyDataSetChanged();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                } //onSuccess
+                } //onAuthed
                 @Override
                 public void onFail(VolleyError error) {
                     Log.d(TAG , "> getUserItems > onFail: " + error.toString());
@@ -786,7 +786,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
             mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
 
                     mItemList.remove(mItemToBeUploaded);
@@ -798,8 +798,8 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
                         @Override
-                        public void onSuccess(String authtoken) {
-                            Log.d(TAG, "> addNewAccount > onSuccess, authtoken: " + authtoken);
+                        public void onAuthed(String authtoken) {
+                            Log.d(TAG, "> addNewAccount > onAuthed, authtoken: " + authtoken);
                             try {
                                 mItemList.remove(mItemToBeUploaded);
                                 mFeedAdapter.notifyDataSetChanged();
@@ -864,7 +864,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                     }
                                 });
 
-                    } //onSuccess
+                    } //onAuthed
                     @Override
                     public void onFail() {
                         Log.d(TAG, "On Photo Upload Fail");

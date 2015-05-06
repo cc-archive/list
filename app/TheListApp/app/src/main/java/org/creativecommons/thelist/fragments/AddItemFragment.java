@@ -176,7 +176,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mCategorySpinner.setAdapter(adapter);
                 }
-            } //onSuccess
+            } //onAuthed
             @Override
             public void onFail(VolleyError error) {
                 Log.v(TAG, "getCategories > onFail: " + error.getMessage());

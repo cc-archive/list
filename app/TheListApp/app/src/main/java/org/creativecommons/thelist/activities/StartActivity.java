@@ -114,7 +114,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                 if(availableAccounts.length > 1){
                     mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
                         @Override
-                        public void onSuccess(String authtoken) {
+                        public void onAuthed(String authtoken) {
                             Log.d(TAG, "I have an account > Got an authtoken");
                             //TODO: is this actually needed?
                             Intent intent = new Intent(StartActivity.this, MainActivity.class);
@@ -126,7 +126,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                 } else {
                     mCurrentUser.getAuthed(new ListUser.AuthCallback() {
                         @Override
-                        public void onSuccess(String authtoken) {
+                        public void onAuthed(String authtoken) {
                             Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
                             //TODO: is this actually needed?
                             Intent intent = new Intent(StartActivity.this, MainActivity.class);

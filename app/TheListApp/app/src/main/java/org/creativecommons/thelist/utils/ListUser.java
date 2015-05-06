@@ -80,7 +80,7 @@ public class ListUser implements ServerAuthenticate {
 
     //Callback for account signin/login
     public interface AuthCallback {
-        void onSuccess(final String authtoken);
+        void onAuthed(final String authtoken);
     }
 
     public boolean isTempUser() {
@@ -163,9 +163,9 @@ public class ListUser implements ServerAuthenticate {
             Log.v(TAG, "IS TEMP USER TRUE");
             addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
-                    callback.onSuccess(authtoken);
+                    callback.onAuthed(authtoken);
                 }
             });
 
@@ -177,9 +177,9 @@ public class ListUser implements ServerAuthenticate {
 
                 addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                     @Override
-                    public void onSuccess(String authtoken) {
+                    public void onAuthed(String authtoken) {
                         Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
-                        callback.onSuccess(authtoken);
+                        callback.onAuthed(authtoken);
                     }
                 });
             }
@@ -192,7 +192,7 @@ public class ListUser implements ServerAuthenticate {
                                 Bundle bundle = future.getResult();
                                 String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                                 Log.v(TAG, "> getAuthed > getAuthToken from existing account: " + authtoken);
-                                callback.onSuccess(authtoken);
+                                callback.onAuthed(authtoken);
                             } catch (OperationCanceledException e) {
                                 e.printStackTrace();
                             } catch (IOException e) {
@@ -210,8 +210,6 @@ public class ListUser implements ServerAuthenticate {
      */
     public void getToken(final AuthCallback callback) {
         Log.d(TAG, "getToken > getting session token");
-        //sessionComplete = false;
-        //TODO: match userID to account with the same userID store in AccountManager
         Account account = getAccount();
 
         if(account == null){
@@ -227,7 +225,7 @@ public class ListUser implements ServerAuthenticate {
                             Bundle bundle = future.getResult();
                             String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                             Log.v(TAG, "> getToken, token received: " + authtoken);
-                            callback.onSuccess(authtoken);
+                            callback.onAuthed(authtoken);
                         } catch (OperationCanceledException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -251,7 +249,7 @@ public class ListUser implements ServerAuthenticate {
             addNewAccount(AccountGeneral.ACCOUNT_TYPE,
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker (no accounts) > addNewAccount, " +
                             "token received: " + authtoken);
                 }
@@ -286,7 +284,7 @@ public class ListUser implements ServerAuthenticate {
                                         Bundle bundle = future.getResult();
                                         String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                                         Log.v(TAG, " > showAccountPicker > getAuthToken from existing account: " + authtoken);
-                                        callback.onSuccess(authtoken);
+                                        callback.onAuthed(authtoken);
                                     } catch (OperationCanceledException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
@@ -315,7 +313,7 @@ public class ListUser implements ServerAuthenticate {
         public void onClick(DialogInterface dialog, int which) {
             addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, token received: " + authtoken);
                 }
             });
@@ -332,7 +330,7 @@ public class ListUser implements ServerAuthenticate {
                         Bundle bnd = future.getResult();
 
                         Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
-                        callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
+                        callback.onAuthed(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
                     } catch (Exception e) {
                         //Log.d(TAG, e.getMessage());
@@ -350,7 +348,7 @@ public class ListUser implements ServerAuthenticate {
                 @Override
                 public void run(AccountManagerFuture<Boolean> future) {
                     Log.d(TAG, " > removeAccounts, accounts removed");
-                    callback.onSuccess("removedAccounts");
+                    callback.onAuthed("removedAccounts");
                 }
             }, null);
         }
@@ -391,11 +389,10 @@ public class ListUser implements ServerAuthenticate {
                                 mSharedPref.setUserID(userID);
 
                                 //Pass authtoken back to activity
-                                callback.onSuccess(sessionToken);
+                                callback.onAuthed(sessionToken);
 
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
-                                //TODO: add proper error message
                                 mMessageHelper.showDialog(mContext, mContext.getString
                                                 (R.string.login_error_exception_title),
                                         mContext.getString(R.string.login_error_exception_message));

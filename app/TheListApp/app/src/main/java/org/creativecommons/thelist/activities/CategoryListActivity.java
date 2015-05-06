@@ -157,7 +157,7 @@ public class CategoryListActivity extends AppCompatActivity {
                                 Log.v(TAG, "user’s category list: " + mUserCategories.toString());
                             }
                             updateList();
-                        } //onSuccess
+                        } //onAuthed
                         @Override
                         public void onFail(VolleyError error) {
                             Log.v(TAG, "> getUserCategories > onFail " + error.toString());
@@ -182,7 +182,7 @@ public class CategoryListActivity extends AppCompatActivity {
                     }
                     updateList();
                 }
-            } //onSuccess
+            } //onAuthed
             @Override
             public void onFail(VolleyError error) {
                 Log.d(TAG, "> getCategories > onFail: " + error.getMessage());

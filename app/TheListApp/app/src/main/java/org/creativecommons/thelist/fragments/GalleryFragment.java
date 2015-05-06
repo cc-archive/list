@@ -173,7 +173,7 @@ public class GalleryFragment extends Fragment {
             mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
-                    Log.v(TAG, " > getUserPhotos > onSuccess" + response.toString());
+                    Log.v(TAG, " > getUserPhotos > onAuthed" + response.toString());
                     mPhotoList.clear();
 
                     for(int i = 0; i < response.length(); i++){

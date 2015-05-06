@@ -137,7 +137,7 @@ public class AddItemActivity extends AppCompatActivity {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mCategorySpinner.setAdapter(adapter);
                 }
-            } //onSuccess
+            } //onAuthed
             @Override
             public void onFail(VolleyError error) {
                 Log.v(TAG, "getCategories > onFail: " + error.getMessage());
@@ -345,7 +345,7 @@ public class AddItemActivity extends AppCompatActivity {
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
         mCurrentUser.getAuthed(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(String authtoken) {
+            public void onAuthed(String authtoken) {
                 //mOverlay.setBackgroundColor(getResources().getColor(R.color.translucent_background));
                 mMakerItemProgressBar.setVisibility(View.VISIBLE);
 
@@ -374,7 +374,7 @@ public class AddItemActivity extends AppCompatActivity {
                                         startActivity(intent);
                                     }
                                 }, 1500);
-                            } //onSuccess
+                            } //onAuthed
 
                             @Override
                             public void onFail() {

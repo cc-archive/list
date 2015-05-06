@@ -99,7 +99,7 @@ public class ImageAdapter extends PagerAdapter {
 
                         Log.v(TAG, "NEW ATTACHER CREATED");
                     //}
-                    } //onSuccess
+                    } //onAuthed
 
                     @Override
                     public void onError() {

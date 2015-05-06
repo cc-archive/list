@@ -160,7 +160,7 @@ public final class RequestMethods {
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_USER_LIST + mSharedPref.getUserId();
 
@@ -217,7 +217,7 @@ public final class RequestMethods {
         //Get sessionToken
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.ADD_ITEM + mSharedPref.getUserId() + "/" + itemID;
 
@@ -273,7 +273,7 @@ public final class RequestMethods {
             //Get sessionToken
             mCurrentUser.getToken(new ListUser.AuthCallback() {
                 @Override
-                public void onSuccess(final String authtoken) { //getToken and then start request
+                public void onAuthed(final String authtoken) { //getToken and then start request
                     RequestQueue queue = Volley.newRequestQueue(mContext);
                     String url = ApiConstants.REMOVE_ITEM + mSharedPref.getUserId() + "/" + itemID;
 
@@ -322,7 +322,7 @@ public final class RequestMethods {
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_MAKER_LIST + mSharedPref.getUserId();
                 Log.v(TAG, " > getMakerItems, url: " + url);
@@ -362,7 +362,7 @@ public final class RequestMethods {
         //Check for login: required for this request
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
 
                 //TODO: add legit url
@@ -450,7 +450,7 @@ public final class RequestMethods {
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_USER_CATEGORIES + mSharedPref.getUserId();
 
@@ -511,7 +511,7 @@ public final class RequestMethods {
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.ADD_CATEGORY + mSharedPref.getUserId() + "/" + catId;
 
@@ -561,7 +561,7 @@ public final class RequestMethods {
 
             mCurrentUser.getToken(new ListUser.AuthCallback() {
                 @Override
-                public void onSuccess(final String authtoken) { //getToken and then start request
+                public void onAuthed(final String authtoken) { //getToken and then start request
                     RequestQueue queue = Volley.newRequestQueue(mContext);
                     String url = ApiConstants.REMOVE_CATEGORY + mSharedPref.getUserId() + "/" + catId;
 
@@ -610,7 +610,7 @@ public final class RequestMethods {
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_USER_PHOTOS + mSharedPref.getUserId();
                 Log.v(TAG, " > getUserPhotos, url: " + url);
@@ -659,7 +659,7 @@ public final class RequestMethods {
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(final String authtoken) {
+            public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
                 String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;

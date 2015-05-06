@@ -117,7 +117,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
                             ListUser mCurrentUser = new ListUser(activity);
                             mCurrentUser.userSignIn(account.name, password, authTokenType, new ListUser.AuthCallback() {
                                 @Override
-                                public void onSuccess(String userToken) {
+                                public void onAuthed(String userToken) {
                                     authToken = userToken;
                                 }
                             });
