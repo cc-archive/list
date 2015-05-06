@@ -33,10 +33,10 @@ package org.creativecommons.thelist.authentication;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 
-public class AccountAuthenticatorActivity extends ActionBarActivity {
+public class AccountAuthenticatorActivity extends AppCompatActivity {
     private AccountAuthenticatorResponse mAccountAuthenticatorResponse = null;
     private Bundle mResultBundle = null;
     /**

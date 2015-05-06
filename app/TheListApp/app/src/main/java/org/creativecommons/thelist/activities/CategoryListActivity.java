@@ -22,7 +22,7 @@ package org.creativecommons.thelist.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -60,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CategoryListActivity extends ActionBarActivity {
+public class CategoryListActivity extends AppCompatActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
     protected Context mContext;
 

@@ -162,7 +162,7 @@ public final class RequestMethods {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.GET_USER_LIST + mCurrentUser.getUserID();
+                String url = ApiConstants.GET_USER_LIST + mSharedPref.getUserId();
 
                 JsonArrayRequest userItemsRequest = new JsonArrayRequest(url,
                         new Response.Listener<JSONArray>() {
@@ -189,6 +189,124 @@ public final class RequestMethods {
         });
     } //getUserListItems
 
+    //Add all list items to userlist (previously temp stored items)
+    public void addSavedItemsToUserList(){
+        Log.v(TAG," > addSavedItemsToUserList, started");
+        JSONArray listItemPref;
+        listItemPref = mSharedPref.getUserItemPreference();
+
+        try{
+            if (listItemPref != null && listItemPref.length() > 0) {
+                Log.v("LIST ITEM PREF: ", listItemPref.toString());
+                for (int i = 0; i < listItemPref.length(); i++) {
+                    Log.v("ITEMS", "ARE BEING ADDED");
+                    addItemToUserList(listItemPref.getString(i));
+                }
+            }
+        } catch(JSONException e){
+            Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
+        }
+    } //addSavedItemsToUserList
+
+    //Add SINGLE random item to user list
+    public void addItemToUserList(final String itemID) {
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+        //Get sessionToken
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onSuccess(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.ADD_ITEM + mSharedPref.getUserId() + "/" + itemID;
+
+                //Add single item to user list
+                StringRequest postItemRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
+                                Log.v(TAG, "AN ITEM IS BEING ADDED");
+                                //TODO: on success remove the item from the sharedPreferences
+                                mSharedPref.deleteUserItemPreference(itemID);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //TODO: Add “not successful“ toast
+                        mMessageHelper.showDialog(mContext,
+                                mContext.getString(R.string.error_title),
+                                mContext.getString(R.string.error_message));
+                        Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(postItemRequest);
+            }
+        });
+
+    } //addItemToUserList
+
+    //REMOVE SINGLE item from user list
+    //TODO: move to RequestMethods + add callbacks
+    public void removeItemFromUserList(final String itemID){
+
+        if(mCurrentUser.isTempUser()){
+            //If not logged in, remove item from sharedPreferences
+            mSharedPref.deleteUserItemPreference(itemID);
+
+        } else { //If logged in, remove from DB
+            if(!(RequestMethods.isNetworkAvailable(mContext))){
+                mMessageHelper.showDialog(mContext,mContext.getString(R.string.error_network_title),
+                        mContext.getString(R.string.error_network_message));
+                return;
+            }
+
+            //Get sessionToken
+            mCurrentUser.getToken(new ListUser.AuthCallback() {
+                @Override
+                public void onSuccess(final String authtoken) { //getToken and then start request
+                    RequestQueue queue = Volley.newRequestQueue(mContext);
+                    String url = ApiConstants.REMOVE_ITEM + mSharedPref.getUserId() + "/" + itemID;
+
+                    StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    //get Response
+                                    Log.v(TAG, "> removeItemFromUserList > OnResponse: " + response);
+                                    Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                                    //TODO: do something with response?
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
+                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
+                                    "There was a problem deleting your item.");
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put(ApiConstants.USER_TOKEN, authtoken);
+                            return params;
+                        }
+                    };
+                    queue.add(deleteItemRequest);
+                }
+            });
+        }
+    } //removeItemFromUserList
+
 
     // --------------------------------------------------------
     // MAKER LIST REQUESTS
@@ -206,7 +324,7 @@ public final class RequestMethods {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.GET_MAKER_LIST + mCurrentUser.getUserID();
+                String url = ApiConstants.GET_MAKER_LIST + mSharedPref.getUserId();
                 Log.v(TAG, " > getMakerItems, url: " + url);
 
                 JsonArrayRequest getMakerItemsRequest = new JsonArrayRequest(url,
@@ -248,7 +366,7 @@ public final class RequestMethods {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
 
                 //TODO: add legit url
-                String url = ApiConstants.ADD_MAKER_ITEM + '/' + mCurrentUser.getUserID();
+                String url = ApiConstants.ADD_MAKER_ITEM + '/' + mSharedPref.getUserId();
 
                 //Upload Request
                 StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
@@ -269,11 +387,11 @@ public final class RequestMethods {
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<String, String>();
 
-                        if(description != null) {
+                        if (description != null) {
                             params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
                         }
 
-                        if(photoUri != null){
+                        if (photoUri != null) {
                             String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
                             params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
                         }
@@ -334,7 +452,7 @@ public final class RequestMethods {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.GET_USER_CATEGORIES + mCurrentUser.getUserID();
+                String url = ApiConstants.GET_USER_CATEGORIES + mSharedPref.getUserId();
 
                 JsonArrayRequest userCategoriesRequest = new JsonArrayRequest(url,
                         new Response.Listener<JSONArray>() {
@@ -395,7 +513,7 @@ public final class RequestMethods {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.ADD_CATEGORY + mCurrentUser.getUserID() + "/" + catId;
+                String url = ApiConstants.ADD_CATEGORY + mSharedPref.getUserId() + "/" + catId;
 
                 //Add single item to user list
                 StringRequest postCategoryRequest = new StringRequest(Request.Method.POST, url,
@@ -445,7 +563,7 @@ public final class RequestMethods {
                 @Override
                 public void onSuccess(final String authtoken) { //getToken and then start request
                     RequestQueue queue = Volley.newRequestQueue(mContext);
-                    String url = ApiConstants.REMOVE_CATEGORY + mCurrentUser.getUserID() + "/" + catId;
+                    String url = ApiConstants.REMOVE_CATEGORY + mSharedPref.getUserId() + "/" + catId;
 
                     StringRequest deleteCategoryRequest = new StringRequest(Request.Method.POST, url,
                             new Response.Listener<String>() {
@@ -494,7 +612,7 @@ public final class RequestMethods {
             @Override
             public void onSuccess(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.GET_USER_PHOTOS + mCurrentUser.getUserID();
+                String url = ApiConstants.GET_USER_PHOTOS + mSharedPref.getUserId();
                 Log.v(TAG, " > getUserPhotos, url: " + url);
 
                 JsonArrayRequest getUserPhotosRequest = new JsonArrayRequest(url,

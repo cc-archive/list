@@ -154,7 +154,7 @@ public class RandomActivity extends Activity {
                 //If logged in, add item to user’s list right away
                 if (!(mCurrentUser.isTempUser())) {
                     Log.v(TAG, "> isTempUser, user is logged in");
-                    mCurrentUser.addItemToUserList(mItemID);
+                    mRequestMethods.addItemToUserList(mItemID);
                 }
                 //Display a new item
                 updateView();

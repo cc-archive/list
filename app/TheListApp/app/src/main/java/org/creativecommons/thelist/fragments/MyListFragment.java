@@ -255,12 +255,12 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         if(!mFab.isVisible()){
             mFab.show();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFab.setEnabled(true);
-            }
-        }, 500);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mFab.setEnabled(true);
+//            }
+//        }, 500);
 
         if(mItemToBeUploaded != null && mRequestMethods.isNetworkAvailable()){
             return;
@@ -461,7 +461,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                     //What happens when item is swiped offscreen
                     mItemList.remove(mLastDismissedItem);
-                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
+                    mRequestMethods.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
 
                     // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
                     mFeedAdapter.notifyDataSetChanged();
@@ -518,7 +518,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                 //What happens when item is swiped offscreen
                                 mItemList.add(0, mLastDismissedItem);
                                 //re-add item to user’s list in DB
-                                mCurrentUser.addItemToUserList(mLastDismissedItem.getItemID());
+                                mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
                                 mFeedAdapter.notifyDataSetChanged();
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();

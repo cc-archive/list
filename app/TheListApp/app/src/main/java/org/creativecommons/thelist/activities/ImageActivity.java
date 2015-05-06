@@ -2,7 +2,7 @@ package org.creativecommons.thelist.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -12,7 +12,7 @@ import org.creativecommons.thelist.adapters.ImageAdapter;
 
 import java.util.ArrayList;
 
-public class ImageActivity extends ActionBarActivity {
+public class ImageActivity extends AppCompatActivity {
     private static final String TAG = ImageActivity.class.getSimpleName();
 
     private ImageAdapter adapter;

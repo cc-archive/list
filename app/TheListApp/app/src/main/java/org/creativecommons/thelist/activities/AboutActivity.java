@@ -2,7 +2,7 @@ package org.creativecommons.thelist.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -10,7 +10,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ListApplication;
 
-public class AboutActivity extends ActionBarActivity {
+public class AboutActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     // --------------------------------------------------------

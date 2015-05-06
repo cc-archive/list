@@ -18,6 +18,7 @@ import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.fragments.TermsFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.io.UnsupportedEncodingException;
@@ -39,6 +40,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     private AccountManager mAccountManager;
     private String mAuthTokenType;
     private ListUser mCurrentUser;
+    private RequestMethods mRequestMethods;
     private SharedPreferencesMethods mSharedPref;
     private Bundle newUserBundle;
 
@@ -59,6 +61,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         mContext = this;
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
+        mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
@@ -141,7 +144,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 sharedPref.saveKey(key.toString());
 
                 //Add items chosen before login to userlist
-                mCurrentUser.addSavedItemsToUserList();
+                mRequestMethods.addSavedItemsToUserList();
                 //TODO: also add category preferences (+ callback?) for these two?
                 //mCurrentUser.addSavedCategoriesToUserList();
 
