@@ -155,8 +155,7 @@
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
     <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
-    <string name="alpha_release_terms_label"><a href="https://github.com/creativecommons/list/blob/master/docs/beta-TOS.md">
-        Use of this beta release of The List Powered by Creative Commons is subject to these terms and conditions</a></string>
+    <string name="alpha_release_terms_label"><a href="https://github.com/creativecommons/list/blob/master/docs/beta-TOS.md">Use of this beta release of The List Powered by Creative Commons is subject to these terms and conditions</a></string>
 
     <!--Add Item Fragment-->
     <string name="category_prompt">Choose a category</string>

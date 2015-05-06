@@ -17,7 +17,8 @@
 #}
 
 # Needed to ignore missing class warnings. Lib works fine without them.
--dontwarn com.squareup.picasso.**
+-dontwarn com.squareup.okhttp.**
+
 
 #ACRA specifics
 # Restore some Source file names and restore approximate line numbers in the stack traces,

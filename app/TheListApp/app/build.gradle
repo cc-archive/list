@@ -4,26 +4,26 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId "org.creativecommons.thelist"
         minSdkVersion 11
-        targetSdkVersion 22
+        targetSdkVersion 21
         versionCode 3
         versionName "2.0"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-    }
+//    packagingOptions {
+//        exclude 'META-INF/DEPENDENCIES'
+//        exclude 'META-INF/NOTICE'
+//        exclude 'META-INF/LICENSE'
+//    }
 }
 
 dependencies {
@@ -31,7 +31,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'commons-io:commons-io:2.4'
-    compile 'com.android.support:support-v4:22'
+    compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.google.android.gms:play-services-base:6.5.87'
     compile 'com.android.support:recyclerview-v7:21.0.3'
@@ -41,9 +41,8 @@ dependencies {
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'ch.acra:acra:4.6.1'
     compile 'org.lucasr.dspec:dspec:0.1.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.rengwuxian.materialedittext:library:2.0.3'
     compile 'de.hdodenhof:circleimageview:1.2.2'
-    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
     compile 'com.github.chrisbanes.photoview:library:1.2.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

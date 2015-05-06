@@ -24,10 +24,8 @@ SOFTWARE.
 package org.creativecommons.thelist.utils;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
 
@@ -109,28 +107,28 @@ public class FileHelper {
 		return reducedData;
 	}
 
-    public static String getFileName(Context context, Uri uri){
-        getFileType(context, uri);
+//    public static String getFileName(Context context, Uri uri){
+//        getFileType(context, uri);
+//
+//        Cursor returnCursor =
+//                context.getContentResolver().query(uri, null, null, null, null);
+//        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+//        returnCursor.moveToFirst();
+//
+//        String fileName = returnCursor.getString(nameIndex);
+//
+//        Log.v(TAG,"> getFileName: " + returnCursor.getString(nameIndex));
+//        return fileName;
+//
+//    }
 
-        Cursor returnCursor =
-                context.getContentResolver().query(uri, null, null, null, null);
-        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-        returnCursor.moveToFirst();
-
-        String fileName = returnCursor.getString(nameIndex);
-
-        Log.v(TAG,"> getFileName: " + returnCursor.getString(nameIndex));
-        return fileName;
-
-    }
-
-    public static String getFileType(Context context, Uri uri){
-        String mimeType = context.getContentResolver().getType(uri);
-
-        Log.v(TAG,"> getFileType: " + mimeType);
-        return mimeType;
-
-    }
+//    public static String getFileType(Context context, Uri uri){
+//        String mimeType = context.getContentResolver().getType(uri);
+//
+//        Log.v(TAG,"> getFileType: " + mimeType);
+//        return mimeType;
+//
+//    }
 
 
 //	public static String getFileName(Context context, Uri uri, String fileType) {

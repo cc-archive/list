@@ -534,10 +534,10 @@ public final class RequestMethods {
             return;
         }
 
-        if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
-            mMessageHelper.photoUploadFileTypeFailMessage();
-            return;
-        }
+//        if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
+//            mMessageHelper.photoUploadFileTypeFailMessage();
+//            return;
+//        }
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override

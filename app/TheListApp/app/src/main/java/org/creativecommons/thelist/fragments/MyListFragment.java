@@ -38,6 +38,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.adapters.UserListAdapter;
 import org.creativecommons.thelist.adapters.UserListItem;
+import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
@@ -138,7 +139,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
 
         mFab = (FloatingActionButton) activity.findViewById(R.id.fab);
-        mFab.setEnabled(false);
+        //mFab.setEnabled(false);
         mFab.setVisibility(View.GONE);
         mFab.hide();
 
@@ -781,16 +782,35 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
     //Start Upload + Respond
     public void startPhotoUpload(){
-        mCurrentUser.getAuthed(new ListUser.AuthCallback() {
-            @Override
-            public void onSuccess(String authtoken) {
 
-                mItemList.remove(mItemToBeUploaded);
-                mFeedAdapter.notifyDataSetChanged();
-                performPhotoUpload();
+        if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
+            mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
+                @Override
+                public void onSuccess(String authtoken) {
+                    Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
 
-            }
-        });
+                    mItemList.remove(mItemToBeUploaded);
+                    mFeedAdapter.notifyDataSetChanged();
+                    performPhotoUpload();
+                }
+            });
+        } else {
+            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
+                        @Override
+                        public void onSuccess(String authtoken) {
+                            Log.d(TAG, "> addNewAccount > onSuccess, authtoken: " + authtoken);
+                            try {
+                                mItemList.remove(mItemToBeUploaded);
+                                mFeedAdapter.notifyDataSetChanged();
+                                performPhotoUpload();
+                            } catch (Exception e) {
+                                Log.d(TAG,"addAccount > " + e.getMessage());
+                            }
+                        }
+                    });
+        }
+
     } //startPhotoUpload
 
     public void performPhotoUpload(){

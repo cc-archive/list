@@ -191,6 +191,7 @@ public class MainActivity extends ActionBarActivity implements
                 //Set survey taken
                 mSharedPref.setSurveyTaken(true);
 
+
                 //Go to Google Form
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse(getString(R.string.dialog_survey_link)));
