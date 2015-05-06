@@ -212,5 +212,6 @@
     <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
 
     <string name="ellipsis">…</string>
+    <string name="action_share">Share this photo</string>
 
 </resources>

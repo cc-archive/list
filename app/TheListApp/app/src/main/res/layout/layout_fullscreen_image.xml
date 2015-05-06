@@ -20,7 +20,7 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:background="@color/translucent_background"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <LinearLayout
             android:layout_width="wrap_content"

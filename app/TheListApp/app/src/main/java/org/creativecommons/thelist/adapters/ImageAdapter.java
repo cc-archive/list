@@ -58,6 +58,9 @@ public class ImageAdapter extends PagerAdapter {
         //Photoview Elements
         final PhotoView mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
 
+        //Track with tags for share intent
+        mImgDisplay.setTag(position);
+
         final android.support.v7.widget.Toolbar galleryCaption = (android.support.v7.widget.Toolbar)
                 viewLayout.findViewById(R.id.gallery_caption_container);
 
@@ -80,6 +83,7 @@ public class ImageAdapter extends PagerAdapter {
                 .into(mImgDisplay, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
+
                         Log.v(TAG, "Successful image load into PhotoView");
 
                         mAttacher = new PhotoViewAttacher(mImgDisplay);
@@ -97,9 +101,9 @@ public class ImageAdapter extends PagerAdapter {
                             }
                         });
 
-                        Log.v(TAG, "NEW ATTACHER CREATED");
-                    //}
                     } //onAuthed
+
+
 
                     @Override
                     public void onError() {
