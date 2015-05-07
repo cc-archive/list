@@ -23,20 +23,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -62,17 +58,18 @@ import java.util.List;
 
 public class CategoryListActivity extends AppCompatActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
-    protected Context mContext;
 
-    //Helper Methods
-    RequestMethods mRequestMethods;
-    SharedPreferencesMethods mSharedPref;
-    MessageHelper mMessageHelper;
-    ListUser mCurrentUser;
+    private Context mContext;
+
+    //Helpers
+    private ListUser mCurrentUser;
+    private MessageHelper mMessageHelper;
+    private RequestMethods mRequestMethods;
+    private SharedPreferencesMethods mSharedPref;
 
     //GET Request
-    protected JSONArray mCategoryData;
-    protected List<Integer> mUserCategories = new ArrayList<>();
+    private JSONArray mCategoryData;
+    private List<Integer> mUserCategories = new ArrayList<>();
 
     //RecyclerView
 //    private RecyclerView mRecyclerView;
@@ -81,13 +78,12 @@ public class CategoryListActivity extends AppCompatActivity {
 //    private List<CategoryListItem> mCategoryList = new ArrayList<>();
 
     //GridView
-    protected GridView mGridView;
+    private GridView mGridView;
     private List<CategoryListItem> mCategoryList = new ArrayList<>();
-    protected CategoryListAdapter adapter;
-    protected ImageView mCheckmarkView;
+    private CategoryListAdapter adapter;
 
     //UI Elements
-    protected ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     private Menu menu;
 
     // --------------------------------------------------------
@@ -96,11 +92,13 @@ public class CategoryListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
+
         mContext = this;
+
+        mCurrentUser = new ListUser(CategoryListActivity.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
-        mCurrentUser = new ListUser(CategoryListActivity.this);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
@@ -254,37 +252,38 @@ public class CategoryListActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-    }
+//    public interface OnItemClickListener {
+//        public void onItemClick(View view, int position);
+//    }
 
-    public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-        private OnItemClickListener mListener;
-        GestureDetector mGestureDetector;
-
-        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
-            mListener = listener;
-            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    //Log.v("HI", "ON SINGLE TAG UP CALLED");
-                    return true;
-                }
-            });
-        }
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-            View childView = view.findChildViewUnder(e.getX(), e.getY());
-            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-                mListener.onItemClick(childView, view.getChildPosition(childView));
-            }
-            return false;
-        }
-        @Override
-        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
-            //Log.v("HI", "ON TOUCH EVENT CALLED");
-        }
-    } //RecyclerItemClickListener
+    //TODO: convert listview to recyclerview
+//    public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+//        private OnItemClickListener mListener;
+//        GestureDetector mGestureDetector;
+//
+//        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
+//            mListener = listener;
+//            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+//                @Override
+//                public boolean onSingleTapUp(MotionEvent e) {
+//                    //Log.v("HI", "ON SINGLE TAG UP CALLED");
+//                    return true;
+//                }
+//            });
+//        }
+//        @Override
+//        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+//            View childView = view.findChildViewUnder(e.getX(), e.getY());
+//            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+//                mListener.onItemClick(childView, view.getChildPosition(childView));
+//            }
+//            return false;
+//        }
+//        @Override
+//        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+//            //Log.v("HI", "ON TOUCH EVENT CALLED");
+//        }
+//    } //RecyclerItemClickListener
 
 
     //UPDATE LIST WITH CONTENT

@@ -134,7 +134,7 @@ ADDED from AndroidManifest.xml:59:9
 		ADDED from AndroidManifest.xml:61:13
 	android:name
 		ADDED from AndroidManifest.xml:60:13
-service#org.creativecommons.thelist.authentication.ListAuthenticatorService
+service#org.creativecommons.thelist.misc.ListAuthenticatorService
 ADDED from AndroidManifest.xml:64:9
 	android:name
 		ADDED from AndroidManifest.xml:64:18

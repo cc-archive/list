@@ -5,7 +5,6 @@
         <item name="background">@color/colorPrimaryLight</item>
     </style>
 
-
     <!--Button-->
     <style name="ButtonStyle" parent="android:Widget.Button">
         <item name="android:layout_width">wrap_content</item>
@@ -16,6 +15,7 @@
         <item name="android:paddingRight">4dp</item>
         <item name="android:layout_marginTop">@dimen/button_padding_vertical_material</item>
         <item name="android:layout_marginBottom">@dimen/button_padding_vertical_material</item>
+        <item name="android:textColor">@color/app_white</item>
     </style>
 
     <!--CheckBox-->

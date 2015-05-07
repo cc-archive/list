@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,7 +43,6 @@ import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
@@ -61,25 +60,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MyListFragment extends android.support.v4.app.Fragment {
+public class MyListFragment extends Fragment {
     public static final String TAG = MyListFragment.class.getSimpleName();
-    protected Context mContext;
+    private Context mContext;
 
     //Helper Methods
-    RequestMethods mRequestMethods;
-    SharedPreferencesMethods mSharedPref;
-    MessageHelper mMessageHelper;
-    ListUser mCurrentUser;
+    private RequestMethods mRequestMethods;
+    private SharedPreferencesMethods mSharedPref;
+    private MessageHelper mMessageHelper;
+    private ListUser mCurrentUser;
 
-    protected UserListItem mCurrentItem;
-    protected int activeItemPosition;
+    private UserListItem mCurrentItem;
+    private int activeItemPosition;
 
-    protected UserListItem mItemToBeUploaded;
-    protected int uploadItemPosition;
+    private UserListItem mItemToBeUploaded;
+    private int uploadItemPosition;
 
-    protected UserListItem mLastDismissedItem;
-    protected int lastDismissedItemPosition;
-    protected Uri mMediaUri;
+    private UserListItem mLastDismissedItem;
+    private int lastDismissedItemPosition;
+    private Uri mMediaUri;
 
     //RecyclerView
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -92,7 +91,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     //Upload Elements
     private RelativeLayout mUploadProgressBarContainer;
     private TextView mUploadText;
-    long totalSize;
 
     //UI Elements
     private Menu menu;
@@ -107,7 +105,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,17 +117,16 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        Activity activity = getActivity();
+
+        //Helpers
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(getActivity());
 
-        Activity activity = getActivity();
-
-        snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
-
         //Load UI Elements
-        totalSize = 0;
+        snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
         mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
         mUploadProgressBarContainer = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
         //mUploadProgressBar = (com.gc.materialdesign.views.ProgressBarDeterminate) activity.findViewById(R.id.upload_progress);
@@ -255,12 +251,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         if(!mFab.isVisible()){
             mFab.show();
         }
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mFab.setEnabled(true);
-//            }
-//        }, 500);
 
         if(mItemToBeUploaded != null && mRequestMethods.isNetworkAvailable()){
             return;
@@ -525,10 +515,11 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             }
                         }) //action button’s listener
                         .eventListener(new EventListener() {
-                            Interpolator interpolator = new MaterialInterpolator();
+//                            Interpolator interpolator = new MaterialInterpolator();
 
                             @Override
                             public void onShow(Snackbar snackbar) {
+                                //TODO: do we need animations for snackbar still?
 //                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
 //                                        -snackbar.getHeight());
 //                                tsa.setInterpolator(interpolator);
@@ -549,7 +540,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                             @Override
                             public void onDismiss(Snackbar snackbar) {
-
+                                //TODO: see above
 //                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
 //                                        -snackbar.getHeight(), 0);
 //                                tsa2.setInterpolator(interpolator);
@@ -593,7 +584,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         .actionListener(listener)
                         //action button’s listener
                         .eventListener(new EventListener() {
-                            Interpolator interpolator = new MaterialInterpolator();
+//                            Interpolator interpolator = new MaterialInterpolator();
 
                             @Override
                             public void onShow(Snackbar snackbar) {
@@ -728,12 +719,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 //Check if external storage is available
                 private boolean isExternalStorageAvailable() {
                     String state = Environment.getExternalStorageState();
-                    if (state.equals(Environment.MEDIA_MOUNTED)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    return (state.equals(Environment.MEDIA_MOUNTED)); //boolean
                 }
             };
 
@@ -758,9 +744,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                     Log.v(TAG,"Media URI:" + mMediaUri);
 
-
-
-                    //TODO: make sure for sure auth will exist for this to happen
                     //Add photo to the Gallery (listen for broadcast and let gallery take action)
                     Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(mMediaUri);

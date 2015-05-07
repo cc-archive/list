@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.fragments;
+package org.creativecommons.thelist.misc;
 
 
 import android.app.Activity;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -46,12 +45,13 @@ import java.util.Locale;
 public class AddItemFragment extends android.support.v4.app.Fragment {
     public static final String TAG = AddItemFragment.class.getSimpleName();
 
-    Context mContext;
+    private Context mContext;
+    private Activity mActivity;
+
+    //Helpers
     private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
-    protected Uri mMediaUri;
-    protected Uri mLinkUri;
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
@@ -64,6 +64,9 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
     private String mDescription;
     private Spinner mCategorySpinner;
     private RelativeLayout mStickyFooter;
+
+    protected Uri mMediaUri;
+    protected Uri mLinkUri;
 
     private Boolean mPhotoAdded;
 
@@ -85,30 +88,20 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        mActivity = getActivity();
+
         mCurrentUser = new ListUser(mContext);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
-        final Activity activity = getActivity();
-
         //UI Elements
-        mItemNameField = (EditText) activity.findViewById(R.id.add_item_title);
-        mDescriptionField = (EditText) activity.findViewById(R.id.add_item_description);
+        mItemNameField = (EditText) mActivity.findViewById(R.id.add_item_title);
+        mDescriptionField = (EditText) mActivity.findViewById(R.id.add_item_description);
         mDescription = null;
-        mCategorySpinner = (Spinner) activity.findViewById(R.id.category_spinner);
-        mStickyFooter = (RelativeLayout)getActivity().findViewById(R.id.add_item_sticky_footer);
-
-        ArrayList<EditText> editList = new ArrayList<>();
-        editList.add(mItemNameField);
-        editList.add(mDescriptionField);
+        mCategorySpinner = (Spinner) mActivity.findViewById(R.id.category_spinner);
+        mStickyFooter = (RelativeLayout) mActivity.findViewById(R.id.add_item_sticky_footer);
 
         mPhotoAdded = false;
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-//            for (EditText view : editList){
-//                view.setOnFocusChangeListener(focusListener);
-//            }
-        } //Lollipop
 
 //        mBottomToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
 //            @Override
@@ -201,16 +194,6 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
             }
         });
     } //onActivityCreated
-
-    @Override
-    public void onStart(){
-        super.onStart();
-    } //onStart (only do once per fragment creation)
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    } //onResume
 
     //Show dialog when List Item is tapped
     public DialogInterface.OnClickListener mDialogListener =
@@ -365,18 +348,6 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                 });
 
     } //startItemUpload
-
-//    private View.OnFocusChangeListener focusListener = new View.OnFocusChangeListener(){
-//        public void onFocusChange(View v, boolean hasFocus){
-//            if(hasFocus){
-//                //mStickyFooter.setVisibility(View.GONE);
-//                Log.v(TAG, "EDITTEXT IS GONE");
-//            } else {
-//                //mStickyFooter.setVisibility(View.VISIBLE);
-//                Log.v(TAG, "EDITTEXT IS VISIBLE");
-//            }
-//        }
-//    };
 
     @Override
     public void onDetach() {

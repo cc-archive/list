@@ -11,7 +11,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.utils.ListApplication;
 
 public class AboutActivity extends AppCompatActivity {
-    private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = AboutActivity.class.getSimpleName();
 
     // --------------------------------------------------------
 

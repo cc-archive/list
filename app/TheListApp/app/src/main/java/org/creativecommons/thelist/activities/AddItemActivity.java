@@ -51,11 +51,14 @@ public class AddItemActivity extends AppCompatActivity {
     public static final String TAG = AddItemActivity.class.getSimpleName();
 
     private Context mContext;
+
+    //Helpers
     private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
+
     private Uri mMediaUri;
-    //protected Uri mLinkUri;
+    //protected Uri mLinkUri; //TODO: re-add when links become a thing
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
@@ -83,12 +86,12 @@ public class AddItemActivity extends AppCompatActivity {
 
         mContext = this;
 
-        //Google Analytics Tracker
-        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-
         mCurrentUser = new ListUser(AddItemActivity.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
+
+        //Google Analytics Tracker
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //UI Elements
         mMakerItemProgressBar = (RelativeLayout) findViewById(R.id.makerItemProgressBar);
@@ -99,12 +102,6 @@ public class AddItemActivity extends AppCompatActivity {
         mAddImage = (ImageButton) findViewById(R.id.add_item_example_image);
         mStickyFooterContainer = (RelativeLayout) findViewById(R.id.sticky_footer_container);
         mDoneButton = (Button) findViewById(R.id.add_item_button);
-
-        //mOverlay = (FrameLayout) findViewById(R.id.add_item_overlay);
-
-        ArrayList<EditText> editList = new ArrayList<>();
-        editList.add(mItemNameField);
-        editList.add(mDescriptionField);
 
         mPhotoAdded = false;
 
@@ -147,6 +144,7 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
+        //Get data when spinner selection made
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -162,7 +160,7 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
-        //Click Listener to get sample image
+        //Example image click listener
         mAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +177,7 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
+        //Done Button Listener
         mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,6 +341,7 @@ public class AddItemActivity extends AppCompatActivity {
         } //switch
     } //onActivityResult
 
+    //Start Item Upload
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
         mCurrentUser.getAuthed(new ListUser.AuthCallback() {
             @Override
@@ -401,7 +401,6 @@ public class AddItemActivity extends AppCompatActivity {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

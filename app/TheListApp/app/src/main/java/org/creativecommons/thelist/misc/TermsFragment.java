@@ -18,7 +18,7 @@
 
 */
 
-package org.creativecommons.thelist.fragments;
+package org.creativecommons.thelist.misc;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -26,8 +26,6 @@ public class ImageAdapter extends PagerAdapter {
     private Activity activity;
     private ArrayList<GalleryItem> photoObjects;
     private PhotoViewAttacher mAttacher;
-    //private PhotoView mImgDisplay;
-    //private android.support.v7.widget.Toolbar mGalleryCaption;
     private LayoutInflater inflater;
 
     // constructor
@@ -83,8 +81,7 @@ public class ImageAdapter extends PagerAdapter {
                 .into(mImgDisplay, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-
-                        Log.v(TAG, "Successful image load into PhotoView");
+                        Log.v(TAG, "Successfully loaded image into PhotoView");
 
                         mAttacher = new PhotoViewAttacher(mImgDisplay);
 
@@ -102,8 +99,6 @@ public class ImageAdapter extends PagerAdapter {
                         });
 
                     } //onAuthed
-
-
 
                     @Override
                     public void onError() {

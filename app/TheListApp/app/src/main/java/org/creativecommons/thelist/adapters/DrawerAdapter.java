@@ -33,6 +33,8 @@ import org.creativecommons.thelist.R;
 import java.util.List;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerViewHolder>  {
+    public static final String TAG = DrawerAdapter.class.getSimpleName();
+
     private LayoutInflater inflater;
     private List<DrawerItem> drawerItems; //Collections.emptyList()
 
@@ -102,9 +104,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             itemTitle = (TextView)itemView.findViewById(R.id.drawer_item_title);
         }
     }
-
-
-
 
 //    private LayoutInflater inflater;
 //    private List<DrawerItem> drawerItems;

@@ -35,6 +35,8 @@ import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 import java.util.List;
 
 public class CategoryListAdapter extends BaseAdapter {
+    public static final String TAG = CategoryListAdapter.class.getSimpleName();
+
     private Activity activity;
     private LayoutInflater inflater;
     private List<CategoryListItem> categoryListItems;

@@ -56,10 +56,11 @@ public class MainActivity extends AppCompatActivity implements
     public static final String TAG = MyListFragment.class.getSimpleName();
 
     private Context mContext;
+
     private ListUser mCurrentUser;
-    private SharedPreferencesMethods mSharedPref;
-    private RequestMethods mRequestMethods;
     private MessageHelper mMessageHelper;
+    private RequestMethods mRequestMethods;
+    private SharedPreferencesMethods mSharedPref;
 
     //UI Elements
     private DrawerLayout mDrawerLayout;
@@ -77,9 +78,9 @@ public class MainActivity extends AppCompatActivity implements
         mContext = this;
 
         mCurrentUser = new ListUser(MainActivity.this);
-        mSharedPref = new SharedPreferencesMethods(mContext);
-        mRequestMethods = new RequestMethods(mContext);
         mMessageHelper = new MessageHelper(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);

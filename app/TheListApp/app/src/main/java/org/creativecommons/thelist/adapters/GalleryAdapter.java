@@ -37,6 +37,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     public static final String TAG = GalleryAdapter.class.getSimpleName();
 
     private Context mContext;
+
     private RequestMethods mRequestMethods;
     private LayoutInflater inflater;
     private List<GalleryItem> galleryItems;
@@ -45,12 +46,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 //    public static final int PROGRESS_VIEW = 2;
 
     public GalleryAdapter(Context context, List<GalleryItem> galleryItems){
-
         mContext = context;
+        mRequestMethods = new RequestMethods(mContext);
+
+        this.galleryItems = galleryItems;
+
         //For debugging
         //Picasso.with(mContext).setIndicatorsEnabled(true);
-        mRequestMethods = new RequestMethods(mContext);
-        this.galleryItems = galleryItems;
+
         inflater = LayoutInflater.from(context);
     }
 

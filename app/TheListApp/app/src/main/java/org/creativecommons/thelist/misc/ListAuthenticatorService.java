@@ -9,7 +9,7 @@
  language governing permissions and limitations under the License.
  */
 
-package org.creativecommons.thelist.authentication;
+package org.creativecommons.thelist.misc;
 
 import android.app.Service;
 import android.content.Intent;

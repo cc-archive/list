@@ -55,10 +55,11 @@ import java.util.Collections;
 public class GalleryFragment extends Fragment {
     public static final String TAG = GalleryFragment.class.getSimpleName();
 
-    Context mContext;
+    private Context mContext;
+
+    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
-    private ListUser mCurrentUser;
 
     //UI Elements
     private TextView mEmptyView;
@@ -109,15 +110,16 @@ public class GalleryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        Activity activity = getActivity();
+
+        //Helpers
         mCurrentUser = new ListUser(mContext);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
-        Activity activity = getActivity();
-
         //UI Elements
-        mEmptyView = (TextView)getActivity().findViewById(R.id.empty_gallery_label);
-        mProgressBar = (ProgressBar)getActivity().findViewById(R.id.gallery_progressBar);
+        mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
+        mProgressBar = (ProgressBar) activity.findViewById(R.id.gallery_progressBar);
 
         //RecyclerView
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.gallerySwipeRefresh);
@@ -128,6 +130,7 @@ public class GalleryFragment extends Fragment {
         mGalleryAdapter = new GalleryAdapter(mContext, mPhotoList);
         mRecyclerView.setAdapter(mGalleryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
+
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override

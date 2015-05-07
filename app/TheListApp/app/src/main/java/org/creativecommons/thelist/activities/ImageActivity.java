@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,16 +24,14 @@ public class ImageActivity extends AppCompatActivity {
     private static final String TAG = ImageActivity.class.getSimpleName();
 
     private Context mContext;
-    private MessageHelper mMessageHelper;
 
-    private ShareActionProvider miShareAction;
+    //Helpers
+    private MessageHelper mMessageHelper;
 
     private ImageAdapter adapter;
     private ViewPager viewPager;
 
     private ArrayList<GalleryItem> photoObjects;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +39,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
 
         mContext = this;
+
         mMessageHelper = new MessageHelper(mContext);
 
         //Setup toolbar
@@ -60,18 +57,15 @@ public class ImageActivity extends AppCompatActivity {
         adapter = new ImageAdapter(ImageActivity.this, photoObjects);
         viewPager.setAdapter(adapter);
 
-        //displaying selected image first
+        //Displaying selected image first
         viewPager.setCurrentItem(position);
+
     } //onCreate
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_image, menu);
-
-        MenuItem item = menu.findItem(R.id.action_share);
-        // Fetch reference to the share action provider
-        miShareAction = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
         return true;
     }

@@ -51,11 +51,13 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener,
         AccountFragment.AuthListener {
     public static final String TAG = StartActivity.class.getSimpleName();
-    protected Context mContext;
-    protected ListUser mCurrentUser;
-    protected SharedPreferencesMethods mSharedPref;
-    protected MessageHelper mMessageHelper;
+
+    private Context mContext;
+
     private AccountManager am;
+    private ListUser mCurrentUser;
+    private MessageHelper mMessageHelper;
+    private SharedPreferencesMethods mSharedPref;
 
     //UI Elements
     protected Button mAccountButton;
@@ -73,11 +75,16 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
         mContext = this;
-        mSharedPref = new SharedPreferencesMethods(mContext);
-        mMessageHelper = new MessageHelper(mContext);
-        mCurrentUser = new ListUser(StartActivity.this);
+
         am = AccountManager.get(getBaseContext());
+        mCurrentUser = new ListUser(StartActivity.this);
+        mMessageHelper = new MessageHelper(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
+
+
+
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);

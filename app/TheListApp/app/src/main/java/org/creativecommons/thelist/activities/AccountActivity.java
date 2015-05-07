@@ -15,7 +15,7 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.fragments.AccountFragment;
-import org.creativecommons.thelist.fragments.TermsFragment;
+import org.creativecommons.thelist.misc.TermsFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -35,22 +35,21 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.gen
 public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity
         implements AccountFragment.AuthListener, TermsFragment.TermsClickListener {
     private final String TAG = this.getClass().getSimpleName();
-    Context mContext;
 
+    private Context mContext;
+
+    //Helpers
     private AccountManager mAccountManager;
-    private String mAuthTokenType;
     private ListUser mCurrentUser;
     private RequestMethods mRequestMethods;
     private SharedPreferencesMethods mSharedPref;
+
+    private String mAuthTokenType;
     private Bundle newUserBundle;
 
     //UI Elements
-    FrameLayout mFrameLayout;
-    EditText mPasswordTextField;
-
-    //Fragments
-    //TODO: agree to terms
-    //TermsFragment termsFragment = new TermsFragment();
+    private FrameLayout mFrameLayout;
+    private EditText mPasswordTextField;
 
     // --------------------------------------------------------
 
@@ -58,7 +57,9 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
         mContext = this;
+
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
         mRequestMethods = new RequestMethods(mContext);

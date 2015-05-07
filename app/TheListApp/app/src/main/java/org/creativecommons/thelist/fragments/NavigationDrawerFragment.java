@@ -23,6 +23,7 @@ package org.creativecommons.thelist.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,9 +46,11 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
-
+public class NavigationDrawerFragment extends Fragment {
+    public static final String TAG = NavigationDrawerFragment.class.getSimpleName();
     private Context mContext;
+
+    //Helpers
     private ListUser mCurrentUser;
     private SharedPreferencesMethods mSharedPref;
 
@@ -113,16 +116,17 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        Activity activity = getActivity();
+
+        //Helpers
         mCurrentUser = new ListUser(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
-        Activity parent = getActivity();
-
         //UI Elements
-        mAccountName = (TextView) parent.findViewById(R.id.drawer_account_name);
-        mAccountButton = (RelativeLayout) parent.findViewById(R.id.drawer_account_button);
-        mAccountButtonLabel = (TextView) parent.findViewById(R.id.drawer_account_label);
-        mAccountButtonIcon = (ImageView) parent.findViewById(R.id.drawer_account_icon);
+        mAccountName = (TextView) activity.findViewById(R.id.drawer_account_name);
+        mAccountButton = (RelativeLayout) activity.findViewById(R.id.drawer_account_button);
+        mAccountButtonLabel = (TextView) activity.findViewById(R.id.drawer_account_label);
+        mAccountButtonIcon = (ImageView) activity.findViewById(R.id.drawer_account_icon);
 
         mAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +137,7 @@ public class NavigationDrawerFragment extends android.support.v4.app.Fragment {
 
         //RecyclerView
         mAdapter = new DrawerAdapter(mContext, getData());
-        mDrawerRecyclerView = (RecyclerView)parent.findViewById(R.id.drawer_recyclerView);
+        mDrawerRecyclerView = (RecyclerView)activity.findViewById(R.id.drawer_recyclerView);
         mDrawerRecyclerView.setAdapter(mAdapter);
         mDrawerRecyclerView.setHasFixedSize(true);
         mDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
