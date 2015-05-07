@@ -72,7 +72,7 @@
 
         <!--TODO: re-add Camera Button (if this is functionality we want)-->
         <ImageButton android:id="@+id/CameraButton"
-            android:contentDescription="Take A Picture"
+            android:contentDescription="Click to take A Picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
@@ -83,7 +83,7 @@
 
         <ImageButton
             android:id="@+id/NoButton"
-            android:contentDescription="Pass on this item"
+            android:contentDescription="Click to pass on this item"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="invisible"

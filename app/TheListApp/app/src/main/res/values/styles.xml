@@ -20,7 +20,7 @@
 
     <!--CheckBox-->
     <style name="CheckBoxStyle" parent="android:Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/btn_check</item>
+        <!--<item name="android:button">@drawable/btn_check</item>-->
         <!--TODO: make icons in colorPrimary-->
     </style>
 
