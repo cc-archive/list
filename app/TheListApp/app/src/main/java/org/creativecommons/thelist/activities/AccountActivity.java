@@ -34,7 +34,6 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.fragments.AccountFragment;
-import org.creativecommons.thelist.misc.TermsFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -52,8 +51,8 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.gen
 
 
 public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity
-        implements AccountFragment.AuthListener, TermsFragment.TermsClickListener {
-    private final String TAG = this.getClass().getSimpleName();
+        implements AccountFragment.AuthListener {
+    private final String TAG = AccountActivity.class.getSimpleName();
 
     private Context mContext;
 
@@ -189,28 +188,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         setAccountAuthenticatorResult(null);
         setResult(RESULT_CANCELED, null);
         finish(); //this should take you to previous activity
-    }
-
-    @Override
-    public void onTermsClicked() {
-        //Start UploadFragment and Upload photo
-        //Sign in User and
-//        String email;
-//        String password;
-//        String authType;
-//
-//        mCurrentUser.userSignUp();
-//
-//        final Intent res = new Intent();
-//        res.putExtras(userData);
-//        finishLogin(res);
-    } //onTermsClicked
-
-    @Override
-    public void onTermsCancelled() {
-        setAccountAuthenticatorResult(null);
-        setResult(RESULT_CANCELED, null);
-        finish();
     }
 
     @Override
