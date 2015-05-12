@@ -23,25 +23,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.adapters.CategoryListAdapter;
+import org.creativecommons.thelist.adapters.CategoryAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
-import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
@@ -72,15 +67,15 @@ public class CategoryListActivity extends AppCompatActivity {
     private List<Integer> mUserCategories = new ArrayList<>();
 
     //RecyclerView
-//    private RecyclerView mRecyclerView;
-//    private RecyclerView.Adapter mCategoryAdapter;
-//    private RecyclerView.LayoutManager mLayoutManager;
-//    private List<CategoryListItem> mCategoryList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mCategoryAdapter;
+    private GridLayoutManager mGridLayoutManager;
+    private List<CategoryListItem> mCategoryList = new ArrayList<>();
 
     //GridView
-    private GridView mGridView;
-    private List<CategoryListItem> mCategoryList = new ArrayList<>();
-    private CategoryListAdapter adapter;
+//    private GridView mGridView;
+//    private List<CategoryListItem> mCategoryList = new ArrayList<>();
+//    private CategoryListAdapter adapter;
 
     //UI Elements
     //private ProgressBar mProgressBar;
@@ -103,9 +98,12 @@ public class CategoryListActivity extends AppCompatActivity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-        //Set List Adapter
-        mGridView = (GridView) findViewById(R.id.categoryGrid);
-        adapter = new CategoryListAdapter(this,mCategoryList);
+        //RecyclerView
+        mRecyclerView = (RecyclerView) findViewById(R.id.category_list_grid);
+        mGridLayoutManager = new GridLayoutManager(mContext, 2);
+        mCategoryAdapter = new CategoryAdapter(this, mCategoryList);
+        mRecyclerView.setAdapter(mCategoryAdapter);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
 
         //Set up Helper Message if new user
         if(!mSharedPref.getCategoryHelperViewed()){
@@ -155,7 +153,7 @@ public class CategoryListActivity extends AppCompatActivity {
                                 Log.v(TAG, "user’s category list: " + mUserCategories.toString());
                             }
                             updateList();
-                        } //onAuthed
+                        } //getUserCategories > onSuccess
                         @Override
                         public void onFail(VolleyError error) {
                             Log.v(TAG, "> getUserCategories > onFail " + error.toString());
@@ -163,7 +161,7 @@ public class CategoryListActivity extends AppCompatActivity {
                                     getString(R.string.error_message));
                         }
                     });
-                } else {
+                } else { //TODO: REMOVE WITH ANU
 
                     JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
 
@@ -180,7 +178,7 @@ public class CategoryListActivity extends AppCompatActivity {
                     }
                     updateList();
                 }
-            } //onAuthed
+            } //getCategories > onSuccess
             @Override
             public void onFail(VolleyError error) {
                 Log.d(TAG, "> getCategories > onFail: " + error.getMessage());
@@ -189,101 +187,105 @@ public class CategoryListActivity extends AppCompatActivity {
             }
         });
 
-        //When Category is tapped
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckableRelativeLayout checkableLayout = (CheckableRelativeLayout)view.findViewById(R.id.checkable_layout);
-                ImageView checkIcon = (ImageView) view.findViewById(R.id.category_checkmark);
-                TextView categoryNameLabel = (TextView)view.findViewById(R.id.category_title);
+//        //When category is tapped
+//        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mContext,
+//                new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        CheckableRelativeLayout checkableLayout = (CheckableRelativeLayout) view.findViewById(R.id.checkable_layout);
+//                        ImageView categoryCheckIcon = (ImageView) view.findViewById(R.id.category_checkmark);
+//                        TextView categoryNameLabel = (TextView) view.findViewById(R.id.category_title);
+//
+//                        CategoryListItem item = (CategoryListItem) mCategoryList.get(position);
+//                        String catId = String.valueOf(item.getCategoryID());
+//
+//                        ((CategoryAdapter) mCategoryAdapter).toggleSelection(position);
+//
+//                        boolean toggleState = ((CategoryAdapter) mCategoryAdapter).getToggleState(position);
+//
+//                        Log.v(TAG, "AFTER CLICK, STATE IS: " + String.valueOf(toggleState));
+//
+//
+//                        if (((CategoryAdapter) mCategoryAdapter).getToggleState(position)) {
+//                            checkableLayout.getBackground().setAlpha(200);
+//                            categoryNameLabel.setTextColor(mContext.getResources().getColor(R.color.secondary_text_material_dark));
+//                            categoryCheckIcon.setVisibility(View.VISIBLE);
+//
+//                            mRequestMethods.addCategory(catId);
+//
+//                        } else {
+//                            checkableLayout.getBackground().setAlpha(255);
+//                            categoryNameLabel.setTextColor(mContext.getResources().getColor(R.color.primary_text_default_material_dark));
+//                            categoryCheckIcon.setVisibility(View.INVISIBLE);
+//
+//                            mRequestMethods.removeCategory(catId);
+//                        }
+//
+////                        TODO: does button hide? put this in the activity when fragment created
+////                        List<Integer> positions = ((CategoryAdapter)mCategoryAdapter).getSelectedItems();
+////
+////                        if(positions.size() > 1){
+////                            MenuItem doneButton = menu.findItem(R.id.action_done);
+////                            doneButton.setVisible(true);
+////                        }
+////                        else {
+////                            MenuItem doneButton = menu.findItem(R.id.action_done);
+////                            doneButton.setVisible(false);
+////                        }
+//
+//                    }
+//                }));
 
-                //Get item clicked + its category id
-                CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(position);
-                String catId = String.valueOf(item.getCategoryID());
-
-                if(mGridView.isItemChecked(position)) {
-                    checkableLayout.getBackground().setAlpha(128);
-                    checkIcon.setVisibility(View.VISIBLE);
-                    categoryNameLabel.setTextColor(getResources().getColor(R.color.secondary_text_material_dark));
-                    item.setCategoryChecked(true);
-                    mRequestMethods.addCategory(catId);
-                    //Log.v(TAG, "ADDED " + catId);
-                } else {
-                    checkableLayout.getBackground().setAlpha(255);
-                    checkIcon.setVisibility(View.INVISIBLE);
-                    categoryNameLabel.setTextColor(getResources().getColor(R.color.primary_text_default_material_dark));
-                    item.setCategoryChecked(false);
-                    mRequestMethods.removeCategory(catId);
-                    //Log.v(TAG, "REMOVED " + catId);
-                }
-                //Count how many items are checked: if at least 3, show done button
-                SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-                int length = positions.size();
-                int ItemsChecked = 0;
-                if (positions.size() > 0) {
-                    for (int i = 0; i < length; i++) {
-                        if (positions.get(positions.keyAt(i))) {
-                            ItemsChecked++;
-                        }
-                    }
-                }
-                if (ItemsChecked >= 1) {
-                    MenuItem doneButton = menu.findItem(R.id.action_done);
-                    doneButton.setVisible(true);
-                }
-                else {
-                    MenuItem doneButton = menu.findItem(R.id.action_done);
-                    doneButton.setVisible(false);
-                }
-            }
-        }); //setOnItemClickListener
+//        //When Category is tapped
+//        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                CheckableRelativeLayout checkableLayout = (CheckableRelativeLayout)view.findViewById(R.id.checkable_layout);
+//                ImageView checkIcon = (ImageView) view.findViewById(R.id.category_checkmark);
+//                TextView categoryNameLabel = (TextView)view.findViewById(R.id.category_title);
+//
+//                //Get item clicked + its category id
+//                CategoryListItem item = (CategoryListItem) mGridView.getItemAtPosition(position);
+//                String catId = String.valueOf(item.getCategoryID());
+//
+//                if(mGridView.isItemChecked(position)) {
+//                    checkableLayout.getBackground().setAlpha(128);
+//                    checkIcon.setVisibility(View.VISIBLE);
+//                    categoryNameLabel.setTextColor(getResources().getColor(R.color.secondary_text_material_dark));
+//                    item.setCategoryChecked(true);
+//                    mRequestMethods.addCategory(catId);
+//                    //Log.v(TAG, "ADDED " + catId);
+//                } else {
+//                    checkableLayout.getBackground().setAlpha(255);
+//                    checkIcon.setVisibility(View.INVISIBLE);
+//                    categoryNameLabel.setTextColor(getResources().getColor(R.color.primary_text_default_material_dark));
+//                    item.setCategoryChecked(false);
+//                    mRequestMethods.removeCategory(catId);
+//                    //Log.v(TAG, "REMOVED " + catId);
+//                }
+//                //Count how many items are checked: if at least 3, show done button
+//                SparseBooleanArray positions = mGridView.getCheckedItemPositions();
+//                int length = positions.size();
+//                int ItemsChecked = 0;
+//                if (positions.size() > 0) {
+//                    for (int i = 0; i < length; i++) {
+//                        if (positions.get(positions.keyAt(i))) {
+//                            ItemsChecked++;
+//                        }
+//                    }
+//                }
+//                if (ItemsChecked >= 1) {
+//                    MenuItem doneButton = menu.findItem(R.id.action_done);
+//                    doneButton.setVisible(true);
+//                }
+//                else {
+//                    MenuItem doneButton = menu.findItem(R.id.action_done);
+//                    doneButton.setVisible(false);
+//                }
+//            }
+//        }); //setOnItemClickListener
 
     } //onCreate
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-//    public interface OnItemClickListener {
-//        public void onItemClick(View view, int position);
-//    }
-
-    //TODO: convert listview to recyclerview
-//    public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-//        private OnItemClickListener mListener;
-//        GestureDetector mGestureDetector;
-//
-//        public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
-//            mListener = listener;
-//            mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-//                @Override
-//                public boolean onSingleTapUp(MotionEvent e) {
-//                    //Log.v("HI", "ON SINGLE TAG UP CALLED");
-//                    return true;
-//                }
-//            });
-//        }
-//        @Override
-//        public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
-//            View childView = view.findChildViewUnder(e.getX(), e.getY());
-//            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-//                mListener.onItemClick(childView, view.getChildPosition(childView));
-//            }
-//            return false;
-//        }
-//        @Override
-//        public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
-//            //Log.v("HI", "ON TOUCH EVENT CALLED");
-//        }
-//    } //RecyclerItemClickListener
 
 
     //UPDATE LIST WITH CONTENT
@@ -309,43 +311,27 @@ public class CategoryListActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 Log.e(TAG, "Exception Caught: ", e);
             }
-            mGridView.setAdapter(adapter);
-            mGridView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
             //if category has been previously selected by user, set item in gridview as checked
             if(mUserCategories != null && mUserCategories.size() > 0) {
                 for(int i = 0; i < mCategoryList.size(); i++){
                     CategoryListItem checkItem = mCategoryList.get(i);
                     if(mUserCategories.contains(checkItem.getCategoryID())){
-                        mGridView.setItemChecked(i, true);
-                        checkItem.setCategoryChecked(true);
+
+                        ((CategoryAdapter) mCategoryAdapter).setState(i, true);
+                        //Log.v(TAG, checkItem.getCategoryName() + " is true");
                     }
                 }
                 MenuItem doneButton = menu.findItem(R.id.action_done);
                 doneButton.setVisible(true);
             }
 
-            adapter.notifyDataSetChanged();
+            mCategoryAdapter.notifyDataSetChanged();
         }
     } //updateList
 
     public void saveUserCategories(){
-        SparseBooleanArray positions = mGridView.getCheckedItemPositions();
-        int length = positions.size();
-        //Array of user selected categories
-        List<Integer> userCategories = new ArrayList<>();
-
-        for(int i = 0; i < length; i++) {
-            int itemPosition = positions.keyAt(i);
-            boolean value = positions.get(itemPosition);
-
-            if(value) {
-                CategoryListItem catItem = (CategoryListItem) mGridView.getItemAtPosition(itemPosition);
-                int catId = catItem.getCategoryID();
-                userCategories.add(catId);
-                Log.v(TAG, "ITEM ADDED");
-            }
-        }
+        List<Integer> userCategories = ((CategoryAdapter)mCategoryAdapter).getSelectedItems();
 
         Intent intent;
 
@@ -366,6 +352,18 @@ public class CategoryListActivity extends AppCompatActivity {
             startActivity(intent);
         }
     } //saveUserCategories
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
 
     //onBackPressed
     @Override

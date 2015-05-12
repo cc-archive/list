@@ -8,15 +8,20 @@
         android:visibility="gone"
         android:id="@+id/category_helper_message"/>
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/categoryGrid"
-        android:numColumns="auto_fit"
-        android:columnWidth="180dp"
-        android:choiceMode="multipleChoice"
-        android:clipToPadding="false"
-        android:gravity="center"
-        android:stretchMode="columnWidth" />
+        android:layout_height="fill_parent"
+        android:id="@+id/category_list_grid"/>
+
+    <!--<GridView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:id="@+id/categoryGrid"-->
+        <!--android:numColumns="auto_fit"-->
+        <!--android:columnWidth="180dp"-->
+        <!--android:choiceMode="multipleChoice"-->
+        <!--android:clipToPadding="false"-->
+        <!--android:gravity="center"-->
+        <!--android:stretchMode="columnWidth" />-->
 </LinearLayout>

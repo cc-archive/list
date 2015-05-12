@@ -579,6 +579,7 @@ public final class RequestMethods {
                         public void onErrorResponse(VolleyError error) {
                             //TODO: Add “not successful“ toast
                             Log.d(TAG, " > removeCategory > onErrorResponse: " + error.getMessage());
+                            //TODO: REMOVE FROM HELPER CLASS
                             mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
                                     mContext.getString(R.string.error_message));
                         }
