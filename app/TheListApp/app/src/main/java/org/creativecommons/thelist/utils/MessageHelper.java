@@ -23,6 +23,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -32,11 +33,20 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MessageHelper {
     public static final String TAG = RequestMethods.class.getSimpleName();
-    protected Context mContext;
+
+    private Context mContext;
+    private Resources res;
+
+    //Gratitude
+    private String [] gratitudeMessages;
+    private Random random = new Random();
+
+    public static final Integer[] MESSAGE_INTERVALS = new Integer[]{5, 10, 15, 20, 25};
 
     //Notifications
     final AtomicInteger notificationID = new AtomicInteger(0);
@@ -45,6 +55,8 @@ public class MessageHelper {
     //Set Context
     public MessageHelper(Context mc) {
         mContext = mc;
+        res = mContext.getResources();
+        gratitudeMessages = res.getStringArray(R.array.gratitude_messages);
     }
 
     //Generic Dialog
@@ -220,7 +232,18 @@ public class MessageHelper {
                 Toast.LENGTH_SHORT).show();
     }
 
+    // --------------------------------------------------------
+    // MAKE USERS FEEL SPECIAL MESSAGES
+    // --------------------------------------------------------
 
+    public void makerUsersFeelAllSpecialAndWhatNot(int count){
+        String title = String.format(res.getString(R.string.gratitude_title), String.valueOf(count));
+
+        int randomIndex = random.nextInt(gratitudeMessages.length);
+        String message = (gratitudeMessages[randomIndex]);
+
+        showDialog(mContext, title, message);
+    }
 
 
 } //MessageHelper

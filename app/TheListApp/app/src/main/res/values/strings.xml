@@ -46,6 +46,20 @@
     <!-- Empty Labels -->
     <string name="empty_feed_label">No items in your picks.</string>
 
+
+    <!-- Grafitication -->
+    <string name="gratitude_title">You’ve uploaded %1$s photos!</string>
+
+    <string-array name="gratitude_messages">
+        <item>We’re making The Commons that much more complete.</item>
+        <item>The Commons applauds your valiant efforts.</item>
+        <item>Cool. Coolcoolcool.</item>
+        <item>Too cool for school. Or proprietary content.</item>
+        <item>Yeeaaaah you’re on a roll.</item>
+        <item>All in a day’s work, eh?</item>
+        <item>No big. Just contributing to the world’s repository of human knowledge.</item>
+    </string-array>
+
     <!-- Login/SignUp Shared Strings -->
     <string name="password_hint">Password</string>
     <string name="login_button_label">LOGIN</string>
