@@ -112,6 +112,7 @@ public class AddItemActivity extends AppCompatActivity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
+
         //UI Elements
         mMakerItemProgressBar = (RelativeLayout) findViewById(R.id.makerItemProgressBar);
         mItemNameField = (EditText) findViewById(R.id.add_item_title);
@@ -123,6 +124,26 @@ public class AddItemActivity extends AppCompatActivity {
         mDoneButton = (Button) findViewById(R.id.add_item_button);
 
         mPhotoAdded = false;
+
+        //Get Intent if it exists
+        Intent receivedIntent = getIntent();
+        Log.v(TAG, receivedIntent.toString());
+
+        if(receivedIntent.getAction() != null){
+            String receivedAction = receivedIntent.getAction();
+            Uri receivedUri = (Uri)receivedIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+            if(receivedAction.equals(Intent.ACTION_SEND) && receivedUri != null){
+
+                Picasso.with(mContext).load(receivedUri).into(mAddImage);
+
+                mPhotoAdded = true;
+
+            } else {
+                mMessageHelper.showDialog(mContext, "Oops!", "There was a problem adding your image to suggestions");
+            }
+        }
+
 
         //Set Spinner Content
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {

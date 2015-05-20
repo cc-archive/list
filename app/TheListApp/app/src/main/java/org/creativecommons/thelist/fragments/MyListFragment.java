@@ -824,7 +824,6 @@ public class MyListFragment extends Fragment {
         //mUploadText.setText("Uploading " + mItemToBeUploaded.getItemName() + "…");
         mUploadProgressBarContainer.setVisibility(View.VISIBLE);
 
-
         //Hide progress bar if it takes too much time to upload
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -850,6 +849,7 @@ public class MyListFragment extends Fragment {
                         //Show snackbar confirmation
                         mItemToBeUploaded = null;
 
+                        //TODO: check if we actually need to disable fab
                         showPhotoUploadSnackbar("Photo Uploaded",
                                 "dismiss", new ActionClickListener() {
                                     @Override
@@ -867,7 +867,10 @@ public class MyListFragment extends Fragment {
                                     }
                                 });
 
-                    } //onAuthed
+                        //Messager Helper: check messages
+                        //mMessageHelper.getUserMessaging()
+
+                    } //onSuccess
                     @Override
                     public void onFail() {
                         Log.d(TAG, "On Photo Upload Fail");
@@ -895,6 +898,11 @@ public class MyListFragment extends Fragment {
                     } //onFail
         });
     } //performPhotoUpload
+
+
+    public void checkMessages() {
+
+    }
 
     //Helper Methods
     public static String capitalize(final String line) {

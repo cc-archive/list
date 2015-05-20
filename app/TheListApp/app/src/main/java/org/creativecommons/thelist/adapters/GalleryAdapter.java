@@ -74,6 +74,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         //Getting data for the row
         GalleryItem g = galleryItems.get(position);
 
+        //set description for TalkBack
+        holder.photoView.setContentDescription("image of " + g.getItemName());
+
         Picasso.with(mContext)
                 .load(g.getUrl() + "/300")
                 .placeholder(R.drawable.progress_view)

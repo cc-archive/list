@@ -10,5 +10,6 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
+
         android:layout_centerInParent="true"/>
  </RelativeLayout>

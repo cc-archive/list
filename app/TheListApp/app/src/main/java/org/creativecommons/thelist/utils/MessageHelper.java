@@ -28,10 +28,12 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.VolleyError;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
+import org.json.JSONArray;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +44,7 @@ public class MessageHelper {
     private Context mContext;
     private Resources res;
 
-    //Gratitude
+    //Make Users feel special
     private String [] gratitudeMessages;
     private Random random = new Random();
 
@@ -244,6 +246,32 @@ public class MessageHelper {
 
         showDialog(mContext, title, message);
     }
+
+    public void getUserMessaging(){
+        //make request and analyze results of user stats
+
+        RequestMethods mRequestMethods = new RequestMethods(mContext);
+
+        mRequestMethods.getUserProfile(new RequestMethods.ResponseCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                //TODO: check if message should be displayed based on user stats
+                //what are the rules for this? Only 1 message per “run” of this?
+
+
+                //TODO: get upload count
+
+                //TODO: get
+
+            }
+
+            @Override
+            public void onFail(VolleyError error) {
+
+            }
+        });
+
+    } //userMessaging
 
 
 } //MessageHelper

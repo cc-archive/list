@@ -143,14 +143,6 @@ public class GalleryFragment extends Fragment {
 
                         mCallback.viewImage(mPhotoList, position);
 
-                        //Create list of image urls to pass to viewPager
-//                        ArrayList<String> urls = new ArrayList<>();
-//
-//                        for(int i = 0; i < mPhotoList.size(); i++){
-//                            GalleryItem singlePhoto = mPhotoList.get(i);
-//                            urls.add(singlePhoto.getUrl() + "/800");
-//                        }
-//                        mCallback.viewImage(urls, position);
                     }
                 }));
 

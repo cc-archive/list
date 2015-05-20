@@ -48,7 +48,7 @@ public class FileHelper {
 	
 	public static final int SHORT_SIDE_TARGET = 1280;
 	
-	public static String getByteArrayFromFile(Context context, Uri uri) {
+	public static String getBase64StringFromFile(Context context, Uri uri) {
 		byte[] fileBytes;
         String fileString = null;
         InputStream inStream = null;
@@ -93,14 +93,58 @@ public class FileHelper {
        	}
         
         return fileString;
-	}
+	} //getBase64StringFromFile
+
+	public static byte[] getByteArrayFromFile(Context context, Uri uri) {
+		byte[] fileBytes = null;
+		InputStream inStream = null;
+		ByteArrayOutputStream outStream = null;
+
+		if (uri.getScheme().equals("content")) {
+			try {
+				inStream = context.getContentResolver().openInputStream(uri);
+				outStream = new ByteArrayOutputStream();
+
+				byte[] bytesFromFile = new byte[1024*1024]; // buffer size (1 MB)
+				int bytesRead = inStream.read(bytesFromFile);
+				while (bytesRead != -1) {
+					outStream.write(bytesFromFile, 0, bytesRead);
+					bytesRead = inStream.read(bytesFromFile);
+				}
+
+				fileBytes = outStream.toByteArray();
+			}
+			catch (IOException e) {
+				Log.e(TAG, e.getMessage());
+			}
+			finally {
+				try {
+					inStream.close();
+					outStream.close();
+				}
+				catch (IOException e) { /*( Intentionally blank */ }
+			}
+		}
+		else {
+			try {
+				File file = new File(uri.getPath());
+				FileInputStream fileInput = new FileInputStream(file);
+				fileBytes = IOUtils.toByteArray(fileInput);
+			}
+			catch (IOException e) {
+				Log.e(TAG, e.getMessage());
+			}
+		}
+
+		return fileBytes;
+	} //getByteArrayFromFile
 
     //Not used reduceImageForUpload
 	public static byte[] reduceImageForUpload(byte[] imageData) {
-		Bitmap bitmap = org.creativecommons.thelist.utils.ImageResizer.resizeImageMaintainAspectRatio(imageData, SHORT_SIDE_TARGET);
+		Bitmap bitmap = ImageResizer.resizeImageMaintainAspectRatio(imageData, SHORT_SIDE_TARGET);
 		
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); //used to be png
 		byte[] reducedData = outputStream.toByteArray();
 		try {
 			outputStream.close();
@@ -168,7 +212,7 @@ public class FileHelper {
 
     public static String createUploadPhotoObject(Context context, Uri uri) {
         //Convert photo file to Base64 encoded string
-        String fileString = getByteArrayFromFile(context, uri);
+        String fileString = getBase64StringFromFile(context, uri);
 
         return fileString;
     }
