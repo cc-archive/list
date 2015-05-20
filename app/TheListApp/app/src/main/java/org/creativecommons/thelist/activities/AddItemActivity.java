@@ -144,7 +144,6 @@ public class AddItemActivity extends AppCompatActivity {
             }
         }
 
-
         //Set Spinner Content
         mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
             @Override

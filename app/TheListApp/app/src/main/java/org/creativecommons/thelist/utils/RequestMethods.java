@@ -107,6 +107,7 @@ public final class RequestMethods {
     // APP REQUEST
     // --------------------------------------------------------
 
+    //TODO: create real request when endpoint exists
     public void getAppVersion(Response.Listener<JSONArray> response, Response.ErrorListener error){
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
@@ -121,6 +122,46 @@ public final class RequestMethods {
         queue.add(appVersionRequest);
     }
 
+    // --------------------------------------------------------
+    // CHECK USER STATS
+    // --------------------------------------------------------
+
+    public void getUserProfile(final ResponseCallback callback){
+        if (!(isNetworkAvailable())) {
+            mMessageHelper.galleryNetworkFailMessage();
+            return;
+        }
+        //TODO: change to proper request for stats once it exists
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onAuthed(final String authtoken) {
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.GET_USER_PHOTOS + mSharedPref.getUserId();
+                Log.v(TAG, " > getUserPhotos, url: " + url);
+
+                JsonArrayRequest getUserPhotosRequest = new JsonArrayRequest(url,
+                        new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                callback.onSuccess(response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onFail(error);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(getUserPhotosRequest);
+            }
+        });
+    } //getUserProfile
 
     // --------------------------------------------------------
     // USER LIST REQUESTS
@@ -700,50 +741,5 @@ public final class RequestMethods {
             }
         });
     } //uploadPhoto
-
-    // --------------------------------------------------------
-    // CHECK USER STATS
-    // --------------------------------------------------------
-
-    public void getUserProfile(final ResponseCallback callback){
-        if (!(isNetworkAvailable())) {
-            mMessageHelper.galleryNetworkFailMessage();
-            return;
-        }
-        //TODO: change to proper request once it exists
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
-            @Override
-            public void onAuthed(final String authtoken) {
-                RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.GET_USER_PHOTOS + mSharedPref.getUserId();
-                Log.v(TAG, " > getUserPhotos, url: " + url);
-
-                JsonArrayRequest getUserPhotosRequest = new JsonArrayRequest(url,
-                        new Response.Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                //Log.v(TAG, "> getUserCategories > onResponse: " + response);
-                                callback.onSuccess(response);
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Log.d(TAG, "> getUserCategories > onErrorResponse: " + error.getMessage());
-                        callback.onFail(error);
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put(ApiConstants.USER_TOKEN, authtoken);
-                        return params;
-                    }
-                };
-                queue.add(getUserPhotosRequest);
-            }
-        });
-    } //getUserProfile
-
-
 
 } //RequestMethods

@@ -849,6 +849,9 @@ public class MyListFragment extends Fragment {
                         //Show snackbar confirmation
                         mItemToBeUploaded = null;
 
+                        //Messager Helper: check messages
+                        mMessageHelper.getUserMessaging();
+
                         //TODO: check if we actually need to disable fab
                         showPhotoUploadSnackbar("Photo Uploaded",
                                 "dismiss", new ActionClickListener() {
@@ -866,9 +869,6 @@ public class MyListFragment extends Fragment {
                                         }, 500);
                                     }
                                 });
-
-                        //Messager Helper: check messages
-                        //mMessageHelper.getUserMessaging()
 
                     } //onSuccess
                     @Override
@@ -898,11 +898,6 @@ public class MyListFragment extends Fragment {
                     } //onFail
         });
     } //performPhotoUpload
-
-
-    public void checkMessages() {
-
-    }
 
     //Helper Methods
     public static String capitalize(final String line) {

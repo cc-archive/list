@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -42,6 +43,7 @@ public class MessageHelper {
     public static final String TAG = RequestMethods.class.getSimpleName();
 
     private Context mContext;
+    private RequestMethods mRequestMethods;
     private Resources res;
 
     //Make Users feel special
@@ -57,6 +59,7 @@ public class MessageHelper {
     //Set Context
     public MessageHelper(Context mc) {
         mContext = mc;
+        mRequestMethods = new RequestMethods(mContext);
         res = mContext.getResources();
         gratitudeMessages = res.getStringArray(R.array.gratitude_messages);
     }
@@ -248,20 +251,27 @@ public class MessageHelper {
     }
 
     public void getUserMessaging(){
-        //make request and analyze results of user stats
-
-        RequestMethods mRequestMethods = new RequestMethods(mContext);
-
+        //make request and do something based on user stats
         mRequestMethods.getUserProfile(new RequestMethods.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 //TODO: check if message should be displayed based on user stats
-                //what are the rules for this? Only 1 message per “run” of this?
-
+                //what are the rules for this? Only 1 message per “run” of this? What is the priority level of each type of message?
+                //For now: achievement gets top priority (uploadCount)
 
                 //TODO: get upload count
+                int uploadCount = response.length();
+                Log.v(TAG, "USER UPLOAD COUNT: " + String.valueOf(uploadCount));
 
-                //TODO: get
+                //Arrays.asList(MESSAGE_INTERVALS).contains(uploadCount)
+
+                if(uploadCount > 1){
+                    makerUsersFeelAllSpecialAndWhatNot(uploadCount);
+
+                    return;
+                }
+
+                //TODO: include other values in the check:
 
             }
 
