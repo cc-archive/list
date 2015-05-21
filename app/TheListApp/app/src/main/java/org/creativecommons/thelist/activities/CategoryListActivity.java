@@ -151,7 +151,7 @@ public class CategoryListActivity extends AppCompatActivity {
                                         JSONObject singleCat = response.getJSONObject(i);
                                         mUserCategories.add(i, singleCat.getInt("categoryid"));
 
-                                        //Log.v("USERCATS", "add: " + singleCat.getInt("categoryid"));
+                                        Log.v("USERCATS", "add: " + singleCat.getInt("categoryid"));
 
                                     } catch (JSONException e) {
                                         Log.e(TAG, e.getMessage());
@@ -171,6 +171,8 @@ public class CategoryListActivity extends AppCompatActivity {
                 } else { //TODO: REMOVE WITH Anonymous Users
 
                     JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
+
+                    Log.v(TAG, "TEMP USER CATS: " + tempUserCategories);
 
                     if(tempUserCategories != null && tempUserCategories.length() > 0){
                         //Convert to list + add to mUserCategories
@@ -202,9 +204,6 @@ public class CategoryListActivity extends AppCompatActivity {
 
         mProgressBar.setVisibility(View.GONE);
 
-        MenuItem doneButton = menu.findItem(R.id.action_done);
-        doneButton.setVisible(true);
-
         if (mCategoryData == null) {
             mMessageHelper.showDialog(mContext, getString(R.string.error_title),
                     getString(R.string.error_message));
@@ -232,12 +231,16 @@ public class CategoryListActivity extends AppCompatActivity {
                     if(mUserCategories.contains(checkItem.getCategoryID())){
 
                         ((CategoryAdapter) mCategoryAdapter).setState(i, true);
+                        Log.v(TAG, checkItem.getCategoryName() + "IS CHECKED");
                         //Log.v(TAG, checkItem.getCategoryName() + " is true");
                     }
                 }
             }
 
             mCategoryAdapter.notifyDataSetChanged();
+
+            MenuItem doneButton = menu.findItem(R.id.action_done);
+            doneButton.setVisible(true);
         }
     } //updateList
 
@@ -247,28 +250,28 @@ public class CategoryListActivity extends AppCompatActivity {
 
         Intent intent;
 
-        if(mCurrentUser.isTempUser()){ //TEMP USER
-
-            if(userCategories.size() < 1){
-                mMessageHelper.showDialog(mContext, "No Categories Selected",
-                        "Pick at least one category so you can received List recommendations");
-                return;
-            }
-            //Save user categories to shared preferences
-            mSharedPref.saveSharedPreference
-                    (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
-
-            if(mSharedPref.getUserItemCount() == 0){
-                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-                startActivity(intent);
-            } else {
-                intent = new Intent(CategoryListActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        } else {
+//        if(mCurrentUser.isTempUser()){ //TEMP USER
+//
+//            if(userCategories.size() < 1){
+//                mMessageHelper.showDialog(mContext, "No Categories Selected",
+//                        "Pick at least one category so you can received List recommendations");
+//                return;
+//            }
+//            //Save user categories to shared preferences
+//            mSharedPref.saveSharedPreference
+//                    (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
+//
+//            if(mSharedPref.getUserItemCount() == 0){
+//                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+//                startActivity(intent);
+//            } else {
+//                intent = new Intent(CategoryListActivity.this, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        } else {
             intent = new Intent(CategoryListActivity.this, MainActivity.class);
             startActivity(intent);
-        }
+//        }
     } //saveUserCategories
 
     @Override

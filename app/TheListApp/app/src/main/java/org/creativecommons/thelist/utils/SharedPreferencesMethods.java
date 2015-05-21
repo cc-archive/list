@@ -33,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.creativecommons.thelist.adapters.UserListItem;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -368,6 +369,34 @@ public class SharedPreferencesMethods {
     public JSONArray getCategorySharedPreference(){
         return getSharedPreferenceList(CATEGORY_PREFERENCE_KEY);
     } //getCategorySharedPreference
+
+    //ADD single value from Item Preferences
+    public void addUserCategoryPreference(String catID) {
+        SharedPreferences sharedPref = mContext.getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        String listOfValues = sharedPref.getString(CATEGORY_PREFERENCE_KEY, null);
+
+        JSONArray list = null;
+
+        Log.v(TAG, "> addUserCategoryPreference, try to add item: " + catID);
+        try {
+
+            if(listOfValues != null){
+                list = new JSONArray(listOfValues);
+                list.put(Integer.parseInt(catID));
+            } else {
+                list = new JSONArray();
+                list.put(Integer.parseInt(catID));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(CATEGORY_PREFERENCE_KEY, list.toString());
+        editor.apply();
+
+    } //addUserCategoryPreference
+
 
     //DELETE single value from Category Preferences
     public void deleteUserCategoryPreference(String catId) {

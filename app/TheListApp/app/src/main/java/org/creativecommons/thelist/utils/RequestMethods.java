@@ -549,6 +549,13 @@ public final class RequestMethods {
 
     //Add Single Category to User Account
     public void addCategory(final String catId){
+
+        if(mCurrentUser.isTempUser()){ //TEMP USER
+            mSharedPref.addUserCategoryPreference(catId);
+            Log.v(TAG, "TEMP CAT ADDED: " + catId);
+            return;
+        }
+
         if(!(RequestMethods.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
@@ -596,50 +603,51 @@ public final class RequestMethods {
     public void removeCategory(final String catId){
 
         if(mCurrentUser.isTempUser()){ //TEMP USER
-            mSharedPref.deleteUserItemPreference(catId);
-        } else { //If logged in, remove from DB
-
-            if(!(RequestMethods.isNetworkAvailable(mContext))){
-                mMessageHelper.networkFailMessage();
-                return;
-            }
-
-            mCurrentUser.getToken(new ListUser.AuthCallback() {
-                @Override
-                public void onAuthed(final String authtoken) { //getToken and then start request
-                    RequestQueue queue = Volley.newRequestQueue(mContext);
-                    String url = ApiConstants.REMOVE_CATEGORY + mSharedPref.getUserId() + "/" + catId;
-
-                    StringRequest deleteCategoryRequest = new StringRequest(Request.Method.POST, url,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    //get Response
-                                    Log.v(TAG, "> removeCategory > onResponse: " + response);
-                                    Log.v(TAG, "A CATEGORY IS BEING REMOVED");
-                                    //TODO: do something with response?
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO: Add “not successful“ toast
-                            Log.d(TAG, " > removeCategory > onErrorResponse: " + error.getMessage());
-                            //TODO: REMOVE FROM HELPER CLASS
-                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
-                                    mContext.getString(R.string.error_message));
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put(ApiConstants.USER_TOKEN, authtoken);
-                            return params;
-                        }
-                    };
-                    queue.add(deleteCategoryRequest);
-                }
-            });
+            mSharedPref.deleteUserCategoryPreference(catId);
+            Log.v(TAG, "TEMP CAT DELETED: " + catId);
+            return;
         }
+
+        if(!(RequestMethods.isNetworkAvailable(mContext))){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        mCurrentUser.getToken(new ListUser.AuthCallback() {
+            @Override
+            public void onAuthed(final String authtoken) { //getToken and then start request
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.REMOVE_CATEGORY + mSharedPref.getUserId() + "/" + catId;
+
+                StringRequest deleteCategoryRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                //get Response
+                                Log.v(TAG, "> removeCategory > onResponse: " + response);
+                                Log.v(TAG, "A CATEGORY IS BEING REMOVED");
+                                //TODO: do something with response?
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //TODO: Add “not successful“ toast
+                        Log.d(TAG, " > removeCategory > onErrorResponse: " + error.getMessage());
+                        //TODO: REMOVE FROM HELPER CLASS
+                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
+                                mContext.getString(R.string.error_message));
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(deleteCategoryRequest);
+            }
+        });
     } //removeCategory
 
 

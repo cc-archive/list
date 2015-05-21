@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
@@ -108,6 +107,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 //            items.add(selectedItems.keyAt(i));
 //        }
 
+        Log.v(TAG, items.toString());
         return items;
     }
 
@@ -154,11 +154,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     holder.categoryNameLabel.setTextColor(mActivity.getResources().getColor(R.color.secondary_text_material_dark));
                     holder.categoryCheckIcon.setVisibility(View.VISIBLE);
 
-                    if(listUser.isTempUser()){
-                        Toast.makeText(mActivity, "category added", Toast.LENGTH_SHORT).show();
-                    } else {
-                        mRequestMethods.addCategory(catId);
-                    }
+                    mRequestMethods.addCategory(catId);
 
                 } else {
                     holder.checkableLayout.getBackground().setAlpha(255);
