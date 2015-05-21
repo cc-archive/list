@@ -43,7 +43,6 @@ public class MessageHelper {
     public static final String TAG = RequestMethods.class.getSimpleName();
 
     private Context mContext;
-    private RequestMethods mRequestMethods;
     private Resources res;
 
     //Make Users feel special
@@ -59,7 +58,6 @@ public class MessageHelper {
     //Set Context
     public MessageHelper(Context mc) {
         mContext = mc;
-        mRequestMethods = new RequestMethods(mContext);
         res = mContext.getResources();
         gratitudeMessages = res.getStringArray(R.array.gratitude_messages);
     }
@@ -251,6 +249,8 @@ public class MessageHelper {
     }
 
     public void getUserMessaging(){
+        RequestMethods mRequestMethods = new RequestMethods(mContext);
+
         //make request and do something based on user stats
         mRequestMethods.getUserProfile(new RequestMethods.ResponseCallback() {
             @Override

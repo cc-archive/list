@@ -6,22 +6,25 @@
 
     <include layout="@layout/helper_message"
         android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/category_helper_message"/>
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/category_list_grid"/>
+        android:layout_height="fill_parent">
 
-    <!--<GridView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:id="@+id/categoryGrid"-->
-        <!--android:numColumns="auto_fit"-->
-        <!--android:columnWidth="180dp"-->
-        <!--android:choiceMode="multipleChoice"-->
-        <!--android:clipToPadding="false"-->
-        <!--android:gravity="center"-->
-        <!--android:stretchMode="columnWidth" />-->
+        <ProgressBar android:id="@+id/category_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/category_list_grid"/>
+
+    </RelativeLayout>
+
 </LinearLayout>

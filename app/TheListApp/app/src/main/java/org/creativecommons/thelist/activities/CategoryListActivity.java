@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -78,7 +79,7 @@ public class CategoryListActivity extends AppCompatActivity {
 //    private CategoryListAdapter adapter;
 
     //UI Elements
-    //private ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private Menu menu;
 
     // --------------------------------------------------------
@@ -105,10 +106,14 @@ public class CategoryListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
+
+        //UI Elements
+        mProgressBar = (ProgressBar) findViewById(R.id.category_progress_bar);
+        mProgressBar.setVisibility(View.VISIBLE);
+
         //Set up Helper Message if new user
         if(!mSharedPref.getCategoryHelperViewed()){
 
-            //UI Elements
             final View helperMessage = findViewById(R.id.category_helper_message);
             ImageButton helperCloseButton = (ImageButton) findViewById(R.id.helper_close_button);
 
@@ -145,7 +150,9 @@ public class CategoryListActivity extends AppCompatActivity {
                                     try {
                                         JSONObject singleCat = response.getJSONObject(i);
                                         mUserCategories.add(i, singleCat.getInt("categoryid"));
-                                        Log.v("USERCATS", "add: " + singleCat.getInt("categoryid"));
+
+                                        //Log.v("USERCATS", "add: " + singleCat.getInt("categoryid"));
+
                                     } catch (JSONException e) {
                                         Log.e(TAG, e.getMessage());
                                     }
@@ -161,7 +168,7 @@ public class CategoryListActivity extends AppCompatActivity {
                                     getString(R.string.error_message));
                         }
                     });
-                } else { //TODO: REMOVE WITH ANU
+                } else { //TODO: REMOVE WITH Anonymous Users
 
                     JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
 
@@ -192,7 +199,12 @@ public class CategoryListActivity extends AppCompatActivity {
     //UPDATE LIST WITH CONTENT
     private void updateList() {
         Log.v(TAG, "> updateList");
-        //mProgressBar.setVisibility(View.INVISIBLE);
+
+        mProgressBar.setVisibility(View.GONE);
+
+        MenuItem doneButton = menu.findItem(R.id.action_done);
+        doneButton.setVisible(true);
+
         if (mCategoryData == null) {
             mMessageHelper.showDialog(mContext, getString(R.string.error_title),
                     getString(R.string.error_message));
@@ -223,8 +235,6 @@ public class CategoryListActivity extends AppCompatActivity {
                         //Log.v(TAG, checkItem.getCategoryName() + " is true");
                     }
                 }
-                MenuItem doneButton = menu.findItem(R.id.action_done);
-                doneButton.setVisible(true);
             }
 
             mCategoryAdapter.notifyDataSetChanged();
@@ -233,10 +243,17 @@ public class CategoryListActivity extends AppCompatActivity {
 
     public void saveUserCategories(){
         List<Integer> userCategories = ((CategoryAdapter)mCategoryAdapter).getSelectedItems();
+        Log.v(TAG, "SELECTED ITEMS: " + userCategories.toString());
 
         Intent intent;
 
         if(mCurrentUser.isTempUser()){ //TEMP USER
+
+            if(userCategories.size() < 1){
+                mMessageHelper.showDialog(mContext, "No Categories Selected",
+                        "Pick at least one category so you can received List recommendations");
+                return;
+            }
             //Save user categories to shared preferences
             mSharedPref.saveSharedPreference
                     (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());

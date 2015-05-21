@@ -648,6 +648,9 @@ public class MyListFragment extends Fragment {
 
                             @Override
                             public void onDismissed(Snackbar snackbar) {
+                                //Messager Helper: check messages
+                                mMessageHelper.getUserMessaging();
+
                                 //If fab is hidden (bug fix?)
                                 if (!mFab.isVisible()) {
                                     mFab.show();
@@ -848,9 +851,6 @@ public class MyListFragment extends Fragment {
 
                         //Show snackbar confirmation
                         mItemToBeUploaded = null;
-
-                        //Messager Helper: check messages
-                        mMessageHelper.getUserMessaging();
 
                         //TODO: check if we actually need to disable fab
                         showPhotoUploadSnackbar("Photo Uploaded",

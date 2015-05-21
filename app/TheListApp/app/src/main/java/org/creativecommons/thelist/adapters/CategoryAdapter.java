@@ -29,9 +29,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RequestMethods;
 
 import java.util.ArrayList;
@@ -119,6 +121,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, final int position) {
 
+        final ListUser listUser = new ListUser(mActivity);
+
         final CategoryListItem c = categoryItems.get(position);
         final String catId = String.valueOf(c.getCategoryID());
 
@@ -150,7 +154,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     holder.categoryNameLabel.setTextColor(mActivity.getResources().getColor(R.color.secondary_text_material_dark));
                     holder.categoryCheckIcon.setVisibility(View.VISIBLE);
 
-                    mRequestMethods.addCategory(catId);
+                    if(listUser.isTempUser()){
+                        Toast.makeText(mActivity, "category added", Toast.LENGTH_SHORT).show();
+                    } else {
+                        mRequestMethods.addCategory(catId);
+                    }
 
                 } else {
                     holder.checkableLayout.getBackground().setAlpha(255);
