@@ -655,6 +655,14 @@ public class MyListFragment extends Fragment {
                                     mMessageHelper.getUserMessaging();
                                 }
 
+                                if (text.equals("Upload Failed")) {
+                                    //TODO: return item to the top of the stack
+                                    //TODO: don’t do this if items are returned with errors from API
+                                    mItemToBeUploaded.setError(true);
+                                    mItemList.add(0, mItemToBeUploaded);
+                                    mFeedAdapter.notifyDataSetChanged();
+                                }
+
                                 //If fab is hidden (bug fix?)
                                 if (!mFab.isVisible()) {
                                     mFab.show();

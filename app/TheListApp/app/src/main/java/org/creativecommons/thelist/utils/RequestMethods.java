@@ -628,8 +628,8 @@ public final class RequestMethods {
 
         //Start notification
         mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle("Uploading " + title + "…")
-                .setContentText("Upload in progress")
+        mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
+                .setContentText("“" + title + "”" + " is uploading…")
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
 
@@ -658,8 +658,7 @@ public final class RequestMethods {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mBuilder.setContentTitle("Upload successful")
-                                                .setContentText(title + " uploaded");
+                                        mBuilder.setContentText("“" + title + "”" + " upload success");
                                         // Removes the progress bar
                                         mBuilder.setProgress(0, 0, false);
                                         mNotifyManager.notify(notificationID, mBuilder.build());
@@ -678,8 +677,7 @@ public final class RequestMethods {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mBuilder.setContentTitle("Upload failed")
-                                        .setContentText(title + " failed to upload");
+                                mBuilder.setContentText("“" + title + "”" + " failed to upload");
                                 // Removes the progress bar
                                 mBuilder.setProgress(0, 0, false);
                                 mNotifyManager.notify(notificationID, mBuilder.build());
@@ -781,8 +779,8 @@ public final class RequestMethods {
 
         //Start notification
         mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle(listItem.getItemName() + " is uploading…")
-                .setContentText("Upload in progress")
+        mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
+                .setContentText("“" + listItem.getItemName() + "”" + " is uploading…")
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
 
@@ -812,8 +810,7 @@ public final class RequestMethods {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mBuilder.setContentTitle("Upload successful")
-                                                .setContentText(listItem.getItemName() + " uploaded");
+                                        mBuilder.setContentText(listItem.getItemName() + " upload success");
                                         // Removes the progress bar
                                         mBuilder.setProgress(0, 0, false);
                                         mNotifyManager.notify(notificationID, mBuilder.build());
@@ -832,8 +829,7 @@ public final class RequestMethods {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mBuilder.setContentTitle("Upload failed")
-                                        .setContentText(listItem.getItemName() + " failed to upload");
+                                mBuilder.setContentText("“" + listItem.getItemName() + "”" + " failed to upload");
                                 // Removes the progress bar
                                 mBuilder.setProgress(0, 0, false);
                                 mNotifyManager.notify(notificationID, mBuilder.build());
