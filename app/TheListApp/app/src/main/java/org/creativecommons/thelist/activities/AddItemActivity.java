@@ -399,7 +399,7 @@ public class AddItemActivity extends AppCompatActivity {
                         new RequestMethods.RequestCallback() {
                             @Override
                             public void onSuccess() {
-                                //mMessageHelper.notifyUploadSuccess(title);
+                                Log.v(TAG, "addMakerItem > onSuccess");
 
                                 //Delay success response so user can process what’s going on
                                 new android.os.Handler().postDelayed(new Runnable() {

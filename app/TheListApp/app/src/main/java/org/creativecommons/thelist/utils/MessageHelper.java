@@ -55,11 +55,20 @@ public class MessageHelper {
     final AtomicInteger notificationID = new AtomicInteger(0);
     public static final String INTENT_ACTION = "OPEN_GALLERY";
 
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mBuilder;
+
     //Set Context
     public MessageHelper(Context mc) {
         mContext = mc;
+
+        //Gratitude Message Strings
         res = mContext.getResources();
         gratitudeMessages = res.getStringArray(R.array.gratitude_messages);
+
+        //Notifications
+        mNotifyManager = (NotificationManager) mc.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(mc);
     }
 
     //Generic Dialog
@@ -187,6 +196,17 @@ public class MessageHelper {
     // --------------------------------------------------------
 
     //NOTIFICATIONS
+
+    public void createUploadNotification(){
+
+        //Start notification
+        mNotifyManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(mContext);
+        mBuilder.setContentTitle("Download")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+    }
+
 
     public void notifyUploadSuccess(String itemName){
         sendNotification(mContext, "The List",
