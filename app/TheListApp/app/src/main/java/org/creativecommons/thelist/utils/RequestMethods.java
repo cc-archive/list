@@ -448,11 +448,11 @@ public final class RequestMethods {
 
         try{
             if (listItemPref != null && listItemPref.length() > 0) {
-                Log.v("LIST ITEM PREF: ", listItemPref.toString());
+
                 for (int i = 0; i < listItemPref.length(); i++) {
-                    Log.v("ITEMS", "ARE BEING ADDED");
                     addItemToUserList(listItemPref.getString(i));
                 }
+
             }
         } catch(JSONException e){
             Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
@@ -563,6 +563,7 @@ public final class RequestMethods {
     // MAKER LIST REQUESTS
     // --------------------------------------------------------
 
+    //TODO: WAITING FOR ENDPOINT
     public void getMakerItems(final String itemName,
                               final String category, final ResponseCallback callback){
 
@@ -611,27 +612,30 @@ public final class RequestMethods {
         }
 
         //If photo is attached, check file size
-        if(photoUri != null ){
-            if(FileHelper.getFileSize(photoUri) > 8){
-                mMessageHelper.photoUploadSizeFailMessage();
-                return;
-            }
+        if(photoUri != null || FileHelper.getFileSize(photoUri) > 8){
+            mMessageHelper.photoUploadSizeFailMessage();
+            return;
         }
 
         //Start notification
-        int notificationID = mMessageHelper.getNotificationID();
-        mMessageHelper.createUploadNotification();
+        mBuilder = new NotificationCompat.Builder(mContext);
+        mBuilder.setContentTitle("Download")
+                .setContentText("Download in progress")
+                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
+                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
 
         //Set up progress bar updater
         final ProgressBarState state = new ProgressBarState();
+        int notificationID = mMessageHelper.getNotificationID();
         final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
-
                 String url = ApiConstants.ADD_MAKER_ITEM + '/' + mSharedPref.getUserId();
+
+                state.mState = ProgressBarState.State.START;
 
                 //Upload Request
                 StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
@@ -639,12 +643,17 @@ public final class RequestMethods {
                             @Override
                             public void onResponse(String response) {
                                 Log.v(TAG, "addMakerItem > onResponse: " + response);
+
+                                state.mState = ProgressBarState.State.FINISHED;
+
                                 callback.onSuccess();
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.v(TAG, "addMakerItem > OnErrorResponse: " + error.getMessage());
+
+                        state.mState = ProgressBarState.State.ERROR;
                         callback.onFail();
                     }
                 }) {
@@ -695,7 +704,6 @@ public final class RequestMethods {
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 String url = ApiConstants.GET_USER_PHOTOS + mSharedPref.getUserId();
-                Log.v(TAG, " > getUserPhotos, url: " + url);
 
                 JsonArrayRequest getUserPhotosRequest = new JsonArrayRequest(url,
                         new Response.Listener<JSONArray>() {
@@ -766,8 +774,6 @@ public final class RequestMethods {
                             public void onResponse(String response) {
                                 //Get Response
                                 Log.v(TAG, "uploadPhoto > onResponse: " + response);
-                                //mMessageHelper.notifyUploadSuccess();
-
                                 state.mState = ProgressBarState.State.FINISHED;
 
                                 new Handler().postDelayed(new Runnable() {
@@ -786,10 +792,8 @@ public final class RequestMethods {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
-                        //TODO: add switch for all possible error codes
-                        //mMessageHelper.notifyUploadFail();
-                        state.mState = ProgressBarState.State.ERROR;
 
+                        state.mState = ProgressBarState.State.ERROR;
                         callback.onFail();
                     }
                 }) {
@@ -844,7 +848,6 @@ public final class RequestMethods {
             int targetVal = 0;
 
             while(true){
-
                 switch(state.mState){
                     case START:
                         targetVal = 30;

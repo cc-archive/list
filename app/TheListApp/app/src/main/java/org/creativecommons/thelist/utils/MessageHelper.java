@@ -68,7 +68,6 @@ public class MessageHelper {
 
         //Notifications
         mNotifyManager = (NotificationManager) mc.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(mc);
     }
 
     //Generic Dialog
@@ -197,15 +196,15 @@ public class MessageHelper {
 
     //NOTIFICATIONS
 
-    public void createUploadNotification(){
-
-        //Start notification
-        mNotifyManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle("Download")
-                .setContentText("Download in progress")
-                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
-    }
+//    public void createUploadNotification(){
+//
+//        //Start notification
+//        mNotifyManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+//        mBuilder = new NotificationCompat.Builder(mContext);
+//        mBuilder.setContentTitle("Download")
+//                .setContentText("Download in progress")
+//                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+//    }
 
 
     public void notifyUploadSuccess(String itemName){

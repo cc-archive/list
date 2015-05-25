@@ -592,7 +592,7 @@ public class MyListFragment extends Fragment {
                 , snackbarContainer);
     } //showItemDeletionSnackbar
 
-    public void showPhotoUploadSnackbar(String text, String actiontext, ActionClickListener listener){
+    public void showPhotoUploadSnackbar(final String text, String actiontext, ActionClickListener listener){
 
         mFab.setEnabled(false);
 
@@ -603,7 +603,7 @@ public class MyListFragment extends Fragment {
                         .actionColor(getResources().getColor(R.color.colorSecondary))
                         .actionLabel(actiontext.toUpperCase())
                         .actionListener(listener)
-                        //action button’s listener
+                                //action button’s listener
                         .eventListener(new EventListener() {
 //                            Interpolator interpolator = new MaterialInterpolator();
 
@@ -650,7 +650,10 @@ public class MyListFragment extends Fragment {
                             @Override
                             public void onDismissed(Snackbar snackbar) {
                                 //Messager Helper: check messages
-                                mMessageHelper.getUserMessaging();
+
+                                if (text.equals("Photo Uploaded")) {
+                                    mMessageHelper.getUserMessaging();
+                                }
 
                                 //If fab is hidden (bug fix?)
                                 if (!mFab.isVisible()) {
@@ -832,12 +835,12 @@ public class MyListFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
+                if (mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
                     mUploadProgressBarContainer.setVisibility(View.GONE);
                 }
             }
         }, 3000);
-        
+
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
