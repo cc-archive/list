@@ -139,7 +139,7 @@ public class UserListItem {
                     //Handle Data
                     try {
                         JSONObject jsonObject = response.getJSONObject(0);
-                        setItemName(MyListFragment.capitalize(jsonObject.getString(ApiConstants.ITEM_NAME)));
+                        setItemName(MessageHelper.capitalize(jsonObject.getString(ApiConstants.ITEM_NAME)));
                         setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
                         //Log.v("ITEM ADDED NAME: ", getItemName());

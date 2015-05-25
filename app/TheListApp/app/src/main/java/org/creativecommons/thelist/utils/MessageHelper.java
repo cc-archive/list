@@ -70,6 +70,20 @@ public class MessageHelper {
         mNotifyManager = (NotificationManager) mc.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
+    // --------------------------------------------------------
+    // HELPERS
+    // --------------------------------------------------------
+
+
+    //Helper Methods
+    public static String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
+
+    // --------------------------------------------------------
+    // DIALOGS GENERIC
+    // --------------------------------------------------------
+
     //Generic Dialog
     public void showDialog(Context context, String title, String message){
         new MaterialDialog.Builder(context)
@@ -126,6 +140,10 @@ public class MessageHelper {
                 //.positiveText(context.getString(R.string.single_choice_text))
                 .show();
     } //showSingleChoiceDialog
+
+    // --------------------------------------------------------
+    // NOTIFICATIONS GENERIC
+    // --------------------------------------------------------
 
     //Send Android System Notifications
     public void sendNotification(Context context, String title, String message, String ticker){

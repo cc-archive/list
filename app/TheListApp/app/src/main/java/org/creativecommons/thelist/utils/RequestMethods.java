@@ -20,7 +20,9 @@
 package org.creativecommons.thelist.utils;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -40,6 +42,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.MainActivity;
+import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.adapters.ProgressBarState;
 import org.creativecommons.thelist.adapters.UserListItem;
 import org.json.JSONArray;
@@ -80,6 +84,10 @@ public final class RequestMethods {
 
     }
 
+    // --------------------------------------------------------
+    // CALLBACKS
+    // --------------------------------------------------------
+
     //Callback for requests
     public interface RequestCallback {
         void onSuccess();
@@ -97,6 +105,10 @@ public final class RequestMethods {
         void onFail(VolleyError error);
         void onUserOffline(List<UserListItem> response);
     }
+
+    // --------------------------------------------------------
+    // NETWORK CHECKS
+    // --------------------------------------------------------
 
     //Check if thar be internets (public helper)
     public static boolean isNetworkAvailable(Context context) {
@@ -123,6 +135,37 @@ public final class RequestMethods {
 
         return isAvailable;
     }
+
+
+    // --------------------------------------------------------
+    // HELPERS
+    // --------------------------------------------------------
+
+    public void startUploadNotification(int notificationID, String contentText){
+        mBuilder = new NotificationCompat.Builder(mContext);
+        mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
+                .setContentText(contentText)
+                .setColor(mContext.getResources().getColor(R.color.colorSecondary))
+                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+
+        Intent resultIntent = new Intent(mContext, MainActivity.class);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
+        stackBuilder.addParentStack(StartActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_CANCEL_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(notificationID, mBuilder.build());
+
+    }
+
 
     // --------------------------------------------------------
     // APP REQUEST
@@ -627,15 +670,11 @@ public final class RequestMethods {
         }
 
         //Start notification
-        mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
-                .setContentText("“" + title + "”" + " is uploading…")
-                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+        final int notificationID = mMessageHelper.getNotificationID();
+        startUploadNotification(notificationID, "“" + MessageHelper.capitalize(title) + "”" + " is uploading…");
 
         //Set up progress bar updater
         final ProgressBarState state = new ProgressBarState();
-        final int notificationID = mMessageHelper.getNotificationID();
         final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
@@ -658,7 +697,7 @@ public final class RequestMethods {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mBuilder.setContentText("“" + title + "”" + " upload success");
+                                        mBuilder.setContentText("“" + title + "”" + " uploaded successfully");
                                         // Removes the progress bar
                                         mBuilder.setProgress(0, 0, false);
                                         mNotifyManager.notify(notificationID, mBuilder.build());
@@ -677,7 +716,7 @@ public final class RequestMethods {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mBuilder.setContentText("“" + title + "”" + " failed to upload");
+                                mBuilder.setContentText("“" + MessageHelper.capitalize(title) + "”" + " failed to upload");
                                 // Removes the progress bar
                                 mBuilder.setProgress(0, 0, false);
                                 mNotifyManager.notify(notificationID, mBuilder.build());
@@ -778,15 +817,11 @@ public final class RequestMethods {
 //        }
 
         //Start notification
-        mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
-                .setContentText("“" + listItem.getItemName() + "”" + " is uploading…")
-                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
-                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
-
-        //Set up progressbar updater
-        final ProgressBarState state = new ProgressBarState();
         final int notificationID = mMessageHelper.getNotificationID();
+        startUploadNotification(notificationID, "“" + listItem.getItemName() + "”" + " is uploading…");
+
+        //Set up progress bar updater
+        final ProgressBarState state = new ProgressBarState();
         final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
@@ -810,7 +845,7 @@ public final class RequestMethods {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mBuilder.setContentText(listItem.getItemName() + " upload success");
+                                        mBuilder.setContentText(listItem.getItemName() + " uploaded successfully");
                                         // Removes the progress bar
                                         mBuilder.setProgress(0, 0, false);
                                         mNotifyManager.notify(notificationID, mBuilder.build());
@@ -896,7 +931,7 @@ public final class RequestMethods {
 
                         break;
                     case REQUEST_SENT:
-                        targetVal = 75;
+                        targetVal = 85;
 
                         break;
                     case REQUEST_RECEIVED:
@@ -917,6 +952,11 @@ public final class RequestMethods {
 
                 if(currentVal < targetVal){
                     currentVal++;
+
+                    if(currentVal > 80){
+                        mBuilder.setProgress(0, 0, true);
+                    }
+
                     if(currentVal == 100 || state.mState == ProgressBarState.State.FINISHED){
                         currentVal = 100;
                         publishProgress(currentVal, 100);
@@ -929,7 +969,7 @@ public final class RequestMethods {
 
                 try {
                     // Sleep for 1 seconds
-                    Thread.sleep(100);
+                    Thread.sleep(80);
                 } catch (InterruptedException e) {
                     Log.d("ProgressBarUpdater", "sleep failure");
                 }

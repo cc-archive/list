@@ -316,7 +316,7 @@ public class MyListFragment extends Fragment {
                             if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
                                 UserListItem listItem = new UserListItem();
                                 listItem.setItemName
-                                        (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
+                                        (mMessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID
@@ -325,7 +325,7 @@ public class MyListFragment extends Fragment {
                             } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
                                 UserListItem listItem = new UserListItem();
                                 listItem.setItemName
-                                        (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
+                                        (mMessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID
@@ -926,11 +926,6 @@ public class MyListFragment extends Fragment {
                     }
                 });
     } //performPhotoUpload
-
-    //Helper Methods
-    public static String capitalize(final String line) {
-        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
-    }
 
     @Override
     public void onPause() {
