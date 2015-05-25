@@ -628,14 +628,14 @@ public final class RequestMethods {
 
         //Start notification
         mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle("Download")
-                .setContentText("Download in progress")
+        mBuilder.setContentTitle("Uploading " + title + "…")
+                .setContentText("Upload in progress")
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
 
         //Set up progress bar updater
         final ProgressBarState state = new ProgressBarState();
-        int notificationID = mMessageHelper.getNotificationID();
+        final int notificationID = mMessageHelper.getNotificationID();
         final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
 
         mCurrentUser.getToken(new ListUser.AuthCallback() {
@@ -655,6 +655,17 @@ public final class RequestMethods {
 
                                 state.mState = ProgressBarState.State.FINISHED;
 
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mBuilder.setContentTitle("Upload successful")
+                                                .setContentText(title + " uploaded");
+                                        // Removes the progress bar
+                                        mBuilder.setProgress(0, 0, false);
+                                        mNotifyManager.notify(notificationID, mBuilder.build());
+                                    }
+                                }, 1000);
+
                                 callback.onSuccess();
                             }
                         }, new Response.ErrorListener() {
@@ -663,6 +674,18 @@ public final class RequestMethods {
                         Log.v(TAG, "addMakerItem > OnErrorResponse: " + error.getMessage());
 
                         state.mState = ProgressBarState.State.ERROR;
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mBuilder.setContentTitle("Upload failed")
+                                        .setContentText(title + " failed to upload");
+                                // Removes the progress bar
+                                mBuilder.setProgress(0, 0, false);
+                                mNotifyManager.notify(notificationID, mBuilder.build());
+                            }
+                        }, 1000);
+
                         callback.onFail();
                     }
                 }) {
@@ -740,7 +763,7 @@ public final class RequestMethods {
         });
     } //getUserPhotos
 
-    public void uploadPhoto(final String itemID, final Uri photoUri, final RequestCallback callback) {
+    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final RequestCallback callback) {
         if(!(isNetworkAvailable())){
             callback.onCancelled(CancelResponse.NETWORK_ERROR);
             return;
@@ -758,8 +781,9 @@ public final class RequestMethods {
 
         //Start notification
         mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle("Download")
-                .setContentText("Download in progress")
+        mBuilder.setContentTitle(listItem.getItemName() + " is uploading…")
+                .setContentText("Upload in progress")
+                .setColor(mContext.getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
 
         //Set up progressbar updater
@@ -772,7 +796,7 @@ public final class RequestMethods {
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
-                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;
+                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + listItem.getItemID();
 
                 state.mState = ProgressBarState.State.START;
 
@@ -788,7 +812,8 @@ public final class RequestMethods {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mBuilder.setContentText("Download complete");
+                                        mBuilder.setContentTitle("Upload successful")
+                                                .setContentText(listItem.getItemName() + " uploaded");
                                         // Removes the progress bar
                                         mBuilder.setProgress(0, 0, false);
                                         mNotifyManager.notify(notificationID, mBuilder.build());
@@ -803,6 +828,18 @@ public final class RequestMethods {
                         Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
 
                         state.mState = ProgressBarState.State.ERROR;
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mBuilder.setContentTitle("Upload failed")
+                                        .setContentText(listItem.getItemName() + " failed to upload");
+                                // Removes the progress bar
+                                mBuilder.setProgress(0, 0, false);
+                                mNotifyManager.notify(notificationID, mBuilder.build());
+                            }
+                        }, 1000);
+
                         callback.onFail();
                     }
                 }) {
@@ -867,7 +904,7 @@ public final class RequestMethods {
 
                         break;
                     case REQUEST_RECEIVED:
-                        targetVal = 85;
+                        targetVal = 90;
 
                         break;
                     case FINISHED:

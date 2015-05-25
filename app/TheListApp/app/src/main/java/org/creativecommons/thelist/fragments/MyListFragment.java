@@ -841,7 +841,7 @@ public class MyListFragment extends Fragment {
             }
         }, 3000);
 
-        mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
+        mRequestMethods.uploadPhoto(mItemToBeUploaded, mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
                     public void onSuccess() {

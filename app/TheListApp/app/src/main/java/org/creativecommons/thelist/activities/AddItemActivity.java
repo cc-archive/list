@@ -443,7 +443,7 @@ public class AddItemActivity extends AppCompatActivity {
                                 }
                             }
                         });
-            }
+            } //onAuthed
         });
 
     } //startItemUpload
