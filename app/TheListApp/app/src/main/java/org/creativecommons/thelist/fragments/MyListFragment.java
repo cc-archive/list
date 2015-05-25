@@ -89,6 +89,7 @@ public class MyListFragment extends Fragment {
     private MessageHelper mMessageHelper;
     private ListUser mCurrentUser;
 
+    //Item Management
     private UserListItem mCurrentItem;
     private int activeItemPosition;
 
@@ -822,7 +823,7 @@ public class MyListFragment extends Fragment {
     public void performPhotoUpload(){
         //Set upload count
         int uploadCount = mSharedPref.getUploadCount();
-        mSharedPref.setUploadCount(uploadCount+1);
+        mSharedPref.setUploadCount(uploadCount + 1);
 
         //mUploadText.setText("Uploading " + mItemToBeUploaded.getItemName() + "…");
         mUploadProgressBarContainer.setVisibility(View.VISIBLE);
@@ -836,7 +837,7 @@ public class MyListFragment extends Fragment {
                 }
             }
         }, 3000);
-
+        
         mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
                 new RequestMethods.RequestCallback() {
                     @Override
@@ -910,5 +911,8 @@ public class MyListFragment extends Fragment {
         mSharedPref.saveOfflineUserList(mItemList);
         super.onPause();
     }
+
+
+
 
 } //MyListFragment

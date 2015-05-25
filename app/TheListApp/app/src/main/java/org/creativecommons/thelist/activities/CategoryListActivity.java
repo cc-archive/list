@@ -245,12 +245,12 @@ public class CategoryListActivity extends AppCompatActivity {
     } //updateList
 
     public void saveUserCategories(){
-        List<Integer> userCategories = ((CategoryAdapter)mCategoryAdapter).getSelectedItems();
-        Log.v(TAG, "SELECTED ITEMS: " + userCategories.toString());
+        //List<Integer> userCategories = ((CategoryAdapter)mCategoryAdapter).getSelectedItems();
+        //Log.v(TAG, "SELECTED ITEMS: " + userCategories.toString());
 
         Intent intent;
 
-//        if(mCurrentUser.isTempUser()){ //TEMP USER
+        if(mCurrentUser.isTempUser()){ //TEMP USER
 //
 //            if(userCategories.size() < 1){
 //                mMessageHelper.showDialog(mContext, "No Categories Selected",
@@ -261,17 +261,17 @@ public class CategoryListActivity extends AppCompatActivity {
 //            mSharedPref.saveSharedPreference
 //                    (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
 //
-//            if(mSharedPref.getUserItemCount() == 0){
-//                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-//                startActivity(intent);
-//            } else {
-//                intent = new Intent(CategoryListActivity.this, MainActivity.class);
-//                startActivity(intent);
-//            }
-//        } else {
+            if(mSharedPref.getUserItemCount() == 0){
+                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+                startActivity(intent);
+            } else {
+                intent = new Intent(CategoryListActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        } else {
             intent = new Intent(CategoryListActivity.this, MainActivity.class);
             startActivity(intent);
-//        }
+        }
     } //saveUserCategories
 
     @Override

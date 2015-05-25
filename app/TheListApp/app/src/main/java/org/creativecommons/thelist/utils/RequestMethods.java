@@ -19,10 +19,13 @@
 
 package org.creativecommons.thelist.utils;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,6 +39,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.adapters.ProgressBarState;
 import org.creativecommons.thelist.adapters.UserListItem;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,11 +57,20 @@ public final class RequestMethods {
     protected SharedPreferencesMethods mSharedPref;
     protected ListUser mCurrentUser;
 
+    //Notifications
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mBuilder;
+    int uploaderID = 505;
+
     public RequestMethods(Context mc) {
         mContext = mc;
         mMessageHelper = new MessageHelper(mc);
         mSharedPref = new SharedPreferencesMethods(mc);
         mCurrentUser = new ListUser(mc);
+
+        //Notifications
+        mNotifyManager = (NotificationManager) mc.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(mc);
     }
 
     //Callback for requests
@@ -271,8 +284,9 @@ public final class RequestMethods {
 
                                 Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
                                 Log.v(TAG, "AN ITEM IS BEING ADDED");
-                                //TODO: on success remove the item from the sharedPreferences
-                                mSharedPref.deleteUserItemPreference(itemID);
+
+//                                //TODO: on success remove the item from the sharedPreferences
+//                                mSharedPref.deleteUserItemPreference(itemID);
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -711,12 +725,25 @@ public final class RequestMethods {
 //            return;
 //        }
 
+        mNotifyManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(mContext);
+        mBuilder.setContentTitle("Download")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+
+        final ProgressBarState state = new ProgressBarState();
+
+        final AsyncTask uploader =  new Uploader().execute(state);
+
+
         mCurrentUser.getToken(new ListUser.AuthCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
                 final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
                 String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + itemID;
+
+                state.mState = ProgressBarState.State.START;
 
                 //Upload Request
                 StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
@@ -726,6 +753,14 @@ public final class RequestMethods {
                                 //Get Response
                                 Log.v(TAG, "uploadPhoto > onResponse: " + response);
                                 //mMessageHelper.notifyUploadSuccess();
+
+                                state.mState = ProgressBarState.State.FINISHED;
+
+                                mBuilder.setContentText("Download complete");
+                                // Removes the progress bar
+                                mBuilder.setProgress(0, 0, false);
+                                mNotifyManager.notify(uploaderID, mBuilder.build());
+
                                 callback.onSuccess();
                             }
                         }, new Response.ErrorListener() {
@@ -734,6 +769,8 @@ public final class RequestMethods {
                         Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
                         //TODO: add switch for all possible error codes
                         //mMessageHelper.notifyUploadFail();
+                        state.mState = ProgressBarState.State.ERROR;
+
                         callback.onFail();
                     }
                 }) {
@@ -746,8 +783,101 @@ public final class RequestMethods {
                     }
                 };
                 queue.add(uploadPhotoRequest);
+
+                state.mState = ProgressBarState.State.REQUEST_SENT;
             }
         });
+
     } //uploadPhoto
+
+    //Helper Classes
+    public class Uploader extends AsyncTask<Object, Integer, Integer> {
+
+        private ProgressBarState state;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // Displays the progress bar for the first time.
+            mBuilder.setProgress(100, 0, false);
+            mNotifyManager.notify(uploaderID, mBuilder.build());
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            // Update progress
+            mBuilder.setProgress(100, values[0], false);
+            mNotifyManager.notify(uploaderID, mBuilder.build());
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected Integer doInBackground(Object... params) {
+            state = (ProgressBarState) params[0];
+
+            int currentVal = 0;
+            int targetVal = 0;
+
+            while(true){
+
+                switch(state.mState){
+                    case START:
+                        targetVal = 10;
+
+                        break;
+                    case REQUEST_SENT:
+                        targetVal = 50;
+
+                        break;
+                    case REQUEST_RECEIVED:
+                        targetVal = 80;
+
+                        break;
+                    case FINISHED:
+                        targetVal = 100;
+
+                        break;
+                    case ERROR:
+                        cancel(true);
+                        break;
+                    case TIMEOUT:
+                        cancel(true);
+                        break;
+                }
+
+                if(currentVal < targetVal){
+                    currentVal++;
+                    if(currentVal == 100 || state.mState == ProgressBarState.State.FINISHED){
+                        currentVal = 100;
+
+
+                        cancel(true);
+                    }
+                }
+
+                // Sets the progress indicator completion percentage
+                publishProgress(currentVal, 100);
+
+                try {
+                    // Sleep for 1 seconds
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Log.d("TAG", "sleep failure");
+                }
+
+                if(isCancelled()){
+                    break;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+        }
+    } //Uploader
+
 
 } //RequestMethods

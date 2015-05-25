@@ -209,7 +209,6 @@ public class MessageHelper {
     }
 
     //DIALOGS
-
     public void photoUploadNetworkFailMessage(){
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_network),
                 mContext.getString(R.string.upload_failed_text_network));
@@ -248,6 +247,8 @@ public class MessageHelper {
         showDialog(mContext, title, message);
     }
 
+
+    //User Messaging
     public void getUserMessaging(){
         RequestMethods mRequestMethods = new RequestMethods(mContext);
 
@@ -265,7 +266,7 @@ public class MessageHelper {
 
                 //Arrays.asList(MESSAGE_INTERVALS).contains(uploadCount)
 
-                if(uploadCount > 1){
+                if (uploadCount > 1) {
                     makerUsersFeelAllSpecialAndWhatNot(uploadCount);
 
                     return;
@@ -280,8 +281,6 @@ public class MessageHelper {
 
             }
         });
-
     } //userMessaging
-
 
 } //MessageHelper
