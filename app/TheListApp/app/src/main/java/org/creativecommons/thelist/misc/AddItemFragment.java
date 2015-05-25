@@ -364,6 +364,11 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 //                                mContext.getString(R.string.oops_label),
 //                                mContext.getString(R.string.dialog_item_upload_fail));
                     }
+
+                    @Override
+                    public void onCancelled(RequestMethods.CancelResponse response) {
+
+                    }
                 });
 
     } //startItemUpload

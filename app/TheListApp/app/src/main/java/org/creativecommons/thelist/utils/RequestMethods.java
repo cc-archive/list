@@ -62,6 +62,12 @@ public final class RequestMethods {
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
 
+    //Request Cancelled
+    public enum CancelResponse {
+        NETWORK_ERROR,
+        FILESIZE_ERROR
+    }
+
     public RequestMethods(Context mc) {
         mContext = mc;
         mMessageHelper = new MessageHelper(mc);
@@ -78,6 +84,7 @@ public final class RequestMethods {
     public interface RequestCallback {
         void onSuccess();
         void onFail();
+        void onCancelled(CancelResponse response);
     }
 
     public interface ResponseCallback {
@@ -607,14 +614,16 @@ public final class RequestMethods {
                             final Uri photoUri, final RequestCallback callback){
 
         if(!(isNetworkAvailable())){
-            mMessageHelper.networkFailMessage();
+            callback.onCancelled(CancelResponse.NETWORK_ERROR);
             return;
         }
 
         //If photo is attached, check file size
-        if(photoUri != null || FileHelper.getFileSize(photoUri) > 8){
-            mMessageHelper.photoUploadSizeFailMessage();
-            return;
+        if(photoUri != null){
+            if(FileHelper.getFileSize(photoUri) > 8){
+                callback.onCancelled(CancelResponse.FILESIZE_ERROR);
+                return;
+            }
         }
 
         //Start notification
@@ -733,12 +742,12 @@ public final class RequestMethods {
 
     public void uploadPhoto(final String itemID, final Uri photoUri, final RequestCallback callback) {
         if(!(isNetworkAvailable())){
-            mMessageHelper.photoUploadNetworkFailMessage();
+            callback.onCancelled(CancelResponse.NETWORK_ERROR);
             return;
         }
 
         if(FileHelper.getFileSize(photoUri) > 8){
-            mMessageHelper.photoUploadSizeFailMessage();
+            callback.onCancelled(CancelResponse.FILESIZE_ERROR);
             return;
         }
 

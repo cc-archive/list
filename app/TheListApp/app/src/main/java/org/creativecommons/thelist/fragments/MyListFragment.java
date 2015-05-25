@@ -900,7 +900,23 @@ public class MyListFragment extends Fragment {
                                     }
                                 });
                     } //onFail
-        });
+
+                    @Override
+                    public void onCancelled(RequestMethods.CancelResponse response) {
+                        Log.v(TAG, "addMakerItem > onCancelled: " + response.toString());
+
+                        mUploadProgressBarContainer.setVisibility(View.GONE);
+
+                        switch(response){
+                            case NETWORK_ERROR:
+                                mMessageHelper.networkFailMessage();
+                                break;
+                            case FILESIZE_ERROR:
+                                mMessageHelper.photoUploadSizeFailMessage();
+                                break;
+                        }
+                    }
+                });
     } //performPhotoUpload
 
     //Helper Methods

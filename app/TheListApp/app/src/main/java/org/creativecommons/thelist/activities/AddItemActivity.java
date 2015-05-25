@@ -389,10 +389,7 @@ public class AddItemActivity extends AppCompatActivity {
                 mMakerItemProgressBar.setVisibility(View.VISIBLE);
 
                 //Disable button/editexts
-                mDoneButton.setEnabled(false);
-                mDescriptionField.setEnabled(false);
-                mItemNameField.setEnabled(false);
-                mCategorySpinner.setEnabled(false);
+                enableFields(false);
 
                 //Add Item Request
                 mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
@@ -421,13 +418,42 @@ public class AddItemActivity extends AppCompatActivity {
                                 Toast.makeText(mContext,
                                         "Looks like there was a problem sending your request. Try again!",
                                         Toast.LENGTH_LONG).show();
+
                                 mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+                                //Enable button/editexts again
+                                enableFields(true);
+
                             } //onFail
+
+                            @Override
+                            public void onCancelled(RequestMethods.CancelResponse response) {
+                                Log.v(TAG, "addMakerItem > onCancelled: " + response.toString());
+
+                                mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+                                //Enable button/editexts again
+                                enableFields(true);
+
+                                switch (response) {
+                                    case NETWORK_ERROR:
+                                        mMessageHelper.networkFailMessage();
+                                        break;
+                                    case FILESIZE_ERROR:
+                                        mMessageHelper.photoUploadSizeFailMessage();
+                                        break;
+                                }
+                            }
                         });
             }
         });
 
     } //startItemUpload
+
+    public void enableFields(boolean bol){
+        mDoneButton.setEnabled(bol);
+        mDescriptionField.setEnabled(bol);
+        mItemNameField.setEnabled(bol);
+        mCategorySpinner.setEnabled(bol);
+    }
 
     @Override
     public void onStart(){
