@@ -953,9 +953,10 @@ public final class RequestMethods {
                 if(currentVal < targetVal){
                     currentVal++;
 
-                    if(currentVal > 80){
-                        mBuilder.setProgress(0, 0, true);
-                    }
+//                    TODO: can I make indeterminate display until upload complete?
+//                    if(currentVal > 80){
+//                        mBuilder.setProgress(0, 0, true);
+//                    }
 
                     if(currentVal == 100 || state.mState == ProgressBarState.State.FINISHED){
                         currentVal = 100;

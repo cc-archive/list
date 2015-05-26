@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -784,7 +785,26 @@ public class MyListFragment extends Fragment {
                     mediaScanIntent.setData(mMediaUri);
                     getActivity().sendBroadcast(mediaScanIntent);
 
-                    startPhotoUpload();
+                    Resources res = getResources();
+
+                    //TODO: get confirmation of terms
+                    mMessageHelper.showSingleChoiceDialog(mContext, res.getString(R.string.single_choice_terms_title),
+                            res.getString(R.string.single_choice_terms_content),
+                            res.getStringArray(R.array.single_choice_terms_array),
+                            new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection (MaterialDialog materialDialog, View view,
+                                                            int i,CharSequence charSequence) {
+
+
+
+                                    Log.v(TAG, "CHARQUENCE" + charSequence.toString());
+                                    startPhotoUpload();
+
+                                    return true;
+                                }
+                    });
+
                 } //RESULT OK
                 else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
                     //Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();

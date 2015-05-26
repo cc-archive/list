@@ -131,13 +131,14 @@ public class MessageHelper {
     } //Single Input Dialog
 
     //Single Choice Dialog
-    public void showSingleChoiceDialog(Context context, String title, String[] items,
+    public void showSingleChoiceDialog(Context context, String title, String content, String[] items,
                                        MaterialDialog.ListCallbackSingleChoice callback){
         new MaterialDialog.Builder(context)
                 .title(title)
+                .content(content)
                 .items(items)
                 .itemsCallbackSingleChoice(-1, callback)
-                //.positiveText(context.getString(R.string.single_choice_text))
+                .positiveText(context.getString(R.string.single_choice_text))
                 .show();
     } //showSingleChoiceDialog
 
