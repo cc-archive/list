@@ -24,6 +24,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -50,7 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class RequestMethods {
@@ -66,44 +67,16 @@ public final class RequestMethods {
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
 
-    //Request Cancelled
-    public enum CancelResponse {
-        NETWORK_ERROR,
-        FILESIZE_ERROR
-    }
-
-    public RequestMethods(Context mc) {
-        mContext = mc;
-        mMessageHelper = new MessageHelper(mc);
-        mSharedPref = new SharedPreferencesMethods(mc);
-        mCurrentUser = new ListUser(mc);
+    public RequestMethods(Context context) {
+        mContext = context;
+        mMessageHelper = new MessageHelper(context);
+        mSharedPref = new SharedPreferencesMethods(context);
+        mCurrentUser = new ListUser(context);
 
         //Notifications
-        mNotifyManager = (NotificationManager) mc.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(mc);
+        mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(context);
 
-    }
-
-    // --------------------------------------------------------
-    // CALLBACKS
-    // --------------------------------------------------------
-
-    //Callback for requests
-    public interface RequestCallback {
-        void onSuccess();
-        void onFail();
-        void onCancelled(CancelResponse response);
-    }
-
-    public interface ResponseCallback {
-        void onSuccess(JSONArray response);
-        void onFail(VolleyError error);
-    }
-
-    public interface UserListCallback {
-        void onSuccess(JSONArray response);
-        void onFail(VolleyError error);
-        void onUserOffline(List<UserListItem> response);
     }
 
     // --------------------------------------------------------
@@ -190,7 +163,7 @@ public final class RequestMethods {
     // CHECK USER STATS
     // --------------------------------------------------------
 
-    public void getUserProfile(final ResponseCallback callback){
+    public void getUserProfile(final NetworkUtils.ResponseCallback callback){
         if (!(isNetworkAvailable())) {
             mMessageHelper.galleryNetworkFailMessage();
             return;
@@ -232,7 +205,7 @@ public final class RequestMethods {
     // --------------------------------------------------------
 
     //GET List of All Categories
-    public void getCategories(final ResponseCallback callback) {
+    public void getCategories(final NetworkUtils.ResponseCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
@@ -259,7 +232,7 @@ public final class RequestMethods {
     } //getCategories
 
     //GET User Selected Categories from API
-    public void getUserCategories(final ResponseCallback callback) {
+    public void getUserCategories(final NetworkUtils.ResponseCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
@@ -427,7 +400,7 @@ public final class RequestMethods {
     // --------------------------------------------------------
 
     //GET Random List Items
-    public void getRandomItems(final ResponseCallback callback) {
+    public void getRandomItems(final NetworkUtils.ResponseCallback callback) {
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
@@ -452,7 +425,7 @@ public final class RequestMethods {
     } //getRandomItemRequest
 
     //GET User List Items
-    public void getUserItems(final UserListCallback callback){
+    public void getUserItems(final NetworkUtils.UserListCallback callback){
         if(!(isNetworkAvailable())){
             callback.onUserOffline(mSharedPref.getOfflineUserList());
             mMessageHelper.networkFailMessage();
@@ -615,7 +588,7 @@ public final class RequestMethods {
 
     //TODO: WAITING FOR ENDPOINT
     public void getMakerItems(final String itemName,
-                              final String category, final ResponseCallback callback){
+                              final String category, final NetworkUtils.ResponseCallback callback){
 
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
@@ -654,17 +627,17 @@ public final class RequestMethods {
     } //getMakerItems
 
     public void addMakerItem(final String title, final String category, final String description,
-                            final Uri photoUri, final RequestCallback callback){
+                            final Uri photoUri, final NetworkUtils.RequestCallback callback){
 
         if(!(isNetworkAvailable())){
-            callback.onCancelled(CancelResponse.NETWORK_ERROR);
+            callback.onCancelled(NetworkUtils.CancelResponse.NETWORK_ERROR);
             return;
         }
 
         //If photo is attached, check file size
         if(photoUri != null){
             if(FileHelper.getFileSize(photoUri) > 8){
-                callback.onCancelled(CancelResponse.FILESIZE_ERROR);
+                callback.onCancelled(NetworkUtils.CancelResponse.FILESIZE_ERROR);
                 return;
             }
         }
@@ -762,7 +735,7 @@ public final class RequestMethods {
     // --------------------------------------------------------
 
 
-    public void getUserPhotos(final ResponseCallback callback) {
+    public void getUserPhotos(final NetworkUtils.ResponseCallback callback) {
         if (!(isNetworkAvailable())) {
             mMessageHelper.galleryNetworkFailMessage();
             return;
@@ -800,14 +773,14 @@ public final class RequestMethods {
         });
     } //getUserPhotos
 
-    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final RequestCallback callback) {
+    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final NetworkUtils.RequestCallback callback) {
         if(!(isNetworkAvailable())){
-            callback.onCancelled(CancelResponse.NETWORK_ERROR);
+            callback.onCancelled(NetworkUtilsCancelResponse.NETWORK_ERROR);
             return;
         }
 
         if(FileHelper.getFileSize(photoUri) > 8){
-            callback.onCancelled(CancelResponse.FILESIZE_ERROR);
+            callback.onCancelled(NetworkUtils.CancelResponse.FILESIZE_ERROR);
             return;
         }
 
@@ -834,10 +807,11 @@ public final class RequestMethods {
                 state.mState = ProgressBarState.State.START;
 
                 //Upload Request
-                StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+                final StringReq uploadPhotoRequest = new StringReq(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+
                                 //Get Response
                                 Log.v(TAG, "uploadPhoto > onResponse: " + response);
                                 state.mState = ProgressBarState.State.FINISHED;
@@ -877,17 +851,126 @@ public final class RequestMethods {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<String, String>();
+
+                        byte [] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
+                        image = FileHelper.reduceImageForUpload(image);
+
+                        String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
+
+
                         params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
                         params.put(ApiConstants.USER_TOKEN, authtoken);
                         return params;
                     }
                 };
+
+                uploadPhotoRequest.setRetryPolicy(new DefaultRetryPolicy
+                        (DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 12, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
                 queue.add(uploadPhotoRequest);
                 state.mState = ProgressBarState.State.REQUEST_SENT;
             }
         });
 
     } //uploadPhoto
+
+//    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final RequestCallback callback) {
+//        if(!(isNetworkAvailable())){
+//            callback.onCancelled(CancelResponse.NETWORK_ERROR);
+//            return;
+//        }
+//
+//        if(FileHelper.getFileSize(photoUri) > 8){
+//            callback.onCancelled(CancelResponse.FILESIZE_ERROR);
+//            return;
+//        }
+//
+////        if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
+////            mMessageHelper.photoUploadFileTypeFailMessage();
+////            return;
+////        }
+//
+//        //Start notification
+//        final int notificationID = mMessageHelper.getNotificationID();
+//        startUploadNotification(notificationID, "“" + listItem.getItemName() + "”" + " is uploading…");
+//
+//        //Set up progress bar updater
+//        final ProgressBarState state = new ProgressBarState();
+//        final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
+//
+//        mCurrentUser.getToken(new ListUser.AuthCallback() {
+//            @Override
+//            public void onAuthed(final String authtoken) {
+//                RequestQueue queue = Volley.newRequestQueue(mContext);
+//                final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
+//                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + listItem.getItemID();
+//
+//                state.mState = ProgressBarState.State.START;
+//
+//                //Upload Request
+//                StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+//                        new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//
+//                                //Get Response
+//                                Log.v(TAG, "uploadPhoto > onResponse: " + response);
+//                                state.mState = ProgressBarState.State.FINISHED;
+//
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        mBuilder.setContentText(listItem.getItemName() + " uploaded successfully");
+//                                        // Removes the progress bar
+//                                        mBuilder.setProgress(0, 0, false);
+//                                        mNotifyManager.notify(notificationID, mBuilder.build());
+//                                    }
+//                                }, 1000);
+//
+//                                callback.onSuccess();
+//                            }
+//                        }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
+//
+//                        state.mState = ProgressBarState.State.ERROR;
+//
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mBuilder.setContentText("“" + listItem.getItemName() + "”" + " failed to upload");
+//                                // Removes the progress bar
+//                                mBuilder.setProgress(0, 0, false);
+//                                mNotifyManager.notify(notificationID, mBuilder.build());
+//                            }
+//                        }, 1000);
+//
+//                        callback.onFail();
+//                    }
+//                }) {
+//                    @Override
+//                    protected Map<String, String> getParams() {
+//                        Map<String, String> params = new HashMap<String, String>();
+//                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+//                        params.put(ApiConstants.USER_TOKEN, authtoken);
+//                        return params;
+//                    }
+//                };
+//
+//                uploadPhotoRequest.setRetryPolicy(new DefaultRetryPolicy
+//                        (DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//                Log.v(TAG, "SET RETRY POLICY");
+//
+//                queue.add(uploadPhotoRequest);
+//                Log.v(TAG, "ADDED TO QUEUE");
+//                state.mState = ProgressBarState.State.REQUEST_SENT;
+//            }
+//        });
+//
+//    } //uploadPhoto
 
     //Helper Classes
     public class ProgressBarUpdater extends AsyncTask<Object, Integer, Integer> {

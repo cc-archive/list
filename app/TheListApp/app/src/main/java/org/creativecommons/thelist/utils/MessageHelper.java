@@ -36,6 +36,7 @@ import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 import org.json.JSONArray;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -302,9 +303,7 @@ public class MessageHelper {
                 int uploadCount = response.length();
                 Log.v(TAG, "USER UPLOAD COUNT: " + String.valueOf(uploadCount));
 
-                //Arrays.asList(MESSAGE_INTERVALS).contains(uploadCount)
-
-                if (uploadCount > 1) {
+                if (Arrays.asList(MESSAGE_INTERVALS).contains(uploadCount)) {
                     makerUsersFeelAllSpecialAndWhatNot(uploadCount);
 
                     return;

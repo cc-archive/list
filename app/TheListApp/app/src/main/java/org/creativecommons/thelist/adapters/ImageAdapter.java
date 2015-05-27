@@ -107,7 +107,7 @@ public class ImageAdapter extends PagerAdapter {
                         mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                             @Override
                             public void onViewTap(View view, float x, float y) {
-                                Log.v(TAG, "TAPPED THAT VIEW");
+                                //Log.v(TAG, "TAPPED THAT VIEW");
 
                                 if(galleryCaption.getVisibility() == View.INVISIBLE){
                                     galleryCaption.setVisibility(View.VISIBLE);

@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FileHelper {
-	
 	public static final String TAG = FileHelper.class.getSimpleName();
 	
 	public static final int SHORT_SIDE_TARGET = 1280;
@@ -144,7 +143,7 @@ public class FileHelper {
 		Bitmap bitmap = ImageResizer.resizeImageMaintainAspectRatio(imageData, SHORT_SIDE_TARGET);
 		
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); //used to be png
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream); //used to be png
 		byte[] reducedData = outputStream.toByteArray();
 		try {
 			outputStream.close();
@@ -242,4 +241,6 @@ public class FileHelper {
         }
         return bmpUri;
     }
+
+
 } //FileHelper

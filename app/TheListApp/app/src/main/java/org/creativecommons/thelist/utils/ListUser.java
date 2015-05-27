@@ -81,6 +81,7 @@ public class ListUser implements ServerAuthenticate {
     //Callback for account signin/login
     public interface AuthCallback {
         void onAuthed(final String authtoken);
+        void onAuthedFail(String message);
     }
 
     public boolean isTempUser() {
@@ -167,6 +168,11 @@ public class ListUser implements ServerAuthenticate {
                     Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
                     callback.onAuthed(authtoken);
                 }
+
+                @Override
+                public void onAuthedFail(String message) {
+                    callback.onAuthedFail(message);
+                }
             });
 
         } else {
@@ -180,6 +186,11 @@ public class ListUser implements ServerAuthenticate {
                     public void onAuthed(String authtoken) {
                         Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
                         callback.onAuthed(authtoken);
+                    }
+
+                    @Override
+                    public void onAuthedFail(String message) {
+                        callback.onAuthedFail(message);
                     }
                 });
             }
@@ -253,6 +264,11 @@ public class ListUser implements ServerAuthenticate {
                     Log.d(TAG, " > showAccountPicker (no accounts) > addNewAccount, " +
                             "token received: " + authtoken);
                 }
+
+                @Override
+                public void onAuthedFail(String message) {
+                    callback.onAuthedFail(message);
+                }
             });
         } else {
             String name[] = new String[availableAccounts.length];
@@ -316,6 +332,11 @@ public class ListUser implements ServerAuthenticate {
                 public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, token received: " + authtoken);
                 }
+
+                @Override
+                public void onAuthedFail(String message) {
+                    Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, failed to get token: " + message);
+                }
             });
         }
     } //for account picker
@@ -334,6 +355,7 @@ public class ListUser implements ServerAuthenticate {
 
                     } catch (Exception e) {
                         //Log.d(TAG, e.getMessage());
+                        callback.onAuthedFail(e.getMessage());
                         Log.d(TAG, "addNewAccount > Error adding new account");
                     }
                 }
