@@ -48,8 +48,10 @@ import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -160,7 +162,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
 
         //Set Spinner Content
-        mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getCategories(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getCategories > onResponse: " + response);
@@ -347,8 +349,10 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
 
     public void startItemUpload(final String itemName, final String description, final Uri linkuri){
 
-        mRequestMethods.addMakerItem(itemName, catId, description, mMediaUri,
-                new RequestMethods.RequestCallback() {
+        Uploader uploader = new Uploader(mContext);
+
+        uploader.addMakerItem(itemName, catId, description, mMediaUri,
+                new NetworkUtils.RequestCallback() {
                     @Override
                     public void onSuccess() {
                         //TODO: if request succeeds
@@ -366,7 +370,7 @@ public class AddItemFragment extends android.support.v4.app.Fragment {
                     }
 
                     @Override
-                    public void onCancelled(RequestMethods.CancelResponse response) {
+                    public void onCancelled(NetworkUtils.CancelResponse response) {
 
                     }
                 });

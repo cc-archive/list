@@ -81,7 +81,10 @@ public class ListUser implements ServerAuthenticate {
     //Callback for account signin/login
     public interface AuthCallback {
         void onAuthed(final String authtoken);
-        void onAuthedFail(String message);
+    }
+
+    public interface TokenCallback {
+        void onAuthed(final String authtoken);
     }
 
     public boolean isTempUser() {
@@ -158,7 +161,6 @@ public class ListUser implements ServerAuthenticate {
      */
     public void getAuthed(final AuthCallback callback){
         Log.d(TAG, "Getting session token");
-        //sessionComplete = false;
 
         if(isTempUser()){
             Log.v(TAG, "IS TEMP USER TRUE");
@@ -168,29 +170,19 @@ public class ListUser implements ServerAuthenticate {
                     Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
                     callback.onAuthed(authtoken);
                 }
-
-                @Override
-                public void onAuthedFail(String message) {
-                    callback.onAuthedFail(message);
-                }
             });
 
         } else {
             Account account = getAccount();
 
             if(account == null){
-                Log.v(TAG, "getToken > getAccount > account is null");
+                Log.v(TAG, "getAuthed > getAccount > account is null");
 
                 addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                     @Override
                     public void onAuthed(String authtoken) {
                         Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
                         callback.onAuthed(authtoken);
-                    }
-
-                    @Override
-                    public void onAuthedFail(String message) {
-                        callback.onAuthedFail(message);
                     }
                 });
             }
@@ -218,8 +210,9 @@ public class ListUser implements ServerAuthenticate {
 
     /**
      * Get auth token for existing account (assumes pre-existing account)
+     * @param callback
      */
-    public void getToken(final AuthCallback callback) {
+    public void getToken(final TokenCallback callback) {
         Log.d(TAG, "getToken > getting session token");
         Account account = getAccount();
 
@@ -263,11 +256,6 @@ public class ListUser implements ServerAuthenticate {
                 public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker (no accounts) > addNewAccount, " +
                             "token received: " + authtoken);
-                }
-
-                @Override
-                public void onAuthedFail(String message) {
-                    callback.onAuthedFail(message);
                 }
             });
         } else {
@@ -332,11 +320,6 @@ public class ListUser implements ServerAuthenticate {
                 public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, token received: " + authtoken);
                 }
-
-                @Override
-                public void onAuthedFail(String message) {
-                    Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, failed to get token: " + message);
-                }
             });
         }
     } //for account picker
@@ -355,7 +338,6 @@ public class ListUser implements ServerAuthenticate {
 
                     } catch (Exception e) {
                         //Log.d(TAG, e.getMessage());
-                        callback.onAuthedFail(e.getMessage());
                         Log.d(TAG, "addNewAccount > Error adding new account");
                     }
                 }
@@ -384,7 +366,7 @@ public class ListUser implements ServerAuthenticate {
     //LOG IN USER
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
         }
@@ -442,7 +424,7 @@ public class ListUser implements ServerAuthenticate {
     //TODO: SIGN UP USER
     @Override
     public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;

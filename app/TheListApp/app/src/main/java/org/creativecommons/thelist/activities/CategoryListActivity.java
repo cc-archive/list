@@ -42,6 +42,7 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -129,7 +130,7 @@ public class CategoryListActivity extends AppCompatActivity {
         }
 
         //Get Categories
-        mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getCategories(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getCategories > onSuccess: " + response);
@@ -138,7 +139,7 @@ public class CategoryListActivity extends AppCompatActivity {
                 //Get user’s pre-selected categories
                 if(!(mCurrentUser.isTempUser())){
                     //If user is logged in, request any pre-selected categories
-                    mRequestMethods.getUserCategories(new RequestMethods.ResponseCallback() {
+                    mRequestMethods.getUserCategories(new NetworkUtils.ResponseCallback() {
                         @Override
                         public void onSuccess(JSONArray response) {
                             Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());

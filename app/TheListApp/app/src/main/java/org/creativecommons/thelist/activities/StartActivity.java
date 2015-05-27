@@ -83,9 +83,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mMessageHelper = new MessageHelper(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
-
-
-
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
@@ -129,6 +126,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
+
                     });
                 } else {
                     mCurrentUser.getAuthed(new ListUser.AuthCallback() {
@@ -141,6 +139,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
+
                     });
                 }
             }

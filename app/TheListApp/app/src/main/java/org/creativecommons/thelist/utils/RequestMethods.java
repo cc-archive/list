@@ -19,22 +19,12 @@
 
 package org.creativecommons.thelist.utils;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,10 +34,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
-import org.creativecommons.thelist.activities.StartActivity;
-import org.creativecommons.thelist.adapters.ProgressBarState;
-import org.creativecommons.thelist.adapters.UserListItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -63,38 +49,16 @@ public final class RequestMethods {
     protected SharedPreferencesMethods mSharedPref;
     protected ListUser mCurrentUser;
 
-    //Notifications
-    private NotificationManager mNotifyManager;
-    private NotificationCompat.Builder mBuilder;
-
     public RequestMethods(Context context) {
         mContext = context;
         mMessageHelper = new MessageHelper(context);
         mSharedPref = new SharedPreferencesMethods(context);
         mCurrentUser = new ListUser(context);
-
-        //Notifications
-        mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(context);
-
     }
 
     // --------------------------------------------------------
     // NETWORK CHECKS
     // --------------------------------------------------------
-
-    //Check if thar be internets (public helper)
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-
-        boolean isAvailable = false;
-        if(networkInfo != null && networkInfo.isConnected()) {
-            isAvailable = true;
-        }
-
-        return isAvailable;
-    }
 
     //Check if thar be internets
     public boolean isNetworkAvailable() {
@@ -107,36 +71,6 @@ public final class RequestMethods {
         }
 
         return isAvailable;
-    }
-
-
-    // --------------------------------------------------------
-    // HELPERS
-    // --------------------------------------------------------
-
-    public void startUploadNotification(int notificationID, String contentText){
-        mBuilder = new NotificationCompat.Builder(mContext);
-        mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
-                .setContentText(contentText)
-                .setColor(mContext.getResources().getColor(R.color.colorSecondary))
-                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
-
-        Intent resultIntent = new Intent(mContext, MainActivity.class);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
-        stackBuilder.addParentStack(StartActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationID, mBuilder.build());
-
     }
 
 
@@ -169,7 +103,7 @@ public final class RequestMethods {
             return;
         }
         //TODO: change to proper request for stats once it exists
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -238,7 +172,7 @@ public final class RequestMethods {
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -270,7 +204,7 @@ public final class RequestMethods {
 
     //Add all categories to User Account (during login)
     public void addTempCategoriesToUser(){
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
         }
@@ -301,12 +235,12 @@ public final class RequestMethods {
             return;
         }
 
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -353,12 +287,12 @@ public final class RequestMethods {
             return;
         }
 
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) { //getToken and then start request
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -432,7 +366,7 @@ public final class RequestMethods {
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -484,12 +418,12 @@ public final class RequestMethods {
 
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
         }
         //Get sessionToken
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -538,14 +472,14 @@ public final class RequestMethods {
             mSharedPref.deleteUserItemPreference(itemID);
 
         } else { //If logged in, remove from DB
-            if(!(RequestMethods.isNetworkAvailable(mContext))){
+            if(!(isNetworkAvailable())){
                 mMessageHelper.showDialog(mContext,mContext.getString(R.string.error_network_title),
                         mContext.getString(R.string.error_network_message));
                 return;
             }
 
             //Get sessionToken
-            mCurrentUser.getToken(new ListUser.AuthCallback() {
+            mCurrentUser.getToken(new ListUser.TokenCallback() {
                 @Override
                 public void onAuthed(final String authtoken) { //getToken and then start request
                     RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -595,7 +529,7 @@ public final class RequestMethods {
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -626,109 +560,6 @@ public final class RequestMethods {
         });
     } //getMakerItems
 
-    public void addMakerItem(final String title, final String category, final String description,
-                            final Uri photoUri, final NetworkUtils.RequestCallback callback){
-
-        if(!(isNetworkAvailable())){
-            callback.onCancelled(NetworkUtils.CancelResponse.NETWORK_ERROR);
-            return;
-        }
-
-        //If photo is attached, check file size
-        if(photoUri != null){
-            if(FileHelper.getFileSize(photoUri) > 8){
-                callback.onCancelled(NetworkUtils.CancelResponse.FILESIZE_ERROR);
-                return;
-            }
-        }
-
-        //Start notification
-        final int notificationID = mMessageHelper.getNotificationID();
-        startUploadNotification(notificationID, "“" + MessageHelper.capitalize(title) + "”" + " is uploading…");
-
-        //Set up progress bar updater
-        final ProgressBarState state = new ProgressBarState();
-        final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
-
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
-            @Override
-            public void onAuthed(final String authtoken) {
-                RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.ADD_MAKER_ITEM + '/' + mSharedPref.getUserId();
-
-                state.mState = ProgressBarState.State.START;
-
-                //Upload Request
-                StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Log.v(TAG, "addMakerItem > onResponse: " + response);
-
-                                state.mState = ProgressBarState.State.FINISHED;
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mBuilder.setContentText("“" + title + "”" + " uploaded successfully");
-                                        // Removes the progress bar
-                                        mBuilder.setProgress(0, 0, false);
-                                        mNotifyManager.notify(notificationID, mBuilder.build());
-                                    }
-                                }, 1000);
-
-                                callback.onSuccess();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.v(TAG, "addMakerItem > OnErrorResponse: " + error.getMessage());
-
-                        state.mState = ProgressBarState.State.ERROR;
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBuilder.setContentText("“" + MessageHelper.capitalize(title) + "”" + " failed to upload");
-                                // Removes the progress bar
-                                mBuilder.setProgress(0, 0, false);
-                                mNotifyManager.notify(notificationID, mBuilder.build());
-                            }
-                        }, 1000);
-
-                        callback.onFail();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-
-                        if (description != null) {
-                            params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
-                        }
-
-                        if (photoUri != null) {
-                            byte [] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
-                            image = FileHelper.reduceImageForUpload(image);
-
-                            String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
-                            params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
-                        }
-
-                        params.put(ApiConstants.MAKER_ITEM_NAME, title);
-                        params.put(ApiConstants.MAKER_ITEM_CATEGORY, category);
-                        params.put(ApiConstants.USER_TOKEN, authtoken);
-
-                        return params;
-                    }
-                };
-                queue.add(addMakerItemRequest);
-                state.mState = ProgressBarState.State.REQUEST_SENT;
-
-            }
-        });
-    } //addMakerItem + photo
-
 
     // --------------------------------------------------------
     // USER PHOTO REQUESTS
@@ -741,7 +572,7 @@ public final class RequestMethods {
             return;
         }
 
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(final String authtoken) {
                 RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -773,116 +604,14 @@ public final class RequestMethods {
         });
     } //getUserPhotos
 
-    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final NetworkUtils.RequestCallback callback) {
-        if(!(isNetworkAvailable())){
-            callback.onCancelled(NetworkUtilsCancelResponse.NETWORK_ERROR);
-            return;
-        }
-
-        if(FileHelper.getFileSize(photoUri) > 8){
-            callback.onCancelled(NetworkUtils.CancelResponse.FILESIZE_ERROR);
-            return;
-        }
-
-//        if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
-//            mMessageHelper.photoUploadFileTypeFailMessage();
-//            return;
-//        }
-
-        //Start notification
-        final int notificationID = mMessageHelper.getNotificationID();
-        startUploadNotification(notificationID, "“" + listItem.getItemName() + "”" + " is uploading…");
-
-        //Set up progress bar updater
-        final ProgressBarState state = new ProgressBarState();
-        final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
-
-        mCurrentUser.getToken(new ListUser.AuthCallback() {
-            @Override
-            public void onAuthed(final String authtoken) {
-                RequestQueue queue = Volley.newRequestQueue(mContext);
-                final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
-                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + listItem.getItemID();
-
-                state.mState = ProgressBarState.State.START;
-
-                //Upload Request
-                final StringReq uploadPhotoRequest = new StringReq(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-
-                                //Get Response
-                                Log.v(TAG, "uploadPhoto > onResponse: " + response);
-                                state.mState = ProgressBarState.State.FINISHED;
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mBuilder.setContentText(listItem.getItemName() + " uploaded successfully");
-                                        // Removes the progress bar
-                                        mBuilder.setProgress(0, 0, false);
-                                        mNotifyManager.notify(notificationID, mBuilder.build());
-                                    }
-                                }, 1000);
-
-                                callback.onSuccess();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
-
-                        state.mState = ProgressBarState.State.ERROR;
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBuilder.setContentText("“" + listItem.getItemName() + "”" + " failed to upload");
-                                // Removes the progress bar
-                                mBuilder.setProgress(0, 0, false);
-                                mNotifyManager.notify(notificationID, mBuilder.build());
-                            }
-                        }, 1000);
-
-                        callback.onFail();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-
-                        byte [] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
-                        image = FileHelper.reduceImageForUpload(image);
-
-                        String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
-
-
-                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
-                        params.put(ApiConstants.USER_TOKEN, authtoken);
-                        return params;
-                    }
-                };
-
-                uploadPhotoRequest.setRetryPolicy(new DefaultRetryPolicy
-                        (DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 12, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-                queue.add(uploadPhotoRequest);
-                state.mState = ProgressBarState.State.REQUEST_SENT;
-            }
-        });
-
-    } //uploadPhoto
-
-//    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final RequestCallback callback) {
+//    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final NetworkUtils.RequestCallback callback) {
 //        if(!(isNetworkAvailable())){
-//            callback.onCancelled(CancelResponse.NETWORK_ERROR);
+//            callback.onCancelled(NetworkUtilsCancelResponse.NETWORK_ERROR);
 //            return;
 //        }
 //
 //        if(FileHelper.getFileSize(photoUri) > 8){
-//            callback.onCancelled(CancelResponse.FILESIZE_ERROR);
+//            callback.onCancelled(NetworkUtils.CancelResponse.FILESIZE_ERROR);
 //            return;
 //        }
 //
@@ -899,7 +628,7 @@ public final class RequestMethods {
 //        final ProgressBarState state = new ProgressBarState();
 //        final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
 //
-//        mCurrentUser.getToken(new ListUser.AuthCallback() {
+//        mCurrentUser.getToken(new ListUser.TokenCallback() {
 //            @Override
 //            public void onAuthed(final String authtoken) {
 //                RequestQueue queue = Volley.newRequestQueue(mContext);
@@ -909,7 +638,7 @@ public final class RequestMethods {
 //                state.mState = ProgressBarState.State.START;
 //
 //                //Upload Request
-//                StringRequest uploadPhotoRequest = new StringRequest(Request.Method.POST, url,
+//                final StringReq uploadPhotoRequest = new StringReq(Request.Method.POST, url,
 //                        new Response.Listener<String>() {
 //                            @Override
 //                            public void onResponse(String response) {
@@ -953,6 +682,13 @@ public final class RequestMethods {
 //                    @Override
 //                    protected Map<String, String> getParams() {
 //                        Map<String, String> params = new HashMap<String, String>();
+//
+//                        byte [] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
+//                        image = FileHelper.reduceImageForUpload(image);
+//
+//                        String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
+//
+//
 //                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
 //                        params.put(ApiConstants.USER_TOKEN, authtoken);
 //                        return params;
@@ -960,115 +696,14 @@ public final class RequestMethods {
 //                };
 //
 //                uploadPhotoRequest.setRetryPolicy(new DefaultRetryPolicy
-//                        (DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                        (DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 12, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
 //                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//                Log.v(TAG, "SET RETRY POLICY");
 //
 //                queue.add(uploadPhotoRequest);
-//                Log.v(TAG, "ADDED TO QUEUE");
 //                state.mState = ProgressBarState.State.REQUEST_SENT;
 //            }
 //        });
 //
 //    } //uploadPhoto
-
-    //Helper Classes
-    public class ProgressBarUpdater extends AsyncTask<Object, Integer, Integer> {
-
-        private ProgressBarState state;
-        private int notificationID;
-
-        public ProgressBarUpdater(int id){
-            super();
-            notificationID = id;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            // Displays the progress bar for the first time.
-            mBuilder.setProgress(100, 0, false);
-            mNotifyManager.notify(notificationID, mBuilder.build());
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            // Update progress
-            mBuilder.setProgress(100, values[0], false);
-            mNotifyManager.notify(notificationID, mBuilder.build());
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected Integer doInBackground(Object... params) {
-            state = (ProgressBarState) params[0];
-
-            int currentVal = 0;
-            int targetVal = 0;
-
-            while(true){
-                switch(state.mState){
-                    case START:
-                        targetVal = 30;
-
-                        break;
-                    case REQUEST_SENT:
-                        targetVal = 85;
-
-                        break;
-                    case REQUEST_RECEIVED:
-                        targetVal = 90;
-
-                        break;
-                    case FINISHED:
-                        targetVal = 100;
-
-                        break;
-                    case ERROR:
-                        cancel(true);
-                        break;
-                    case TIMEOUT:
-                        cancel(true);
-                        break;
-                }
-
-                if(currentVal < targetVal){
-                    currentVal++;
-
-//                    TODO: can I make indeterminate display until upload complete?
-//                    if(currentVal > 80){
-//                        mBuilder.setProgress(0, 0, true);
-//                    }
-
-                    if(currentVal == 100 || state.mState == ProgressBarState.State.FINISHED){
-                        currentVal = 100;
-                        publishProgress(currentVal, 100);
-                        cancel(true);
-                    }
-                }
-
-                // Sets the progress indicator completion percentage
-                publishProgress(currentVal, 100);
-
-                try {
-                    // Sleep for 1 seconds
-                    Thread.sleep(80);
-                } catch (InterruptedException e) {
-                    Log.d("ProgressBarUpdater", "sleep failure");
-                }
-
-                if(isCancelled()){
-                    break;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-        }
-    } //Uploader
 
 } //RequestMethods

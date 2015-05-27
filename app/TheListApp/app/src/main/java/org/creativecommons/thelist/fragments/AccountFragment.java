@@ -165,7 +165,7 @@ public class AccountFragment extends Fragment {
                                     }
                                 });
                     } catch (Exception e) {
-                        Log.d("LoginFragment", e.getMessage());
+                        Log.d(TAG, e.getMessage());
                         //data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                     }
                 }

@@ -53,8 +53,10 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -145,7 +147,7 @@ public class AddItemActivity extends AppCompatActivity {
         }
 
         //Set Spinner Content
-        mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getCategories(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getCategories > onResponse: " + response);
@@ -391,9 +393,11 @@ public class AddItemActivity extends AppCompatActivity {
                 //Disable button/editexts
                 enableFields(false);
 
+                Uploader uploader = new Uploader(mContext);
+
                 //Add Item Request
-                mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
-                        new RequestMethods.RequestCallback() {
+                uploader.addMakerItem(title, catId, description, mMediaUri,
+                        new NetworkUtils.RequestCallback() {
                             @Override
                             public void onSuccess() {
                                 Log.v(TAG, "addMakerItem > onSuccess");
@@ -426,7 +430,7 @@ public class AddItemActivity extends AppCompatActivity {
                             } //onFail
 
                             @Override
-                            public void onCancelled(RequestMethods.CancelResponse response) {
+                            public void onCancelled(NetworkUtils.CancelResponse response) {
                                 Log.v(TAG, "addMakerItem > onCancelled: " + response.toString());
 
                                 mMakerItemProgressBar.setVisibility(View.INVISIBLE);
@@ -444,6 +448,7 @@ public class AddItemActivity extends AppCompatActivity {
                             }
                         });
             } //onAuthed
+
         });
 
     } //startItemUpload

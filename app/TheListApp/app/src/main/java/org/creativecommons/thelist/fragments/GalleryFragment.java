@@ -43,6 +43,7 @@ import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
@@ -165,7 +166,7 @@ public class GalleryFragment extends Fragment {
 
     public void refreshItems(){
         if(!mCurrentUser.isTempUser()){
-            mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
+            mRequestMethods.getUserPhotos(new NetworkUtils.ResponseCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG, " > getUserPhotos > onAuthed" + response.toString());

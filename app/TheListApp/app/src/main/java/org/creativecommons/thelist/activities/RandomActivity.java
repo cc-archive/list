@@ -44,6 +44,7 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -113,7 +114,7 @@ public class RandomActivity extends Activity {
         mNoButton = (ImageButton) findViewById(R.id.NoButton);
         //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
-        mRequestMethods.getRandomItems(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getRandomItems(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getRandomListItems > onSuccess: " + response);

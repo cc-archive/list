@@ -64,6 +64,7 @@ import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchLis
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
@@ -304,7 +305,7 @@ public class MyListFragment extends Fragment {
 
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
 
-            mRequestMethods.getUserItems(new RequestMethods.UserListCallback() {
+            mRequestMethods.getUserItems(new NetworkUtils.UserListCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
@@ -823,7 +824,7 @@ public class MyListFragment extends Fragment {
     public void startPhotoUpload(){
 
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
-            mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
+            mCurrentUser.getToken(new ListUser.TokenCallback() { //getToken
                 @Override
                 public void onAuthed(String authtoken) {
                     Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
@@ -847,9 +848,9 @@ public class MyListFragment extends Fragment {
                                 Log.d(TAG,"addAccount > " + e.getMessage());
                             }
                         }
+
                     });
         }
-
     } //startPhotoUpload
 
     public void performPhotoUpload(){
@@ -871,86 +872,76 @@ public class MyListFragment extends Fragment {
         }, 3000);
 
         Uploader uploader = new Uploader(mContext);
-        uploader.uploadPhoto(mItemToBeUploaded, mMediaUri);
+        uploader.uploadPhoto(mItemToBeUploaded, mMediaUri, new NetworkUtils.UploadResponse() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "uploadPhoto > onSuccess");
 
+                //TODO: add upload notification bar (below actionbar)
 
+                displayUserItems();
 
-//        mRequestMethods.uploadPhoto(mItemToBeUploaded, mMediaUri,
-//                new RequestMethods.RequestCallback() {
-//                    @Override
-//                    public void onSuccess() {
-//                        Log.d(TAG, "On Photo Upload Success");
-//
-//                        //TODO: replace with upload bar notification
-//                        //mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
-//
-//                        displayUserItems();
-//                        mUploadProgressBarContainer.setVisibility(View.GONE);
-//
-//                        //Show snackbar confirmation
-//                        mItemToBeUploaded = null;
-//
-//                        //TODO: check if we actually need to disable fab
-//                        showPhotoUploadSnackbar("Photo Uploaded",
-//                                "dismiss", new ActionClickListener() {
-//                                    @Override
-//                                    public void onActionClicked(Snackbar snackbar) {
-//                                        mFab.setEnabled(false);
-//                                        snackbar.dismiss();
-//
-//                                        new Handler().postDelayed(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                mFab.show();
-//                                                mFab.setEnabled(true);
-//                                            }
-//                                        }, 500);
-//                                    }
-//                                });
-//
-//                    } //onSuccess
-//                    @Override
-//                    public void onFail() {
-//                        Log.d(TAG, "On Photo Upload Fail");
-//
-//                        //TODO: replace with upload bar notification
-//                        //mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
-//
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mUploadProgressBarContainer.setVisibility(View.GONE);
-//                                displayUserItems();
-//                                //TODO: add visual indication that item failed
-//                            }
-//                        }, 500);
-//
-//                        //Show snackbar confirmation
-//                        showPhotoUploadSnackbar("Upload failed",
-//                                "retry", new ActionClickListener() {
-//                                    @Override
-//                                    public void onActionClicked(Snackbar snackbar) {
-//                                        performPhotoUpload();
-//                                    }
-//                                });
-//                    } //onFail
-//
-//                    @Override
-//                    public void onCancelled(RequestMethods.CancelResponse response) {
-//                        Log.v(TAG, "addMakerItem > onCancelled: " + response.toString());
-//
-//                        mUploadProgressBarContainer.setVisibility(View.GONE);
-//
-//                        switch(response){
-//                            case NETWORK_ERROR:
-//                                mMessageHelper.networkFailMessage();
-//                                break;
-//                            case FILESIZE_ERROR:
-//                                mMessageHelper.photoUploadSizeFailMessage();
-//                                break;
-//                        }
-//                    }
-//                });
+                mUploadProgressBarContainer.setVisibility(View.GONE);
+                mItemToBeUploaded = null;
+
+                //Show snackbar confirmation
+                //TODO: check if we actually need to disable fab
+                showPhotoUploadSnackbar("Photo Uploaded",
+                        "dismiss", new ActionClickListener() {
+                            @Override
+                            public void onActionClicked(Snackbar snackbar) {
+                                mFab.setEnabled(false);
+                                snackbar.dismiss();
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mFab.show();
+                                        mFab.setEnabled(true);
+                                    }
+                                }, 500);
+                            }
+                        });
+            } //onSuccess
+            @Override
+            public void onFail() {
+                Log.d(TAG, "uploadPhoto > onFail");
+
+                //TODO: add upload notification bar (below actionbar)
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mUploadProgressBarContainer.setVisibility(View.GONE);
+                        displayUserItems();
+                    }
+                }, 500);
+
+                //Show snackbar confirmation
+                showPhotoUploadSnackbar("Upload failed",
+                        "retry", new ActionClickListener() {
+                            @Override
+                            public void onActionClicked(Snackbar snackbar) {
+                                performPhotoUpload();
+                            }
+                        });
+            } //onFail
+            @Override
+            public void onCancelled(NetworkUtils.CancelResponse response) {
+                Log.v(TAG, "uploadPhoto > onCancelled: " + response.toString());
+
+                mUploadProgressBarContainer.setVisibility(View.GONE);
+
+                switch(response) {
+                    case NETWORK_ERROR:
+                        mMessageHelper.networkFailMessage();
+                        break;
+                    case FILESIZE_ERROR:
+                        mMessageHelper.photoUploadSizeFailMessage();
+                        break;
+                }
+            }
+        });
     } //performPhotoUpload
 
     @Override
@@ -959,8 +950,6 @@ public class MyListFragment extends Fragment {
         mSharedPref.saveOfflineUserList(mItemList);
         super.onPause();
     }
-
-
 
 
 } //MyListFragment

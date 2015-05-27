@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.misc;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;

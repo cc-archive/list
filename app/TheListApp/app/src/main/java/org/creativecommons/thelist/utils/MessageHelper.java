@@ -292,7 +292,7 @@ public class MessageHelper {
         RequestMethods mRequestMethods = new RequestMethods(mContext);
 
         //make request and do something based on user stats
-        mRequestMethods.getUserProfile(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getUserProfile(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 //TODO: check if message should be displayed based on user stats
