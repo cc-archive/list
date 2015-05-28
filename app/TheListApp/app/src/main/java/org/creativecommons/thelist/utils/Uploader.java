@@ -13,12 +13,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -31,9 +25,6 @@ import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.adapters.ProgressBarState;
 import org.creativecommons.thelist.adapters.UserListItem;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Uploader {
     public static final String TAG = Uploader.class.getSimpleName();
@@ -110,21 +101,20 @@ public class Uploader {
         mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
             public void onAuthed(String authtoken) {
+                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + listItem.getItemID();
 
                 //Set start state for uploader
                 state.mState = ProgressBarState.State.START;
 
-                //Add params
+                //PARAMETERS
                 RequestParams params = new RequestParams();
 
                 //Format photo for upload
                 byte[] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
                 image = FileHelper.reduceImageForUpload(image);
                 String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
-                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + listItem.getItemID();
 
                 try {
-                    params.put("filedata", photoFile);
                     params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
                     params.put(ApiConstants.USER_TOKEN, authtoken);
 
@@ -132,7 +122,7 @@ public class Uploader {
                     Log.e("UPLOADER", e.getMessage());
                 }
 
-
+                //REQUEST
                 client.setTimeout(60 * 1000);
                 client.post(url, params, new AsyncHttpResponseHandler() {
                     @Override
@@ -228,42 +218,79 @@ public class Uploader {
 
         mCurrentUser.getToken(new ListUser.TokenCallback() {
             @Override
-            public void onAuthed(final String authtoken) {
-                RequestQueue queue = Volley.newRequestQueue(mContext);
+            public void onAuthed(String authtoken) {
                 String url = ApiConstants.ADD_MAKER_ITEM + '/' + mSharedPref.getUserId();
 
+                //Set start state for uploader
                 state.mState = ProgressBarState.State.START;
 
-                //Upload Request
-                StringRequest addMakerItemRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                Log.v(TAG, "addMakerItem > onResponse: " + response);
+                //PARAMETERS
+                RequestParams params = new RequestParams();
 
-                                state.mState = ProgressBarState.State.FINISHED;
+                try {
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mBuilder.setContentText("“" + title + "”" + " uploaded successfully");
-                                        // Removes the progress bar
-                                        mBuilder.setProgress(0, 0, false);
-                                        mBuilder.setSmallIcon(R.drawable.ic_done_white_24dp);
+                    params.put(ApiConstants.USER_TOKEN, authtoken);
+                    params.put(ApiConstants.MAKER_ITEM_CATEGORY, category);
 
-                                        mNotifyManager.notify(notificationID, mBuilder.build());
-                                    }
-                                }, 1000);
+                    if (description != null) {
+                        params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
+                    }
 
-                                callback.onSuccess();
-                            }
-                        }, new Response.ErrorListener() {
+                    if (photoUri != null) {
+                        //Format photo for upload
+                        byte[] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
+                        image = FileHelper.reduceImageForUpload(image);
+                        String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
+                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
+                    }
+
+                } catch (Exception e) {
+                    Log.e("UPLOADER", e.getMessage());
+                }
+
+                //REQUEST
+                client.setTimeout(60 * 1000);
+                client.post(url, params, new AsyncHttpResponseHandler() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.v(TAG, "addMakerItem > OnErrorResponse: " + error.getMessage());
+                    public void onStart() {
+                        // called before request is started
+                        state.mState = ProgressBarState.State.REQUEST_SENT;
+                    }
+
+                    public void onPreProcessResponse(ResponseHandlerInterface instance, HttpResponse response) {
+                        // default action is to do nothing...
+
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        Log.v(TAG, "uploadPhoto > onSuccess: " + String.valueOf(statusCode));
+
+                        state.mState = ProgressBarState.State.FINISHED;
+
+                        //TODO: insert onSuccess
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mBuilder.setContentText("“" + title + "”" + " uploaded successfully");
+                                // Removes the progress bar
+                                mBuilder.setProgress(0, 0, false);
+                                mBuilder.setSmallIcon(R.drawable.ic_done_white_24dp);
+
+                                mNotifyManager.notify(notificationID, mBuilder.build());
+                            }
+                        }, 1000);
+
+                        callback.onSuccess();
+                    } //onSuccess
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Log.d(TAG, "uploadPhoto > onFailure: " + String.valueOf(statusCode) + ", " + error.getMessage());
 
                         state.mState = ProgressBarState.State.ERROR;
 
+                        //TODO: insert OnFail
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -277,37 +304,18 @@ public class Uploader {
                         }, 1000);
 
                         callback.onFail();
+                    } //on Failure
+
+                    public void onCancel() {
+                        Log.d(TAG, "Request got cancelled");
+
                     }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-
-                        if (description != null) {
-                            params.put(ApiConstants.MAKER_ITEM_DESCRIPTION, description);
-                        }
-
-                        if (photoUri != null) {
-                            byte [] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
-                            image = FileHelper.reduceImageForUpload(image);
-
-                            String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
-                            params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
-                        }
-
-                        params.put(ApiConstants.MAKER_ITEM_NAME, title);
-                        params.put(ApiConstants.MAKER_ITEM_CATEGORY, category);
-                        params.put(ApiConstants.USER_TOKEN, authtoken);
-
-                        return params;
-                    }
-                };
-                queue.add(addMakerItemRequest);
-                state.mState = ProgressBarState.State.REQUEST_SENT;
-
+                });
             }
         });
-    } //addMakerItem + photo
+    } //addMakerItem
+
+
 
     // --------------------------------------------------------
     // UPLOAD NOTIFICATION HELPERS
