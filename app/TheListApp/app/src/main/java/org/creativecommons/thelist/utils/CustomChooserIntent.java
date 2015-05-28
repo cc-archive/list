@@ -27,6 +27,7 @@ public class CustomChooserIntent {
      * @param blacklist A list of package names that are not allowed to show.
      * @return Updated intent, to be passed to {@link android.content.Context#startActivity}.
      */
+
     public static Intent create(PackageManager pm, Intent target, String title,
                                 List<String> blacklist) {
         Intent dummy = new Intent(target.getAction());
@@ -76,6 +77,7 @@ public class CustomChooserIntent {
                 targetedIntents.toArray(new Parcelable[targetedIntents.size()]);
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedIntentsParcelable);
         return chooserIntent;
+
     }
 
-}
+} //CustomChooserIntent

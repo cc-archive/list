@@ -204,7 +204,7 @@
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
-    <string name="app_version">Version 2.0 (May 5 2015)</string>
+    <string name="app_version">Version 3.0 (June 2 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
 
@@ -212,8 +212,7 @@
     <string name="single_choice_text">Choose</string>
 
     <string name="single_choice_terms_title">Only choose photos created by you!</string>
-    <string name="single_choice_terms_content">The List only accepts original images.
-        All photos contributed to The List Powered by Creative Commons will be made available to the world for reuse for any purpose so long as reusers give you credit. You must be able to grant these rights in order to upload your photo.</string>
+    <string name="single_choice_terms_content">All photos contributed to The List Powered by Creative Commons will be made available to the world for reuse for any purpose so long as reusers give you credit. You must be able to grant these rights in order to upload your photo.</string>
 
     <string-array name="single_choice_terms_array">
         <item>I solemnly swear my image is my own!</item>

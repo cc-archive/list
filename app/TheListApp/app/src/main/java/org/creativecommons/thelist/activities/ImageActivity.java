@@ -92,6 +92,11 @@ public class ImageActivity extends AppCompatActivity {
 
                     List<String> blacklist = new ArrayList<>();
                     blacklist.add("org.creativecommons.thelist");
+                    blacklist.add("com.android.bluetooth");
+                    //TODO: see if possible to remove photos app from list
+                    //blacklist.add("com.google.android.apps.photos");
+                    //blacklist.add("com.android.phasebeamorange");
+
 
                     PackageManager pm = getPackageManager();
                     Intent shareIntent = new Intent();
@@ -103,26 +108,6 @@ public class ImageActivity extends AppCompatActivity {
                     startActivity(customIntent);
 
                 }
-
-                //shareExludingApp(mContext, mContext.getPackageName(), bmpUri, "Share Image");
-//                //Access Image from View
-//                ImageView galleryImage = (ImageView)viewPager.findViewWithTag(viewPager.getCurrentItem());
-//
-//                // Get access to the URI for the bitmap
-//                Uri bmpUri = FileHelper.getLocalBitmapUri(galleryImage);
-//                if (bmpUri != null) {
-//
-//                    // Construct a ShareIntent with link to image
-//                    Intent shareIntent = new Intent();
-//                    shareIntent.setAction(Intent.ACTION_SEND);
-//                    shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-//                    shareIntent.setType("image/*");
-//                    // Launch sharing dialog for image
-//                    startActivity(Intent.createChooser(shareIntent, "Share Image"));
-//                } else {
-//                    Log.d(TAG, "Failed to find Bitmap; Uri was null");
-//                    // ...sharing failed, handle error
-//                }
 
                 return true;
             case android.R.id.home:
