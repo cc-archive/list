@@ -195,7 +195,6 @@ public class Uploader {
                 });
             } //onAuthed
         });
-
     } //uploadPhoto
 
 

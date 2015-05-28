@@ -2,12 +2,12 @@ package org.creativecommons.thelist.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -15,10 +15,12 @@ import android.widget.ImageView;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.adapters.ImageAdapter;
+import org.creativecommons.thelist.utils.CustomChooserIntent;
 import org.creativecommons.thelist.utils.FileHelper;
 import org.creativecommons.thelist.utils.MessageHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageActivity extends AppCompatActivity {
     private static final String TAG = ImageActivity.class.getSimpleName();
@@ -85,18 +87,42 @@ public class ImageActivity extends AppCompatActivity {
 
                 // Get access to the URI for the bitmap
                 Uri bmpUri = FileHelper.getLocalBitmapUri(galleryImage);
-                if (bmpUri != null) {
-                    // Construct a ShareIntent with link to image
+
+                if(bmpUri != null){
+
+                    List<String> blacklist = new ArrayList<>();
+                    blacklist.add("org.creativecommons.thelist");
+
+                    PackageManager pm = getPackageManager();
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
                     shareIntent.setType("image/*");
-                    // Launch sharing dialog for image
-                    startActivity(Intent.createChooser(shareIntent, "Share Image"));
-                } else {
-                    Log.d(TAG, "Failed to find Bitmap; Uri was null");
-                    // ...sharing failed, handle error
+
+                    Intent customIntent = CustomChooserIntent.create(pm, shareIntent, "Share Image", blacklist);
+                    startActivity(customIntent);
+
                 }
+
+                //shareExludingApp(mContext, mContext.getPackageName(), bmpUri, "Share Image");
+//                //Access Image from View
+//                ImageView galleryImage = (ImageView)viewPager.findViewWithTag(viewPager.getCurrentItem());
+//
+//                // Get access to the URI for the bitmap
+//                Uri bmpUri = FileHelper.getLocalBitmapUri(galleryImage);
+//                if (bmpUri != null) {
+//
+//                    // Construct a ShareIntent with link to image
+//                    Intent shareIntent = new Intent();
+//                    shareIntent.setAction(Intent.ACTION_SEND);
+//                    shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+//                    shareIntent.setType("image/*");
+//                    // Launch sharing dialog for image
+//                    startActivity(Intent.createChooser(shareIntent, "Share Image"));
+//                } else {
+//                    Log.d(TAG, "Failed to find Bitmap; Uri was null");
+//                    // ...sharing failed, handle error
+//                }
 
                 return true;
             case android.R.id.home:
@@ -105,5 +131,6 @@ public class ImageActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 } //ImageActivity
