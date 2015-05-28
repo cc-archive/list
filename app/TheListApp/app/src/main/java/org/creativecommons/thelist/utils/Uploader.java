@@ -139,42 +139,19 @@ public class Uploader {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         Log.v(TAG, "uploadPhoto > onSuccess: " + String.valueOf(statusCode));
-
                         state.mState = ProgressBarState.State.FINISHED;
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBuilder.setContentText(listItem.getItemName() + " uploaded successfully");
-                                // Removes the progress bar
-                                mBuilder.setProgress(0, 0, false);
-                                mBuilder.setSmallIcon(R.drawable.ic_done_white_24dp);
-
-                                mNotifyManager.notify(notificationID, mBuilder.build());
-                            }
-                        }, 1000);
-
+                        updateNotificationSuccess(notificationID, listItem.getItemName() + " uploaded successfully");
                         callback.onSuccess();
+
                     } //onSuccess
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         Log.d(TAG, "uploadPhoto > onFailure: " + String.valueOf(statusCode) + ", " + error.getMessage());
-
                         state.mState = ProgressBarState.State.ERROR;
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBuilder.setContentText("“" + listItem.getItemName() + "”" + " failed to upload");
-                                // Removes the progress bar
-                                mBuilder.setProgress(0, 0, false);
-                                mBuilder.setSmallIcon(R.drawable.ic_close_white_18dp);
-
-                                mNotifyManager.notify(notificationID, mBuilder.build());
-                            }
-                        }, 1000);
-
+                        updateNotificationFailure(notificationID, "“" + listItem.getItemName() + "”" + " failed to upload");
                         callback.onFail();
                     } //on Failure
 
@@ -265,44 +242,18 @@ public class Uploader {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         Log.v(TAG, "uploadPhoto > onSuccess: " + String.valueOf(statusCode));
-
                         state.mState = ProgressBarState.State.FINISHED;
 
-                        //TODO: insert onSuccess
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBuilder.setContentText("“" + title + "”" + " uploaded successfully");
-                                // Removes the progress bar
-                                mBuilder.setProgress(0, 0, false);
-                                mBuilder.setSmallIcon(R.drawable.ic_done_white_24dp);
-
-                                mNotifyManager.notify(notificationID, mBuilder.build());
-                            }
-                        }, 1000);
-
+                        updateNotificationSuccess(notificationID, "“" + title + "”" + " uploaded successfully");
                         callback.onSuccess();
                     } //onSuccess
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         Log.d(TAG, "uploadPhoto > onFailure: " + String.valueOf(statusCode) + ", " + error.getMessage());
-
                         state.mState = ProgressBarState.State.ERROR;
 
-                        //TODO: insert OnFail
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBuilder.setContentText("“" + MessageHelper.capitalize(title) + "”" + " failed to upload");
-                                // Removes the progress bar
-                                mBuilder.setProgress(0, 0, false);
-                                mBuilder.setSmallIcon(R.drawable.ic_close_white_18dp);
-
-                                mNotifyManager.notify(notificationID, mBuilder.build());
-                            }
-                        }, 1000);
-
+                        updateNotificationFailure(notificationID, "“" + MessageHelper.capitalize(title) + "”" + " failed to upload");
                         callback.onFail();
                     } //on Failure
 
@@ -326,7 +277,7 @@ public class Uploader {
         mBuilder.setContentTitle(mContext.getResources().getString(R.string.app_name_short))
                 .setContentText(contentText)
                 .setColor(mContext.getResources().getColor(R.color.colorSecondary))
-                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+                .setSmallIcon(R.drawable.ic_party_mode_white_24dp);
 
         Intent resultIntent = new Intent(mContext, MainActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -343,6 +294,37 @@ public class Uploader {
         NotificationManager mNotificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(notificationID, mBuilder.build());
+
+    }
+
+    public void updateNotificationSuccess(final int id, final String contentText) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBuilder.setContentText(contentText);
+                // Removes the progress bar
+                mBuilder.setProgress(0, 0, false);
+                mBuilder.setSmallIcon(R.drawable.ic_done_white_24dp);
+
+                mNotifyManager.notify(id, mBuilder.build());
+            }
+        }, 1000);
+
+    }
+
+    public void updateNotificationFailure(final int id, final String contentText) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBuilder.setContentText(contentText);
+                // Removes the progress bar
+                mBuilder.setProgress(0, 0, false);
+                mBuilder.setSmallIcon(R.drawable.ic_report_problem_white_24dp);
+                mBuilder.setColor(mContext.getResources().getColor(R.color.colorFail));
+
+                mNotifyManager.notify(id, mBuilder.build());
+            }
+        }, 1000);
 
     }
 

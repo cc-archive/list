@@ -9,6 +9,9 @@
     <color name="colorSecondary">#FFA000</color>
     <color name="colorSecondaryLight">#FFC107</color>
 
+    <!-- Failure -->
+    <color name="colorFail">#E53935</color>
+
 
     <!--Button Colours-->
     <color name="NORMAL_STATE_COLOR">@color/colorPrimary</color>
@@ -26,6 +29,7 @@
     <color name="snackbar_background_default">#323232</color>
     <!--nb: should be accent colour-->
     <color name="snackbar_action">@color/colorSecondary</color>
+
 
     <!--Category Colours-->
 
