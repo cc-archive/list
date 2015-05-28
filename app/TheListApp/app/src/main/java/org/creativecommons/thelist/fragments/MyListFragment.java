@@ -675,6 +675,15 @@ public class MyListFragment extends Fragment {
                 , snackbarContainer);
     } //showPhotoUploadSnackbar
 
+    public void showUploadCancelledSnackbar(){
+        SnackbarManager.show(
+                //also includes duration: SHORT, LONG, INDEFINITE
+                Snackbar.with(mContext.getApplicationContext())
+                        .text("Upload Cancelled") //text to display
+                , snackbarContainer);
+    } //showUploadCancelledSnackbar
+
+
 
     //----------------------------------------------
     //TAKING PHOTO/PHOTO SELECTION
@@ -685,11 +694,6 @@ public class MyListFragment extends Fragment {
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
-                    if(!mRequestMethods.isNetworkAvailable()){
-                        mMessageHelper.toastNeedInternet();
-                        return;
-                    }
 
                     switch(which) {
                         case 0:
@@ -780,28 +784,33 @@ public class MyListFragment extends Fragment {
                         mMediaUri = data.getData();
                     }
 
-                    Log.v(TAG,"Media URI:" + mMediaUri);
+                    Log.v(TAG, "Media URI:" + mMediaUri);
 
                     //Add photo to the Gallery (listen for broadcast and let gallery take action)
-                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    final Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(mMediaUri);
                     getActivity().sendBroadcast(mediaScanIntent);
 
-                    Resources res = getResources();
+                    final Resources res = getResources();
+                    final String [] choices = res.getStringArray(R.array.single_choice_terms_array);
 
                     //TODO: get confirmation of terms
                     mMessageHelper.showSingleChoiceDialog(mContext, res.getString(R.string.single_choice_terms_title),
                             res.getString(R.string.single_choice_terms_content),
-                            res.getStringArray(R.array.single_choice_terms_array),
+                            choices,
                             new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
                                 public boolean onSelection (MaterialDialog materialDialog, View view,
                                                             int i,CharSequence charSequence) {
 
+                                    if(charSequence == (choices[0])){
+                                        //Positive response
+                                        startPhotoUpload();
 
-
-                                    Log.v(TAG, "CHARQUENCE" + charSequence.toString());
-                                    startPhotoUpload();
+                                    } else {
+                                        //Negative response
+                                        showUploadCancelledSnackbar();
+                                    }
 
                                     return true;
                                 }

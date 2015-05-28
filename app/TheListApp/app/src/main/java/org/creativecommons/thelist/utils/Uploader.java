@@ -336,7 +336,6 @@ public class Uploader {
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(notificationID, mBuilder.build());
 
-
     }
 
     //PROGRESS BAR UPDATER
