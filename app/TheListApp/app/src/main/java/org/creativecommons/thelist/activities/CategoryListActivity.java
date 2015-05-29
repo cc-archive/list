@@ -271,6 +271,7 @@ public class CategoryListActivity extends AppCompatActivity {
             }
         } else {
             intent = new Intent(CategoryListActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     } //saveUserCategories
@@ -291,6 +292,8 @@ public class CategoryListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         saveUserCategories();
+
+
     }
 
     @Override

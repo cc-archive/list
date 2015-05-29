@@ -166,7 +166,7 @@ public class MyListFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(!mRequestMethods.isNetworkAvailable()){
+                if(!NetworkUtils.isNetworkAvailable(mContext)){
                     mMessageHelper.toastNeedInternet();
                     return;
                 }
