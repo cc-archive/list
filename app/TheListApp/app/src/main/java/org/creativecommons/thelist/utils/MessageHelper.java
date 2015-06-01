@@ -190,6 +190,11 @@ public class MessageHelper {
                 mContext.getString(R.string.error_network_message));
     }
 
+    public void loadUserItemsFailMessage(){
+        showDialog(mContext, mContext.getString(R.string.error_network_title),
+                mContext.getString(R.string.error_load_message));
+    }
+
 
     // --------------------------------------------------------
     // LIST ITEM MESSAGES

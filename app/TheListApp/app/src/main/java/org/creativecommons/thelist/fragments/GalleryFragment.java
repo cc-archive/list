@@ -214,6 +214,9 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onFail(VolleyError error) {
                     Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mEmptyView.setText("Problem loading your photos.\nTry reloading the page!");
+                    mEmptyView.setVisibility(View.VISIBLE);
                 }
             });
         } else {

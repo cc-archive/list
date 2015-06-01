@@ -361,10 +361,14 @@ public class MyListFragment extends Fragment {
                         mFeedAdapter.notifyDataSetChanged();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                } //onAuthed
+                } //onSuccess
                 @Override
                 public void onFail(VolleyError error) {
                     Log.d(TAG , "> getUserItems > onFail: " + error.toString());
+                    //mMessageHelper.loadUserItemsFailMessage();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mEmptyView.setText("Problem loading your list items.\nPlease try again.");
+                    mEmptyView.setVisibility(View.VISIBLE);
                 }
                 @Override
                 public void onUserOffline(List<UserListItem> response) {
