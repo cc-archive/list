@@ -92,6 +92,8 @@ public class ImageActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_share:
 
+                //TODO: add check to see if image loaded (check for placeholder…)
+
                 //Access Image from View
                 ImageView galleryImage = (ImageView)viewPager.findViewWithTag(viewPager.getCurrentItem());
 
@@ -114,10 +116,8 @@ public class ImageActivity extends AppCompatActivity {
                     isIntentSafe = activities.size() > 0;
 
                 } else {
-                    //TODO: Hide share button
                     Log.v(TAG, "bmpUri is null > problem loading photo");
                 }
-
 
                 if(isIntentSafe){
                     // Launch sharing dialog for image
@@ -125,6 +125,7 @@ public class ImageActivity extends AppCompatActivity {
                 } else {
                     Log.v(TAG, "No apps to receive intent");
                     //TODO: add message: Looks like you have no apps to share to
+                    mMessageHelper.showDialog(mContext, "Oops!", "Looks like you don’t have any apps to share to.");
                 }
 
                 return true;

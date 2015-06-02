@@ -3,7 +3,7 @@ Attributed to Felix Ableitner
 Source: https://gist.github.com/Nutomic/528ac465df545f34193b
  */
 
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.misc;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
