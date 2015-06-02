@@ -472,6 +472,14 @@ public class AddItemActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
+    //onBackPressed
+    @Override
+    public void onBackPressed() {
+        Intent homeIntent = new Intent(AddItemActivity.this, MainActivity.class);
+        startActivity(homeIntent);
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

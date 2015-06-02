@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -15,7 +16,6 @@ import android.widget.ImageView;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.adapters.ImageAdapter;
-import org.creativecommons.thelist.utils.CustomChooserIntent;
 import org.creativecommons.thelist.utils.FileHelper;
 import org.creativecommons.thelist.utils.MessageHelper;
 
@@ -35,6 +35,10 @@ public class ImageActivity extends AppCompatActivity {
 
     private ArrayList<GalleryItem> photoObjects;
 
+    //Share Photo
+    private boolean isIntentSafe = false;
+    private Intent filteredIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,7 @@ public class ImageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         //Get incoming data
         Bundle b = getIntent().getExtras();
         photoObjects = b.getParcelableArrayList("photos");
@@ -62,12 +67,17 @@ public class ImageActivity extends AppCompatActivity {
         //Displaying selected image first
         viewPager.setCurrentItem(position);
 
+
     } //onCreate
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_image, menu);
+
+        if(!isIntentSafe){
+            //TODO: hide share button
+        }
 
         return true;
     }
@@ -88,25 +98,33 @@ public class ImageActivity extends AppCompatActivity {
                 // Get access to the URI for the bitmap
                 Uri bmpUri = FileHelper.getLocalBitmapUri(galleryImage);
 
+                //Create intent
+                Intent shareIntent = new Intent();
+
                 if(bmpUri != null){
-
-                    List<String> blacklist = new ArrayList<>();
-                    blacklist.add("org.creativecommons.thelist");
-                    blacklist.add("com.android.bluetooth");
-                    //TODO: see if possible to remove photos app from list
-                    //blacklist.add("com.google.android.apps.photos");
-                    //blacklist.add("com.android.phasebeamorange");
-
-
-                    PackageManager pm = getPackageManager();
-                    Intent shareIntent = new Intent();
+                    // Construct a ShareIntent with link to image
                     shareIntent.setAction(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
                     shareIntent.setType("image/*");
 
-                    Intent customIntent = CustomChooserIntent.create(pm, shareIntent, "Share Image", blacklist);
-                    startActivity(customIntent);
+                    //Check if any activities can handle the intent
+                    PackageManager packageManager = getPackageManager();
+                    List activities = packageManager.queryIntentActivities(shareIntent,
+                            PackageManager.MATCH_DEFAULT_ONLY);
+                    isIntentSafe = activities.size() > 0;
 
+                } else {
+                    //TODO: Hide share button
+                    Log.v(TAG, "bmpUri is null > problem loading photo");
+                }
+
+
+                if(isIntentSafe){
+                    // Launch sharing dialog for image
+                    startActivity(Intent.createChooser(shareIntent, "Share Image"));
+                } else {
+                    Log.v(TAG, "No apps to receive intent");
+                    //TODO: add message: Looks like you have no apps to share to
                 }
 
                 return true;
