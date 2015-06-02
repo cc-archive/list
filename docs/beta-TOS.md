@@ -20,7 +20,7 @@ You represent, warrant, and agree that no content uploaded or otherwise shared b
 
 * Photos: Except for images you share from third party applications for the limited purposes described in Section 5 below, you may only share photos on The List Service if you are the sole copyright holder. When you contribute an image to The List Service in response to a requested List item, you retain your copyright upon upload, and you agree that the photo is hereby licensed under the Creative Commons Attribution 4.0 License (“CC BY”) and may be used under the terms of that license or any later version of a Creative Commons Attribution License. You further agree that Creative Commons has the right to upload your photos to the Internet Archive and to retain the files on CC’s servers and otherwise use the photos under the terms of the Creative Commons license. 
 
-* Other content: You agree that all text or other content (except for photos) you provide to The List Service is hereby dedicated to the public domain via the CC0 public domain dedication (“CC0”) or is otherwise in the public domain if not original to you. 
+* Other content: Except for photos, you agree that all text and other content you provide to The List Service is hereby dedicated to the public domain via the CC0 public domain dedication (“CC0”) or is otherwise in the public domain if not original to you. 
 
 * Attribution: You agree that you will be attributed for your photos with your personal name or pseudonym on CCID at the time of upload and that this satisfies the requirement in the CC BY license that the creator be identified. You may change the name on your CCID at any time, but you understand and agree that doing so will not change the way you are attributed for photos you uploaded previously.  
 
@@ -30,7 +30,7 @@ You represent, warrant, and agree that no content uploaded or otherwise shared b
 
 You can share your own images from The List Service via many of the third party applications installed on your phone or tablet. As these images are your own work, you do not need to provide attribution to yourself. Future releases of The List Service will let you share the work of other users of The List (if you’re reading this and have a good idea for a catchy way to refer to The List users, send us a pull request to this document on GitHub).
 
-You can also share images from these applications into The List Service, solely in connection with your suggestions for possible list items to be photographed by other users of The List Service. These images are not shared publicly but may be shared with other users of the The List Service for purposes of illustration. You are responsible for ensuring you have permission to share images on The List Service for this purpose. 
+You can also share images from these applications into The List Service, solely in connection with your suggestions for possible list items to be photographed by other users of The List Service. These images may be shared with other users of the The List Service. You are responsible for ensuring you have permission to share images on The List Service for this purpose. 
 
 ## 6. DISCLAIMER; LIMITATION OF LIABILITY.
 
