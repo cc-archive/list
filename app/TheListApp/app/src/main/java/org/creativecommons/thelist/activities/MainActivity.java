@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,7 +32,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerLayout mDrawerLayout;
     private View mDrawerView;
     private String[] mDrawerTitles;
-    private Menu menu;
+
+    private NavigationView navigationView;
 
     // --------------------------------------------------------
 
@@ -261,78 +262,37 @@ public class MainActivity extends AppCompatActivity implements
     // --------------------------------------------------------
 
     private void handleUserAccount(){
-        //TODO: bring up account picker dialog w/ new option
-        if(mCurrentUser.getAccountCount() > 0){
-            mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
-                @Override
-                public void onAuthed(String authtoken) {
-                    Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
-                            "got authtoken: " + authtoken);
-                }
-            });
-        } else {
-            mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
-                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
-                        @Override
-                        public void onAuthed(String authtoken) {
-                            Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
-                                    "got authtoken: " + authtoken);
+    //TODO: bring up account picker dialog w/ new option
+    if(mCurrentUser.getAccountCount() > 0){
+        mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
+            @Override
+            public void onAuthed(String authtoken) {
+                Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
+                        "got authtoken: " + authtoken);
+            }
+        });
+    } else {
+        mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
+                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                    @Override
+                    public void onAuthed(String authtoken) {
+                        Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
+                                "got authtoken: " + authtoken);
 
-                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
 
-                            MyListFragment listFragment = new MyListFragment();
-                            //load default view
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.main_content_container, listFragment)
-                                    .commit();
-                        }
-                    });
+                        MyListFragment listFragment = new MyListFragment();
+                        //load default view
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.main_content_container, listFragment)
+                                .commit();
+                    }
+                });
         }
     } //handleUserAccount
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_drawer, menu);
-//        this.menu = menu; //keep this in case of later use
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        switch(item.getItemId()) {
-//            case R.id.about_theapp:
-//                Intent aboutAppIntent = new Intent(DrawerActivity.this, AboutActivity.class);
-//                startActivity(aboutAppIntent);
-//                return true;
-//            case R.id.remove_accounts:
-//                if (mCurrentUser.isTempUser()) {
-//                    mSharedPref.ClearAllSharedPreferences();
-//                    Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
-//                    startActivity(startIntent);
-//                } else {
-//                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-//                        @Override
-//                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-//                        public void onAuthed(String authtoken) {
-//                            mSharedPref.ClearAllSharedPreferences();
-//                            Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
-//                            startActivity(startIntent);
-//                        }
-//                    });
-//                }
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
+    //Set navigation
+
 
 }

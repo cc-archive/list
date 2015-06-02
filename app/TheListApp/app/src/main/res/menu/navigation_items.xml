@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item_list"
+            android:checked="true"
+            android:icon="@drawable/ic_view_list_grey600_24dp"
+            android:title="My List"/>
+        <item
+            android:id="@+id/nav_item_photos"
+            android:icon="@drawable/ic_photo_grey600_24dp"
+            android:title="My Photos"/>
+        <item
+            android:id="@+id/nav_item_categories"
+            android:icon="@drawable/ic_bookmark_grey600_24dp"
+            android:title="My Categories"/>
+        <item
+            android:id="@+id/nav_item_requests"
+            android:checked="true"
+            android:icon="@drawable/ic_add_to_photos_grey600_24dp"
+            android:title="Request An Item"/>
+        <item
+            android:id="@+id/nav_item_about"
+            android:icon="@drawable/ic_info_grey600_24dp"
+            android:title="About The App"/>
+        <item
+            android:id="@+id/nav_item_feedback"
+            android:icon="@drawable/ic_question_answer_grey600_24dp"
+            android:title="Give Feedback"/>
+    </group>
+</menu>
