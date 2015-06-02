@@ -75,8 +75,6 @@ public class MessageHelper {
     // HELPERS
     // --------------------------------------------------------
 
-
-    //Helper Methods
     public static String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }

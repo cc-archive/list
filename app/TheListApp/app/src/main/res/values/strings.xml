@@ -212,7 +212,8 @@
     <!-- Single Choice dialog -->
     <string name="single_choice_text">Choose</string>
 
-    <string name="single_choice_terms_title">Only choose photos created by you!</string>
+    <string name="single_choice_take_photo_title">Only upload original content!</string>
+    <string name="single_choice_choose_photo_title">Only choose photos created by you!</string>
     <string name="single_choice_terms_content">All photos contributed to The List Powered by Creative Commons will be made available to the world for reuse for any purpose so long as reusers give you credit. You must be able to grant these rights in order to upload your photo.</string>
 
     <string-array name="single_choice_terms_array">

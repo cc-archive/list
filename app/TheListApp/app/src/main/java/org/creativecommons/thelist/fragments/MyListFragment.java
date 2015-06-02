@@ -773,61 +773,70 @@ public class MyListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode){
-            case PhotoConstants.PICK_PHOTO_REQUEST:
-            case PhotoConstants.TAKE_PHOTO_REQUEST:
-                if(resultCode == Activity.RESULT_OK) {
-                    mItemToBeUploaded = mCurrentItem;
-                    uploadItemPosition = activeItemPosition;
 
-                    if(data == null) {
-                        //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "> onActivityResult > data == null");
-                    }
-                    else {
-                        mMediaUri = data.getData();
-                    }
+        if(resultCode == Activity.RESULT_OK){
+            prepForPhotoUpload(data);
 
-                    Log.v(TAG, "Media URI:" + mMediaUri);
+            final Resources res = getResources();
+            final String [] choices = res.getStringArray(R.array.single_choice_terms_array);
+            String title = null;
+            String content = res.getString(R.string.single_choice_terms_content);
 
-                    //Add photo to the Gallery (listen for broadcast and let gallery take action)
-                    final Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    mediaScanIntent.setData(mMediaUri);
-                    getActivity().sendBroadcast(mediaScanIntent);
+            switch(requestCode){
+                case PhotoConstants.PICK_PHOTO_REQUEST:
+                    title = res.getString(R.string.single_choice_choose_photo_title);
+                    break;
+                case PhotoConstants.TAKE_PHOTO_REQUEST:
+                    title = res.getString(R.string.single_choice_take_photo_title);
+                    break;
+            } //switch
 
-                    final Resources res = getResources();
-                    final String [] choices = res.getStringArray(R.array.single_choice_terms_array);
+            mMessageHelper.showSingleChoiceDialog(mContext, title, content, choices,
+                    new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection (MaterialDialog materialDialog, View view,
+                                                    int i,CharSequence charSequence) {
 
-                    //TODO: get confirmation of terms
-                    mMessageHelper.showSingleChoiceDialog(mContext, res.getString(R.string.single_choice_terms_title),
-                            res.getString(R.string.single_choice_terms_content),
-                            choices,
-                            new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection (MaterialDialog materialDialog, View view,
-                                                            int i,CharSequence charSequence) {
+                            if(charSequence == (choices[0])){
+                                //Positive response
+                                startPhotoUpload();
 
-                                    if(charSequence == (choices[0])){
-                                        //Positive response
-                                        startPhotoUpload();
+                            } else {
+                                //Negative response
+                                showUploadCancelledSnackbar();
+                            }
 
-                                    } else {
-                                        //Negative response
-                                        showUploadCancelledSnackbar();
-                                    }
-
-                                    return true;
-                                }
+                            return true;
+                        }
                     });
 
-                } //RESULT OK
-                else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
-                    //Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "> onActivityResult > resultCode != canceled");
-                }
-                break;
-        } //switch
+        } else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
+            // Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "> onActivityResult > resultCode != canceled");
+        }
+
     } //onActivityResult
+
+    public void prepForPhotoUpload(Intent data){
+        mItemToBeUploaded = mCurrentItem;
+        uploadItemPosition = activeItemPosition;
+
+        if(data == null) {
+            //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();
+            Log.d(TAG, "> onActivityResult > data == null");
+        }
+        else {
+            mMediaUri = data.getData();
+        }
+
+        Log.v(TAG, "Media URI:" + mMediaUri);
+
+        //Add photo to the Gallery (listen for broadcast and let gallery take action)
+        final Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        mediaScanIntent.setData(mMediaUri);
+        getActivity().sendBroadcast(mediaScanIntent);
+
+    }
 
     //----------------------------------------------
     //PHOTO UPLOAD
