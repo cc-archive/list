@@ -28,7 +28,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -51,15 +51,16 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends AppCompatActivity implements
         NavigationDrawerFragment.NavigationDrawerListener, GalleryFragment.GalleryListener {
     public static final String TAG = MyListFragment.class.getSimpleName();
 
     private Context mContext;
+
     private ListUser mCurrentUser;
-    private SharedPreferencesMethods mSharedPref;
-    private RequestMethods mRequestMethods;
     private MessageHelper mMessageHelper;
+    private RequestMethods mRequestMethods;
+    private SharedPreferencesMethods mSharedPref;
 
     //UI Elements
     private DrawerLayout mDrawerLayout;
@@ -77,9 +78,9 @@ public class MainActivity extends ActionBarActivity implements
         mContext = this;
 
         mCurrentUser = new ListUser(MainActivity.this);
-        mSharedPref = new SharedPreferencesMethods(mContext);
-        mRequestMethods = new RequestMethods(mContext);
         mMessageHelper = new MessageHelper(mContext);
+        mRequestMethods = new RequestMethods(mContext);
+        mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
@@ -228,7 +229,7 @@ public class MainActivity extends ActionBarActivity implements
             mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
                 @Override
                 //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     mSharedPref.ClearAllSharedPreferences();
                     Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
                     startActivity(startIntent);
@@ -264,7 +265,7 @@ public class MainActivity extends ActionBarActivity implements
         if(mCurrentUser.getAccountCount() > 0){
             mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
                             "got authtoken: " + authtoken);
                 }
@@ -273,7 +274,7 @@ public class MainActivity extends ActionBarActivity implements
             mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
                         @Override
-                        public void onSuccess(String authtoken) {
+                        public void onAuthed(String authtoken) {
                             Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
                                     "got authtoken: " + authtoken);
 
@@ -321,7 +322,7 @@ public class MainActivity extends ActionBarActivity implements
 //                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
 //                        @Override
 //                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-//                        public void onSuccess(String authtoken) {
+//                        public void onAuthed(String authtoken) {
 //                            mSharedPref.ClearAllSharedPreferences();
 //                            Intent startIntent = new Intent(DrawerActivity.this, StartActivity.class);
 //                            startActivity(startIntent);

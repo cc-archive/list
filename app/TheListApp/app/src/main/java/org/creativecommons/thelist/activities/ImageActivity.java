@@ -1,36 +1,62 @@
 package org.creativecommons.thelist.activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.adapters.ImageAdapter;
+import org.creativecommons.thelist.utils.FileHelper;
+import org.creativecommons.thelist.utils.MessageHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ImageActivity extends ActionBarActivity {
+public class ImageActivity extends AppCompatActivity {
     private static final String TAG = ImageActivity.class.getSimpleName();
+
+    private Context mContext;
+
+    //Helpers
+    private MessageHelper mMessageHelper;
 
     private ImageAdapter adapter;
     private ViewPager viewPager;
+
+    private ArrayList<GalleryItem> photoObjects;
+
+    //Share Photo
+    private boolean isIntentSafe = false;
+    private Intent filteredIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
+        mContext = this;
+
+        mMessageHelper = new MessageHelper(mContext);
+
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_transparent);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         //Get incoming data
         Bundle b = getIntent().getExtras();
-        ArrayList<GalleryItem> photoObjects = b.getParcelableArrayList("photos");
+        photoObjects = b.getParcelableArrayList("photos");
         int position = b.getInt("position", 0);
 
         //View Pager
@@ -38,16 +64,23 @@ public class ImageActivity extends ActionBarActivity {
         adapter = new ImageAdapter(ImageActivity.this, photoObjects);
         viewPager.setAdapter(adapter);
 
-        //displaying selected image first
+        //Displaying selected image first
         viewPager.setCurrentItem(position);
+
+
     } //onCreate
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_image, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_image, menu);
+
+        if(!isIntentSafe){
+            //TODO: hide share button
+        }
+
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -57,11 +90,50 @@ public class ImageActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         switch (item.getItemId()) {
+            case R.id.action_share:
+
+                //Access Image from View
+                ImageView galleryImage = (ImageView)viewPager.findViewWithTag(viewPager.getCurrentItem());
+
+                // Get access to the URI for the bitmap
+                Uri bmpUri = FileHelper.getLocalBitmapUri(galleryImage);
+
+                //Create intent
+                Intent shareIntent = new Intent();
+
+                if(bmpUri != null){
+                    // Construct a ShareIntent with link to image
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+                    shareIntent.setType("image/*");
+
+                    //Check if any activities can handle the intent
+                    PackageManager packageManager = getPackageManager();
+                    List activities = packageManager.queryIntentActivities(shareIntent,
+                            PackageManager.MATCH_DEFAULT_ONLY);
+                    isIntentSafe = activities.size() > 0;
+
+                } else {
+                    //TODO: Hide share button
+                    Log.v(TAG, "bmpUri is null > problem loading photo");
+                }
+
+
+                if(isIntentSafe){
+                    // Launch sharing dialog for image
+                    startActivity(Intent.createChooser(shareIntent, "Share Image"));
+                } else {
+                    Log.v(TAG, "No apps to receive intent");
+                    //TODO: add message: Looks like you have no apps to share to
+                }
+
+                return true;
             case android.R.id.home:
                     finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 } //ImageActivity

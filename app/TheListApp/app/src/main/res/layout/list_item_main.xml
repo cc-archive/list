@@ -5,6 +5,7 @@
         android:layout_height="wrap_content"
         android:background="@color/app_white"
         android:height="72dp"
+        android:focusable="true"
         android:id="@+id/full_list_item">
 
         <RelativeLayout

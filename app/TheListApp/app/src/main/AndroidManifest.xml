@@ -5,6 +5,7 @@
     <!-- App Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Account Permissions -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -57,6 +58,8 @@
         <activity
             android:name=".activities.CategoryListActivity"
             android:label="@string/title_activity_category_list"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/ListThemeStatus"
             android:screenOrientation="portrait">
             <!--<meta-data-->
@@ -80,13 +83,15 @@
             android:label="@string/title_activity_random"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/ListThemeNoActionBar" >
+            android:theme="@style/ListThemeNoActionBar"
+            android:parentActivityName=".activities.MainActivity">
         </activity>
 
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/ListThemeStatus"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -98,7 +103,13 @@
             android:label="@string/title_activity_add_item"
             android:theme="@style/ListThemeStatus"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />

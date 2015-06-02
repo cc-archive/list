@@ -1,3 +1,22 @@
+/* The List powered by Creative Commons
+
+   Copyright (C) 2014, 2015 Creative Commons
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 package org.creativecommons.thelist.activities;
 
 import android.app.Activity;
@@ -9,7 +28,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +53,10 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,15 +68,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AddItemActivity extends ActionBarActivity {
+public class AddItemActivity extends AppCompatActivity {
     public static final String TAG = AddItemActivity.class.getSimpleName();
 
     private Context mContext;
+
+    //Helpers
     private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
+
     private Uri mMediaUri;
-    //protected Uri mLinkUri;
+    //protected Uri mLinkUri; //TODO: re-add when links become a thing
 
     //Spinner List
     List<SpinnerObject> mSpinnerList = new ArrayList<>();
@@ -83,12 +107,13 @@ public class AddItemActivity extends ActionBarActivity {
 
         mContext = this;
 
-        //Google Analytics Tracker
-        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-
         mCurrentUser = new ListUser(AddItemActivity.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
+
+        //Google Analytics Tracker
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
+
 
         //UI Elements
         mMakerItemProgressBar = (RelativeLayout) findViewById(R.id.makerItemProgressBar);
@@ -100,16 +125,29 @@ public class AddItemActivity extends ActionBarActivity {
         mStickyFooterContainer = (RelativeLayout) findViewById(R.id.sticky_footer_container);
         mDoneButton = (Button) findViewById(R.id.add_item_button);
 
-        //mOverlay = (FrameLayout) findViewById(R.id.add_item_overlay);
-
-        ArrayList<EditText> editList = new ArrayList<>();
-        editList.add(mItemNameField);
-        editList.add(mDescriptionField);
-
         mPhotoAdded = false;
 
+        //Get Intent if it exists
+        Intent receivedIntent = getIntent();
+        Log.v(TAG, receivedIntent.toString());
+
+        if(receivedIntent.getAction() != null){
+            String receivedAction = receivedIntent.getAction();
+            Uri receivedUri = (Uri)receivedIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+            if(receivedAction.equals(Intent.ACTION_SEND) && receivedUri != null){
+
+                Picasso.with(mContext).load(receivedUri).into(mAddImage);
+
+                mPhotoAdded = true;
+
+            } else {
+                mMessageHelper.showDialog(mContext, "Oops!", "There was a problem adding your image to suggestions");
+            }
+        }
+
         //Set Spinner Content
-        mRequestMethods.getCategories(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getCategories(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getCategories > onResponse: " + response);
@@ -137,7 +175,7 @@ public class AddItemActivity extends ActionBarActivity {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mCategorySpinner.setAdapter(adapter);
                 }
-            } //onSuccess
+            } //onAuthed
             @Override
             public void onFail(VolleyError error) {
                 Log.v(TAG, "getCategories > onFail: " + error.getMessage());
@@ -147,6 +185,7 @@ public class AddItemActivity extends ActionBarActivity {
             }
         });
 
+        //Get data when spinner selection made
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -162,7 +201,7 @@ public class AddItemActivity extends ActionBarActivity {
             }
         });
 
-        //Click Listener to get sample image
+        //Example image click listener
         mAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,6 +218,7 @@ public class AddItemActivity extends ActionBarActivity {
             }
         });
 
+        //Done Button Listener
         mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,25 +382,25 @@ public class AddItemActivity extends ActionBarActivity {
         } //switch
     } //onActivityResult
 
+    //Start Item Upload
     public void startItemUpload(final String title, final String description){ //TODO: re-add param: final Uri linkuri
         mCurrentUser.getAuthed(new ListUser.AuthCallback() {
             @Override
-            public void onSuccess(String authtoken) {
+            public void onAuthed(String authtoken) {
                 //mOverlay.setBackgroundColor(getResources().getColor(R.color.translucent_background));
                 mMakerItemProgressBar.setVisibility(View.VISIBLE);
 
                 //Disable button/editexts
-                mDoneButton.setEnabled(false);
-                mDescriptionField.setEnabled(false);
-                mItemNameField.setEnabled(false);
-                mCategorySpinner.setEnabled(false);
+                enableFields(false);
+
+                Uploader uploader = new Uploader(mContext);
 
                 //Add Item Request
-                mRequestMethods.addMakerItem(title, catId, description, mMediaUri,
-                        new RequestMethods.RequestCallback() {
+                uploader.addMakerItem(title, catId, description, mMediaUri,
+                        new NetworkUtils.RequestCallback() {
                             @Override
                             public void onSuccess() {
-                                //mMessageHelper.notifyUploadSuccess(title);
+                                Log.v(TAG, "addMakerItem > onSuccess");
 
                                 //Delay success response so user can process what’s going on
                                 new android.os.Handler().postDelayed(new Runnable() {
@@ -374,7 +414,7 @@ public class AddItemActivity extends ActionBarActivity {
                                         startActivity(intent);
                                     }
                                 }, 1500);
-                            } //onSuccess
+                            } //onAuthed
 
                             @Override
                             public void onFail() {
@@ -382,13 +422,43 @@ public class AddItemActivity extends ActionBarActivity {
                                 Toast.makeText(mContext,
                                         "Looks like there was a problem sending your request. Try again!",
                                         Toast.LENGTH_LONG).show();
+
                                 mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+                                //Enable button/editexts again
+                                enableFields(true);
+
                             } //onFail
+
+                            @Override
+                            public void onCancelled(NetworkUtils.CancelResponse response) {
+                                Log.v(TAG, "addMakerItem > onCancelled: " + response.toString());
+
+                                mMakerItemProgressBar.setVisibility(View.INVISIBLE);
+                                //Enable button/editexts again
+                                enableFields(true);
+
+                                switch (response) {
+                                    case NETWORK_ERROR:
+                                        mMessageHelper.networkFailMessage();
+                                        break;
+                                    case FILESIZE_ERROR:
+                                        mMessageHelper.photoUploadSizeFailMessage();
+                                        break;
+                                }
+                            }
                         });
-            }
+            } //onAuthed
+
         });
 
     } //startItemUpload
+
+    public void enableFields(boolean bol){
+        mDoneButton.setEnabled(bol);
+        mDescriptionField.setEnabled(bol);
+        mItemNameField.setEnabled(bol);
+        mCategorySpinner.setEnabled(bol);
+    }
 
     @Override
     public void onStart(){
@@ -400,6 +470,13 @@ public class AddItemActivity extends ActionBarActivity {
     public void onStop(){
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    //onBackPressed
+    @Override
+    public void onBackPressed() {
+        Intent homeIntent = new Intent(AddItemActivity.this, MainActivity.class);
+        startActivity(homeIntent);
     }
 
 

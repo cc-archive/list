@@ -21,6 +21,7 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,14 +31,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.ListApplication;
 
 public class ExplainerFragment extends Fragment {
     public static final String TAG = ExplainerFragment.class.getSimpleName();
+
+    private Context mContext;
 
     protected Button mNextButton;
     protected TextView mTextView;
@@ -51,6 +50,8 @@ public class ExplainerFragment extends Fragment {
     //Interface with Activity
     OnClickListener mCallback;
 
+    // --------------------------------------------------------
+
     //LISTENER
     public interface OnClickListener {
         public void onNextClicked();
@@ -63,28 +64,24 @@ public class ExplainerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        //Google Analytics Tracker
-//        Tracker t = ((ListApplication) getActivity().getApplication()).getTracker(
-//                ListApplication.TrackerName.GLOBAL_TRACKER);
-//
-//        t.setScreenName("Explainer Fragment");
-//        t.send(new HitBuilders.AppViewBuilder().build());
-
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_explainer, container, false);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mNextButton = (Button)getView().findViewById(R.id.nextButton);
-        mTextView = (TextView)getView().findViewById(R.id.explainer_text);
-        mImageView = (ImageView)getView().findViewById(R.id.explainer_image);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        explainerText = getActivity().getResources().getStringArray
+        mContext = getActivity();
+        Activity activity = getActivity();
+
+        //UI Elements
+        mNextButton = (Button) activity.findViewById(R.id.nextButton);
+        mTextView = (TextView) activity.findViewById(R.id.explainer_text);
+        mImageView = (ImageView) activity.findViewById(R.id.explainer_image);
+
+        explainerText = activity.getResources().getStringArray
                 (R.array.onboarding_explainers);
-        explainerButtonText = getActivity().getResources().getStringArray
+        explainerButtonText = activity.getResources().getStringArray
                 (R.array.onboarding_button_text);
 
         //TODO: if clickCount < array.length(), show next item in array else, send onNextClicked()
@@ -102,6 +99,12 @@ public class ExplainerFragment extends Fragment {
                 }
             }
         });
+
+    } //onActivityCreated
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public void setExplainerContent(){
@@ -132,4 +135,4 @@ public class ExplainerFragment extends Fragment {
         mCallback = null;
     }
 
-}
+} //ExplainerFragment

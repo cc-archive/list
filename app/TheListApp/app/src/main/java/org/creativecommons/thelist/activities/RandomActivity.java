@@ -44,6 +44,7 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -55,33 +56,34 @@ import java.util.List;
 
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
-    protected Context mContext;
+
+    private Context mContext;
 
     //Helper Methods
-    RequestMethods mRequestMethods;
-    SharedPreferencesMethods mSharedPref;
-    MessageHelper mMessageHelper;
-    ListUser mCurrentUser;
+    private ListUser mCurrentUser;
+    private MessageHelper mMessageHelper;
+    private RequestMethods mRequestMethods;
+    private SharedPreferencesMethods mSharedPref;
 
     //Handle Data
-    protected JSONArray mRandomItemData;
-    protected JSONObject mListItemData;
-    String mMakerName;
-    String mItemName;
-    String mItemID;
-    String mCategoryID;
+    private JSONArray mRandomItemData;
+    private JSONObject mListItemData;
+    private String mMakerName;
+    private String mItemName;
+    private String mItemID;
+    private String mCategoryID;
 
     private List<UserListItem> mItemList;
 
     int itemPositionCount = 0;
 
     //UI Elements
-    AutoResizeTextView mTextView;
-    ProgressBar mProgressBar;
-    Button mDoneButton;
-    ImageButton mYesButton;
-    ImageButton mNoButton;
-    RelativeLayout mBackground;
+    private AutoResizeTextView mTextView;
+    private ProgressBar mProgressBar;
+    private Button mDoneButton;
+    private ImageButton mYesButton;
+    private ImageButton mNoButton;
+    private RelativeLayout mBackground;
 
     // --------------------------------------------------------
 
@@ -89,11 +91,13 @@ public class RandomActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random);
+
         mContext = this;
+
+        mCurrentUser = new ListUser(RandomActivity.this);
+        mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
-        mMessageHelper = new MessageHelper(mContext);
-        mCurrentUser = new ListUser(RandomActivity.this);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
@@ -106,12 +110,11 @@ public class RandomActivity extends Activity {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mDoneButton = (Button) findViewById(R.id.doneButton);
 
-
         mYesButton = (ImageButton) findViewById(R.id.YesButton);
         mNoButton = (ImageButton) findViewById(R.id.NoButton);
         //ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton);
 
-        mRequestMethods.getRandomItems(new RequestMethods.ResponseCallback() {
+        mRequestMethods.getRandomItems(new NetworkUtils.ResponseCallback() {
             @Override
             public void onSuccess(JSONArray response) {
                 Log.v(TAG, "> getRandomListItems > onSuccess: " + response);
@@ -154,7 +157,7 @@ public class RandomActivity extends Activity {
                 //If logged in, add item to user’s list right away
                 if (!(mCurrentUser.isTempUser())) {
                     Log.v(TAG, "> isTempUser, user is logged in");
-                    mCurrentUser.addItemToUserList(mItemID);
+                    mRequestMethods.addItemToUserList(mItemID);
                 }
                 //Display a new item
                 updateView();

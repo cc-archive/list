@@ -1,3 +1,22 @@
+/* The List powered by Creative Commons
+
+   Copyright (C) 2014, 2015 Creative Commons
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 package org.creativecommons.thelist.fragments;
 
 import android.app.Activity;
@@ -5,11 +24,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +40,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,12 +63,13 @@ import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.MaterialInterpolator;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
+import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,25 +82,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MyListFragment extends android.support.v4.app.Fragment {
+public class MyListFragment extends Fragment {
     public static final String TAG = MyListFragment.class.getSimpleName();
-    protected Context mContext;
+    private Context mContext;
 
     //Helper Methods
-    RequestMethods mRequestMethods;
-    SharedPreferencesMethods mSharedPref;
-    MessageHelper mMessageHelper;
-    ListUser mCurrentUser;
+    private RequestMethods mRequestMethods;
+    private SharedPreferencesMethods mSharedPref;
+    private MessageHelper mMessageHelper;
+    private ListUser mCurrentUser;
 
-    protected UserListItem mCurrentItem;
-    protected int activeItemPosition;
+    //Item Management
+    private UserListItem mCurrentItem;
+    private int activeItemPosition;
 
-    protected UserListItem mItemToBeUploaded;
-    protected int uploadItemPosition;
+    private UserListItem mItemToBeUploaded;
+    private int uploadItemPosition;
 
-    protected UserListItem mLastDismissedItem;
-    protected int lastDismissedItemPosition;
-    protected Uri mMediaUri;
+    private UserListItem mLastDismissedItem;
+    private int lastDismissedItemPosition;
+    private Uri mMediaUri;
 
     //RecyclerView
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -92,7 +114,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     //Upload Elements
     private RelativeLayout mUploadProgressBarContainer;
     private TextView mUploadText;
-    long totalSize;
 
     //UI Elements
     private Menu menu;
@@ -107,7 +128,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,17 +140,16 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        Activity activity = getActivity();
+
+        //Helpers
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(getActivity());
 
-        Activity activity = getActivity();
-
-        snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
-
         //Load UI Elements
-        totalSize = 0;
+        snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
         mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
         mUploadProgressBarContainer = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
         //mUploadProgressBar = (com.gc.materialdesign.views.ProgressBarDeterminate) activity.findViewById(R.id.upload_progress);
@@ -147,7 +166,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                if(!mRequestMethods.isNetworkAvailable()){
+                if(!NetworkUtils.isNetworkAvailable(mContext)){
                     mMessageHelper.toastNeedInternet();
                     return;
                 }
@@ -170,6 +189,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         mFeedAdapter = new UserListAdapter(mContext, mItemList);
         mRecyclerView.setAdapter(mFeedAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         initRecyclerView();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -255,12 +275,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         if(!mFab.isVisible()){
             mFab.show();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFab.setEnabled(true);
-            }
-        }, 500);
 
         if(mItemToBeUploaded != null && mRequestMethods.isNetworkAvailable()){
             return;
@@ -291,7 +305,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
         if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
 
-            mRequestMethods.getUserItems(new RequestMethods.UserListCallback() {
+            mRequestMethods.getUserItems(new NetworkUtils.UserListCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
                     Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
@@ -305,7 +319,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
                                 UserListItem listItem = new UserListItem();
                                 listItem.setItemName
-                                        (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
+                                        (mMessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID
@@ -314,7 +328,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                             } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
                                 UserListItem listItem = new UserListItem();
                                 listItem.setItemName
-                                        (capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
+                                        (mMessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID
@@ -351,6 +365,10 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 @Override
                 public void onFail(VolleyError error) {
                     Log.d(TAG , "> getUserItems > onFail: " + error.toString());
+                    //mMessageHelper.loadUserItemsFailMessage();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mEmptyView.setText("Problem loading your list items.\nPlease try again.");
+                    mEmptyView.setVisibility(View.VISIBLE);
                 }
                 @Override
                 public void onUserOffline(List<UserListItem> response) {
@@ -461,7 +479,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                     //What happens when item is swiped offscreen
                     mItemList.remove(mLastDismissedItem);
-                    mCurrentUser.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
+                    mRequestMethods.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
 
                     // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
                     mFeedAdapter.notifyDataSetChanged();
@@ -518,17 +536,18 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                 //What happens when item is swiped offscreen
                                 mItemList.add(0, mLastDismissedItem);
                                 //re-add item to user’s list in DB
-                                mCurrentUser.addItemToUserList(mLastDismissedItem.getItemID());
+                                mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
                                 mFeedAdapter.notifyDataSetChanged();
                                 mLayoutManager.scrollToPosition(0);
                                 mFab.show();
                             }
                         }) //action button’s listener
                         .eventListener(new EventListener() {
-                            Interpolator interpolator = new MaterialInterpolator();
+//                            Interpolator interpolator = new MaterialInterpolator();
 
                             @Override
                             public void onShow(Snackbar snackbar) {
+                                //TODO: do we need animations for snackbar still?
 //                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
 //                                        -snackbar.getHeight());
 //                                tsa.setInterpolator(interpolator);
@@ -549,7 +568,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                             @Override
                             public void onDismiss(Snackbar snackbar) {
-
+                                //TODO: see above
 //                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
 //                                        -snackbar.getHeight(), 0);
 //                                tsa2.setInterpolator(interpolator);
@@ -580,7 +599,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 , snackbarContainer);
     } //showItemDeletionSnackbar
 
-    public void showPhotoUploadSnackbar(String text, String actiontext, ActionClickListener listener){
+    public void showPhotoUploadSnackbar(final String text, String actiontext, ActionClickListener listener){
 
         mFab.setEnabled(false);
 
@@ -591,9 +610,9 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         .actionColor(getResources().getColor(R.color.colorSecondary))
                         .actionLabel(actiontext.toUpperCase())
                         .actionListener(listener)
-                        //action button’s listener
+                                //action button’s listener
                         .eventListener(new EventListener() {
-                            Interpolator interpolator = new MaterialInterpolator();
+//                            Interpolator interpolator = new MaterialInterpolator();
 
                             @Override
                             public void onShow(Snackbar snackbar) {
@@ -637,6 +656,20 @@ public class MyListFragment extends android.support.v4.app.Fragment {
 
                             @Override
                             public void onDismissed(Snackbar snackbar) {
+                                //Messager Helper: check messages
+
+                                if (text.equals("Photo Uploaded")) {
+                                    mMessageHelper.getUserMessaging();
+                                }
+
+                                if (text.equals("Upload Failed")) {
+                                    //TODO: return item to the top of the stack
+                                    //TODO: don’t do this if items are returned with errors from API
+                                    mItemToBeUploaded.setError(true);
+                                    mItemList.add(0, mItemToBeUploaded);
+                                    mFeedAdapter.notifyDataSetChanged();
+                                }
+
                                 //If fab is hidden (bug fix?)
                                 if (!mFab.isVisible()) {
                                     mFab.show();
@@ -645,6 +678,15 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         }) //event listener
                 , snackbarContainer);
     } //showPhotoUploadSnackbar
+
+    public void showUploadCancelledSnackbar(){
+        SnackbarManager.show(
+                //also includes duration: SHORT, LONG, INDEFINITE
+                Snackbar.with(mContext.getApplicationContext())
+                        .text("Upload Cancelled") //text to display
+                , snackbarContainer);
+    } //showUploadCancelledSnackbar
+
 
 
     //----------------------------------------------
@@ -656,11 +698,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
-                    if(!mRequestMethods.isNetworkAvailable()){
-                        mMessageHelper.toastNeedInternet();
-                        return;
-                    }
 
                     switch(which) {
                         case 0:
@@ -728,12 +765,7 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                 //Check if external storage is available
                 private boolean isExternalStorageAvailable() {
                     String state = Environment.getExternalStorageState();
-                    if (state.equals(Environment.MEDIA_MOUNTED)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    return (state.equals(Environment.MEDIA_MOUNTED)); //boolean
                 }
             };
 
@@ -756,17 +788,38 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                         mMediaUri = data.getData();
                     }
 
-                    Log.v(TAG,"Media URI:" + mMediaUri);
+                    Log.v(TAG, "Media URI:" + mMediaUri);
 
-
-
-                    //TODO: make sure for sure auth will exist for this to happen
                     //Add photo to the Gallery (listen for broadcast and let gallery take action)
-                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    final Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                     mediaScanIntent.setData(mMediaUri);
                     getActivity().sendBroadcast(mediaScanIntent);
 
-                    startPhotoUpload();
+                    final Resources res = getResources();
+                    final String [] choices = res.getStringArray(R.array.single_choice_terms_array);
+
+                    //TODO: get confirmation of terms
+                    mMessageHelper.showSingleChoiceDialog(mContext, res.getString(R.string.single_choice_terms_title),
+                            res.getString(R.string.single_choice_terms_content),
+                            choices,
+                            new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection (MaterialDialog materialDialog, View view,
+                                                            int i,CharSequence charSequence) {
+
+                                    if(charSequence == (choices[0])){
+                                        //Positive response
+                                        startPhotoUpload();
+
+                                    } else {
+                                        //Negative response
+                                        showUploadCancelledSnackbar();
+                                    }
+
+                                    return true;
+                                }
+                    });
+
                 } //RESULT OK
                 else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
                     //Toast.makeText(this, R.string.general_error, Toast.LENGTH_SHORT).show();
@@ -784,9 +837,9 @@ public class MyListFragment extends android.support.v4.app.Fragment {
     public void startPhotoUpload(){
 
         if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
-            mCurrentUser.getToken(new ListUser.AuthCallback() { //getToken
+            mCurrentUser.getToken(new ListUser.TokenCallback() { //getToken
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
 
                     mItemList.remove(mItemToBeUploaded);
@@ -798,8 +851,8 @@ public class MyListFragment extends android.support.v4.app.Fragment {
             mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewAccount
                         @Override
-                        public void onSuccess(String authtoken) {
-                            Log.d(TAG, "> addNewAccount > onSuccess, authtoken: " + authtoken);
+                        public void onAuthed(String authtoken) {
+                            Log.d(TAG, "> addNewAccount > onAuthed, authtoken: " + authtoken);
                             try {
                                 mItemList.remove(mItemToBeUploaded);
                                 mFeedAdapter.notifyDataSetChanged();
@@ -808,95 +861,101 @@ public class MyListFragment extends android.support.v4.app.Fragment {
                                 Log.d(TAG,"addAccount > " + e.getMessage());
                             }
                         }
+
                     });
         }
-
     } //startPhotoUpload
 
     public void performPhotoUpload(){
         //Set upload count
         int uploadCount = mSharedPref.getUploadCount();
-        mSharedPref.setUploadCount(uploadCount+1);
+        mSharedPref.setUploadCount(uploadCount + 1);
 
         //mUploadText.setText("Uploading " + mItemToBeUploaded.getItemName() + "…");
         mUploadProgressBarContainer.setVisibility(View.VISIBLE);
-
 
         //Hide progress bar if it takes too much time to upload
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
+                if (mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
                     mUploadProgressBarContainer.setVisibility(View.GONE);
                 }
             }
         }, 3000);
 
-        mRequestMethods.uploadPhoto(mItemToBeUploaded.getItemID(), mMediaUri,
-                new RequestMethods.RequestCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "On Photo Upload Success");
+        Uploader uploader = new Uploader(mContext);
+        uploader.uploadPhoto(mItemToBeUploaded, mMediaUri, new NetworkUtils.UploadResponse() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "uploadPhoto > onSuccess");
 
-                        //TODO: replace with upload bar notification
-                        //mMessageHelper.notifyUploadSuccess(mItemToBeUploaded.getItemName());
+                //TODO: add upload notification bar (below actionbar)
 
-                        displayUserItems();
-                        mUploadProgressBarContainer.setVisibility(View.GONE);
+                displayUserItems();
 
-                        //Show snackbar confirmation
-                        mItemToBeUploaded = null;
+                mUploadProgressBarContainer.setVisibility(View.GONE);
+                mItemToBeUploaded = null;
 
-                        showPhotoUploadSnackbar("Photo Uploaded",
-                                "dismiss", new ActionClickListener() {
-                                    @Override
-                                    public void onActionClicked(Snackbar snackbar) {
-                                        mFab.setEnabled(false);
-                                        snackbar.dismiss();
-
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                mFab.show();
-                                                mFab.setEnabled(true);
-                                            }
-                                        }, 500);
-                                    }
-                                });
-
-                    } //onSuccess
-                    @Override
-                    public void onFail() {
-                        Log.d(TAG, "On Photo Upload Fail");
-
-                        //TODO: replace with upload bar notification
-                        //mMessageHelper.notifyUploadFail(mItemToBeUploaded.getItemName());
-
-                        new Handler().postDelayed(new Runnable() {
+                //Show snackbar confirmation
+                //TODO: check if we actually need to disable fab
+                showPhotoUploadSnackbar("Photo Uploaded",
+                        "dismiss", new ActionClickListener() {
                             @Override
-                            public void run() {
-                                mUploadProgressBarContainer.setVisibility(View.GONE);
-                                displayUserItems();
-                                //TODO: add visual indication that item failed
-                            }
-                        }, 500);
+                            public void onActionClicked(Snackbar snackbar) {
+                                mFab.setEnabled(false);
+                                snackbar.dismiss();
 
-                        //Show snackbar confirmation
-                        showPhotoUploadSnackbar("Upload failed",
-                                "retry", new ActionClickListener() {
+                                new Handler().postDelayed(new Runnable() {
                                     @Override
-                                    public void onActionClicked(Snackbar snackbar) {
-                                        performPhotoUpload();
+                                    public void run() {
+                                        mFab.show();
+                                        mFab.setEnabled(true);
                                     }
-                                });
-                    } //onFail
+                                }, 500);
+                            }
+                        });
+            } //onSuccess
+            @Override
+            public void onFail() {
+                Log.d(TAG, "uploadPhoto > onFail");
+
+                //TODO: add upload notification bar (below actionbar)
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mUploadProgressBarContainer.setVisibility(View.GONE);
+                        displayUserItems();
+                    }
+                }, 500);
+
+                //Show snackbar confirmation
+                showPhotoUploadSnackbar("Upload failed",
+                        "retry", new ActionClickListener() {
+                            @Override
+                            public void onActionClicked(Snackbar snackbar) {
+                                performPhotoUpload();
+                            }
+                        });
+            } //onFail
+            @Override
+            public void onCancelled(NetworkUtils.CancelResponse response) {
+                Log.v(TAG, "uploadPhoto > onCancelled: " + response.toString());
+
+                mUploadProgressBarContainer.setVisibility(View.GONE);
+
+                switch(response) {
+                    case NETWORK_ERROR:
+                        mMessageHelper.networkFailMessage();
+                        break;
+                    case FILESIZE_ERROR:
+                        mMessageHelper.photoUploadSizeFailMessage();
+                        break;
+                }
+            }
         });
     } //performPhotoUpload
-
-    //Helper Methods
-    public static String capitalize(final String line) {
-        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
-    }
 
     @Override
     public void onPause() {
@@ -904,5 +963,6 @@ public class MyListFragment extends android.support.v4.app.Fragment {
         mSharedPref.saveOfflineUserList(mItemList);
         super.onPause();
     }
+
 
 } //MyListFragment

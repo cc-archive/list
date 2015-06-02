@@ -5,7 +5,6 @@
         <item name="background">@color/colorPrimaryLight</item>
     </style>
 
-
     <!--Button-->
     <style name="ButtonStyle" parent="android:Widget.Button">
         <item name="android:layout_width">wrap_content</item>
@@ -16,11 +15,12 @@
         <item name="android:paddingRight">4dp</item>
         <item name="android:layout_marginTop">@dimen/button_padding_vertical_material</item>
         <item name="android:layout_marginBottom">@dimen/button_padding_vertical_material</item>
+        <item name="android:textColor">@color/app_white</item>
     </style>
 
     <!--CheckBox-->
     <style name="CheckBoxStyle" parent="android:Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/btn_check</item>
+        <!--<item name="android:button">@drawable/btn_check</item>-->
         <!--TODO: make icons in colorPrimary-->
     </style>
 
@@ -34,7 +34,7 @@
         <item name="android:background">@color/primary_material_dark</item>
         <item name="android:height">@dimen/snackbar_height_single</item>
         <item name="android:textColor">@color/primary_text_default_material_dark</item>
-        <item name="android:textAppearance">@style/text_body2</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
     </style>

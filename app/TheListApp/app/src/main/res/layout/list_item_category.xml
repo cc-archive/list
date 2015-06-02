@@ -8,6 +8,7 @@
         android:minHeight="180dp">
     <ImageView
         android:id="@+id/category_checkmark"
+        android:visibility="invisible"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/triangle"
@@ -21,7 +22,7 @@
         <TextView android:id="@+id/category_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/text_body2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/primary_text_default_material_dark"
             android:maxLines="2"
             android:text="hello"

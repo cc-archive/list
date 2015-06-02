@@ -43,6 +43,7 @@ import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
 import org.creativecommons.thelist.utils.RequestMethods;
 import org.json.JSONArray;
@@ -55,10 +56,11 @@ import java.util.Collections;
 public class GalleryFragment extends Fragment {
     public static final String TAG = GalleryFragment.class.getSimpleName();
 
-    Context mContext;
+    private Context mContext;
+
+    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
-    private ListUser mCurrentUser;
 
     //UI Elements
     private TextView mEmptyView;
@@ -109,15 +111,16 @@ public class GalleryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mContext = getActivity();
+        Activity activity = getActivity();
+
+        //Helpers
         mCurrentUser = new ListUser(mContext);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
 
-        Activity activity = getActivity();
-
         //UI Elements
-        mEmptyView = (TextView)getActivity().findViewById(R.id.empty_gallery_label);
-        mProgressBar = (ProgressBar)getActivity().findViewById(R.id.gallery_progressBar);
+        mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
+        mProgressBar = (ProgressBar) activity.findViewById(R.id.gallery_progressBar);
 
         //RecyclerView
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.gallerySwipeRefresh);
@@ -128,6 +131,7 @@ public class GalleryFragment extends Fragment {
         mGalleryAdapter = new GalleryAdapter(mContext, mPhotoList);
         mRecyclerView.setAdapter(mGalleryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
+
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -140,14 +144,6 @@ public class GalleryFragment extends Fragment {
 
                         mCallback.viewImage(mPhotoList, position);
 
-                        //Create list of image urls to pass to viewPager
-//                        ArrayList<String> urls = new ArrayList<>();
-//
-//                        for(int i = 0; i < mPhotoList.size(); i++){
-//                            GalleryItem singlePhoto = mPhotoList.get(i);
-//                            urls.add(singlePhoto.getUrl() + "/800");
-//                        }
-//                        mCallback.viewImage(urls, position);
                     }
                 }));
 
@@ -170,10 +166,10 @@ public class GalleryFragment extends Fragment {
 
     public void refreshItems(){
         if(!mCurrentUser.isTempUser()){
-            mRequestMethods.getUserPhotos(new RequestMethods.ResponseCallback() {
+            mRequestMethods.getUserPhotos(new NetworkUtils.ResponseCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {
-                    Log.v(TAG, " > getUserPhotos > onSuccess" + response.toString());
+                    Log.v(TAG, " > getUserPhotos > onAuthed" + response.toString());
                     mPhotoList.clear();
 
                     for(int i = 0; i < response.length(); i++){
@@ -218,6 +214,9 @@ public class GalleryFragment extends Fragment {
                 @Override
                 public void onFail(VolleyError error) {
                     Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mEmptyView.setText("Problem loading your photos.\nTry reloading the page!");
+                    mEmptyView.setVisibility(View.VISIBLE);
                 }
             });
         } else {

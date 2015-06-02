@@ -10,8 +10,8 @@ android {
         applicationId "org.creativecommons.thelist"
         minSdkVersion 11
         targetSdkVersion 22
-        versionCode 3
-        versionName "2.0"
+        versionCode 4
+        versionName "3.0"
     }
     buildTypes {
         release {
@@ -45,4 +45,5 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:1.2.2'
     compile 'com.github.chrisbanes.photoview:library:1.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.loopj.android:android-async-http:1.4.5'
 }

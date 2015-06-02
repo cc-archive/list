@@ -23,29 +23,67 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.VolleyError;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
+import org.json.JSONArray;
 
+import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MessageHelper {
     public static final String TAG = RequestMethods.class.getSimpleName();
-    protected Context mContext;
+
+    private Context mContext;
+    private Resources res;
+
+    //Make Users feel special
+    private String [] gratitudeMessages;
+    private Random random = new Random();
+
+    public static final Integer[] MESSAGE_INTERVALS = new Integer[]{5, 10, 15, 20, 25};
 
     //Notifications
     final AtomicInteger notificationID = new AtomicInteger(0);
     public static final String INTENT_ACTION = "OPEN_GALLERY";
 
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mBuilder;
+
     //Set Context
     public MessageHelper(Context mc) {
         mContext = mc;
+
+        //Gratitude Message Strings
+        res = mContext.getResources();
+        gratitudeMessages = res.getStringArray(R.array.gratitude_messages);
+
+        //Notifications
+        mNotifyManager = (NotificationManager) mc.getSystemService(Context.NOTIFICATION_SERVICE);
     }
+
+    // --------------------------------------------------------
+    // HELPERS
+    // --------------------------------------------------------
+
+
+    //Helper Methods
+    public static String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
+
+    // --------------------------------------------------------
+    // DIALOGS GENERIC
+    // --------------------------------------------------------
 
     //Generic Dialog
     public void showDialog(Context context, String title, String message){
@@ -94,15 +132,20 @@ public class MessageHelper {
     } //Single Input Dialog
 
     //Single Choice Dialog
-    public void showSingleChoiceDialog(Context context, String title, String[] items,
+    public void showSingleChoiceDialog(Context context, String title, String content, String[] items,
                                        MaterialDialog.ListCallbackSingleChoice callback){
         new MaterialDialog.Builder(context)
                 .title(title)
+                .content(content)
                 .items(items)
                 .itemsCallbackSingleChoice(-1, callback)
-                //.positiveText(context.getString(R.string.single_choice_text))
+                .positiveText(context.getString(R.string.single_choice_text))
                 .show();
     } //showSingleChoiceDialog
+
+    // --------------------------------------------------------
+    // NOTIFICATIONS GENERIC
+    // --------------------------------------------------------
 
     //Send Android System Notifications
     public void sendNotification(Context context, String title, String message, String ticker){
@@ -147,6 +190,11 @@ public class MessageHelper {
                 mContext.getString(R.string.error_network_message));
     }
 
+    public void loadUserItemsFailMessage(){
+        showDialog(mContext, mContext.getString(R.string.error_network_title),
+                mContext.getString(R.string.error_load_message));
+    }
+
 
     // --------------------------------------------------------
     // LIST ITEM MESSAGES
@@ -173,6 +221,17 @@ public class MessageHelper {
 
     //NOTIFICATIONS
 
+//    public void createUploadNotification(){
+//
+//        //Start notification
+//        mNotifyManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+//        mBuilder = new NotificationCompat.Builder(mContext);
+//        mBuilder.setContentTitle("Download")
+//                .setContentText("Download in progress")
+//                .setSmallIcon(R.drawable.ic_camera_alt_white_24dp);
+//    }
+
+
     public void notifyUploadSuccess(String itemName){
         sendNotification(mContext, "The List",
                 itemName + " has been uploaded successfully!",
@@ -194,7 +253,6 @@ public class MessageHelper {
     }
 
     //DIALOGS
-
     public void photoUploadNetworkFailMessage(){
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_network),
                 mContext.getString(R.string.upload_failed_text_network));
@@ -220,7 +278,51 @@ public class MessageHelper {
                 Toast.LENGTH_SHORT).show();
     }
 
+    // --------------------------------------------------------
+    // MAKE USERS FEEL SPECIAL MESSAGES
+    // --------------------------------------------------------
+
+    public void makerUsersFeelAllSpecialAndWhatNot(int count){
+        String title = String.format(res.getString(R.string.gratitude_title), String.valueOf(count));
+
+        int randomIndex = random.nextInt(gratitudeMessages.length);
+        String message = (gratitudeMessages[randomIndex]);
+
+        showDialog(mContext, title, message);
+    }
 
 
+    //User Messaging
+    public void getUserMessaging(){
+        RequestMethods mRequestMethods = new RequestMethods(mContext);
+
+        //make request and do something based on user stats
+        mRequestMethods.getUserProfile(new NetworkUtils.ResponseCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                //TODO: check if message should be displayed based on user stats
+                //what are the rules for this? Only 1 message per “run” of this? What is the priority level of each type of message?
+                //For now: achievement gets top priority (uploadCount)
+
+                //TODO: get upload count
+                int uploadCount = response.length();
+                Log.v(TAG, "USER UPLOAD COUNT: " + String.valueOf(uploadCount));
+
+                if (Arrays.asList(MESSAGE_INTERVALS).contains(uploadCount)) {
+                    makerUsersFeelAllSpecialAndWhatNot(uploadCount);
+
+                    return;
+                }
+
+                //TODO: include other values in the check:
+
+            }
+
+            @Override
+            public void onFail(VolleyError error) {
+
+            }
+        });
+    } //userMessaging
 
 } //MessageHelper

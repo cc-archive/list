@@ -45,6 +45,7 @@ public class UserListItem {
 
     private Context mContext;
     private Activity mActivity;
+
     private MyListFragment myListFragment;
     private MessageHelper mMessageHelper;
 
@@ -61,53 +62,53 @@ public class UserListItem {
         this.progress = false;
     }
 
-    public String getItemID() {
-        return itemID;
-    }
-
     public void setItemID(String id) {
         this.itemID = id;
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getItemID() {
+        return itemID;
     }
 
     public void setItemName(String name) {
         this.itemName = name;
     }
 
-    public String getMakerName() {
-        return makerName;
+    public String getItemName() {
+        return itemName;
     }
 
     public void setMakerName(String maker) {
         this.makerName = maker;
     }
 
-    public boolean getError(){
-        return error;
+    public String getMakerName() {
+        return makerName;
     }
 
     public void setError(boolean bol){
         this.error = bol;
     }
 
-    public boolean getProgress(){
-        return progress;
+    public boolean getError(){
+        return error;
     }
 
     public void setProgress(boolean bol){
         this.progress = bol;
     }
 
-    public String getCategoryID(){
-        return categoryID;
-
+    public boolean getProgress(){
+        return progress;
     }
 
     public void setCategoryID(String id){
         categoryID = id;
+    }
+
+    public String getCategoryID(){
+        return categoryID;
+
     }
 
     public void setContext(Context c) {
@@ -138,7 +139,7 @@ public class UserListItem {
                     //Handle Data
                     try {
                         JSONObject jsonObject = response.getJSONObject(0);
-                        setItemName(MyListFragment.capitalize(jsonObject.getString(ApiConstants.ITEM_NAME)));
+                        setItemName(MessageHelper.capitalize(jsonObject.getString(ApiConstants.ITEM_NAME)));
                         setMakerName(jsonObject.getString(ApiConstants.MAKER_NAME));
                         setItemID(String.valueOf(jsonObject.getInt(ApiConstants.ITEM_ID)));
                         //Log.v("ITEM ADDED NAME: ", getItemName());

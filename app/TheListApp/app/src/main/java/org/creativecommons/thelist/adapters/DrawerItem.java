@@ -17,7 +17,6 @@
 
 */
 
-
 package org.creativecommons.thelist.adapters;
 
 public class DrawerItem {
@@ -32,21 +31,19 @@ public class DrawerItem {
         this.icon = icon;
     }
 
-    public String getItemName() {
-        return itemName;
-    }
-
     public void setItemName(String name) {
         this.itemName = name;
     }
 
-    public int getIcon() {
-        return icon;
+    public String getItemName() {
+        return itemName;
     }
 
     public void setIcon(int icon) {
         this.icon = icon;
     }
 
-
+    public int getIcon() {
+        return icon;
+    }
 } //DrawerItem

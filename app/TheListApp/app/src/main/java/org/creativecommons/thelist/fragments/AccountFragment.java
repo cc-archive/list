@@ -21,7 +21,7 @@ package org.creativecommons.thelist.fragments;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -47,12 +47,23 @@ import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_US
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends android.support.v4.app.Fragment {
+public class AccountFragment extends Fragment {
     public static final String TAG = AccountFragment.class.getSimpleName();
 
     private Context mContext;
     private Activity mActivity;
+
+    //Helpers
     private MessageHelper mMessageHelper;
+
+    //UI Elements
+    private Button cancelButton;
+    private Button loginButton;
+    private Button signUpButton;
+    private EditText accountEmailField;
+    private EditText accountPasswordField;
+    private TextView newAccountButton;
+
 
     //private final int REQ_SIGNUP = 1;
     private String mAuthTokenType;
@@ -97,13 +108,9 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 
         mContext = getActivity();
         mActivity = getActivity();
+
         mMessageHelper = new MessageHelper(mContext);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         //Get account information
         String accountName = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         final String accountType = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
@@ -112,17 +119,19 @@ public class AccountFragment extends android.support.v4.app.Fragment {
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
 
         if (accountName != null) {
-            ((EditText) getView().findViewById(R.id.accountName)).setText(accountName);
+            ((EditText) mActivity.findViewById(R.id.accountName)).setText(accountName);
         }
 
         //UI Elements
-        final Button cancelButton = (Button) mActivity.findViewById(R.id.cancelButton);
-        final Button loginButton = (Button) mActivity.findViewById(R.id.loginButton);
-        final Button signUpButton = (Button) mActivity.findViewById(R.id.signUpButton);
-        final EditText accountEmailField = (EditText)mActivity.findViewById(R.id.accountName);
-        final EditText accountPasswordField = (EditText)mActivity.findViewById(R.id.accountPassword);
-            accountPasswordField.setTypeface(Typeface.DEFAULT);
-        final TextView newAccountButton = (TextView) mActivity.findViewById(R.id.signUp);
+        cancelButton = (Button) mActivity.findViewById(R.id.cancelButton);
+        loginButton = (Button) mActivity.findViewById(R.id.loginButton);
+        signUpButton = (Button) mActivity.findViewById(R.id.signUpButton);
+
+        accountEmailField = (EditText)mActivity.findViewById(R.id.accountName);
+        accountPasswordField = (EditText)mActivity.findViewById(R.id.accountPassword);
+        accountPasswordField.setTypeface(Typeface.DEFAULT);
+
+        newAccountButton = (TextView) mActivity.findViewById(R.id.signUp);
 
         //Try Login on Click
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -140,8 +149,8 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                         mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
                                 new ListUser.AuthCallback() {
                                     @Override
-                                    public void onSuccess(String authtoken) {
-                                        Log.v(TAG, "> userSignIn > onSuccess :" + authtoken);
+                                    public void onAuthed(String authtoken) {
+                                        Log.v(TAG, "> userSignIn > onAuthed :" + authtoken);
 
                                         //TODO: authtoken stuff
                                         Bundle data = new Bundle();
@@ -156,7 +165,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
                                     }
                                 });
                     } catch (Exception e) {
-                        Log.d("LoginFragment", e.getMessage());
+                        Log.d(TAG, e.getMessage());
                         //data.putString(KEY_ERROR_MESSAGE, e.getMessage());
                     }
                 }
@@ -167,23 +176,6 @@ public class AccountFragment extends android.support.v4.app.Fragment {
         if(newAccountButton != null) {
             newAccountButton.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        //TODO: hide loginButton and show signUpButton
-//        newAccountButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                //loginButton.setVisibility(View.GONE);
-//                //signUpButton.setVisibility(View.VISIBLE);
-//            }
-//        });
-
-        //Cancel Activity
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onCancelLogin();
-            }
-        });
 
         //TODO: do when we have register user
 //        signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +194,7 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //                    try {
 //                        mCurrentUser.userSignUp(accountEmail, accountPassword, mAuthTokenType, new ListUser.AuthCallback() {
 //                            @Override
-//                            public void onSuccess(String authtoken) {
+//                            public void onAuthed(String authtoken) {
 //
 //                                Bundle data = new Bundle();
 //
@@ -221,5 +213,20 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 //            }
 //        });
 
+        //Cancel Activity
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onCancelLogin();
+            }
+        });
+
+    } //onResume
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }//onResume
+
 }//LoginFragment

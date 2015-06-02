@@ -18,7 +18,6 @@
 
     <ProgressBar
             style="?android:attr/progressBarStyleLarge"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/gallery_progressBar"

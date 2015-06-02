@@ -1,3 +1,22 @@
+/* The List powered by Creative Commons
+
+   Copyright (C) 2014, 2015 Creative Commons
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 package org.creativecommons.thelist.activities;
 
 import android.accounts.Account;
@@ -15,9 +34,9 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.fragments.AccountFragment;
-import org.creativecommons.thelist.fragments.TermsFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.io.UnsupportedEncodingException;
@@ -32,23 +51,23 @@ import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.gen
 
 
 public class AccountActivity extends org.creativecommons.thelist.authentication.AccountAuthenticatorActivity
-        implements AccountFragment.AuthListener, TermsFragment.TermsClickListener {
-    private final String TAG = this.getClass().getSimpleName();
-    Context mContext;
+        implements AccountFragment.AuthListener {
+    private final String TAG = AccountActivity.class.getSimpleName();
 
+    private Context mContext;
+
+    //Helpers
     private AccountManager mAccountManager;
-    private String mAuthTokenType;
     private ListUser mCurrentUser;
+    private RequestMethods mRequestMethods;
     private SharedPreferencesMethods mSharedPref;
+
+    private String mAuthTokenType;
     private Bundle newUserBundle;
 
     //UI Elements
-    FrameLayout mFrameLayout;
-    EditText mPasswordTextField;
-
-    //Fragments
-    //TODO: agree to terms
-    //TermsFragment termsFragment = new TermsFragment();
+    private FrameLayout mFrameLayout;
+    private EditText mPasswordTextField;
 
     // --------------------------------------------------------
 
@@ -56,9 +75,12 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
         mContext = this;
+
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
+        mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
@@ -141,7 +163,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 sharedPref.saveKey(key.toString());
 
                 //Add items chosen before login to userlist
-                mCurrentUser.addSavedItemsToUserList();
+                mRequestMethods.addSavedItemsToUserList();
                 //TODO: also add category preferences (+ callback?) for these two?
                 //mCurrentUser.addSavedCategoriesToUserList();
 
@@ -166,28 +188,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         setAccountAuthenticatorResult(null);
         setResult(RESULT_CANCELED, null);
         finish(); //this should take you to previous activity
-    }
-
-    @Override
-    public void onTermsClicked() {
-        //Start UploadFragment and Upload photo
-        //Sign in User and
-//        String email;
-//        String password;
-//        String authType;
-//
-//        mCurrentUser.userSignUp();
-//
-//        final Intent res = new Intent();
-//        res.putExtras(userData);
-//        finishLogin(res);
-    } //onTermsClicked
-
-    @Override
-    public void onTermsCancelled() {
-        setAccountAuthenticatorResult(null);
-        setResult(RESULT_CANCELED, null);
-        finish();
     }
 
     @Override

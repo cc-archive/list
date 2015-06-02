@@ -44,7 +44,6 @@ import com.android.volley.toolbox.Volley;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.authentication.ServerAuthenticate;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,7 +80,11 @@ public class ListUser implements ServerAuthenticate {
 
     //Callback for account signin/login
     public interface AuthCallback {
-        void onSuccess(final String authtoken);
+        void onAuthed(final String authtoken);
+    }
+
+    public interface TokenCallback {
+        void onAuthed(final String authtoken);
     }
 
     public boolean isTempUser() {
@@ -158,15 +161,14 @@ public class ListUser implements ServerAuthenticate {
      */
     public void getAuthed(final AuthCallback callback){
         Log.d(TAG, "Getting session token");
-        //sessionComplete = false;
 
         if(isTempUser()){
             Log.v(TAG, "IS TEMP USER TRUE");
             addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
-                    callback.onSuccess(authtoken);
+                    callback.onAuthed(authtoken);
                 }
             });
 
@@ -174,13 +176,13 @@ public class ListUser implements ServerAuthenticate {
             Account account = getAccount();
 
             if(account == null){
-                Log.v(TAG, "getToken > getAccount > account is null");
+                Log.v(TAG, "getAuthed > getAccount > account is null");
 
                 addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                     @Override
-                    public void onSuccess(String authtoken) {
+                    public void onAuthed(String authtoken) {
                         Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
-                        callback.onSuccess(authtoken);
+                        callback.onAuthed(authtoken);
                     }
                 });
             }
@@ -193,7 +195,7 @@ public class ListUser implements ServerAuthenticate {
                                 Bundle bundle = future.getResult();
                                 String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                                 Log.v(TAG, "> getAuthed > getAuthToken from existing account: " + authtoken);
-                                callback.onSuccess(authtoken);
+                                callback.onAuthed(authtoken);
                             } catch (OperationCanceledException e) {
                                 e.printStackTrace();
                             } catch (IOException e) {
@@ -208,11 +210,10 @@ public class ListUser implements ServerAuthenticate {
 
     /**
      * Get auth token for existing account (assumes pre-existing account)
+     * @param callback
      */
-    public void getToken(final AuthCallback callback) {
+    public void getToken(final TokenCallback callback) {
         Log.d(TAG, "getToken > getting session token");
-        //sessionComplete = false;
-        //TODO: match userID to account with the same userID store in AccountManager
         Account account = getAccount();
 
         if(account == null){
@@ -228,7 +229,7 @@ public class ListUser implements ServerAuthenticate {
                             Bundle bundle = future.getResult();
                             String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                             Log.v(TAG, "> getToken, token received: " + authtoken);
-                            callback.onSuccess(authtoken);
+                            callback.onAuthed(authtoken);
                         } catch (OperationCanceledException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -252,7 +253,7 @@ public class ListUser implements ServerAuthenticate {
             addNewAccount(AccountGeneral.ACCOUNT_TYPE,
                     AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker (no accounts) > addNewAccount, " +
                             "token received: " + authtoken);
                 }
@@ -287,7 +288,7 @@ public class ListUser implements ServerAuthenticate {
                                         Bundle bundle = future.getResult();
                                         String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                                         Log.v(TAG, " > showAccountPicker > getAuthToken from existing account: " + authtoken);
-                                        callback.onSuccess(authtoken);
+                                        callback.onAuthed(authtoken);
                                     } catch (OperationCanceledException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
@@ -316,7 +317,7 @@ public class ListUser implements ServerAuthenticate {
         public void onClick(DialogInterface dialog, int which) {
             addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
-                public void onSuccess(String authtoken) {
+                public void onAuthed(String authtoken) {
                     Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, token received: " + authtoken);
                 }
             });
@@ -333,7 +334,7 @@ public class ListUser implements ServerAuthenticate {
                         Bundle bnd = future.getResult();
 
                         Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
-                        callback.onSuccess(bnd.getString(AccountManager.KEY_AUTHTOKEN));
+                        callback.onAuthed(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
                     } catch (Exception e) {
                         //Log.d(TAG, e.getMessage());
@@ -351,7 +352,7 @@ public class ListUser implements ServerAuthenticate {
                 @Override
                 public void run(AccountManagerFuture<Boolean> future) {
                     Log.d(TAG, " > removeAccounts, accounts removed");
-                    callback.onSuccess("removedAccounts");
+                    callback.onAuthed("removedAccounts");
                 }
             }, null);
         }
@@ -365,7 +366,7 @@ public class ListUser implements ServerAuthenticate {
     //LOG IN USER
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
         }
@@ -392,11 +393,10 @@ public class ListUser implements ServerAuthenticate {
                                 mSharedPref.setUserID(userID);
 
                                 //Pass authtoken back to activity
-                                callback.onSuccess(sessionToken);
+                                callback.onAuthed(sessionToken);
 
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
-                                //TODO: add proper error message
                                 mMessageHelper.showDialog(mContext, mContext.getString
                                                 (R.string.login_error_exception_title),
                                         mContext.getString(R.string.login_error_exception_message));
@@ -424,7 +424,7 @@ public class ListUser implements ServerAuthenticate {
     //TODO: SIGN UP USER
     @Override
     public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
+        if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));
             return;
@@ -432,128 +432,5 @@ public class ListUser implements ServerAuthenticate {
 
         //TODO: actually register user
     }
-
-    // --------------------------------------------------------
-    // USER LIST REQUESTS
-    // --------------------------------------------------------
-
-    //Add all list items to userlist (previously temp stored items)
-    public void addSavedItemsToUserList(){
-        Log.v(TAG," > addSavedItemsToUserList, started");
-        JSONArray listItemPref;
-        listItemPref = mSharedPref.getUserItemPreference();
-
-        try{
-            if (listItemPref != null && listItemPref.length() > 0) {
-                Log.v("LIST ITEM PREF: ", listItemPref.toString());
-                for (int i = 0; i < listItemPref.length(); i++) {
-                    Log.v("ITEMS", "ARE BEING ADDED");
-                    addItemToUserList(listItemPref.getString(i));
-                }
-            }
-        } catch(JSONException e){
-            Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
-        }
-    } //addSavedItemsToUserList
-
-    //Add SINGLE random item to user list
-    public void addItemToUserList(final String itemID) {
-        if(!(RequestMethods.isNetworkAvailable(mContext))){
-            mMessageHelper.networkFailMessage();
-            return;
-        }
-        //Get sessionToken
-        getToken(new AuthCallback() {
-            @Override
-            public void onSuccess(final String authtoken) {
-                RequestQueue queue = Volley.newRequestQueue(mContext);
-                String url = ApiConstants.ADD_ITEM + getUserID() + "/" + itemID;
-
-                //Add single item to user list
-                StringRequest postItemRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-
-                                Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
-                                Log.v(TAG,"AN ITEM IS BEING ADDED");
-                                //TODO: on success remove the item from the sharedPreferences
-                                mSharedPref.deleteUserItemPreference(itemID);
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse (VolleyError error){
-                        //TODO: Add “not successful“ toast
-                        mMessageHelper.showDialog(mContext,
-                                mContext.getString(R.string.error_title),
-                                mContext.getString(R.string.error_message));
-                        Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put(ApiConstants.USER_TOKEN, authtoken);
-                        return params;
-                    }
-                };
-                queue.add(postItemRequest);
-            }
-        });
-
-    } //addItemToUserList
-
-    //REMOVE SINGLE item from user list
-    //TODO: move to RequestMethods + add callbacks
-    public void removeItemFromUserList(final String itemID){
-
-        if(isTempUser()){
-            //If not logged in, remove item from sharedPreferences
-            mSharedPref.deleteUserItemPreference(itemID);
-
-        } else { //If logged in, remove from DB
-            if(!(RequestMethods.isNetworkAvailable(mContext))){
-                mMessageHelper.showDialog(mContext,mActivity.getString(R.string.error_network_title),
-                        mActivity.getString(R.string.error_network_message));
-                return;
-            }
-
-            //Get sessionToken
-            getToken(new AuthCallback() {
-                @Override
-                public void onSuccess(final String authtoken) { //getToken and then start request
-                    RequestQueue queue = Volley.newRequestQueue(mContext);
-                    String url = ApiConstants.REMOVE_ITEM + getUserID() + "/" + itemID;
-
-                    StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    //get Response
-                                    Log.v(TAG, "> removeItemFromUserList > OnResponse: " + response);
-                                    Log.v(TAG, "AN ITEM IS BEING REMOVED");
-                                    //TODO: do something with response?
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
-                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
-                                    "There was a problem deleting your item.");
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put(ApiConstants.USER_TOKEN, authtoken);
-                            return params;
-                        }
-                    };
-                    queue.add(deleteItemRequest);
-                }
-            });
-        }
-    } //removeItemFromUserList
-
 
 } //ListUser

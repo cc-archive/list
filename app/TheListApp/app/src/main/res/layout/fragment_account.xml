@@ -82,10 +82,11 @@
                 android:layout_marginBottom="10dp"
                 android:textCursorDrawable="@null"/>
 
-            <Button android:id="@+id/loginButton"
+            <Button
+                style="@style/raised_button"
+                android:id="@+id/loginButton"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:textColor="@color/app_white"
                 android:text="@string/login_button_label"
                 android:layout_below="@+id/accountPassword"/>
 

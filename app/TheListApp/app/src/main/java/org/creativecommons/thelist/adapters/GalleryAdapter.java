@@ -37,6 +37,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     public static final String TAG = GalleryAdapter.class.getSimpleName();
 
     private Context mContext;
+
     private RequestMethods mRequestMethods;
     private LayoutInflater inflater;
     private List<GalleryItem> galleryItems;
@@ -45,12 +46,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
 //    public static final int PROGRESS_VIEW = 2;
 
     public GalleryAdapter(Context context, List<GalleryItem> galleryItems){
-
         mContext = context;
+        mRequestMethods = new RequestMethods(mContext);
+
+        this.galleryItems = galleryItems;
+
         //For debugging
         //Picasso.with(mContext).setIndicatorsEnabled(true);
-        mRequestMethods = new RequestMethods(mContext);
-        this.galleryItems = galleryItems;
+
         inflater = LayoutInflater.from(context);
     }
 
@@ -70,6 +73,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     public void onBindViewHolder(GalleryViewHolder holder, int position) {
         //Getting data for the row
         GalleryItem g = galleryItems.get(position);
+
+        //set description for TalkBack
+        holder.photoView.setContentDescription("image of " + g.getItemName());
 
         Picasso.with(mContext)
                 .load(g.getUrl() + "/300")
