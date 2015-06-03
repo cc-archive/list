@@ -53,11 +53,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="invisible">
-                <com.gc.materialdesign.views.ProgressBarIndeterminate
-                    android:id="@+id/progressBarIndeterminate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#1E88E5"/>
+                <!--<com.gc.materialdesign.views.ProgressBarIndeterminate-->
+                    <!--android:id="@+id/progressBarIndeterminate"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="#1E88E5"/>-->
             </RelativeLayout>
 
             <RelativeLayout android:id="@+id/content_container"

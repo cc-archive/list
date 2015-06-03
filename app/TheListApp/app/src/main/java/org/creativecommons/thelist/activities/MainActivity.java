@@ -32,7 +32,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -42,7 +42,6 @@ import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
-import org.creativecommons.thelist.fragments.NavigationDrawerFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -51,8 +50,7 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements
-        NavigationDrawerFragment.NavigationDrawerListener, GalleryFragment.GalleryListener {
+public class MainActivity extends AppCompatActivity implements GalleryFragment.GalleryListener {
     public static final String TAG = MyListFragment.class.getSimpleName();
 
     private Context mContext;
@@ -62,12 +60,18 @@ public class MainActivity extends AppCompatActivity implements
     private RequestMethods mRequestMethods;
     private SharedPreferencesMethods mSharedPref;
 
-    //UI Elements
+    //Navigation Drawer
     private DrawerLayout mDrawerLayout;
-    private View mDrawerView;
-    private String[] mDrawerTitles;
+    private NavigationView mNavigationView;
 
-    private NavigationView navigationView;
+    //private View mDrawerView;
+    //private String[] mDrawerTitles;
+    //private boolean mUserLearnedDrawer;
+    //private boolean mFromSavedInstanceState;
+
+    //Nav Drawer
+    //private View containerView;
+    //private ActionBarDrawerToggle mDrawerToggle;
 
     // --------------------------------------------------------
 
@@ -86,27 +90,21 @@ public class MainActivity extends AppCompatActivity implements
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-        //UI Elements
+        //Drawer Components
+        mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        mDrawerView = findViewById(R.id.navigation_drawer);
-        mDrawerTitles = getResources().getStringArray(R.array.drawer_navigation_labels);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+
         }
 
-        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-        drawerFragment.setUp(R.id.navigation_drawer,
-                (DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-
         //If there is no savedInstanceState, load in default fragment
-        if(savedInstanceState == null){
+        if(savedInstanceState == null) {
             MyListFragment listFragment = new MyListFragment();
             //load default view
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -116,6 +114,97 @@ public class MainActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle(getString(R.string.title_activity_drawer));
 
         }
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                Fragment fragment = null;
+
+                Tracker t = ((ListApplication) getApplication()).getTracker(
+                        ListApplication.TrackerName.GLOBAL_TRACKER);
+
+                switch(menuItem.getItemId()){
+                    case R.id.nav_item_list:
+                        fragment = new MyListFragment();
+
+                        // Set screen name.
+                        t.setScreenName("My List");
+                        // Send a screen view.
+                        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+                        break;
+                    case R.id.nav_item_photos:
+                        if(!mRequestMethods.isNetworkAvailable()){
+                            mMessageHelper.toastNeedInternet();
+                            return true;
+                        }
+
+                        fragment = new GalleryFragment();
+
+                        // Set screen name.
+                        t.setScreenName("My Photos");
+                        // Send a screen view.
+                        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+                        break;
+                    case R.id.nav_item_categories:
+                        if(!mRequestMethods.isNetworkAvailable()){
+                            mMessageHelper.toastNeedInternet();
+                            return true;
+                        }
+
+                        mDrawerLayout.closeDrawers();
+
+                        Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
+                        startActivity(catIntent);
+
+                        break;
+                    case R.id.nav_item_requests:
+                        if(!mRequestMethods.isNetworkAvailable()){
+                            mMessageHelper.toastNeedInternet();
+                            return true;
+                        }
+
+                        mDrawerLayout.closeDrawers();
+
+                        Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
+                        startActivity(reqIntent);
+                        break;
+                    case R.id.nav_item_about:
+                        Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivity(aboutIntent);
+
+                        break;
+                    case R.id.nav_item_feedback:
+                        mDrawerLayout.closeDrawers();
+
+                        //Set survey taken
+                        mSharedPref.setSurveyTaken(true);
+
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(getString(R.string.dialog_survey_link)));
+                        startActivity(browserIntent);
+
+                        break;
+                }
+
+                if(fragment != null) {
+                    mDrawerLayout.closeDrawers();
+                    menuItem.setChecked(true);
+                    setTitle(menuItem.getTitle());
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.main_content_container, fragment)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit();
+                }
+
+                return true;
+            } //onNavigationItemSelected
+        });
+
     } //onCreate
 
     @Override
@@ -124,104 +213,9 @@ public class MainActivity extends AppCompatActivity implements
     } //onResume
 
     // --------------------------------------------------------
-    //Drawer Fragment
+    //Drawer Listener
     // --------------------------------------------------------
 
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-    }
-
-    @Override
-    public void onDrawerClicked(int position) {
-
-        Fragment fragment = null;
-
-        Tracker t = ((ListApplication) getApplication()).getTracker(
-                ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        switch(position) {
-            case 0: //My List
-                fragment = new MyListFragment();
-
-                // Set screen name.
-                t.setScreenName("My List");
-                // Send a screen view.
-                t.send(new HitBuilders.ScreenViewBuilder().build());
-
-                break;
-            case 1: //My Photos
-                if(!mRequestMethods.isNetworkAvailable()){
-                    mMessageHelper.toastNeedInternet();
-                    return;
-                }
-
-                fragment = new GalleryFragment();
-
-                // Set screen name.
-                t.setScreenName("My Photos");
-                // Send a screen view.
-                t.send(new HitBuilders.ScreenViewBuilder().build());
-
-                break;
-            case 2: //My Categories
-                if(!mRequestMethods.isNetworkAvailable()){
-                    mMessageHelper.toastNeedInternet();
-                    return;
-                }
-
-                Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
-                startActivity(catIntent);
-
-                break;
-            case 3: //Request An Item
-                if(!mRequestMethods.isNetworkAvailable()){
-                    mMessageHelper.toastNeedInternet();
-                    return;
-                }
-
-                Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
-                startActivity(reqIntent);
-                break;
-            case 4: //About The App
-
-                Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(aboutIntent);
-
-                break;
-            case 5: //Give Feedback
-                //Set survey taken
-                mSharedPref.setSurveyTaken(true);
-
-
-                //Go to Google Form
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(getString(R.string.dialog_survey_link)));
-                startActivity(browserIntent);
-                break;
-            default:
-                break;
-        } //switch
-
-        if (fragment != null) {
-            mDrawerLayout.closeDrawer(mDrawerView);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_content_container, fragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit();
-
-            // update selected item and title, then close the drawer
-            getSupportActionBar().setTitle(mDrawerTitles[position]);
-
-        } else {
-            // error in creating fragment
-            Log.e(TAG, "Error in creating fragment");
-        }
-    } //onDrawerClicked
-
-    @Override
     public void onAccountClicked() {
         if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
             handleUserAccount();
@@ -292,7 +286,15 @@ public class MainActivity extends AppCompatActivity implements
         }
     } //handleUserAccount
 
-    //Set navigation
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 
-}
+} //MainActivity

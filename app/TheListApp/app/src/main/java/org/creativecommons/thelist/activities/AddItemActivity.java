@@ -475,8 +475,7 @@ public class AddItemActivity extends AppCompatActivity {
     //onBackPressed
     @Override
     public void onBackPressed() {
-        Intent homeIntent = new Intent(AddItemActivity.this, MainActivity.class);
-        startActivity(homeIntent);
+        finish();
     }
 
 
