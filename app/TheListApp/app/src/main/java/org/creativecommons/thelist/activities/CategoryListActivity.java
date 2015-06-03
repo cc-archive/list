@@ -270,9 +270,10 @@ public class CategoryListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         } else {
-            intent = new Intent(CategoryListActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            finish();
+//            intent = new Intent(CategoryListActivity.this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
         }
     } //saveUserCategories
 

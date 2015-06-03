@@ -3,7 +3,6 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_item_list"
-            android:checked="true"
             android:icon="@drawable/ic_view_list_grey600_24dp"
             android:title="My List"/>
         <item
@@ -16,7 +15,6 @@
             android:title="My Categories"/>
         <item
             android:id="@+id/nav_item_requests"
-            android:checked="true"
             android:icon="@drawable/ic_add_to_photos_grey600_24dp"
             android:title="Request An Item"/>
         <item
