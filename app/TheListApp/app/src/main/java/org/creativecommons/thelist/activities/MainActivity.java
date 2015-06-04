@@ -66,7 +66,10 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     //Navigation Drawer
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+
+    //Nav Menu
     private Menu mNavigationMenu;
+    private MenuItem mAccountItem;
     private TextView mAccountName;
 
     // --------------------------------------------------------
@@ -90,10 +93,9 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationMenu = mNavigationView.getMenu();
 
-        //View headerView = (View) mNavigationView.findViewById(R.id.drawer_header);
+        mAccountItem = mNavigationMenu.findItem(R.id.nav_item_account);
         mAccountName = (TextView) mNavigationView.findViewById(R.id.drawer_account_name);
 
-        //mAccountName = (TextView) findViewById(R.id.drawer_account_name);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
@@ -233,17 +235,15 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         if(mCurrentUser.isTempUser()){ //TEMP USER
             mAccountName.setVisibility(View.GONE);
 
-            MenuItem item = mNavigationMenu.getItem(R.id.nav_item_account);
-            item.setTitle("Log In");
-            item.setIcon(R.drawable.ic_login_grey600_24dp);
+            mAccountItem.setTitle("Log In");
+            mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
 
         } else { //LOGGED IN USER
             mAccountName.setVisibility(View.VISIBLE);
             mAccountName.setText(mCurrentUser.getAccountName());
 
-            MenuItem item = mNavigationMenu.findItem(R.id.nav_item_account);
-            item.setTitle("Log Out");
-            item.setIcon(R.drawable.ic_logout_grey600_24dp);
+            mAccountItem.setTitle("Log Out");
+            mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
         }
 
     } //onResume
