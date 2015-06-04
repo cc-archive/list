@@ -30,6 +30,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -37,7 +39,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -48,11 +49,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.melnykov.fab.FloatingActionButton;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.listeners.ActionClickListener;
-import com.nispok.snackbar.listeners.EventListener;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.RandomActivity;
@@ -116,7 +112,6 @@ public class MyListFragment extends Fragment {
     private TextView mUploadText;
 
     //UI Elements
-    private Menu menu;
     private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
     protected TextView mEmptyView;
@@ -158,9 +153,7 @@ public class MyListFragment extends Fragment {
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
 
         mFab = (FloatingActionButton) activity.findViewById(R.id.fab);
-        //mFab.setEnabled(false);
-        mFab.setVisibility(View.GONE);
-        mFab.hide();
+        //mFab.setVisibility(View.GONE);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,10 +265,6 @@ public class MyListFragment extends Fragment {
             mSharedPref.setSurveyCount(surveyCount + 1);
         } //surveyTaken
 
-        if(!mFab.isVisible()){
-            mFab.show();
-        }
-
         if(mItemToBeUploaded != null && mRequestMethods.isNetworkAvailable()){
             return;
         }
@@ -344,8 +333,7 @@ public class MyListFragment extends Fragment {
                         }
                     }
                     mProgressBar.setVisibility(View.INVISIBLE);
-                    mFab.show();
-                    mFab.setVisibility(View.VISIBLE);
+                    //mFab.setVisibility(View.VISIBLE);
 
                     if(mItemList.size() == 0){
 
@@ -385,8 +373,8 @@ public class MyListFragment extends Fragment {
                     }
 
                     mProgressBar.setVisibility(View.INVISIBLE);
-                    mFab.show();
-                    mFab.setVisibility(View.VISIBLE);
+                    //mFab.show();
+                    //mFab.setVisibility(View.VISIBLE);
 
                     if(mItemList.size() == 0 || mItemList == null){
                         mEmptyView.setText("Sorry we couldn’t find your most recent list. \n" +
@@ -427,8 +415,8 @@ public class MyListFragment extends Fragment {
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mEmptyView.setText("Hey, looks like your list is empty.\nAdd some items!");
                 mEmptyView.setVisibility(View.VISIBLE);
-                mFab.show();
-                mFab.setVisibility(View.VISIBLE);
+                //mFab.show();
+                //mFab.setVisibility(View.VISIBLE);
             }
         }
     } //displayUserItems
@@ -443,8 +431,8 @@ public class MyListFragment extends Fragment {
             }
         }
         mProgressBar.setVisibility(View.INVISIBLE);
-        mFab.show();
-        mFab.setVisibility(View.VISIBLE);
+        //mFab.show();
+        //mFab.setVisibility(View.VISIBLE);
         mFeedAdapter.notifyDataSetChanged();
         mRecyclerView.setVisibility(View.VISIBLE);
     } //CheckComplete
@@ -485,7 +473,20 @@ public class MyListFragment extends Fragment {
                     mFeedAdapter.notifyDataSetChanged();
 
                     //Snackbar message
-                    showItemDeletionSnackbar();
+                    Snackbar.make(snackbarContainer, "Item Deleted", Snackbar.LENGTH_LONG)
+                            .setAction("Undo", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    mItemList.add(0, mLastDismissedItem);
+                                    //re-add item to user’s list in DB
+                                    mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
+                                    mFeedAdapter.notifyDataSetChanged();
+                                    mLayoutManager.scrollToPosition(0);
+                                    //mFab.show();
+                                }
+                            }).show();
+
+                    //showItemDeletionSnackbar();
                 }
             }
         });
@@ -493,201 +494,25 @@ public class MyListFragment extends Fragment {
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
-        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm, mFab));
+        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm));
 
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setItems(R.array.listItem_choices, mDialogListener);
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setItems(R.array.listItem_choices, mDialogListener);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
 
-                            //Get item details for photo upload
-                            activeItemPosition = position;
-                            mCurrentItem = mItemList.get(position);
+                        //Get item details for photo upload
+                        activeItemPosition = position;
+                        mCurrentItem = mItemList.get(position);
 
                     }
                 }));
     } //initRecyclerView
-
-    //----------------------------------------------
-    //SNACKBARS
-    //----------------------------------------------
-
-    public void showItemDeletionSnackbar(){
-
-        SnackbarManager.show(
-                //also includes duration: SHORT, LONG, INDEFINITE
-                Snackbar.with(mContext.getApplicationContext())
-                        .text("Item deleted") //text to display
-                        .actionColor(getResources().getColor(R.color.colorSecondary))
-                        .actionLabel("undo".toUpperCase())
-                        .attachToRecyclerView(mRecyclerView)
-                        .actionListener(new ActionClickListener() {
-                            @Override
-                            public void onActionClicked(Snackbar snackbar) {
-
-                                /*NOTE: item does not need to be re-added here because it is only
-                                removed when the snackbar is actually dismissed*/
-
-                                //What happens when item is swiped offscreen
-                                mItemList.add(0, mLastDismissedItem);
-                                //re-add item to user’s list in DB
-                                mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
-                                mFeedAdapter.notifyDataSetChanged();
-                                mLayoutManager.scrollToPosition(0);
-                                mFab.show();
-                            }
-                        }) //action button’s listener
-                        .eventListener(new EventListener() {
-//                            Interpolator interpolator = new MaterialInterpolator();
-
-                            @Override
-                            public void onShow(Snackbar snackbar) {
-                                //TODO: do we need animations for snackbar still?
-//                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
-//                                        -snackbar.getHeight());
-//                                tsa.setInterpolator(interpolator);
-//                                tsa.setFillAfter(true);
-//                                tsa.setFillEnabled(true);
-//                                tsa.setDuration(300);
-//                                mFab.startAnimation(tsa);
-                            }
-
-                            @Override
-                            public void onShowByReplace(Snackbar snackbar) {
-
-                            }
-
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                            }
-
-                            @Override
-                            public void onDismiss(Snackbar snackbar) {
-                                //TODO: see above
-//                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
-//                                        -snackbar.getHeight(), 0);
-//                                tsa2.setInterpolator(interpolator);
-//                                tsa2.setFillAfter(true);
-//                                tsa2.setFillEnabled(true);
-//                                tsa2.setStartOffset(100);
-//                                tsa2.setDuration(300);
-//                                mFab.startAnimation(tsa2);
-                            }
-
-                            @Override
-                            public void onDismissByReplace(Snackbar snackbar) {
-
-                            }
-
-                            @Override
-                            public void onDismissed(Snackbar snackbar) {
-                                //If no more items
-                                if (mItemList.isEmpty()) {
-                                    mEmptyView.setVisibility(View.VISIBLE);
-                                }
-                                //If fab is hidden (bug fix?)
-                                if (!mFab.isVisible()) {
-                                    mFab.show();
-                                }
-                            }
-                        }) //event listener
-                , snackbarContainer);
-    } //showItemDeletionSnackbar
-
-    public void showPhotoUploadSnackbar(final String text, String actiontext, ActionClickListener listener){
-
-        mFab.setEnabled(false);
-
-        SnackbarManager.show(
-                //also includes duration: SHORT, LONG, INDEFINITE
-                Snackbar.with(mContext.getApplicationContext())
-                        .text(text) //text to display
-                        .actionColor(getResources().getColor(R.color.colorSecondary))
-                        .actionLabel(actiontext.toUpperCase())
-                        .actionListener(listener)
-                                //action button’s listener
-                        .eventListener(new EventListener() {
-//                            Interpolator interpolator = new MaterialInterpolator();
-
-                            @Override
-                            public void onShow(Snackbar snackbar) {
-//                                TranslateAnimation tsa = new TranslateAnimation(0, 0, 0,
-//                                        -snackbar.getHeight());
-//                                tsa.setInterpolator(interpolator);
-//                                tsa.setFillAfter(true);
-//                                tsa.setFillEnabled(true);
-//                                tsa.setDuration(300);
-//                                mFab.startAnimation(tsa);
-                            }
-
-                            @Override
-                            public void onShowByReplace(Snackbar snackbar) {
-
-                            }
-
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                            }
-
-                            @Override
-                            public void onDismiss(Snackbar snackbar) {
-
-//                                TranslateAnimation tsa2 = new TranslateAnimation(0, 0,
-//                                        -snackbar.getHeight(), 0);
-//                                tsa2.setInterpolator(interpolator);
-//                                tsa2.setFillAfter(true);
-//                                tsa2.setFillEnabled(true);
-//                                tsa2.setStartOffset(100);
-//                                tsa2.setDuration(300);
-//                                mFab.startAnimation(tsa2);
-
-                                mFab.setEnabled(true);
-                            }
-
-                            @Override
-                            public void onDismissByReplace(Snackbar snackbar) {
-
-                            }
-
-                            @Override
-                            public void onDismissed(Snackbar snackbar) {
-                                //Messager Helper: check messages
-
-                                if (text.equals("Photo Uploaded")) {
-                                    mMessageHelper.getUserMessaging();
-                                }
-
-                                if (text.equals("Upload Failed")) {
-                                    //TODO: return item to the top of the stack
-                                    //TODO: don’t do this if items are returned with errors from API
-                                    mItemToBeUploaded.setError(true);
-                                    mItemList.add(0, mItemToBeUploaded);
-                                    mFeedAdapter.notifyDataSetChanged();
-                                }
-
-                                //If fab is hidden (bug fix?)
-                                if (!mFab.isVisible()) {
-                                    mFab.show();
-                                }
-                            }
-                        }) //event listener
-                , snackbarContainer);
-    } //showPhotoUploadSnackbar
-
-    public void showUploadCancelledSnackbar(){
-        SnackbarManager.show(
-                //also includes duration: SHORT, LONG, INDEFINITE
-                Snackbar.with(mContext.getApplicationContext())
-                        .text("Upload Cancelled") //text to display
-                , snackbarContainer);
-    } //showUploadCancelledSnackbar
-
-
 
     //----------------------------------------------
     //TAKING PHOTO/PHOTO SELECTION
@@ -803,7 +628,11 @@ public class MyListFragment extends Fragment {
 
                             } else {
                                 //Negative response
-                                showUploadCancelledSnackbar();
+                                Snackbar.make
+                                        (snackbarContainer, "Upload Cancelled",
+                                                Snackbar.LENGTH_LONG).show();
+
+                                //showUploadCancelledSnackbar();
                             }
 
                             return true;
@@ -907,23 +736,21 @@ public class MyListFragment extends Fragment {
                 mItemToBeUploaded = null;
 
                 //Show snackbar confirmation
-                //TODO: check if we actually need to disable fab
-                showPhotoUploadSnackbar("Photo Uploaded",
-                        "dismiss", new ActionClickListener() {
-                            @Override
-                            public void onActionClicked(Snackbar snackbar) {
-                                mFab.setEnabled(false);
-                                snackbar.dismiss();
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mFab.show();
-                                        mFab.setEnabled(true);
-                                    }
-                                }, 500);
-                            }
-                        });
+                Snackbar.make(mRecyclerView, "Photo Uploaded", Snackbar.LENGTH_LONG).show();
+//                        .setAction("dismiss", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                mFab.setEnabled(false);
+//
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        //mFab.show();
+//                                        mFab.setEnabled(true);
+//                                    }
+//                                }, 500);
+//                            }
+//                        }).show();
             } //onSuccess
             @Override
             public void onFail() {
@@ -939,14 +766,14 @@ public class MyListFragment extends Fragment {
                     }
                 }, 500);
 
-                //Show snackbar confirmation
-                showPhotoUploadSnackbar("Upload failed",
-                        "retry", new ActionClickListener() {
+                Snackbar.make(snackbarContainer, "Upload Failed", Snackbar.LENGTH_LONG)
+                        .setAction("dismiss", new View.OnClickListener() {
                             @Override
-                            public void onActionClicked(Snackbar snackbar) {
+                            public void onClick(View view) {
                                 performPhotoUpload();
                             }
-                        });
+                        }).show();
+
             } //onFail
             @Override
             public void onCancelled(NetworkUtils.CancelResponse response) {
@@ -965,6 +792,7 @@ public class MyListFragment extends Fragment {
             }
         });
     } //performPhotoUpload
+
 
     @Override
     public void onPause() {

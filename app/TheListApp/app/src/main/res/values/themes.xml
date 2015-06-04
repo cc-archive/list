@@ -3,6 +3,7 @@
     <style name="ListThemeBase" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorSecondary</item>
         <item name="colorControlNormal">@color/colorSecondary</item>
         <item name="colorControlActivated">@color/colorSecondaryDark</item>
         <item name="colorControlHighlight">@color/colorSecondaryLight</item>
@@ -20,10 +21,6 @@
     <style name="ListThemeStatus" parent="ListTheme">
         <!--Temporary fix For Android 5.0 status bar problems-->
     </style>
-
-    <!--<style name="ListThemeTransparentActionBar" parent="ListTheme">-->
-        <!--<item name="android:actionBarStyle">@style/ActionBarTransparent</item>-->
-    <!--</style>-->
 
     <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="windowNoTitle">true</item>

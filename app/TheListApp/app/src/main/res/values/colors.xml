@@ -5,9 +5,16 @@
     <color name="colorPrimaryDark">#004D40</color>
     <color name="colorPrimary">#00796B</color>
     <color name="colorPrimaryLight">#26A69A</color>
+    <color name="colorPrimaryUltraLight">#E0F2F1</color>
     <color name="colorSecondaryDark">#FF6F00</color>
     <color name="colorSecondary">#FFA000</color>
     <color name="colorSecondaryLight">#FFC107</color>
+
+
+    <!--General-->
+    <color name="app_black">#000000</color>
+    <color name="app_white">#ffffff</color>
+    <color name="app_grey">@color/hint_disabled_text_material_light</color>
 
     <!-- Failure -->
     <color name="colorFail">#E53935</color>
@@ -24,11 +31,6 @@
 
     <!--Category List Colours-->
     <color name="category_default">@color/colorSecondaryLight</color>
-
-    <!--Snackbar colours-->
-    <color name="snackbar_background_default">#323232</color>
-    <!--nb: should be accent colour-->
-    <color name="snackbar_action">@color/colorSecondary</color>
 
 
     <!--Category Colours-->
@@ -92,9 +94,5 @@
 
     <!--Background Colours-->
     <color name="translucent_background">#D9000000</color>
-
-    <!--General-->
-    <color name="app_black">#000000</color>
-    <color name="app_white">#ffffff</color>
 
 </resources>

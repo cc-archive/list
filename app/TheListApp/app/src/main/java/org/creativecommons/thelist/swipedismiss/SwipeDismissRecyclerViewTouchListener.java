@@ -107,7 +107,7 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
     private View mDownView;
     private boolean mPaused;
 
-    private int lastKnownFirst = 0;
+    //private int lastKnownFirst = 0;
     private SwipeRefreshLayout mRefreshLayout;
     //private final Object mAnimationLock = new Object();
     /**
@@ -182,7 +182,8 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
      * @see SwipeDismissRecyclerViewTouchListener
      */
     public RecyclerView.OnScrollListener makeScrollListener
-    (RecyclerView.LayoutManager layoutManager, final FloatingActionButton fab) {
+    //final FloatingActionButton fab
+    (RecyclerView.LayoutManager layoutManager) {
         return new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -192,12 +193,12 @@ public class SwipeDismissRecyclerViewTouchListener implements View.OnTouchListen
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
-                if (llm.findFirstVisibleItemPosition() > lastKnownFirst) {
-                    fab.hide();
-                } else if (llm.findFirstVisibleItemPosition() < lastKnownFirst) {
-                    fab.show();
-                }
-                lastKnownFirst = llm.findFirstVisibleItemPosition();
+//                if (llm.findFirstVisibleItemPosition() > lastKnownFirst) {
+//                    fab.hide();
+//                } else if (llm.findFirstVisibleItemPosition() < lastKnownFirst) {
+//                    fab.show();
+//                }
+                //lastKnownFirst = llm.findFirstVisibleItemPosition();
             }
         };
     }

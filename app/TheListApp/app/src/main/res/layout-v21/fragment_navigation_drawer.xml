@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    tools:context="org.creativecommons.thelist.fragments.NavigationDrawerFragment">
+    tools:context="org.creativecommons.thelist.misc.NavigationDrawerFragment">
 
     <include layout="@layout/drawer_header"
         android:id="@+id/drawer_header"

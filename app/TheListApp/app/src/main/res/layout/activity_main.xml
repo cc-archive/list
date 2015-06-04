@@ -21,11 +21,19 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <fragment android:id="@+id/navigation_drawer"
-        android:layout_width="@dimen/nav_drawer_width"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:layout="@layout/fragment_navigation_drawer"
-        android:name="org.creativecommons.thelist.fragments.NavigationDrawerFragment" />
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/navigation_items" />
+
+    <!--<fragment android:id="@+id/navigation_drawer"-->
+        <!--android:layout_width="@dimen/nav_drawer_width"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="start"-->
+        <!--app:layout="@layout/fragment_navigation_drawer"-->
+        <!--android:name="org.creativecommons.thelist.misc.NavigationDrawerFragment" />-->
 
 </android.support.v4.widget.DrawerLayout>

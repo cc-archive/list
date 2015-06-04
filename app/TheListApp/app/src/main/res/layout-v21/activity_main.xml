@@ -29,7 +29,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/navigation_items" />
+        app:menu="@menu/navigation_items"
+        app:theme="@style/NavigationViewTheme"/>
 
 
     <!--<fragment android:id="@+id/navigation_drawer"-->
@@ -37,6 +38,6 @@
         <!--android:layout_height="match_parent"-->
         <!--android:layout_gravity="start"-->
         <!--app:layout="@layout/fragment_navigation_drawer"-->
-        <!--android:name="org.creativecommons.thelist.fragments.NavigationDrawerFragment" />-->
+        <!--android:name="org.creativecommons.thelist.misc.NavigationDrawerFragment" />-->
 
 </android.support.v4.widget.DrawerLayout>
