@@ -32,12 +32,4 @@
         app:menu="@menu/navigation_items"
         app:theme="@style/NavigationViewTheme"/>
 
-
-    <!--<fragment android:id="@+id/navigation_drawer"-->
-        <!--android:layout_width="@dimen/nav_drawer_width"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="start"-->
-        <!--app:layout="@layout/fragment_navigation_drawer"-->
-        <!--android:name="org.creativecommons.thelist.misc.NavigationDrawerFragment" />-->
-
 </android.support.v4.widget.DrawerLayout>
