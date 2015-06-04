@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                 if(fragment != null) {
                     mDrawerLayout.closeDrawers();
                     menuItem.setChecked(true);
-                    setTitle(menuItem.getTitle());
+                    getSupportActionBar().setTitle(menuItem.getTitle());
 
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
