@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/nav_drawer_width"
-    android:layout_height="154dp"
+    android:layout_height="178dp"
     android:gravity="bottom"
     android:id="@+id/nav_drawer_header"
     android:background="@drawable/nav_drawer_header"
@@ -14,7 +14,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/splash_cc_logo"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="48dp"
         android:id="@+id/circleView"/>
 
     <LinearLayout

@@ -22,6 +22,12 @@
         <!--Temporary fix For Android 5.0 status bar problems-->
     </style>
 
+    <!-- NavigationView Style -->
+    <style name="NavigationViewTheme" parent="ListTheme">
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="colorControlHighlight">@color/colorPrimaryUltraLight</item>
+    </style>
+
     <style name="ListThemeNoActionBar" parent="ListTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
