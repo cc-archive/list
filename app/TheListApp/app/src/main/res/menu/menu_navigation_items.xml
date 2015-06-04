@@ -4,6 +4,7 @@
         <item
             android:id="@+id/nav_item_list"
             android:icon="@drawable/ic_view_list_grey600_24dp"
+            android:checked="true"
             android:title="My List"/>
         <item
             android:id="@+id/nav_item_photos"
@@ -17,13 +18,23 @@
             android:id="@+id/nav_item_requests"
             android:icon="@drawable/ic_add_to_photos_grey600_24dp"
             android:title="Request An Item"/>
-        <item
-            android:id="@+id/nav_item_about"
-            android:icon="@drawable/ic_info_grey600_24dp"
-            android:title="About The App"/>
-        <item
-            android:id="@+id/nav_item_feedback"
-            android:icon="@drawable/ic_question_answer_grey600_24dp"
-            android:title="Give Feedback"/>
     </group>
+
+    <item android:title="More">
+        <menu>
+            <item
+                android:id="@+id/nav_item_about"
+                android:icon="@drawable/ic_info_grey600_24dp"
+                android:title="About The App"/>
+            <item
+                android:id="@+id/nav_item_feedback"
+                android:icon="@drawable/ic_question_answer_grey600_24dp"
+                android:title="Give Feedback"/>
+            <item
+                android:id="@+id/nav_item_account"
+                android:icon="@drawable/ic_logout_grey600_24dp"
+                android:title="Log Out"/>
+        </menu>
+    </item>
+
 </menu>

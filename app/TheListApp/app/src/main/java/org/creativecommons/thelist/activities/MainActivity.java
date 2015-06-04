@@ -32,7 +32,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -63,15 +66,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     //Navigation Drawer
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-
-    //private View mDrawerView;
-    //private String[] mDrawerTitles;
-    //private boolean mUserLearnedDrawer;
-    //private boolean mFromSavedInstanceState;
-
-    //Nav Drawer
-    //private View containerView;
-    //private ActionBarDrawerToggle mDrawerToggle;
+    private Menu mNavigationMenu;
+    private TextView mAccountName;
 
     // --------------------------------------------------------
 
@@ -92,6 +88,12 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
         //Drawer Components
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
+        mNavigationMenu = mNavigationView.getMenu();
+
+        //View headerView = (View) mNavigationView.findViewById(R.id.drawer_header);
+        mAccountName = (TextView) mNavigationView.findViewById(R.id.drawer_account_name);
+
+        //mAccountName = (TextView) findViewById(R.id.drawer_account_name);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
@@ -187,7 +189,24 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         startActivity(browserIntent);
 
                         break;
-                }
+                    case R.id.nav_item_account:
+                        if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
+                            handleUserAccount();
+                        } else {
+                            //Log out user
+                            mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                                @Override
+                                //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+                                public void onAuthed(String authtoken) {
+                                    mSharedPref.ClearAllSharedPreferences();
+                                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                                    startActivity(startIntent);
+                                }
+                            });
+                        }
+
+                        break;
+                } //switch
 
                 if(fragment != null) {
                     mDrawerLayout.closeDrawers();
@@ -210,28 +229,24 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     @Override
     public void onResume() {
         super.onResume();
-    } //onResume
 
-    // --------------------------------------------------------
-    //Drawer Listener
-    // --------------------------------------------------------
+        if(mCurrentUser.isTempUser()){ //TEMP USER
+            mAccountName.setVisibility(View.GONE);
 
-    public void onAccountClicked() {
-        if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
-            handleUserAccount();
-        } else {
-            //Log out user
-            mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                @Override
-                //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-                public void onAuthed(String authtoken) {
-                    mSharedPref.ClearAllSharedPreferences();
-                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                    startActivity(startIntent);
-                }
-            });
+            MenuItem item = mNavigationMenu.getItem(R.id.nav_item_account);
+            item.setTitle("Log In");
+            item.setIcon(R.drawable.ic_login_grey600_24dp);
+
+        } else { //LOGGED IN USER
+            mAccountName.setVisibility(View.VISIBLE);
+            mAccountName.setText(mCurrentUser.getAccountName());
+
+            MenuItem item = mNavigationMenu.findItem(R.id.nav_item_account);
+            item.setTitle("Log Out");
+            item.setIcon(R.drawable.ic_logout_grey600_24dp);
         }
-    } //onAccountClicked
+
+    } //onResume
 
     // --------------------------------------------------------
     // Gallery Fragment
@@ -285,6 +300,12 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                 });
         }
     } //handleUserAccount
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
