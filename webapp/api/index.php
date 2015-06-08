@@ -149,10 +149,10 @@ with('/api/users', function () {
 	
 		if(strpos($fields['username'], "@") === false) {
 			// if there's no @ sign, we're looking at either a failed login or a temp user
+			$user = new UserList();
 			if ($fields['username'] == "" && $fields['password'] == "") {
 				// No user name or password? Temp user registration
 				// Let's make a user with a GUID instead of an email address?
-				$user = new UserList();
 				$guid = generateGUID();
 				$result = $user->getUserInfo($guid);
 				
@@ -163,7 +163,12 @@ with('/api/users', function () {
 				
 				$result = $guid;
 			} else {
-			    $result = $fields['username']; // this assumes a previous GUID
+				$result = $user->getUserInfo($fields['username']);
+				if(empty($result)) {
+					http_response_code(401);
+				} else {
+			    		$result = $fields['username']; // this assumes a previous GUID
+				}
 			}
 
 		} else {

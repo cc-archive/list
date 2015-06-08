@@ -447,7 +447,7 @@ class UserList {
 
 
        $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
-            , $adodb->qstr($email));
+            , $adodb->qstr(strtolower($email)));
 
         try {
             $res = $adodb->Execute($q);
