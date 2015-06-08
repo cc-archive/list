@@ -29,6 +29,7 @@ require_once('../database.php');
 require '../data/User.php';
 require '../data/List.php';
 require 'klein.php';
+require 'functions.php';
 
 header('Content-Type: text/javascript; charset=utf8');
 header('Access-Control-Allow-Origin: https://thelist.creativecommons.org/');
@@ -139,75 +140,77 @@ with('/api/photos', function () {
 });
 
 with('/api/users', function () {
+	respond('POST', '/login', function ($request, $response) {
+		$url = 'https://login.creativecommons.org/x.php';
+		$fields = array(
+		    'username' => urlencode($request->param('username')),
+		    'password' => urlencode($request->param('password'))
+		);
+	
+		if(strpos($fields['username'], "@") === false) {
+			// if there's no @ sign, we're looking at either a failed login or a temp user
+			if ($fields['username'] == "" && $fields['password'] == "") {
+				// No user name or password? Temp user registration
+				// Let's make a user with a GUID instead of an email address?
+				$user = new UserList();
+				$guid = generateGUID();
+				$result = $user->getUserInfo($guid);
+				
+				while(!empty($result)) {
+					$guid = generateGUID();
+					$result = $user->getUserInfo($guid);
+				}
+				
+				$result = $guid;
+			} else {
+			    $result = $fields['username']; // this assumes a previous GUID
+			}
 
-    respond('POST', '/login', function ($request, $response) {
+		} else {
+			foreach($fields as $key=>$value) { $posty .= $key.'='.$value.'&'; }
+			rtrim($posty, '&');
 
-        $url = 'https://login.creativecommons.org/x.php';
-        $fields = array(
-            'username' => urlencode($request->param('username')),
-            'password' => urlencode($request->param('password'))
-        );
+			$curl = curl_init();
 
-        foreach($fields as $key=>$value) { $posty .= $key.'='.$value.'&'; }
-        rtrim($posty, '&');
+			curl_setopt($curl,CURLOPT_URL, $url);
+			curl_setopt($curl,CURLOPT_POST, count($fields));
+			curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-        $curl = curl_init();
+			$result = curl_exec($curl);
+        		curl_close($curl);
+		} 
 
-        curl_setopt($curl,CURLOPT_URL, $url);
-        curl_setopt($curl,CURLOPT_POST, count($fields));
-        curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		if ($result) {     // if the user exists in CAS
+			$user = new UserList();
+			$foo = $user->getUserInfo($result); // get the userID, etc
+			if (count($foo) == 0) {  // first time on The List
+				$user->makeUser($result); // make a User
+				$foo = $user->getUserInfo($result); // now get the userID
+			}
+			// Now let's make a session for the user
+			$userid = $foo['id'];
 
-        $result = curl_exec($curl);
+			$session = $user->getUserSession($userid);
+			$session['email'] = $result;
 
-        if ($result) {     // if the user exists in CAS
+			$output = json_encode($session, JSON_PRETTY_PRINT);
+			echo urldecode($output);
+		} else { // invalid user
+			http_response_code(401);                
+		}
+	});
 
-            $user = new UserList();
+	respond('POST', '/register', function ($request, $response) {
 
-            $foo = $user->getUserInfo($result); // get the userID, etc
+		echo "This is the register stub";
 
-            if (count($foo) == 0) {  // first time on The List
+	});
 
-                $user->makeUser($result); // make a User
+	respond('GET', '/[:email]', function ($request, $response) {
+		echo "This is the GET USER stub";
 
-                $foo = $user->getUserInfo($result); // now get the userID
-            }
-
-            // Now let's make a session for the user
-
-            $userid = $foo['id'];
-
-            $session = $user->getUserSession($userid);
-
-            $output = json_encode($session, JSON_PRETTY_PRINT);
-            echo $output;
-            
-        }
-
-        else { // invalid user
-
-            http_response_code(401);                
-
-        }
-
-        curl_close($curl);
-
-    });
-
-    respond('POST', '/register', function ($request, $response) {
-
-        echo "This is the register stub";
-
-    });
-
-    respond('GET', '/[:email]', function ($request, $response) {
-
-        echo "This is the GET USER stub";
-
-    });
-
-
-
+	});
 });
 
 with('/api/suggestions', function () {
