@@ -107,10 +107,15 @@ public class CategoryListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
-
         //UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.category_progress_bar);
         mProgressBar.setVisibility(View.VISIBLE);
+
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
 
         //Set up Helper Message if new user
         if(!mSharedPref.getCategoryHelperViewed()){

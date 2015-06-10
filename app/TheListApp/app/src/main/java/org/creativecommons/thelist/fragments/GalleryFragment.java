@@ -220,6 +220,7 @@ public class GalleryFragment extends Fragment {
                 }
             });
         } else {
+            mProgressBar.setVisibility(View.INVISIBLE);
             mEmptyView.setText(mContext.getString(R.string.empty_gallery_label_temp));
             mEmptyView.setVisibility(View.VISIBLE);
         }

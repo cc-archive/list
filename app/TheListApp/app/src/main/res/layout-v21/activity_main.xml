@@ -30,6 +30,6 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/menu_navigation_items"
-        app:theme="@style/NavigationViewTheme"/>
+        android:theme="@style/NavigationViewTheme"/>
 
 </android.support.v4.widget.DrawerLayout>

@@ -336,7 +336,6 @@ public class MyListFragment extends Fragment {
                     //mFab.setVisibility(View.VISIBLE);
 
                     if(mItemList.size() == 0){
-
                         //TODO: show textView
                         mEmptyView.setText("Hey, looks like your list is empty.\nAdd some items!");
                         mEmptyView.setVisibility(View.VISIBLE);
@@ -482,11 +481,19 @@ public class MyListFragment extends Fragment {
                                     mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
                                     mFeedAdapter.notifyDataSetChanged();
                                     mLayoutManager.scrollToPosition(0);
-                                    //mFab.show();
+
+                                    if(mEmptyView.getVisibility() == View.VISIBLE){
+                                        mEmptyView.setVisibility(View.INVISIBLE);
+                                    }
+
                                 }
                             }).show();
 
-                    //showItemDeletionSnackbar();
+                    if(mItemList.size() == 0){
+                        mEmptyView.setText("Sorry we couldn’t find your most recent list. \n" +
+                                "We’ll try again when you’re online.");
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });

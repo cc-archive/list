@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-
         }
 
         //If there is no savedInstanceState, load in default fragment
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            public boolean onNavigationItemSelected(final MenuItem menuItem) {
 
                 Fragment fragment = null;
 
@@ -160,8 +159,13 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                         mDrawerLayout.closeDrawers();
 
-                        Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
-                        startActivity(catIntent);
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
+                                startActivity(catIntent);
+                            }
+                        }, 250);
 
                         break;
                     case R.id.nav_item_requests:
@@ -172,12 +176,25 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                         mDrawerLayout.closeDrawers();
 
-                        Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
-                        startActivity(reqIntent);
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
+                                startActivity(reqIntent);
+                            }
+                        }, 250);
+
                         break;
                     case R.id.nav_item_about:
-                        Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
-                        startActivity(aboutIntent);
+                        mDrawerLayout.closeDrawers();
+
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+                                startActivity(aboutIntent);
+                            }
+                        }, 100);
 
                         break;
                     case R.id.nav_item_feedback:
@@ -186,40 +203,59 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         //Set survey taken
                         mSharedPref.setSurveyTaken(true);
 
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(getString(R.string.dialog_survey_link)));
-                        startActivity(browserIntent);
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.dialog_survey_link)));
+                                startActivity(browserIntent);
+                            }
+                        }, 100);
 
                         break;
                     case R.id.nav_item_account:
-                        if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
-                            handleUserAccount();
-                        } else {
-                            //Log out user
-                            mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                                @Override
-                                //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-                                public void onAuthed(String authtoken) {
-                                    mSharedPref.ClearAllSharedPreferences();
-                                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                                    startActivity(startIntent);
+                        mDrawerLayout.closeDrawers();
+
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
+                                    handleUserAccount();
+                                } else {
+                                    //Log out user
+                                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
+                                        @Override
+                                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+                                        public void onAuthed(String authtoken) {
+                                            mSharedPref.ClearAllSharedPreferences();
+                                            Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                                            startActivity(startIntent);
+                                        }
+                                    });
                                 }
-                            });
-                        }
+                            }
+                        }, 100);
 
                         break;
                 } //switch
 
                 if(fragment != null) {
                     mDrawerLayout.closeDrawers();
-                    menuItem.setChecked(true);
-                    getSupportActionBar().setTitle(menuItem.getTitle());
 
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.main_content_container, fragment)
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .commit();
+                    final Fragment finalFragment = fragment;
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            menuItem.setChecked(true);
+                            getSupportActionBar().setTitle(menuItem.getTitle());
+
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.main_content_container, finalFragment)
+                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                    .commit();
+                        }
+                    }, 100);
                 }
 
                 return true;
