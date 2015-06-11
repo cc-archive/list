@@ -102,8 +102,10 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         if (toolbar != null) {
             setSupportActionBar(toolbar);
 
+            assert getSupportActionBar() != null;
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+
         }
 
         //If there is no savedInstanceState, load in default fragment
@@ -114,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
             fragmentManager.beginTransaction()
                     .replace(R.id.main_content_container, listFragment)
                     .commit();
+
+            assert getSupportActionBar() != null;
             getSupportActionBar().setTitle(getString(R.string.title_activity_drawer));
 
         }
@@ -182,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                 Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
                                 startActivity(reqIntent);
                             }
-                        }, 250);
+                        }, 350);
 
                         break;
                     case R.id.nav_item_about:
@@ -194,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                 Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
                                 startActivity(aboutIntent);
                             }
-                        }, 100);
+                        }, 250);
 
                         break;
                     case R.id.nav_item_feedback:

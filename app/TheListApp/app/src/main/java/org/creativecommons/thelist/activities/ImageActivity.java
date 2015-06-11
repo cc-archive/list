@@ -61,6 +61,7 @@ public class ImageActivity extends AppCompatActivity {
 
         //View Pager
         viewPager = (ViewPager) findViewById(R.id.imagePager);
+        viewPager.setOffscreenPageLimit(3);
         adapter = new ImageAdapter(ImageActivity.this, photoObjects);
         viewPager.setAdapter(adapter);
 
@@ -136,5 +137,20 @@ public class ImageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onTrimMemory(int level) {
+        switch(level){
+            case TRIM_MEMORY_UI_HIDDEN:
 
+            break;
+
+            case TRIM_MEMORY_RUNNING_LOW:
+            break;
+
+            case TRIM_MEMORY_RUNNING_CRITICAL:
+                break;
+        }
+
+        super.onTrimMemory(level);
+    }
 } //ImageActivity

@@ -42,8 +42,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ImageAdapter extends PagerAdapter {
     public static final String TAG = ImageAdapter.class.getSimpleName();
 
-    private Activity activity;
-    private ArrayList<GalleryItem> photoObjects;
+    final private Activity activity;
+    final private ArrayList<GalleryItem> photoObjects;
     private PhotoViewAttacher mAttacher;
     private LayoutInflater inflater;
 
@@ -82,20 +82,21 @@ public class ImageAdapter extends PagerAdapter {
                 viewLayout.findViewById(R.id.gallery_caption_container);
 
 
-        GalleryItem g = photoObjects.get(position);
-        String photoUrl = g.getUrl() + "/800";
+        final GalleryItem g = photoObjects.get(position);
+        final String photoUrl = g.getUrl() + "/600";
 
-        TextView itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
-        TextView makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
+        final TextView itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
+        final TextView makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
+
+        final String captionText = activity.getString(R.string.image_adapter_caption_text);
 
         itemName.setText(g.getItemName());
-        makerName.setText("requested by " + g.getMakerName());
-
-        Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
+        makerName.setText(captionText + " " + g.getMakerName());
+        //Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
 
         Picasso.with(activity)
                 .load(photoUrl)
-                .placeholder(R.drawable.progress_view_large)
+                //.placeholder() TODO: add placeholder
                 .error(R.drawable.progress_view_large)
                 .into(mImgDisplay, new com.squareup.picasso.Callback() {
                     @Override
@@ -133,6 +134,7 @@ public class ImageAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         ((ViewPager) container).removeView((RelativeLayout) object);
+        object = null;
 
     }
 } //ImageAdapter

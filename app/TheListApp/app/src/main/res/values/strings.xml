@@ -241,6 +241,7 @@
     <string name="ellipsis">…</string>
     <string name="action_share">Share this photo</string>
     <string name="drawer_header_title">powered by Creative Commons</string>
+    <string name="image_adapter_caption_text">"requested by "</string>
 
 
 </resources>

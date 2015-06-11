@@ -7,3 +7,6 @@
 
 .idea/libraries
 app/build
+
+# TraceView captures
+/captures
