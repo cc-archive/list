@@ -144,27 +144,27 @@ public class ImageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onTrimMemory(int level) {
-        switch(level){
-            case TRIM_MEMORY_UI_HIDDEN:
-
-            break;
-
-            case TRIM_MEMORY_RUNNING_LOW:
-            break;
-
-            case TRIM_MEMORY_RUNNING_CRITICAL:
-                break;
-        }
-
-        super.onTrimMemory(level);
-    }
+    //TODO: investigate further
+//    @Override
+//    public void onTrimMemory(int level) {
+//        switch(level){
+//            case TRIM_MEMORY_UI_HIDDEN:
+//
+//            break;
+//
+//            case TRIM_MEMORY_RUNNING_LOW:
+//            break;
+//
+//            case TRIM_MEMORY_RUNNING_CRITICAL:
+//                break;
+//        }
+//
+//        super.onTrimMemory(level);
+//    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-
+        Log.v(TAG, "onDestroy");
     }
 } //ImageActivity
