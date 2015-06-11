@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
@@ -77,6 +76,7 @@ public class ImageAdapter extends PagerAdapter {
 
         //Photoview Elements
         final PhotoView mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
+        mAttacher = new PhotoViewAttacher(mImgDisplay);
 
         //Track with tags for share intent
         mImgDisplay.setTag(position);
@@ -100,7 +100,7 @@ public class ImageAdapter extends PagerAdapter {
         Picasso.with(mContext)
                 .load(photoUrl)
                 .fit()
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                //.memoryPolicy(MemoryPolicy.NO_CACHE)
                 .centerInside()
                 //.placeholder() TODO: add placeholder
                 .error(R.drawable.progress_view_large)
@@ -109,7 +109,11 @@ public class ImageAdapter extends PagerAdapter {
                     public void onSuccess() {
                         Log.v(TAG, "Successfully loaded image into PhotoView");
 
-                        mAttacher = new PhotoViewAttacher(mImgDisplay);
+                        if(mAttacher != null){
+                            mAttacher.update();
+                        } else {
+                            mAttacher = new PhotoViewAttacher(mImgDisplay);
+                        }
 
                         mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                             @Override
@@ -139,8 +143,9 @@ public class ImageAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ((ViewPager) container).removeView((RelativeLayout) object);
-        object = null;
+        View view = (View) object;
+        ((ViewPager) container).removeView(view);
+        view = null;
 
     }
 } //ImageAdapter
