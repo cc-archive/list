@@ -84,6 +84,19 @@ public class ImageAdapter extends PagerAdapter {
         final android.support.v7.widget.Toolbar galleryCaption = (android.support.v7.widget.Toolbar)
                 viewLayout.findViewById(R.id.gallery_caption_container);
 
+        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                //Log.v(TAG, "TAPPED THAT VIEW");
+
+                if (galleryCaption.getVisibility() == View.INVISIBLE) {
+                    galleryCaption.setVisibility(View.VISIBLE);
+                } else {
+                    galleryCaption.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
 
         final GalleryItem g = photoObjects.get(position);
         final String photoUrl = g.getUrl() + "/600";
@@ -114,19 +127,6 @@ public class ImageAdapter extends PagerAdapter {
                         } else {
                             mAttacher = new PhotoViewAttacher(mImgDisplay);
                         }
-
-                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                            @Override
-                            public void onViewTap(View view, float x, float y) {
-                                //Log.v(TAG, "TAPPED THAT VIEW");
-
-                                if (galleryCaption.getVisibility() == View.INVISIBLE) {
-                                    galleryCaption.setVisibility(View.VISIBLE);
-                                } else {
-                                    galleryCaption.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                        });
 
                     } //onAuthed
 
