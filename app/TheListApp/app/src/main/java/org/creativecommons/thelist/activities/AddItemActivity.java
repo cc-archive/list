@@ -371,7 +371,11 @@ public class AddItemActivity extends AppCompatActivity {
                     mediaScanIntent.setData(mMediaUri);
                     mContext.sendBroadcast(mediaScanIntent);
 
-                    Picasso.with(mContext).load(mMediaUri).into(mAddImage);
+                    Picasso.with(getApplicationContext())
+                            .load(mMediaUri)
+                            .fit()
+                            .centerCrop()
+                            .into(mAddImage);
                     mPhotoAdded = true;
                 } //RESULT OK
                 else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled

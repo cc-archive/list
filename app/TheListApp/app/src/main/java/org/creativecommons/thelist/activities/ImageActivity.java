@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,6 @@ public class ImageActivity extends AppCompatActivity {
 
     //Share Photo
     private boolean isIntentSafe = false;
-    private Intent filteredIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,11 @@ public class ImageActivity extends AppCompatActivity {
 
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_transparent);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         //Get incoming data
         Bundle b = getIntent().getExtras();
@@ -61,13 +63,18 @@ public class ImageActivity extends AppCompatActivity {
 
         //View Pager
         viewPager = (ViewPager) findViewById(R.id.imagePager);
-        viewPager.setOffscreenPageLimit(3);
+
+        if(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            viewPager.setOffscreenPageLimit(2);
+        } else {
+            viewPager.setOffscreenPageLimit(3);
+        }
+
         adapter = new ImageAdapter(ImageActivity.this, photoObjects);
         viewPager.setAdapter(adapter);
 
         //Displaying selected image first
         viewPager.setCurrentItem(position);
-
 
     } //onCreate
 
@@ -152,5 +159,12 @@ public class ImageActivity extends AppCompatActivity {
         }
 
         super.onTrimMemory(level);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
     }
 } //ImageActivity

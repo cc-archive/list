@@ -77,9 +77,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         //set description for TalkBack
         holder.photoView.setContentDescription("image of " + g.getItemName());
 
-        Picasso.with(mContext)
+        Picasso.with(mContext.getApplicationContext())
                 .load(g.getUrl() + "/300")
                 .placeholder(R.drawable.progress_view)
+                .fit()
+                .centerCrop()
                 .error(R.drawable.progress_view)
                 .into(holder.photoView);
 

@@ -308,7 +308,7 @@ public class MyListFragment extends Fragment {
                             if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 0) {
                                 UserListItem listItem = new UserListItem();
                                 listItem.setItemName
-                                        (mMessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
+                                        (MessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID
@@ -317,7 +317,7 @@ public class MyListFragment extends Fragment {
                             } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
                                 UserListItem listItem = new UserListItem();
                                 listItem.setItemName
-                                        (mMessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
+                                        (MessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
                                 listItem.setMakerName
                                         (singleListItem.getString(ApiConstants.MAKER_NAME));
                                 listItem.setItemID

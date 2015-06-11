@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
@@ -42,6 +43,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ImageAdapter extends PagerAdapter {
     public static final String TAG = ImageAdapter.class.getSimpleName();
 
+    final private Context mContext;
     final private Activity activity;
     final private ArrayList<GalleryItem> photoObjects;
     private PhotoViewAttacher mAttacher;
@@ -50,6 +52,7 @@ public class ImageAdapter extends PagerAdapter {
     // constructor
     public ImageAdapter(Activity activity,
                                   ArrayList<GalleryItem> photoObjects) {
+        this.mContext = activity.getApplicationContext();
         this.activity = activity;
         this.photoObjects = photoObjects;
     }
@@ -94,8 +97,11 @@ public class ImageAdapter extends PagerAdapter {
         makerName.setText(captionText + " " + g.getMakerName());
         //Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
 
-        Picasso.with(activity)
+        Picasso.with(mContext)
                 .load(photoUrl)
+                .fit()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .centerInside()
                 //.placeholder() TODO: add placeholder
                 .error(R.drawable.progress_view_large)
                 .into(mImgDisplay, new com.squareup.picasso.Callback() {
@@ -110,7 +116,7 @@ public class ImageAdapter extends PagerAdapter {
                             public void onViewTap(View view, float x, float y) {
                                 //Log.v(TAG, "TAPPED THAT VIEW");
 
-                                if(galleryCaption.getVisibility() == View.INVISIBLE){
+                                if (galleryCaption.getVisibility() == View.INVISIBLE) {
                                     galleryCaption.setVisibility(View.VISIBLE);
                                 } else {
                                     galleryCaption.setVisibility(View.INVISIBLE);
