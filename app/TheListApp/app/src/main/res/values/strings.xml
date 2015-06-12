@@ -247,6 +247,7 @@
     <string name="add_category_toast_success">category added</string>
     <string name="add_item_toast_error">There was a problem adding your item</string>
     <string name="remove_item_toast_error">There was a problem deleting your item</string>
+    <string name="my_list_empty_label">Hey, looks like your list is empty.\nAdd some items!</string>
 
 
 </resources>

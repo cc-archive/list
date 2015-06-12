@@ -441,10 +441,6 @@ public final class RequestMethods {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-//                        mMessageHelper.showDialog(mContext,
-//                                mContext.getString(R.string.error_title),
-//                                mContext.getString(R.string.error_message));
                         Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
                         //TODO: move to message helper and Add callback to request
                         Toast.makeText(mContext, mContext.getString(R.string.add_item_toast_error),
@@ -501,8 +497,6 @@ public final class RequestMethods {
                             //TODO: move to message helper and Add callback to request
                             Toast.makeText(mContext, mContext.getString(R.string.remove_item_toast_error),
                                     Toast.LENGTH_SHORT).show();
-//                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
-//                                    "There was a problem deleting your item.");
                         }
                     }) {
                         @Override
