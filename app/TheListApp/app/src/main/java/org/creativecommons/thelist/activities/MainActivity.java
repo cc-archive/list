@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                 Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
                                 startActivity(reqIntent);
                             }
-                        }, 350);
+                        }, 300);
 
                         break;
                     case R.id.nav_item_about:

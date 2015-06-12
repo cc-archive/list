@@ -255,16 +255,16 @@ public final class RequestMethods {
                                 Log.v(TAG, "A CATEGORY IS BEING ADDED");
 
                                 mSharedPref.deleteUserCategoryPreference(catId);
-                                Toast.makeText(mContext, "category added", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, 
+                                        mContext.getString(R.string.add_category_toast_success), 
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, " > addCategory > onErrorResponse: " + error.getMessage());
-                        //TODO: Add “not successful“ toast
-                        mMessageHelper.showDialog(mContext,
-                                mContext.getString(R.string.error_title),
-                                mContext.getString(R.string.error_message));
+                        //TODO: remove to MessageHelper class
+                        mMessageHelper.categoryAddFail();
                     }
                 }) {
                     @Override
@@ -310,11 +310,9 @@ public final class RequestMethods {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //TODO: Add “not successful“ toast
                         Log.d(TAG, " > removeCategory > onErrorResponse: " + error.getMessage());
-                        //TODO: REMOVE FROM HELPER CLASS
-                        mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
-                                mContext.getString(R.string.error_message));
+                        //TODO: remove to MessageHelper class
+                        mMessageHelper.categoryRemoveFail();
                     }
                 }) {
                     @Override
@@ -361,8 +359,8 @@ public final class RequestMethods {
     //GET User List Items
     public void getUserItems(final NetworkUtils.UserListCallback callback){
         if(!(isNetworkAvailable())){
-            callback.onUserOffline(mSharedPref.getOfflineUserList());
             mMessageHelper.networkFailMessage();
+            callback.onUserOffline(mSharedPref.getOfflineUserList());
             return;
         }
 
@@ -434,7 +432,6 @@ public final class RequestMethods {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-
                                 Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
                                 Log.v(TAG, "AN ITEM IS BEING ADDED");
 
@@ -444,11 +441,15 @@ public final class RequestMethods {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //TODO: Add “not successful“ toast
-                        mMessageHelper.showDialog(mContext,
-                                mContext.getString(R.string.error_title),
-                                mContext.getString(R.string.error_message));
+
+//                        mMessageHelper.showDialog(mContext,
+//                                mContext.getString(R.string.error_title),
+//                                mContext.getString(R.string.error_message));
                         Log.d(TAG, " > addItemToUserList > onErrorResponse: " + error.getMessage());
+                        //TODO: move to message helper and Add callback to request
+                        Toast.makeText(mContext, mContext.getString(R.string.add_item_toast_error),
+                                Toast.LENGTH_SHORT).show();
+
                     }
                 }) {
                     @Override
@@ -473,8 +474,7 @@ public final class RequestMethods {
 
         } else { //If logged in, remove from DB
             if(!(isNetworkAvailable())){
-                mMessageHelper.showDialog(mContext,mContext.getString(R.string.error_network_title),
-                        mContext.getString(R.string.error_network_message));
+                mMessageHelper.networkFailMessage();
                 return;
             }
 
@@ -498,8 +498,11 @@ public final class RequestMethods {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
-                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
-                                    "There was a problem deleting your item.");
+                            //TODO: move to message helper and Add callback to request
+                            Toast.makeText(mContext, mContext.getString(R.string.remove_item_toast_error),
+                                    Toast.LENGTH_SHORT).show();
+//                            mMessageHelper.showDialog(mContext, mContext.getString(R.string.error_title),
+//                                    "There was a problem deleting your item.");
                         }
                     }) {
                         @Override
@@ -603,107 +606,5 @@ public final class RequestMethods {
             }
         });
     } //getUserPhotos
-
-//    public void uploadPhoto(final UserListItem listItem, final Uri photoUri, final NetworkUtils.RequestCallback callback) {
-//        if(!(isNetworkAvailable())){
-//            callback.onCancelled(NetworkUtilsCancelResponse.NETWORK_ERROR);
-//            return;
-//        }
-//
-//        if(FileHelper.getFileSize(photoUri) > 8){
-//            callback.onCancelled(NetworkUtils.CancelResponse.FILESIZE_ERROR);
-//            return;
-//        }
-//
-////        if(!FileHelper.getFileType(mContext, photoUri).equals(PhotoConstants.FILE_TYPE)){
-////            mMessageHelper.photoUploadFileTypeFailMessage();
-////            return;
-////        }
-//
-//        //Start notification
-//        final int notificationID = mMessageHelper.getNotificationID();
-//        startUploadNotification(notificationID, "“" + listItem.getItemName() + "”" + " is uploading…");
-//
-//        //Set up progress bar updater
-//        final ProgressBarState state = new ProgressBarState();
-//        final AsyncTask updater =  new ProgressBarUpdater(notificationID).execute(state);
-//
-//        mCurrentUser.getToken(new ListUser.TokenCallback() {
-//            @Override
-//            public void onAuthed(final String authtoken) {
-//                RequestQueue queue = Volley.newRequestQueue(mContext);
-//                final String photoFile = FileHelper.createUploadPhotoObject(mContext, photoUri);
-//                String url = ApiConstants.ADD_PHOTO + mSharedPref.getUserId() + "/" + listItem.getItemID();
-//
-//                state.mState = ProgressBarState.State.START;
-//
-//                //Upload Request
-//                final StringReq uploadPhotoRequest = new StringReq(Request.Method.POST, url,
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//
-//                                //Get Response
-//                                Log.v(TAG, "uploadPhoto > onResponse: " + response);
-//                                state.mState = ProgressBarState.State.FINISHED;
-//
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        mBuilder.setContentText(listItem.getItemName() + " uploaded successfully");
-//                                        // Removes the progress bar
-//                                        mBuilder.setProgress(0, 0, false);
-//                                        mNotifyManager.notify(notificationID, mBuilder.build());
-//                                    }
-//                                }, 1000);
-//
-//                                callback.onSuccess();
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.d(TAG, "uploadPhoto > onErrorResponse: " + error.getMessage());
-//
-//                        state.mState = ProgressBarState.State.ERROR;
-//
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mBuilder.setContentText("“" + listItem.getItemName() + "”" + " failed to upload");
-//                                // Removes the progress bar
-//                                mBuilder.setProgress(0, 0, false);
-//                                mNotifyManager.notify(notificationID, mBuilder.build());
-//                            }
-//                        }, 1000);
-//
-//                        callback.onFail();
-//                    }
-//                }) {
-//                    @Override
-//                    protected Map<String, String> getParams() {
-//                        Map<String, String> params = new HashMap<String, String>();
-//
-//                        byte [] image = FileHelper.getByteArrayFromFile(mContext, photoUri);
-//                        image = FileHelper.reduceImageForUpload(image);
-//
-//                        String photoFile = new String(Base64.encode(image, Base64.DEFAULT));
-//
-//
-//                        params.put(ApiConstants.POST_PHOTO_KEY, photoFile);
-//                        params.put(ApiConstants.USER_TOKEN, authtoken);
-//                        return params;
-//                    }
-//                };
-//
-//                uploadPhotoRequest.setRetryPolicy(new DefaultRetryPolicy
-//                        (DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 12, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//
-//                queue.add(uploadPhotoRequest);
-//                state.mState = ProgressBarState.State.REQUEST_SENT;
-//            }
-//        });
-//
-//    } //uploadPhoto
 
 } //RequestMethods

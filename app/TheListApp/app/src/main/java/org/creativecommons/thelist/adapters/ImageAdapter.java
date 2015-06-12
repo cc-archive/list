@@ -114,7 +114,7 @@ public class ImageAdapter extends PagerAdapter {
                 .load(photoUrl)
                 .fit()
                 .centerInside()
-                //.placeholder() TODO: add placeholder
+                //.placeholder()//TODO: add placeholder in xml instead
                 .error(R.drawable.progress_view_large)
                 .into(mImgDisplay, new com.squareup.picasso.Callback() {
                     @Override

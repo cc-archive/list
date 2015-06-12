@@ -242,6 +242,11 @@
     <string name="action_share">Share this photo</string>
     <string name="drawer_header_title">powered by Creative Commons</string>
     <string name="image_adapter_caption_text">"requested by "</string>
+    <string name="add_category_toast_error">Problem adding category</string>
+    <string name="remove_category_toast_error">Problem removing category</string>
+    <string name="add_category_toast_success">category added</string>
+    <string name="add_item_toast_error">There was a problem adding your item</string>
+    <string name="remove_item_toast_error">There was a problem deleting your item</string>
 
 
 </resources>

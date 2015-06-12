@@ -184,8 +184,10 @@ public class MessageHelper {
 
     //TODO: replace frequently used messages w/ pre-created showDialogs
     public void networkFailMessage(){
-        showDialog(mContext, mContext.getString(R.string.error_network_title),
-                mContext.getString(R.string.error_network_message));
+        Toast.makeText(mContext,
+                mContext.getString(R.string.error_network_message), Toast.LENGTH_SHORT).show();
+//        showDialog(mContext, mContext.getString(R.string.error_network_title),
+//                mContext.getString(R.string.error_network_message));
     }
 
     public void loadUserItemsFailMessage(){
@@ -212,6 +214,21 @@ public class MessageHelper {
         showDialog(mContext, mContext.getString(R.string.upload_failed_title_network),
                 "The gallery is only available online");
     }
+
+    // --------------------------------------------------------
+    //  CATEGORY MESSAGES
+    // --------------------------------------------------------
+
+    public void categoryAddFail(){
+        Toast.makeText(mContext,mContext.getString(R.string.add_category_toast_error),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    public void categoryRemoveFail(){
+        Toast.makeText(mContext,mContext.getString(R.string.remove_category_toast_error),
+                Toast.LENGTH_SHORT).show();
+    }
+
 
     // --------------------------------------------------------
     // PHOTO UPLOAD MESSAGES

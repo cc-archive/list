@@ -8,7 +8,7 @@ android {
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "org.creativecommons.thelist"
-        minSdkVersion 11
+        minSdkVersion 10
         targetSdkVersion 22
         versionCode 4
         versionName "3.0"
