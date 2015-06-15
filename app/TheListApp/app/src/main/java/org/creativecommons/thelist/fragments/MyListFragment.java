@@ -212,6 +212,7 @@ public class MyListFragment extends Fragment {
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
                             dialog.dismiss();
                         }
+
                         @Override
                         public void onNegative(MaterialDialog dialog) {
                             super.onNegative(dialog);
@@ -222,7 +223,6 @@ public class MyListFragment extends Fragment {
                         }
                     });
             mSharedPref.setAnalyticsViewed(true);
-            Log.v(TAG, "SET ANALYTICS VIEWED TRUE");
         }
     } //onStart
 
@@ -337,7 +337,7 @@ public class MyListFragment extends Fragment {
 
                     if(mItemList.size() == 0){
                         //TODO: show textView
-                        mEmptyView.setText("Hey, looks like your list is empty.\nAdd some items!");
+                        mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                         mEmptyView.setVisibility(View.VISIBLE);
 
                     } else {
@@ -354,7 +354,7 @@ public class MyListFragment extends Fragment {
                     Log.d(TAG , "> getUserItems > onFail: " + error.toString());
                     //mMessageHelper.loadUserItemsFailMessage();
                     mProgressBar.setVisibility(View.INVISIBLE);
-                    mEmptyView.setText("Problem loading your list items.\nPlease try again.");
+                    mEmptyView.setText(mContext.getString(R.string.mylist_empty_loading_error_label));
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
                 @Override
@@ -376,8 +376,7 @@ public class MyListFragment extends Fragment {
                     //mFab.setVisibility(View.VISIBLE);
 
                     if(mItemList.size() == 0 || mItemList == null){
-                        mEmptyView.setText("Sorry we couldn’t find your most recent list. \n" +
-                                "We’ll try again when you’re online.");
+                        mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                         mEmptyView.setVisibility(View.VISIBLE);
                     }
 
@@ -412,7 +411,7 @@ public class MyListFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
             } else {
                 mProgressBar.setVisibility(View.INVISIBLE);
-                mEmptyView.setText("Hey, looks like your list is empty.\nAdd some items!");
+                mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                 mEmptyView.setVisibility(View.VISIBLE);
                 //mFab.show();
                 //mFab.setVisibility(View.VISIBLE);
@@ -456,6 +455,12 @@ public class MyListFragment extends Fragment {
                     if(!mRequestMethods.isNetworkAvailable()){
                         mMessageHelper.toastNeedInternet();
                         mFeedAdapter.notifyDataSetChanged();
+
+                        if(mItemList.size() == 0){
+                            mEmptyView.setText(mContext.getString(R.string.mylist_offline_empty_label));
+                            mEmptyView.setVisibility(View.VISIBLE);
+                        }
+
                         return;
                     }
 
@@ -490,8 +495,7 @@ public class MyListFragment extends Fragment {
                             }).show();
 
                     if(mItemList.size() == 0){
-                        mEmptyView.setText("Sorry we couldn’t find your most recent list. \n" +
-                                "We’ll try again when you’re online.");
+                        mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                         mEmptyView.setVisibility(View.VISIBLE);
                     }
                 }

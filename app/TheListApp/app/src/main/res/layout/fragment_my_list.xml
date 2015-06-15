@@ -30,30 +30,24 @@
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false">
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/feedProgressBar"
-            android:gravity="center"
-            android:layout_centerInParent="true" />
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedProgressBar"
+        android:gravity="center"
+        android:layout_gravity="center" />
 
-        <TextView
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/empty_list_label"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/secondary_text_default_material_light"
-            android:text="@string/my_list_empty_label"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
-
+    <TextView
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_list_label"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:text="@string/my_list_empty_label" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
