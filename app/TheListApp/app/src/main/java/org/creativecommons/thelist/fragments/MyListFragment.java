@@ -42,7 +42,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -108,7 +107,8 @@ public class MyListFragment extends Fragment {
     private List<UserListItem> mItemList = new ArrayList<>();
 
     //Upload Elements
-    private RelativeLayout mUploadProgressBarContainer;
+    //private RelativeLayout mUploadProgressBarContainer;
+    private ProgressBar mUploadProgressBar;
     private TextView mUploadText;
 
     //UI Elements
@@ -146,8 +146,8 @@ public class MyListFragment extends Fragment {
         //Load UI Elements
         snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
         mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
-        mUploadProgressBarContainer = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
-        //mUploadProgressBar = (com.gc.materialdesign.views.ProgressBarDeterminate) activity.findViewById(R.id.upload_progress);
+        //mUploadProgressBarContainer = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
+        mUploadProgressBar = (ProgressBar) activity.findViewById(R.id.uploadProgressBar);
         //mUploadText = (TextView) activity.findViewById(R.id.upload_text);
 
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
@@ -717,14 +717,15 @@ public class MyListFragment extends Fragment {
         mSharedPref.setUploadCount(uploadCount + 1);
 
         //mUploadText.setText("Uploading " + mItemToBeUploaded.getItemName() + "…");
-        mUploadProgressBarContainer.setVisibility(View.VISIBLE);
+        mUploadProgressBar.setVisibility(View.VISIBLE);
+        Log.v(TAG, "UPLOAD BAR VISIBLES");
 
         //Hide progress bar if it takes too much time to upload
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mUploadProgressBarContainer.getVisibility() == View.VISIBLE) {
-                    mUploadProgressBarContainer.setVisibility(View.GONE);
+                if (mUploadProgressBar.getVisibility() == View.VISIBLE) {
+                    mUploadProgressBar.setVisibility(View.GONE);
                 }
             }
         }, 3000);
@@ -739,7 +740,7 @@ public class MyListFragment extends Fragment {
 
                 displayUserItems();
 
-                mUploadProgressBarContainer.setVisibility(View.GONE);
+                mUploadProgressBar.setVisibility(View.GONE);
                 mItemToBeUploaded = null;
 
                 //Show snackbar confirmation
@@ -768,7 +769,7 @@ public class MyListFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mUploadProgressBarContainer.setVisibility(View.GONE);
+                        mUploadProgressBar.setVisibility(View.GONE);
                         displayUserItems();
                     }
                 }, 500);
@@ -786,7 +787,7 @@ public class MyListFragment extends Fragment {
             public void onCancelled(NetworkUtils.CancelResponse response) {
                 Log.v(TAG, "uploadPhoto > onCancelled: " + response.toString());
 
-                mUploadProgressBarContainer.setVisibility(View.GONE);
+                mUploadProgressBar.setVisibility(View.GONE);
 
                 switch(response) {
                     case NETWORK_ERROR:

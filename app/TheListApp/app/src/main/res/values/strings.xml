@@ -205,7 +205,7 @@
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
-    <string name="app_version">Version 3.0 (June 2 2015)</string>
+    <string name="app_version">Version 3.0.1 (June 12 2015)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
 
