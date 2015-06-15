@@ -30,7 +30,7 @@
 */
 
 require 'config.php';
-require 'vendor/jasig/phpcas/CAS.php';
+require 'phpcas/CAS.php';
 
 // Enable debugging
 phpCAS::setDebug();

@@ -38,4 +38,5 @@ tramp
 .DS_Store
 
 # phpcas
-webapp/phpcas/
+webapp/phpcas
+../auth.php/
