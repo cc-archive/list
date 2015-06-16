@@ -229,7 +229,7 @@ public final class RequestMethods {
     //Add Single Category to User Account
     public void addCategory(final String catId){
 
-        if(mCurrentUser.isTempUser()){ //TEMP USER
+        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
             mSharedPref.addUserCategoryPreference(catId);
             Log.v(TAG, "TEMP CAT ADDED: " + catId);
             return;
@@ -281,7 +281,7 @@ public final class RequestMethods {
 
     public void removeCategory(final String catId){
 
-        if(mCurrentUser.isTempUser()){ //TEMP USER
+        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
             mSharedPref.deleteUserCategoryPreference(catId);
             Log.v(TAG, "TEMP CAT DELETED: " + catId);
             return;
@@ -464,7 +464,7 @@ public final class RequestMethods {
     //REMOVE SINGLE item from user list
     public void removeItemFromUserList(final String itemID){
 
-        if(mCurrentUser.isTempUser()){
+        if(mCurrentUser.isAnonymousUser()){
             //If not logged in, remove item from sharedPreferences
             mSharedPref.deleteUserItemPreference(itemID);
 

@@ -29,7 +29,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -62,7 +61,6 @@ public class ListUser implements ServerAuthenticate {
     private AccountManager am;
     public AlertDialog mAlertDialog;
 
-
     public ListUser(Context mc){
         mContext = mc;
         mSharedPref = new SharedPreferencesMethods(mContext);
@@ -87,17 +85,18 @@ public class ListUser implements ServerAuthenticate {
         void onAuthed(final String authtoken);
     }
 
-    public boolean isTempUser() {
-        //TODO: Check if User account exists in AccountManager <== Do we need this?
-        SharedPreferences sharedPref = mContext.getSharedPreferences
-                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+    public boolean isAnonymousUser() {
 
-        if(mSharedPref.getUserId() == null) {
-            return true;
+        Account account = getAccount();
+
+        if(account != null){
+            return am.getPassword(account) == null;
         } else {
-            return false;
+            return true;
         }
-    } //isTempUser
+
+
+    } //isAnonymousUser
 
     public String getUserID() {
         return mSharedPref.getUserId();
@@ -162,8 +161,8 @@ public class ListUser implements ServerAuthenticate {
     public void getAuthed(final AuthCallback callback){
         Log.d(TAG, "Getting session token");
 
-        if(isTempUser()){
-            Log.v(TAG, "IS TEMP USER TRUE");
+        if(isAnonymousUser()){
+            Log.v(TAG, "IS ANON USER TRUE");
             addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
                 public void onAuthed(String authtoken) {
@@ -337,8 +336,8 @@ public class ListUser implements ServerAuthenticate {
                         callback.onAuthed(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
                     } catch (Exception e) {
-                        //Log.d(TAG, e.getMessage());
-                        Log.d(TAG, "addNewAccount > Error adding new account");
+                        Log.d(TAG, "addNewAccount > Error adding new account: " + e.getMessage());
+                        //TODO:
                     }
                 }
         }, null);
@@ -363,7 +362,53 @@ public class ListUser implements ServerAuthenticate {
     // LOG REQUESTS
     // --------------------------------------------------------
 
-    //LOG IN USER
+    //Create Anonymous User
+    public void createAnonymousUser(final NetworkUtils.AnonymousUserCallback callback){
+        if(!(NetworkUtils.isNetworkAvailable(mContext))){
+            mMessageHelper.networkFailMessage();
+            return;
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        String url = ApiConstants.LOGIN_USER;
+
+        StringRequest createAnonUserRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.v(TAG, "> createAnonymousUser > onResponse: " + response);
+
+                        if(response != null){
+
+                            try {
+                                JSONObject res = new JSONObject(response);
+                                String sessionToken = res.getString(ApiConstants.USER_TOKEN);
+                                String userID = res.getString(ApiConstants.USER_ID);
+
+                                mSharedPref.setUserID(userID);
+
+                                callback.onSuccess();
+
+                            } catch (JSONException e) {
+                                mMessageHelper.showDialog(mContext, mContext.getString
+                                                (R.string.oops_label),
+                                        mContext.getString(R.string.general_error));
+                            }
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v(TAG, "> createAnonymousUser > onErrorResponse: " + error.getMessage());
+                callback.onFail(error);
+                //TODO: callback or other error message
+            }
+        });
+        queue.add(createAnonUserRequest);
+    } //createAnonymousUser
+
+    //LOG IN USER with credentials
     @Override
     public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
         if(!(NetworkUtils.isNetworkAvailable(mContext))){

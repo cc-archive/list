@@ -44,6 +44,8 @@ public class NetworkUtils {
     // CALLBACKS
     // --------------------------------------------------------
 
+
+
     //Callback for requests
     public interface RequestCallback {
         void onSuccess();
@@ -67,5 +69,11 @@ public class NetworkUtils {
         void onFail(VolleyError error);
         void onUserOffline(List<UserListItem> response);
     }
+
+    public interface AnonymousUserCallback {
+        void onSuccess();
+        void onFail(VolleyError error);
+    }
+
 
 }

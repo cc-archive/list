@@ -159,7 +159,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(mCurrentUser.isTempUser()){ //TEMP USER
+        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
             mAccountName.setVisibility(View.GONE);
             mAccountButtonLabel.setText("Log In");
             mAccountButtonIcon.setImageResource(R.drawable.ic_login_grey600_24dp);

@@ -142,7 +142,7 @@ public class CategoryListActivity extends AppCompatActivity {
                 mCategoryData = response;
 
                 //Get user’s pre-selected categories
-                if(!(mCurrentUser.isTempUser())){
+                if(!(mCurrentUser.isAnonymousUser())){
                     //If user is logged in, request any pre-selected categories
                     mRequestMethods.getUserCategories(new NetworkUtils.ResponseCallback() {
                         @Override
@@ -256,7 +256,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
         Intent intent;
 
-        if(mCurrentUser.isTempUser()){ //TEMP USER
+        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
 //
 //            if(userCategories.size() < 1){
 //                mMessageHelper.showDialog(mContext, "No Categories Selected",

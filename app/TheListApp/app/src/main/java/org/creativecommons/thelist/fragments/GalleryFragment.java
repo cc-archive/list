@@ -165,7 +165,7 @@ public class GalleryFragment extends Fragment {
     } //onResume
 
     public void refreshItems(){
-        if(!mCurrentUser.isTempUser()){
+        if(!mCurrentUser.isAnonymousUser()){
             mRequestMethods.getUserPhotos(new NetworkUtils.ResponseCallback() {
                 @Override
                 public void onSuccess(JSONArray response) {

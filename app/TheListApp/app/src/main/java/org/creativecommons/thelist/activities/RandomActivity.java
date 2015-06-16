@@ -155,8 +155,8 @@ public class RandomActivity extends Activity {
                 }, 1000);
 
                 //If logged in, add item to user’s list right away
-                if (!(mCurrentUser.isTempUser())) {
-                    Log.v(TAG, "> isTempUser, user is logged in");
+                if (!(mCurrentUser.isAnonymousUser())) {
+                    Log.v(TAG, "> isAnonymousUser, user is logged in");
                     mRequestMethods.addItemToUserList(mItemID);
                 }
                 //Display a new item
@@ -184,7 +184,7 @@ public class RandomActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //Get array of selected item IDS
-                if(mCurrentUser.isTempUser()){
+                if(mCurrentUser.isAnonymousUser()){
                     saveTempUserItems();
                 }
 
@@ -221,7 +221,7 @@ public class RandomActivity extends Activity {
             try {
                 if(itemPositionCount == mRandomItemData.length()) {
                     //If you run out of items, just go to MainActivity
-                    if(mCurrentUser.isTempUser()){
+                    if(mCurrentUser.isAnonymousUser()){
                         saveTempUserItems();
                     }
 

@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(mCurrentUser.isTempUser() || mCurrentUser.getAccount() == null){
+                                if(mCurrentUser.isAnonymousUser() || mCurrentUser.getAccount() == null){
                                     handleUserAccount();
                                 } else {
                                     //Log out user
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     public void onResume() {
         super.onResume();
 
-        if(mCurrentUser.isTempUser()){ //TEMP USER
+        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
             mAccountName.setVisibility(View.GONE);
 
             mAccountItem.setTitle("Log In");

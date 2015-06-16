@@ -36,6 +36,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ServerError;
+import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
@@ -45,6 +49,7 @@ import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
@@ -159,7 +164,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onStart(){
         super.onStart();
-        if(!(mCurrentUser.isTempUser()) && mCurrentUser.getAccount() != null) {
+        if(!(mCurrentUser.isAnonymousUser()) && mCurrentUser.getAccount() != null) {
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
             //Redirect to MainActivity
@@ -209,8 +214,26 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     @Override
     public void onNextClicked() {
-        Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
-        startActivity(intent);
+        //TODO: login user as anonymous
+
+        mCurrentUser.createAnonymousUser(new NetworkUtils.AnonymousUserCallback() {
+            @Override
+            public void onSuccess() {
+
+                Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFail(VolleyError error) {
+                if(error instanceof NoConnectionError || error instanceof NetworkError){
+                    //TODO:
+                } else if(error instanceof ServerError) {
+                    //TODO: we’re experiencing some problems dialog
+                }
+            }
+        });
+
     }
 
     @Override

@@ -198,7 +198,7 @@ public class MyListFragment extends Fragment {
     public void onStart(){
         super.onStart();
 
-        if(!mCurrentUser.isTempUser() && !mSharedPref.getAnalyticsViewed()){
+        if(!mCurrentUser.isAnonymousUser() && !mSharedPref.getAnalyticsViewed()){
             //TODO: check app version
             //If user is logged in but has not opted into/out of GA
             Log.v(TAG, "logged in without opt out response");
@@ -269,7 +269,7 @@ public class MyListFragment extends Fragment {
             return;
         }
 
-        if(!(mCurrentUser.isTempUser())) { //if this is not a temp user
+        if(!(mCurrentUser.isAnonymousUser())) { //if this is not a temp user
             Log.v(TAG, " > User is logged in");
             displayUserItems();
         } else { //if user is a temp
@@ -292,7 +292,7 @@ public class MyListFragment extends Fragment {
 
         JSONArray itemIds;
 
-        if(!(mCurrentUser.isTempUser())) { //IF USER IS NOT A TEMP
+        if(!(mCurrentUser.isAnonymousUser())) { //IF USER IS NOT A TEMP
 
             mRequestMethods.getUserItems(new NetworkUtils.UserListCallback() {
                 @Override
@@ -685,7 +685,7 @@ public class MyListFragment extends Fragment {
     //Start Upload + Respond
     public void startPhotoUpload(){
 
-        if(!(mCurrentUser.isTempUser())){ //IF NOT TEMP USER
+        if(!(mCurrentUser.isAnonymousUser())){ //IF NOT TEMP USER
             mCurrentUser.getToken(new ListUser.TokenCallback() { //getToken
                 @Override
                 public void onAuthed(String authtoken) {

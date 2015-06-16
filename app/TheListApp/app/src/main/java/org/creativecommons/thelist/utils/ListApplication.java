@@ -78,12 +78,12 @@ public class ListApplication extends Application {
         sharedPref.setSurveyCount(0);
 
         //If user has id, but no account valid account, reset sharedPreferences (fully log user out)
-        if(!(listUser.isTempUser()) && listUser.getAccount() == null){
+        if(!(listUser.isAnonymousUser()) && listUser.getAccount() == null){
             sharedPref.ClearAllSharedPreferences();
         }
 
         //Check OptOut status (must happen once per app open/restart)
-        if(!(listUser.isTempUser()) && listUser.getAccount() != null){ //Logged in
+        if(!(listUser.isAnonymousUser()) && listUser.getAccount() != null){ //Logged in
             Log.v(TAG, "LIST ON CREATE: LOGGED IN");
             //Get optOut value from the account (if there is no value this should return null)
             Boolean optOut = listUser.getAnalyticsOptOut();
@@ -95,14 +95,14 @@ public class ListApplication extends Application {
                 //Set app opt-out
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
                 sharedPref.setAnalyticsViewed(true);
-                Log.v(TAG, "> isTempUser = false > setOptOut, true");
+                Log.v(TAG, "> isAnonymousUser = false > setOptOut, true");
             }
         } else { //Temp User
             Boolean optOut = sharedPref.getAnalyticsOptOut();
             Log.v(TAG, "tempUser optOut is: " + String.valueOf(optOut));
             if(Boolean.TRUE.equals(optOut)){
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
-                Log.v(TAG, "> isTempUser = true > setOptOut, true");
+                Log.v(TAG, "> isAnonymousUser = true > setOptOut, true");
             }
         }
 
