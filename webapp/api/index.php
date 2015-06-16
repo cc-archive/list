@@ -146,10 +146,10 @@ with('/api/users', function () {
 		    'username' => urlencode($request->param('username')),
 		    'password' => urlencode($request->param('password'))
 		);
-	
-		if(strpos($fields['username'], "@") === false) {
+		$user = new UserList();
+
+		if(strpos($fields['username'], "%40") === false) {
 			// if there's no @ sign, we're looking at either a failed login or a temp user
-			$user = new UserList();
 			if ($fields['username'] == "" && $fields['password'] == "") {
 				// No user name or password? Temp user registration
 				// Let's make a user with a GUID instead of an email address?
@@ -171,8 +171,11 @@ with('/api/users', function () {
 				}
 			}
 
-		} else {
-			foreach($fields as $key=>$value) { $posty .= $key.'='.$value.'&'; }
+		} else {	
+			$posty = '';
+			foreach($fields as $key=>$value) { 
+				$posty .= $key.'='.$value.'&'; 
+			}
 			rtrim($posty, '&');
 
 			$curl = curl_init();
@@ -183,12 +186,24 @@ with('/api/users', function () {
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
 			$result = curl_exec($curl);
+			if($request->param('guid')) {
+				$anonymous = $user->getUserInfo($request->param('guid'));
+				$previous_user = $user->getUserInfo($result);
+				if(!empty($previous_user)) {
+					$user->mergeUserInfo($previous_user['id'], $anonymous['id']);
+				} else {
+					if(!empty($anonymous)) {
+						$user->convertAnonymousUser($anonymous['email'], $result);
+					}
+				}
+			}		
+
         		curl_close($curl);
 		} 
-
 		if ($result) {     // if the user exists in CAS
 			$user = new UserList();
 			$foo = $user->getUserInfo($result); // get the userID, etc
+			// @TODO: This may never hit
 			if (count($foo) == 0) {  // first time on The List
 				$user->makeUser($result); // make a User
 				$foo = $user->getUserInfo($result); // now get the userID

@@ -429,6 +429,35 @@ class UserList {
         
     }
 
+    static function convertAnonymousUser($guid, $email) {
+	global $adodb;
+
+	$query = "UPDATE Users SET email = %s WHERE email=%s";
+	$res = $adodb->Execute(sprintf($query, $adodb->qstr($email), $adodb->qstr($guid)));
+	
+	return $res;
+    }
+
+
+    static function mergeUserInfo($userid, $anonymous_id) {
+	global $adodb; 
+	
+	$query = "UPDATE UserList SET userid = %s WHERE userid=%s";
+	
+	$res = $adodb->Execute(sprintf($query, $adodb->qstr($userid), $adodb->qstr($anonymous_id)));
+
+	$query = "UPDATE UserCategories SET userid = %s WHERE userid=%s";
+	$res = $adodb->Execute(sprintf($query, $adodb->qstr($userid), $adodb->qstr($anonymous_id)));
+
+	$query = "DELETE c1 FROM UserCategories c1, UserCategories c2 WHERE c1.id < c2.id AND c1.categoryid = c2.categoryid";
+	$res = $adodb->Execute($query);
+
+	$query = "DELETE FROM Users WHERE id=%s";
+	$res = $adodb->Execute(sprintf($query, $adodb->qstr($anonymous_id)));
+
+	return $res;
+    }
+
     static function getUserInfo($email) {
 
         global $adodb;
