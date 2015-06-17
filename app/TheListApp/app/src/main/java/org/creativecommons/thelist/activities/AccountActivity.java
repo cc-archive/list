@@ -152,6 +152,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
                 //Create new account
                 mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
+                //TODO: try bundle in 3rd param rather than setUserData
                 mAccountManager.setAuthToken(account, authtokenType, authtoken);
                 mAccountManager.setUserData(account, AccountGeneral.USER_ID, mCurrentUser.getUserID());
                 mAccountManager.setUserData(account, AccountGeneral.ANALYTICS_OPTOUT,

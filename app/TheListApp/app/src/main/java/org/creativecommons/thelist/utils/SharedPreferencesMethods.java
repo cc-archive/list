@@ -97,7 +97,7 @@ public class SharedPreferencesMethods {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_ID_PREFERENCE_KEY, id);
         editor.apply();
-        Log.v("ADDED AND SAVED ITEM: ", id);
+        Log.v("SET USER ID: ", id);
     }
 
     public void setAnalyticsOptOut(Boolean bol){

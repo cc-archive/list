@@ -88,7 +88,6 @@ public class ListApplication extends Application {
             //Get optOut value from the account (if there is no value this should return null)
             Boolean optOut = listUser.getAnalyticsOptOut();
 
-            //TODO: CHECK THIS
             if(optOut == null){
                 sharedPref.setAnalyticsOptOut(null); //this will trigger dialog in StartActivity
             } else if(optOut == true){ //if user has opt-ted out (true)
@@ -97,9 +96,9 @@ public class ListApplication extends Application {
                 sharedPref.setAnalyticsViewed(true);
                 Log.v(TAG, "> isAnonymousUser = false > setOptOut, true");
             }
-        } else { //Temp User
+        } else { //Anonyous User (to be)
             Boolean optOut = sharedPref.getAnalyticsOptOut();
-            Log.v(TAG, "tempUser optOut is: " + String.valueOf(optOut));
+            Log.v(TAG, "anonUser optOut is: " + String.valueOf(optOut));
             if(Boolean.TRUE.equals(optOut)){
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);
                 Log.v(TAG, "> isAnonymousUser = true > setOptOut, true");

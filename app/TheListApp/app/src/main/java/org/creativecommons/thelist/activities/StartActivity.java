@@ -49,7 +49,6 @@ import org.creativecommons.thelist.fragments.ExplainerFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 
@@ -216,19 +215,32 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     public void onNextClicked() {
         //TODO: login user as anonymous
 
-        mCurrentUser.createAnonymousUser(new NetworkUtils.AnonymousUserCallback() {
+        mCurrentUser.createAnonymousUser(new ListUser.AnonymousUserCallback() {
             @Override
             public void onSuccess() {
+                Log.v(TAG, "> createAnonymousUser > onSuccess");
+
+                Account account = mCurrentUser.getAccount();
+                String userData = am.getUserData(account, AccountGeneral.USER_ID);
+                Log.v(TAG, "USER ID: " + userData);
 
                 Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
                 startActivity(intent);
             }
 
             @Override
+            public void onAccountFail(Boolean bol) {
+                Log.v(TAG, "> createAnonymousUser > onAccountFail: " + bol.toString());
+                //TODO: if account fails to be created in
+            }
+
+            @Override
             public void onFail(VolleyError error) {
-                if(error instanceof NoConnectionError || error instanceof NetworkError){
-                    //TODO:
-                } else if(error instanceof ServerError) {
+                Log.v(TAG, "> createAnonymousUser > onFail: "  + error.getMessage());
+
+                if (error instanceof NoConnectionError || error instanceof NetworkError) {
+                    //TODO: need an working internet connection
+                } else if (error instanceof ServerError) {
                     //TODO: we’re experiencing some problems dialog
                 }
             }
@@ -255,7 +267,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     public void onCancelLogin() {
         getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .remove(loginFragment)
                 .commit();
         mFrameLayout.setClickable(false);

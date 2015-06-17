@@ -85,8 +85,13 @@ public class ListUser implements ServerAuthenticate {
         void onAuthed(final String authtoken);
     }
 
-    public boolean isAnonymousUser() {
+    public interface AnonymousUserCallback {
+        void onSuccess();
+        void onAccountFail(Boolean bol); //fail to add account
+        void onFail(VolleyError error); //api request fail
+    }
 
+    public boolean isAnonymousUser() {
         Account account = getAccount();
 
         if(account != null){
@@ -327,21 +332,21 @@ public class ListUser implements ServerAuthenticate {
     public void addNewAccount(String accountType, String authTokenType, final AuthCallback callback) {
         final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType, null,
                 null, mActivity, new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(AccountManagerFuture<Bundle> future) {
-                    try {
-                        Bundle bnd = future.getResult();
+                    @Override
+                    public void run(AccountManagerFuture<Bundle> future) {
+                        try {
+                            Bundle bnd = future.getResult();
 
-                        Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
-                        callback.onAuthed(bnd.getString(AccountManager.KEY_AUTHTOKEN));
+                            Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
+                            callback.onAuthed(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
-                    } catch (Exception e) {
-                        Log.d(TAG, "addNewAccount > Error adding new account: " + e.getMessage());
-                        //TODO:
+                        } catch (Exception e) {
+                            Log.d(TAG, "addNewAccount > Error adding new account: " + e.getMessage());
+                            //TODO:
+                        }
                     }
-                }
-        }, null);
-    }
+                }, null);
+    } //addNewAccount
 
     //Helper for testing
     public void removeAccounts(final AuthCallback callback){
@@ -363,7 +368,7 @@ public class ListUser implements ServerAuthenticate {
     // --------------------------------------------------------
 
     //Create Anonymous User
-    public void createAnonymousUser(final NetworkUtils.AnonymousUserCallback callback){
+    public void createAnonymousUser(final AnonymousUserCallback callback){
         if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
@@ -382,25 +387,40 @@ public class ListUser implements ServerAuthenticate {
 
                             try {
                                 JSONObject res = new JSONObject(response);
-                                String sessionToken = res.getString(ApiConstants.USER_TOKEN);
+                                String guid = res.getString(ApiConstants.USER_EMAIL);
+                                String authtoken = res.getString(ApiConstants.USER_TOKEN);
                                 String userID = res.getString(ApiConstants.USER_ID);
 
                                 mSharedPref.setUserID(userID);
 
-                                callback.onSuccess();
+                                final Account account = new Account(guid, AccountGeneral.ACCOUNT_TYPE);
+
+                                Bundle userData = new Bundle();
+                                userData.putString(AccountGeneral.ANALYTICS_OPTOUT,
+                                        mSharedPref.getAnalyticsOptOut().toString());
+                                userData.putString(AccountGeneral.USER_ID, userID);
+
+                                Boolean accountAdded = am.addAccountExplicitly(account, null, userData);
+
+                                if(accountAdded){
+                                    am.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, authtoken);
+                                    callback.onSuccess();
+                                } else {
+                                    callback.onAccountFail(accountAdded);
+                                }
 
                             } catch (JSONException e) {
-                                mMessageHelper.showDialog(mContext, mContext.getString
-                                                (R.string.oops_label),
-                                        mContext.getString(R.string.general_error));
+                                //TODO: add error toast
+//                                mMessageHelper.showDialog(mContext, mContext.getString
+//                                                (R.string.oops_label),
+//                                        mContext.getString(R.string.general_error));
                             }
-
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v(TAG, "> createAnonymousUser > onErrorResponse: " + error.getMessage());
+                //Log.v(TAG, "> createAnonymousUser > onErrorResponse: " + error.getMessage());
                 callback.onFail(error);
                 //TODO: callback or other error message
             }

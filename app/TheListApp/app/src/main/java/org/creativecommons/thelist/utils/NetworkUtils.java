@@ -70,10 +70,4 @@ public class NetworkUtils {
         void onUserOffline(List<UserListItem> response);
     }
 
-    public interface AnonymousUserCallback {
-        void onSuccess();
-        void onFail(VolleyError error);
-    }
-
-
-}
+} //NetworkUtils

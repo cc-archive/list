@@ -115,9 +115,9 @@ public class AccountFragment extends Fragment {
         String accountName = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         final String accountType = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
         mAuthTokenType = mActivity.getIntent().getStringExtra(ARG_AUTH_TYPE);
-        if (mAuthTokenType == null)
+        if (mAuthTokenType == null) {
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
+        }
         if (accountName != null) {
             ((EditText) mActivity.findViewById(R.id.accountName)).setText(accountName);
         }
