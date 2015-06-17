@@ -465,7 +465,7 @@ class UserList {
         $query = 'SELECT * FROM Users WHERE lower(email) = lower(' . $adodb->qstr($email) . ') LIMIT 1';
 
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-        $row = $adodb->CacheGetRow(1, $query);
+        $row = $adodb->GetRow($query);
 
         return $row;
     }
@@ -480,10 +480,7 @@ class UserList {
 
         try {
             $res = $adodb->Execute($q);
-            $user = new UserList();
-            $foo = $user->getUserInfo($email);
         } catch (Exception $e) {
-
             http_response_code(500);                
 
         }
@@ -491,7 +488,6 @@ class UserList {
     }
 
     static function getUserSession ($userid) {
-
         global $adodb;
 
         $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
@@ -511,7 +507,6 @@ class UserList {
             ));          
 
             $foo = array("skey" => $key, "userid" => $userid);
-
         } else {
 
             $foo = array("skey" => $row['skey'], "userid" => $row['userid']);

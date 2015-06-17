@@ -200,13 +200,13 @@ with('/api/users', function () {
 
         		curl_close($curl);
 		} 
-		if ($result) {     // if the user exists in CAS
-			$user = new UserList();
-			$foo = $user->getUserInfo($result); // get the userID, etc
+		if ($result) {
+			$foo = $user->getUserInfo($result); // get the userID, etc			
 			// @TODO: This may never hit
-			if (count($foo) == 0) {  // first time on The List
+			if (empty($foo)) {  // first time on The List
 				$user->makeUser($result); // make a User
 				$foo = $user->getUserInfo($result); // now get the userID
+		
 			}
 			// Now let's make a session for the user
 			$userid = $foo['id'];
