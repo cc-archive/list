@@ -202,38 +202,8 @@ public final class RequestMethods {
         });
     } //getUserCategories
 
-    //Add all categories to User Account (during login)
-    public void addTempCategoriesToUser(){
-        if(!(isNetworkAvailable())){
-            mMessageHelper.networkFailMessage();
-            return;
-        }
-
-        Log.v(TAG," > addTempCategoriesToUser, started");
-        JSONArray listCategoryPref;
-        listCategoryPref = mSharedPref.getCategorySharedPreference();
-
-        try{
-            if (listCategoryPref != null && listCategoryPref.length() > 0) {
-                Log.v("LIST ITEM PREF: ", listCategoryPref.toString());
-                for (int i = 0; i < listCategoryPref.length(); i++) {
-                    Log.v("ITEMS", "ARE BEING ADDED");
-                    addCategory(listCategoryPref.getString(i));
-                }
-            }
-        } catch(JSONException e){
-            Log.d(TAG, "> addTempCategoriesToUser: " + e.getMessage());
-        }
-    } //addTempCategoriesToUser
-
     //Add Single Category to User Account
     public void addCategory(final String catId){
-
-        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
-            mSharedPref.addUserCategoryPreference(catId);
-            Log.v(TAG, "TEMP CAT ADDED: " + catId);
-            return;
-        }
 
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
@@ -252,9 +222,8 @@ public final class RequestMethods {
                             @Override
                             public void onResponse(String response) {
                                 Log.v(TAG, "> addCategory > OnResponse: " + response);
-                                Log.v(TAG, "A CATEGORY IS BEING ADDED");
+                                //Log.v(TAG, "A CATEGORY IS BEING ADDED");
 
-                                mSharedPref.deleteUserCategoryPreference(catId);
                                 Toast.makeText(mContext, 
                                         mContext.getString(R.string.add_category_toast_success), 
                                         Toast.LENGTH_SHORT).show();
@@ -281,12 +250,6 @@ public final class RequestMethods {
 
     public void removeCategory(final String catId){
 
-        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
-            mSharedPref.deleteUserCategoryPreference(catId);
-            Log.v(TAG, "TEMP CAT DELETED: " + catId);
-            return;
-        }
-
         if(!(isNetworkAvailable())){
             mMessageHelper.networkFailMessage();
             return;
@@ -304,7 +267,7 @@ public final class RequestMethods {
                             public void onResponse(String response) {
                                 //get Response
                                 Log.v(TAG, "> removeCategory > onResponse: " + response);
-                                Log.v(TAG, "A CATEGORY IS BEING REMOVED");
+                                //Log.v(TAG, "A CATEGORY IS BEING REMOVED");
                                 //TODO: do something with response?
                             }
                         }, new Response.ErrorListener() {
@@ -463,53 +426,47 @@ public final class RequestMethods {
 
     //REMOVE SINGLE item from user list
     public void removeItemFromUserList(final String itemID){
-
-        if(mCurrentUser.isAnonymousUser()){
-            //If not logged in, remove item from sharedPreferences
-            mSharedPref.deleteUserItemPreference(itemID);
-
-        } else { //If logged in, remove from DB
-            if(!(isNetworkAvailable())){
-                mMessageHelper.networkFailMessage();
-                return;
-            }
-
-            //Get sessionToken
-            mCurrentUser.getToken(new ListUser.TokenCallback() {
-                @Override
-                public void onAuthed(final String authtoken) { //getToken and then start request
-                    RequestQueue queue = Volley.newRequestQueue(mContext);
-                    String url = ApiConstants.REMOVE_ITEM + mSharedPref.getUserId() + "/" + itemID;
-
-                    StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    //get Response
-                                    Log.v(TAG, "> removeItemFromUserList > OnResponse: " + response);
-                                    Log.v(TAG, "AN ITEM IS BEING REMOVED");
-                                    //TODO: do something with response?
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
-                            //TODO: move to message helper and Add callback to request
-                            Toast.makeText(mContext, mContext.getString(R.string.remove_item_toast_error),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put(ApiConstants.USER_TOKEN, authtoken);
-                            return params;
-                        }
-                    };
-                    queue.add(deleteItemRequest);
-                }
-            });
+        if(!(isNetworkAvailable())){
+            mMessageHelper.networkFailMessage();
+            return;
         }
+
+        //Get sessionToken
+        mCurrentUser.getToken(new ListUser.TokenCallback() {
+            @Override
+            public void onAuthed(final String authtoken) { //getToken and then start request
+                RequestQueue queue = Volley.newRequestQueue(mContext);
+                String url = ApiConstants.REMOVE_ITEM + mSharedPref.getUserId() + "/" + itemID;
+
+                StringRequest deleteItemRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                //get Response
+                                Log.v(TAG, "> removeItemFromUserList > OnResponse: " + response);
+                                Log.v(TAG, "AN ITEM IS BEING REMOVED");
+                                //TODO: do something with response?
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "> removeItemFromUserList > OnErrorResponse: " + error.getMessage());
+                        //TODO: move to message helper and Add callback to request
+                        Toast.makeText(mContext, mContext.getString(R.string.remove_item_toast_error),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put(ApiConstants.USER_TOKEN, authtoken);
+                        return params;
+                    }
+                };
+                queue.add(deleteItemRequest);
+            }
+        });
+
     } //removeItemFromUserList
 
 

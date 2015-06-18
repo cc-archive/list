@@ -206,47 +206,55 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onStop(){
         super.onStop();
-        Log.v(TAG, "ON STOP CALLED");
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-        Log.v(TAG, "ON STOP CALLED – AFTER GA CALLED");
     } //onStop
 
     @Override
     public void onNextClicked() {
         //TODO: login user as anonymous
 
-        mCurrentUser.createAnonymousUser(new ListUser.AnonymousUserCallback() {
-            @Override
-            public void onSuccess() {
-                Log.v(TAG, "> createAnonymousUser > onSuccess");
+        Account account = mCurrentUser.getAccount();
 
-                Account account = mCurrentUser.getAccount();
-                String userData = am.getUserData(account, AccountGeneral.USER_ID);
-                Log.v(TAG, "USER ID: " + userData);
+        if(account == null){ //if there is no previously existing user
 
-                Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
-                startActivity(intent);
-            }
+            mCurrentUser.createAnonymousUser(new ListUser.AnonymousUserCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.v(TAG, "> createAnonymousUser > onSuccess");
 
-            @Override
-            public void onAccountFail(Boolean bol) {
-                Log.v(TAG, "> createAnonymousUser > onAccountFail: " + bol.toString());
-                //TODO: if account fails to be created in
-            }
+                    Account account = mCurrentUser.getAccount();
+                    String userData = am.getUserData(account, AccountGeneral.USER_ID);
+                    Log.v(TAG, "USER ID: " + userData);
 
-            @Override
-            public void onFail(VolleyError error) {
-                Log.v(TAG, "> createAnonymousUser > onFail: "  + error.getMessage());
-
-                if (error instanceof NoConnectionError || error instanceof NetworkError) {
-                    //TODO: need an working internet connection
-                } else if (error instanceof ServerError) {
-                    //TODO: we’re experiencing some problems dialog
+                    Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                    startActivity(intent);
                 }
-            }
-        });
 
-    }
+                @Override
+                public void onAccountFail(Boolean bol) {
+                    Log.v(TAG, "> createAnonymousUser > onAccountFail: " + bol.toString());
+                    //TODO: if account fails to be created in
+                }
+
+                @Override
+                public void onFail(VolleyError error) {
+                    Log.v(TAG, "> createAnonymousUser > onFail: "  + error.getMessage());
+
+                    if (error instanceof NoConnectionError || error instanceof NetworkError) {
+                        //TODO: need an working internet connection
+                    } else if (error instanceof ServerError) {
+                        //TODO: we’re experiencing some problems dialog
+                    }
+                }
+            });
+
+        } else {
+            //TODO: what happens if you already have an account on the phone: account picker?
+            Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+            startActivity(intent);
+        }
+
+    } //onNextClicked
 
     @Override
     public void onUserSignedIn(Bundle userData) {
