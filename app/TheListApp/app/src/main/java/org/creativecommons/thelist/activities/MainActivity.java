@@ -274,20 +274,6 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     public void onResume() {
         super.onResume();
 
-        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
-            mAccountName.setVisibility(View.GONE);
-
-            mAccountItem.setTitle("Log In");
-            mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
-
-        } else { //LOGGED IN USER
-            mAccountName.setVisibility(View.VISIBLE);
-            mAccountName.setText(mCurrentUser.getAccountName());
-
-            mAccountItem.setTitle("Log Out");
-            mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
-        }
-
     } //onResume
 
     // --------------------------------------------------------
@@ -324,6 +310,9 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         public void onAuthed(String authtoken) {
                             Log.d(TAG, " > handleUserAccount > showAccountPicker > " +
                                     "got authtoken: " + authtoken);
+
+                            updateDrawerHeader();
+
                         }
                     });
                 } else {
@@ -336,6 +325,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                             "got authtoken: " + authtoken);
 
                                     mDrawerLayout.closeDrawer(GravityCompat.START);
+
+                                    updateDrawerHeader();
 
                                     MyListFragment listFragment = new MyListFragment();
                                     //load default view
@@ -350,6 +341,23 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         });
 
     } //handleUserAccount
+
+    public void updateDrawerHeader(){
+
+        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
+            mAccountName.setVisibility(View.GONE);
+
+            mAccountItem.setTitle("Log In");
+            mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
+
+        } else { //LOGGED IN USER
+            mAccountName.setVisibility(View.VISIBLE);
+            mAccountName.setText(mCurrentUser.getAccountName());
+
+            mAccountItem.setTitle("Log Out");
+            mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

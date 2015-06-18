@@ -35,7 +35,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -358,25 +357,6 @@ public final class RequestMethods {
         });
     } //getUserListItems
 
-    //Add all list items to userlist (previously temp stored items)
-    public void addSavedItemsToUserList(){
-        Log.v(TAG," > addSavedItemsToUserList, started");
-        JSONArray listItemPref;
-        listItemPref = mSharedPref.getUserItemPreference();
-
-        try{
-            if (listItemPref != null && listItemPref.length() > 0) {
-
-                for (int i = 0; i < listItemPref.length(); i++) {
-                    addItemToUserList(listItemPref.getString(i));
-                }
-
-            }
-        } catch(JSONException e){
-            Log.d(TAG, "> addSavedItemsToUserList: " + e.getMessage());
-        }
-    } //addSavedItemsToUserList
-
     //Add SINGLE random item to user list
     public void addItemToUserList(final String itemID) {
         if(!(isNetworkAvailable())){
@@ -396,10 +376,7 @@ public final class RequestMethods {
                             @Override
                             public void onResponse(String response) {
                                 Log.v(TAG, "> addItemToUserList > OnResponse: " + response);
-                                Log.v(TAG, "AN ITEM IS BEING ADDED");
-
-//                                //TODO: on success remove the item from the sharedPreferences
-//                                mSharedPref.deleteUserItemPreference(itemID);
+                                //Log.v(TAG, "AN ITEM IS BEING ADDED");
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -444,8 +421,8 @@ public final class RequestMethods {
                             public void onResponse(String response) {
                                 //get Response
                                 Log.v(TAG, "> removeItemFromUserList > OnResponse: " + response);
-                                Log.v(TAG, "AN ITEM IS BEING REMOVED");
-                                //TODO: do something with response?
+                                //Log.v(TAG, "AN ITEM IS BEING REMOVED");
+
                             }
                         }, new Response.ErrorListener() {
                     @Override

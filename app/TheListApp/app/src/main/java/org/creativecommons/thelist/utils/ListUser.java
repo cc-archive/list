@@ -101,6 +101,17 @@ public class ListUser implements ServerAuthenticate {
         }
     } //isAnonymousUser
 
+    public String getAnonymousUserGUID(){
+
+        //TODO: throw exception instead of check
+        if(isAnonymousUser()){
+            Account account = getAccount();
+            return account.name;
+        }
+
+        return null;
+    }
+
     public String getUserID() {
         return mSharedPref.getUserId();
     } //getUserID
@@ -110,7 +121,7 @@ public class ListUser implements ServerAuthenticate {
     // --------------------------------------------------------
 
     public interface AvailableAccountCallback {
-        public void onResult(Account[] availableAccounts);
+        void onResult(Account[] availableAccounts);
     }
 
     public String getUserIDFromAccount(Account ac){
@@ -335,7 +346,7 @@ public class ListUser implements ServerAuthenticate {
         }
     } //for account picker
 
-    //AddNewAccount
+    //AddFullNewAccount
     public void addNewFullAccount(String accountType, String authTokenType, final AuthCallback callback) {
         final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType,
                 AccountGeneral.FULL_ACCOUNT_FEATURES,
@@ -354,7 +365,9 @@ public class ListUser implements ServerAuthenticate {
                         }
                     }
                 }, null);
+
     } //addNewFullAccount
+
 
     //Helper for testing
     public void removeAccounts(final AuthCallback callback){
@@ -452,7 +465,6 @@ public class ListUser implements ServerAuthenticate {
                     public void onResponse(String response) {
                         //Get Response
                         if(response == null || response.equals("null")) {
-                            Log.v("RESPONSE NULL HERE: ", response);
                             mMessageHelper.showDialog(mContext, "YOU SHALL NOT PASS",
                                     "Sure you got your email/password combo right?");
                         } else {
@@ -486,7 +498,12 @@ public class ListUser implements ServerAuthenticate {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("username", email);
+
+                if(isAnonymousUser()){
+                    params.put(ApiConstants.USER_GUID, getAnonymousUserGUID());
+                }
+
+                params.put(ApiConstants.USER_NAME, email);
                 params.put(ApiConstants.USER_PASSWORD, pass);
                 return params;
             }

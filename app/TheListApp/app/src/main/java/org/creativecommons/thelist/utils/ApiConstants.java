@@ -23,11 +23,13 @@ public final class ApiConstants {
 
     //User Object
     public static final String USER_ID = "userid";
-    public static final String USER_NAME = "name";
-    public static final String USER_ITEMS = "items";
-    public static final String USER_CATEGORIES = "categories";
+    public static final String USER_NAME = "username";
+    public static final String USER_GUID = "guid";
     public static final String USER_EMAIL = "email";
     public static final String USER_PASSWORD = "password";
+    public static final String USER_ITEMS = "items";
+    public static final String USER_CATEGORIES = "categories";
+
 
     //Category Object
     public static final String CATEGORY_NAME = "title";
