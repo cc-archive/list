@@ -116,36 +116,38 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             //If you have accounts > show picker; if not, show login
             @Override
             public void onClick(View v) {
-                Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+                mCurrentUser.getAvailableFullAccounts(new ListUser.AvailableAccountCallback() {
+                    @Override
+                    public void onResult(Account[] availableAccounts) {
+                        if(availableAccounts.length > 1){
+                            mCurrentUser.showAccountPicker(availableAccounts, new ListUser.AuthCallback() {
+                                @Override
+                                public void onAuthed(String authtoken) {
+                                    Log.d(TAG, "I have an account > Got an authtoken");
+                                    //TODO: is this actually needed?
+                                    Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
 
-                //TODO: switch getAuthed: login to first account if there if only one, if there is more than more go to accountPicker
-                if(availableAccounts.length > 1){
-                    mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
-                        @Override
-                        public void onAuthed(String authtoken) {
-                            Log.d(TAG, "I have an account > Got an authtoken");
-                            //TODO: is this actually needed?
-                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                            });
+                        } else {
+                            mCurrentUser.getAuthed(new ListUser.AuthCallback() {
+                                @Override
+                                public void onAuthed(String authtoken) {
+                                    Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
+                                    //TODO: is this actually needed?
+                                    Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
+
+                            });
                         }
-
-                    });
-                } else {
-                    mCurrentUser.getAuthed(new ListUser.AuthCallback() {
-                        @Override
-                        public void onAuthed(String authtoken) {
-                            Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
-                            //TODO: is this actually needed?
-                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-
-                    });
-                }
+                    }
+                });
             }
         }); //accountButton
 

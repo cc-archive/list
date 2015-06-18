@@ -19,6 +19,7 @@
 
 package org.creativecommons.thelist.activities;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -223,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(mCurrentUser.isAnonymousUser() || mCurrentUser.getAccount() == null){
+
+                                if(mCurrentUser.isAnonymousUser()){
                                     handleUserAccount();
                                 } else {
                                     //Log out user
@@ -312,33 +314,41 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
     private void handleUserAccount(){
     //TODO: bring up account picker dialog w/ new option
-    if(mCurrentUser.getAccountCount() > 0){
-        mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
+        mCurrentUser.getAvailableFullAccounts(new ListUser.AvailableAccountCallback() {
             @Override
-            public void onAuthed(String authtoken) {
-                Log.d(TAG, " > switch_accounts MenuItem > showAccountPicker > " +
-                        "got authtoken: " + authtoken);
+            public void onResult(Account[] availableAccounts) {
+
+                if (availableAccounts.length > 0){
+                    mCurrentUser.showAccountPicker(availableAccounts, new ListUser.AuthCallback() {
+                        @Override
+                        public void onAuthed(String authtoken) {
+                            Log.d(TAG, " > handleUserAccount > showAccountPicker > " +
+                                    "got authtoken: " + authtoken);
+                        }
+                    });
+                } else {
+
+                    mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                            AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                                @Override
+                                public void onAuthed(String authtoken) {
+                                    Log.d(TAG, " > handleUserAccount > addNewFullAccount > " +
+                                            "got authtoken: " + authtoken);
+
+                                    mDrawerLayout.closeDrawer(GravityCompat.START);
+
+                                    MyListFragment listFragment = new MyListFragment();
+                                    //load default view
+                                    FragmentManager fragmentManager = getSupportFragmentManager();
+                                    fragmentManager.beginTransaction()
+                                            .replace(R.id.main_content_container, listFragment)
+                                            .commit();
+                                }
+                            });
+                }
             }
         });
-    } else {
-        mCurrentUser.addNewAccount(AccountGeneral.ACCOUNT_TYPE,
-                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
-                    @Override
-                    public void onAuthed(String authtoken) {
-                        Log.d(TAG, " > switch_accounts MenuItem > addNewAccount > " +
-                                "got authtoken: " + authtoken);
 
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-
-                        MyListFragment listFragment = new MyListFragment();
-                        //load default view
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.main_content_container, listFragment)
-                                .commit();
-                    }
-                });
-        }
     } //handleUserAccount
 
     @Override

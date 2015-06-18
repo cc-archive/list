@@ -19,20 +19,17 @@
 
 package org.creativecommons.thelist.authentication;
 
-import android.accounts.AccountManager;
-import android.content.Context;
-
 public class AccountGeneral {
-    Context mContext;
-    AccountManager mAccountManager;
-
-    public AccountGeneral(){
-    }
-
-    public AccountGeneral(Context context){
-        this.mContext = context;
-        this.mAccountManager = AccountManager.get(context);
-    }
+//    Context mContext;
+//    AccountManager mAccountManager;
+//
+//    public AccountGeneral(){
+//    }
+//
+//    public AccountGeneral(Context context){
+//        this.mContext = context;
+//        this.mAccountManager = AccountManager.get(context);
+//    }
 
     /**
      * Account type id
@@ -43,6 +40,15 @@ public class AccountGeneral {
      * Account name
      */
     public static final String ACCOUNT_NAME = "CCID";
+
+    /**
+     * Features
+     */
+    public static final String FEATURE_FULL_ACCOUNT_DEFAULT = "CCID Full Account";
+
+    public static final String[] FULL_ACCOUNT_FEATURES = {
+            FEATURE_FULL_ACCOUNT_DEFAULT
+    };
 
     /**
      * User Data Keys
@@ -60,7 +66,7 @@ public class AccountGeneral {
 
     //public static final ListAuthenticate sServerAuthenticate = new ListAuthenticate();
 
-    //Authenticate Constants
+    //Authenticate Bundle Constants
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -68,5 +74,7 @@ public class AccountGeneral {
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
     public static final String PARAM_USER_PASS = "USER_PASS";
+
+
 
 }//AccountGeneral

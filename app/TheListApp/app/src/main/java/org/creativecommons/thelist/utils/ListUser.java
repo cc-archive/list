@@ -99,8 +99,6 @@ public class ListUser implements ServerAuthenticate {
         } else {
             return true;
         }
-
-
     } //isAnonymousUser
 
     public String getUserID() {
@@ -110,6 +108,10 @@ public class ListUser implements ServerAuthenticate {
     // --------------------------------------------------------
     // ACCOUNT HELPER METHODS
     // --------------------------------------------------------
+
+    public interface AvailableAccountCallback {
+        public void onResult(Account[] availableAccounts);
+    }
 
     public String getUserIDFromAccount(Account ac){
         return am.getUserData(ac, AccountGeneral.USER_ID);
@@ -159,6 +161,27 @@ public class ListUser implements ServerAuthenticate {
         }
     }
 
+    //Get available full accounts (all accounts non-anonymous)
+    public void getAvailableFullAccounts(final AvailableAccountCallback callback){
+        am.getAccountsByTypeAndFeatures(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.FULL_ACCOUNT_FEATURES,
+                new AccountManagerCallback<Account[]>() {
+                    @Override
+                     public void run(AccountManagerFuture<Account[]> accountManagerFuture) {
+                        try {
+                            callback.onResult(accountManagerFuture.getResult());
+
+                        } catch (OperationCanceledException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (AuthenticatorException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, null);
+
+    } //getAvailableFullAccounts
+
     /**
      * Get auth token for existing account, if the account doesn’t exist, create new CCID account
      * You must already have a valid ID
@@ -168,10 +191,10 @@ public class ListUser implements ServerAuthenticate {
 
         if(isAnonymousUser()){
             Log.v(TAG, "IS ANON USER TRUE");
-            addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+            addNewFullAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
                 public void onAuthed(String authtoken) {
-                    Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
+                    Log.v(TAG, "> getAuthed > addNewFullAccount token: " + authtoken);
                     callback.onAuthed(authtoken);
                 }
             });
@@ -182,10 +205,10 @@ public class ListUser implements ServerAuthenticate {
             if(account == null){
                 Log.v(TAG, "getAuthed > getAccount > account is null");
 
-                addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+                addNewFullAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                     @Override
                     public void onAuthed(String authtoken) {
-                        Log.v(TAG, "> getAuthed > addNewAccount token: " + authtoken);
+                        Log.v(TAG, "> getAuthed > addNewFullAccount token: " + authtoken);
                         callback.onAuthed(authtoken);
                     }
                 });
@@ -248,64 +271,48 @@ public class ListUser implements ServerAuthenticate {
     /**
      * Show all the accounts registered on the account manager. Request an auth token upon user select.
      */
-    public void showAccountPicker(final AuthCallback callback) {
-        //@param final boolean invalidate, final String authTokenType // mInvalidate = invalidate;
-        final Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+    public void showAccountPicker(final Account[] availableAccounts, final AuthCallback callback) {
 
-        if (availableAccounts.length == 0) {
-            //TODO: Show other dialog to add account
-            addNewAccount(AccountGeneral.ACCOUNT_TYPE,
-                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
-                @Override
-                public void onAuthed(String authtoken) {
-                    Log.d(TAG, " > showAccountPicker (no accounts) > addNewAccount, " +
-                            "token received: " + authtoken);
-                }
-            });
-        } else {
-            String name[] = new String[availableAccounts.length];
-            for (int i = 0; i < availableAccounts.length; i++) {
-                name[i] = availableAccounts[i].name;
-            }
+        String name[] = new String[availableAccounts.length];
 
-            // Account picker
-            mAlertDialog = new AlertDialog.Builder(mContext).setTitle("Pick Account")
-                    .setCancelable(true)
-                    .setPositiveButton("Add New", new OkOnClickListener())
-                    .setNegativeButton("Cancel", new CancelOnClickListener())
-                    .setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, name),
-                            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-//                    TODO: do we need this?
-//                    if(invalidate)
-//                        invalidateAuthToken(availableAccounts[which], authTokenType);
-//                    else
-//                        getExistingAccountAuthToken(availableAccounts[which], authTokenType);
-
-                    am.getAuthToken(availableAccounts[which], AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, mActivity,
-                            new AccountManagerCallback<Bundle>() {
-                                @Override
-                                public void run(AccountManagerFuture<Bundle> future) {
-                                    try {
-                                        Bundle bundle = future.getResult();
-                                        String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                                        Log.v(TAG, " > showAccountPicker > getAuthToken from existing account: " + authtoken);
-                                        callback.onAuthed(authtoken);
-                                    } catch (OperationCanceledException e) {
-                                        e.printStackTrace();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (AuthenticatorException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, null);
-                }
-            }).create();
-            mAlertDialog.show();
+        for (int i = 0; i < availableAccounts.length; i++) {
+            name[i] = availableAccounts[i].name;
+            Log.v(TAG, "ACCOUNT NAME: " + name[i]);
         }
+
+        // Account picker
+        mAlertDialog = new AlertDialog.Builder(mContext).setTitle("Pick Account")
+                .setCancelable(true)
+                .setPositiveButton("Add New", new OkOnClickListener())
+                .setNegativeButton("Cancel", new CancelOnClickListener())
+                .setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, name),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                am.getAuthToken(availableAccounts[which],
+                                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS,
+                                        null, mActivity,
+                                        new AccountManagerCallback<Bundle>() {
+                                            @Override
+                                            public void run(AccountManagerFuture<Bundle> future) {
+                                                try {
+                                                    Bundle bundle = future.getResult();
+                                                    String authtoken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                                                    Log.v(TAG, " > showAccountPicker > getAuthToken from existing account: " + authtoken);
+                                                    callback.onAuthed(authtoken);
+                                                } catch (OperationCanceledException e) {
+                                                    e.printStackTrace();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (AuthenticatorException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }, null);
+                            }
+                        }).create();
+        mAlertDialog.show();
     } //showAccountPicker
 
     //Listeners for AccountPicker Dialog
@@ -319,34 +326,35 @@ public class ListUser implements ServerAuthenticate {
     private final class OkOnClickListener implements
             DialogInterface.OnClickListener {
         public void onClick(DialogInterface dialog, int which) {
-            addNewAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
+            addNewFullAccount(AccountGeneral.ACCOUNT_TYPE, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new AuthCallback() {
                 @Override
                 public void onAuthed(String authtoken) {
-                    Log.d(TAG, " > showAccountPicker DialogInterface > addNewAccount, token received: " + authtoken);
+                    Log.d(TAG, " > showAccountPicker DialogInterface > addNewFullAccount, token received: " + authtoken);
                 }
             });
         }
     } //for account picker
 
     //AddNewAccount
-    public void addNewAccount(String accountType, String authTokenType, final AuthCallback callback) {
-        final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType, null,
+    public void addNewFullAccount(String accountType, String authTokenType, final AuthCallback callback) {
+        final AccountManagerFuture<Bundle> future = am.addAccount(accountType, authTokenType,
+                AccountGeneral.FULL_ACCOUNT_FEATURES,
                 null, mActivity, new AccountManagerCallback<Bundle>() {
                     @Override
                     public void run(AccountManagerFuture<Bundle> future) {
                         try {
                             Bundle bnd = future.getResult();
 
-                            Log.d(TAG, " > addNewAccount Bundle received: " + bnd);
+                            Log.d(TAG, " > addNewFullAccount Bundle received: " + bnd);
                             callback.onAuthed(bnd.getString(AccountManager.KEY_AUTHTOKEN));
 
                         } catch (Exception e) {
-                            Log.d(TAG, "addNewAccount > Error adding new account: " + e.getMessage());
+                            Log.d(TAG, "addNewFullAccount > Error adding new account: " + e.getMessage());
                             //TODO:
                         }
                     }
                 }, null);
-    } //addNewAccount
+    } //addNewFullAccount
 
     //Helper for testing
     public void removeAccounts(final AuthCallback callback){
