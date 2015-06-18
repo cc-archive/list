@@ -38,21 +38,15 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.layouts.AutoResizeTextView;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
-import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.NetworkUtils;
 import org.creativecommons.thelist.utils.RequestMethods;
-import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RandomActivity extends Activity {
     public static final String TAG = RandomActivity.class.getSimpleName();
@@ -60,20 +54,12 @@ public class RandomActivity extends Activity {
     private Context mContext;
 
     //Helper Methods
-    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
     private RequestMethods mRequestMethods;
-    private SharedPreferencesMethods mSharedPref;
 
     //Handle Data
     private JSONArray mRandomItemData;
-    private JSONObject mListItemData;
-    private String mMakerName;
-    private String mItemName;
     private String mItemID;
-    private String mCategoryID;
-
-    private List<UserListItem> mItemList;
 
     int itemPositionCount = 0;
 
@@ -94,15 +80,11 @@ public class RandomActivity extends Activity {
 
         mContext = this;
 
-        mCurrentUser = new ListUser(RandomActivity.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
-        mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        mItemList = new ArrayList<>();
 
         //UI Elements
         mBackground = (RelativeLayout) findViewById(R.id.random_item_background);
@@ -126,7 +108,10 @@ public class RandomActivity extends Activity {
             public void onFail(VolleyError error) {
                 Log.d(TAG, "> getRandomListItems > onFail: " + error.getMessage());
                 mMessageHelper.noItemsFound();
-                //TODO: Take user elsewhere if items don’t load
+                mProgressBar.setVisibility(View.INVISIBLE);
+                //TODO: Take user elsewhere if items don’t load?
+                //Dialog with option to go to main screen or retry?
+
             }
         });
 
@@ -134,13 +119,6 @@ public class RandomActivity extends Activity {
         mYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Add items to ItemList
-                UserListItem listItem = new UserListItem();
-                listItem.setItemID(mItemID);
-                listItem.setItemName(mItemName);
-                listItem.setMakerName(mMakerName);
-                listItem.setCategoryID(mCategoryID);
-                mItemList.add(listItem);
 
                 //Toast: Confirm List Item has been added
                 //TODO: add this to addItemToUserList callback
@@ -154,15 +132,12 @@ public class RandomActivity extends Activity {
                     }
                 }, 1000);
 
-                //If logged in, add item to user’s list right away
-                if (!(mCurrentUser.isAnonymousUser())) {
-                    Log.v(TAG, "> isAnonymousUser, user is logged in");
-                    mRequestMethods.addItemToUserList(mItemID);
-                }
+                mRequestMethods.addItemToUserList(mItemID);
+
                 //Display a new item
                 updateView();
-                //show doneButton if user has selected at least 3 items
-                if (mItemList.size() == 1) { //once it has 3 items
+                //show doneButton if user has selected at least x items
+                if (itemPositionCount >= 1) {
                     mDoneButton.setVisibility(View.VISIBLE);
                 }
             } //OnClick
@@ -183,13 +158,6 @@ public class RandomActivity extends Activity {
         mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Get array of selected item IDS
-                if(mCurrentUser.isAnonymousUser()){
-                    saveTempUserItems();
-                }
-
-                //Clear ItemList
-                mItemList.clear();
 
                 Intent intent = new Intent(mContext, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -220,13 +188,6 @@ public class RandomActivity extends Activity {
         else {
             try {
                 if(itemPositionCount == mRandomItemData.length()) {
-                    //If you run out of items, just go to MainActivity
-                    if(mCurrentUser.isAnonymousUser()){
-                        saveTempUserItems();
-                    }
-
-                    //Clear ItemList
-                    mItemList.clear();
 
                     Intent intent = new Intent(RandomActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -234,14 +195,17 @@ public class RandomActivity extends Activity {
                     startActivity(intent);
 
                 } else {
-                    mListItemData = mRandomItemData.getJSONObject(itemPositionCount);
-                    mItemID = mListItemData.getString(ApiConstants.ITEM_ID);
-                    mItemName = mListItemData.getString(ApiConstants.ITEM_NAME);
-                    mMakerName = mListItemData.getString(ApiConstants.MAKER_NAME);
-                    mCategoryID = mListItemData.getString(ApiConstants.ITEM_CATEGORY);
+
+                    JSONObject listItemData = mRandomItemData.getJSONObject(itemPositionCount);
+
+                    mItemID = listItemData.getString(ApiConstants.ITEM_ID);
+
+                    String itemName = listItemData.getString(ApiConstants.ITEM_NAME);
+                    String makerName = listItemData.getString(ApiConstants.MAKER_NAME);
+                    String categoryID = listItemData.getString(ApiConstants.ITEM_CATEGORY);
 
                     //Update UI
-                    switch(Integer.valueOf(mCategoryID)){
+                    switch(Integer.valueOf(categoryID)){
                         case ApiConstants.PEOPLE:
 
                             setButtonTheme(mYesButton, R.drawable.check_default_orange,
@@ -320,10 +284,7 @@ public class RandomActivity extends Activity {
                             break;
                     }
 
-//                    mTextView.setText("Matt Lee needs a picture of a very very very long sentence in this phone and stuff." +
-//                            "So much more stuff than you could ever imagine and there were rainbows and lollipops everywhere.");
-
-                    mTextView.setText(mMakerName + " needs a picture of " + mItemName);
+                    mTextView.setText(makerName + " needs a picture of " + itemName);
                     mYesButton.setVisibility(View.VISIBLE);
                     mNoButton.setVisibility(View.VISIBLE);
 
@@ -334,31 +295,6 @@ public class RandomActivity extends Activity {
             }
         }
     } //updateView
-
-    public void saveTempUserItems(){
-        List<String> userItemList = getItemIds(mItemList);
-
-        JSONArray oldItemArray = mSharedPref.getUserItemPreference();
-        if(oldItemArray != null) {
-            for (int i = 0; i < oldItemArray.length(); i++) {
-                try {
-                    userItemList.add(0, oldItemArray.getString(i));
-                } catch (JSONException e) {
-                    Log.v(TAG, e.getMessage());
-                }
-            }
-        }
-        Log.v("LIST OF ALL ITEMS ADDED", userItemList.toString());
-        //Save Array as String to sharedPreferences
-        mSharedPref.saveSharedPreference
-                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY,
-                        userItemList.toString());
-
-        String sharedPref = mSharedPref.getSharedPreferenceList
-                (SharedPreferencesMethods.LIST_ITEM_PREFERENCE_KEY).toString();
-        Log.v("ALL ITEMS IN USER PREF", sharedPref);
-    }
-
 
     public void setButtonTheme(ImageButton button, int normalState, int pressedState, int focusedState){
         StateListDrawable states = new StateListDrawable();
@@ -374,16 +310,6 @@ public class RandomActivity extends Activity {
 
 //    ------------------------------------------------------------------------------------------
 //    ------------------------------------------------------------------------------------------
-
-    //Parse List Objects of List Items and return list of Item IDS
-    public List<String> getItemIds(List<UserListItem> list){
-        List<String>arrayList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            String singleID = list.get(i).getItemID();
-            arrayList.add(singleID);
-        }
-        return arrayList;
-    } //getItemIds
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
