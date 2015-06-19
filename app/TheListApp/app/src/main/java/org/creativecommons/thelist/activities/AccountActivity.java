@@ -21,6 +21,10 @@ package org.creativecommons.thelist.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +42,7 @@ import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
@@ -120,7 +125,53 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     public void onUserSignedIn(Bundle userData) {
         final Intent res = new Intent();
         res.putExtras(userData);
-        finishLogin(res);
+
+        Account anonymousAccount = mCurrentUser.getAccount();
+        final String anonymousAccountName = anonymousAccount.name;
+
+        mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
+            @Override
+            public void run(AccountManagerFuture<Boolean> accountManagerFuture) {
+
+                try {
+                    if(accountManagerFuture.getResult() != null){
+                        Log.v(TAG, "onUserSignedIn > successfully removed " + anonymousAccountName);
+                        finishLogin(res);
+
+                    }
+                } catch (OperationCanceledException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (AuthenticatorException e) {
+                    Log.v(TAG, "onUserSignedIn > failed to remove " + anonymousAccountName);
+                    e.printStackTrace();
+                }
+
+            }
+        }, null);
+
+//            mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
+//                @Override
+//                public void run(AccountManagerFuture<Boolean> accountManagerFuture) {
+//                    try {
+//                        if(accountManagerFuture.getResult()){
+//                            Log.v(TAG, "onUserSignedIn > successfully removed " + anonymousAccountName);
+//
+//                            finishLogin(res);
+//                        } else {
+//                            Log.d(TAG, "onUserSignedIn > could not delete old account");
+//                        }
+//                    } catch (OperationCanceledException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } catch (AuthenticatorException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }, null);
+
     } //onUserSignedIn
 
     //Pass bundle constructed on request success
@@ -129,10 +180,11 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
         String accountEmail = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+
         final Account account = new Account(accountEmail, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
 
-        //TODO: is this working or skipping to setPassword?
+        //TODO: review when signin is available
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
             Log.d(TAG, "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);

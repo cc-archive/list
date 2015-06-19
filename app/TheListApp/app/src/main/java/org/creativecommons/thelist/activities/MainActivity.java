@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                             @Override
                             public void run() {
 
+                                //TODO: check if logged in or not
                                 if(mCurrentUser.isAnonymousUser()){
                                     handleUserAccount();
                                 } else {
@@ -347,14 +348,14 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         if(mCurrentUser.isAnonymousUser()){ //TEMP USER
             mAccountName.setVisibility(View.GONE);
 
-            mAccountItem.setTitle("Log In");
+            mAccountItem.setTitle(R.string.log_in_nav_label);
             mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
 
         } else { //LOGGED IN USER
             mAccountName.setVisibility(View.VISIBLE);
             mAccountName.setText(mCurrentUser.getAccountName());
 
-            mAccountItem.setTitle("Log Out");
+            mAccountItem.setTitle(R.string.log_out_nav_label);
             mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
         }
     }

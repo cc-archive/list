@@ -95,18 +95,25 @@ public class ListUser implements ServerAuthenticate {
         Account account = getAccount();
 
         if(account != null){
-            return am.getPassword(account) == null;
+            String password = am.getPassword(account);
+            return password == null;
+
         } else {
-            return true;
+            return false;
         }
     } //isAnonymousUser
 
     public String getAnonymousUserGUID(){
 
-        //TODO: throw exception instead of check
+        //TODO: throw exception instead of check?
         if(isAnonymousUser()){
             Account account = getAccount();
-            return account.name;
+
+            if(account != null){
+                return account.name;
+            } else {
+                return null;
+            }
         }
 
         return null;
@@ -451,7 +458,7 @@ public class ListUser implements ServerAuthenticate {
 
     //LOG IN USER with credentials
     @Override
-    public void userSignIn(final String email, final String pass, String authType, final AuthCallback callback){
+    public void userSignIn(final String email, final String pass, final String guid, String authType, final AuthCallback callback){
         if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
@@ -459,6 +466,7 @@ public class ListUser implements ServerAuthenticate {
 
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
+
         StringRequest userSignInRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -499,8 +507,8 @@ public class ListUser implements ServerAuthenticate {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
 
-                if(isAnonymousUser()){
-                    params.put(ApiConstants.USER_GUID, getAnonymousUserGUID());
+                if(guid != null){
+                    params.put(ApiConstants.USER_GUID, guid);
                 }
 
                 params.put(ApiConstants.USER_NAME, email);
@@ -513,7 +521,7 @@ public class ListUser implements ServerAuthenticate {
 
     //TODO: SIGN UP USER
     @Override
-    public void userSignUp(String email, String pass, String authType, final AuthCallback callback) throws Exception {
+    public void userSignUp(String email, String pass, String guid, String authType, final AuthCallback callback) throws Exception {
         if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.showDialog(mContext, mActivity.getString(R.string.error_network_title),
                     mActivity.getString(R.string.error_network_message));

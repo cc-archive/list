@@ -117,7 +117,7 @@ public class ListAuthenticator extends AbstractAccountAuthenticator {
                         try {
                             Log.d("THE LIST", TAG + "> re-authenticating with the existing password");
                             ListUser mCurrentUser = new ListUser(activity);
-                            mCurrentUser.userSignIn(account.name, password, authTokenType, new ListUser.AuthCallback() {
+                            mCurrentUser.userSignIn(account.name, password, mCurrentUser.getAnonymousUserGUID(), authTokenType, new ListUser.AuthCallback() {
                                 @Override
                                 public void onAuthed(String userToken) {
                                     authToken = userToken;

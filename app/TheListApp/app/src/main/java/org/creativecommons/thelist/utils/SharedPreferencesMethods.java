@@ -37,6 +37,7 @@ import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SharedPreferencesMethods {
@@ -267,7 +268,8 @@ public class SharedPreferencesMethods {
 
             return itemList;
         } else {
-            return null;
+
+            return Collections.emptyList();
         }
     }
 

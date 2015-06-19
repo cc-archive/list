@@ -19,6 +19,14 @@
 
 
     <!-- Drawer Navigation Labels -->
+    <string name="nav_item_list_label">My List</string>
+    <string name="nav_item_photos_label">My Photos</string>
+    <string name="nav_item_categories_label">My Categories</string>
+    <string name="nav_item_requests_label">Request An Item</string>
+    <string name="nav_item_about_label">About The App</string>
+    <string name="nav_item_feedback_label">Give Feedback</string>
+    <string name="drawer_subhead_label">More</string>
+
     <string-array name="drawer_navigation_labels">
         <item>My List</item>
         <item>My Photos</item>
@@ -29,13 +37,20 @@
     </string-array>
 
     <!-- Menu Button Labels -->
-    <string name="log_out_menu_label">Log Out</string>
-    <string name="login_menu_label">Log In</string>
-    <string name="pick_categories_menu_label">Pick Categories</string>
-    <string name="action_randomItem_label">Hit Me</string>
-    <string name="action_random_label">Hit Me</string>
+    <string name="log_out_nav_label">Log Out</string>
+    <string name="log_in_nav_label">Log In</string>
+
+
+    <!-- Account Activity/Fragment -->
+    <string name="password_hint">Password</string>
+    <string name="login_button_label">LOGIN</string>
+    <string name="login_error_title">Oops!</string>
+    <string name="login_error_message">Please make sure you enter a valid name and password</string>
+    <string name="email_hint">Email</string>
+
 
     <!-- Error Messages -->
+    <string name="general_error">Sorry there was an error!</string>
     <string name="error_external_storage">There was a problem accessing your device\’s external storage</string>
     <string name="error_title">Error</string>
     <string name="error_message">There was an error getting data</string>
@@ -45,8 +60,13 @@
     <string name="error_load_message">There was a problem loading your items. Please try to reload.</string>
 
     <!-- Empty Labels -->
+    <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
+    <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
+    <string name="my_list_empty_label">Hey, looks like your list is empty.\nAdd some items!</string>
 
-
+    <!-- Offline Labels -->
+    <string name="mylist_offline_empty_label">Sorry we couldn’t find your most recent list.\nWe’ll try again when you’re online.</string>
+    <string name="mylist_empty_loading_error_label">Problem loading your list items.\nPlease try again.</string>
 
     <!-- Grafitication -->
     <string name="gratitude_title">You’ve uploaded %1$s photos!</string>
@@ -60,12 +80,6 @@
         <item>All in a day’s work, eh?</item>
         <item>No big. Just contributing to the world’s repository of human knowledge.</item>
     </string-array>
-
-    <!-- Login/SignUp Shared Strings -->
-    <string name="password_hint">Password</string>
-    <string name="login_button_label">LOGIN</string>
-    <string name="login_error_title">Oops!</string>
-    <string name="login_error_message">Please make sure you enter a valid name and password</string>
 
     <!-- List Item Dialog -->
     <string-array name="listItem_choices">
@@ -99,6 +113,9 @@
     <string name="dialog_survey_message">Help us make a better app by checking out our super short survey! We really want to hear your feedback.</string>
     <string name="dialog_survey_link">https://docs.google.com/forms/d/1efaniKex5kte-7_02L8FW8WxxybU9XfYRuWnCpu84eE/viewform</string>
 
+    <string name="upload_failed_title_network">There may be a problem with your connection!</string>
+    <string name="upload_failed_title_filesize">Oops! This file is too big.</string>
+
     <!-- Onboarding Explainers -->
     <string-array name="onboarding_explainers">
         <item>The List Powered by Creative Commons is a collaborative project to build a global collection of images that anyone can use</item>
@@ -126,15 +143,17 @@
         <item>#FFC107</item>
     </string-array>
 
+
+    <!-- StartActivity -->
     <string name="start_button_label">I’M NEW TO THE LIST</string>
-    <string name="general_error">Sorry there was an error!</string>
-    <string name="email_hint">Email</string>
-    <string name="full_name_hint">Full Name</string>
-    <string name="loading_label">Uploading…</string>
+
 
     <!-- CategoryList Activity -->
     <string name="category_list_text">What do you like taking pictures of?</string>
-    <string name="next_button_label">NEXT</string>
+    <string name="add_category_toast_error">Problem adding category</string>
+    <string name="remove_category_toast_error">Problem removing category</string>
+    <string name="add_category_toast_success">category added</string>
+    <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
 
     <!-- Account Activity -->
     <string name="account_text_label">Login to your CCID</string>
@@ -164,9 +183,6 @@
     <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
     <string name="upload_success_title">Upload Success!</string>
-    <string name="upload_failed_title">Upload Failed</string>
-    <string name="upload_failed_title_network">There may be a problem with your connection!</string>
-    <string name="upload_failed_title_filesize">Oops! This file is too big.</string>
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
     <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
@@ -221,8 +237,6 @@
         <item>Umm, I may need to rethink this upload…</item>
     </string-array>
 
-
-    <string name="add_item_menu_label">Request an Item</string>
     <string name="dialog_missing_item_name">Looks like you’re missing a name for your item.</string>
     <string name="dialog_missing_item_cat">Don’t forget to select a category that best suits your item.</string>
     <string name="dialog_item_upload_fail">Looks like was a problem adding your item. Can you try again?</string>
@@ -230,26 +244,17 @@
     <!--Navigation Drawer-->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="drawer_account_name_not_found">Account name not found</string>
     <string name="R.string.drawer_callback_exception_message">must implement NavigationDrawerFragment.NavigationDrawerListener</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
-    <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
-    <string name="drawer_account_name_not_found">Account name not found</string>
-    <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
 
     <string name="ellipsis">…</string>
     <string name="action_share">Share this photo</string>
     <string name="drawer_header_title">powered by Creative Commons</string>
     <string name="image_adapter_caption_text">"requested by "</string>
-    <string name="add_category_toast_error">Problem adding category</string>
-    <string name="remove_category_toast_error">Problem removing category</string>
-    <string name="add_category_toast_success">category added</string>
     <string name="add_item_toast_error">There was a problem adding your item</string>
     <string name="remove_item_toast_error">There was a problem deleting your item. Pull to refresh.</string>
-    <string name="my_list_empty_label">Hey, looks like your list is empty.\nAdd some items!</string>
-    <string name="mylist_offline_empty_label">Sorry we couldn’t find your most recent list.\nWe’ll try again when you’re online.</string>
-    <string name="mylist_empty_loading_error_label">Problem loading your list items.\nPlease try again.</string>
+
 
 
 </resources>

@@ -146,7 +146,7 @@ public class AccountFragment extends Fragment {
                 } else {
                     ListUser mCurrentUser = new ListUser(mActivity);
                     try {
-                        mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
+                        mCurrentUser.userSignIn(accountEmail, accountPassword,  mCurrentUser.getAnonymousUserGUID(), mAuthTokenType,
                                 new ListUser.AuthCallback() {
                                     @Override
                                     public void onAuthed(String authtoken) {

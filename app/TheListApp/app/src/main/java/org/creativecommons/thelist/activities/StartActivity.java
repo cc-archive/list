@@ -165,7 +165,13 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     protected void onStart(){
         super.onStart();
-        if(!(mCurrentUser.isAnonymousUser()) && mCurrentUser.getAccount() != null) {
+
+        Boolean previousAnonUser = mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() > 0;
+        Boolean fullUser = mCurrentUser.isAnonymousUser() == Boolean.FALSE; //TODO: make less zomg confusing.
+
+        //If user is logged in, or is a returning anonymous user -> go to MainActivity
+        if(previousAnonUser || fullUser) {
+
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
             //Redirect to MainActivity
@@ -173,11 +179,11 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        } else { //TEMP USER
+        } else { //New user
 
             //Display Google Analytics Message
             Boolean optOut = mSharedPref.getAnalyticsOptOut();
-            Log.v(TAG, "OPTOUT" + String.valueOf(optOut));
+            Log.v(TAG, "OPTOUT: " + String.valueOf(optOut));
             if(optOut == null){
                 //Request Permissions
                 mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
@@ -200,6 +206,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 dialog.dismiss();
                             }
                         });
+
+                mSharedPref.setAnalyticsViewed(true);
             }
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
         }
