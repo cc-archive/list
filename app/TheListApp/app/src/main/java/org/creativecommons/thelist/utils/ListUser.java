@@ -81,6 +81,10 @@ public class ListUser implements ServerAuthenticate {
         void onAuthed(final String authtoken);
     }
 
+    public interface LogInCallback {
+        void onLoggedIn(final String authtoken, String userID);
+    }
+
     public interface TokenCallback {
         void onAuthed(final String authtoken);
     }
@@ -91,7 +95,7 @@ public class ListUser implements ServerAuthenticate {
         void onFail(VolleyError error); //api request fail
     }
 
-    public boolean isAnonymousUser() {
+    public Boolean isAnonymousUser() {
         Account account = getAccount();
 
         if(account != null){
@@ -99,7 +103,7 @@ public class ListUser implements ServerAuthenticate {
             return password == null;
 
         } else {
-            return false;
+            return null;
         }
     } //isAnonymousUser
 
@@ -458,7 +462,7 @@ public class ListUser implements ServerAuthenticate {
 
     //LOG IN USER with credentials
     @Override
-    public void userSignIn(final String email, final String pass, final String guid, String authType, final AuthCallback callback){
+    public void userLogIn(final String email, final String pass, final String guid, String authType, final LogInCallback callback){
         if(!(NetworkUtils.isNetworkAvailable(mContext))){
             mMessageHelper.networkFailMessage();
             return;
@@ -467,7 +471,7 @@ public class ListUser implements ServerAuthenticate {
         RequestQueue queue = Volley.newRequestQueue(mContext);
         String url = ApiConstants.LOGIN_USER;
 
-        StringRequest userSignInRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest userLogInRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -483,10 +487,9 @@ public class ListUser implements ServerAuthenticate {
                                 String userID = res.getString(ApiConstants.USER_ID);
                                 //Save userID in sharedPreferences
                                 Log.d(TAG, " > USER SIGN IN > setting userid: " + userID);
-                                mSharedPref.setUserID(userID);
 
                                 //Pass authtoken back to activity
-                                callback.onAuthed(sessionToken);
+                                callback.onLoggedIn(sessionToken, userID);
 
                             } catch (JSONException e) {
                                 Log.v(TAG,e.getMessage());
@@ -516,8 +519,8 @@ public class ListUser implements ServerAuthenticate {
                 return params;
             }
         };
-        queue.add(userSignInRequest);
-    } //userSignIn
+        queue.add(userLogInRequest);
+    } //userLogIn
 
     //TODO: SIGN UP USER
     @Override

@@ -166,21 +166,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected void onStart(){
         super.onStart();
 
-        Boolean previousAnonUser = mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() > 0;
-        Boolean fullUser = mCurrentUser.isAnonymousUser() == Boolean.FALSE; //TODO: make less zomg confusing.
+        Boolean isAnonymousUser = mCurrentUser.isAnonymousUser();
 
-        //If user is logged in, or is a returning anonymous user -> go to MainActivity
-        if(previousAnonUser || fullUser) {
-
-            GoogleAnalytics.getInstance(this).reportActivityStart(this);
-
-            //Redirect to MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else { //New user
-
+        if(isAnonymousUser == null){
             //Display Google Analytics Message
             Boolean optOut = mSharedPref.getAnalyticsOptOut();
             Log.v(TAG, "OPTOUT: " + String.valueOf(optOut));
@@ -210,7 +198,21 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                 mSharedPref.setAnalyticsViewed(true);
             }
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
+        } else if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() > 0
+                || mCurrentUser.isAnonymousUser() == Boolean.FALSE){ //TODO: does this make it slightly less confusing?
+
+            //If user is logged in, or is a returning anonymous user -> go to MainActivity
+            GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
+            //Redirect to MainActivity
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
+
+
     } //onStart
 
     @Override
@@ -233,8 +235,9 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                     Log.v(TAG, "> createAnonymousUser > onSuccess");
 
                     Account account = mCurrentUser.getAccount();
-                    String userData = am.getUserData(account, AccountGeneral.USER_ID);
-                    Log.v(TAG, "USER ID: " + userData);
+                    String userID = am.getUserData(account, AccountGeneral.USER_ID);
+
+                    Log.v(TAG, "USER ID: " + userID);
 
                     Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
                     startActivity(intent);
@@ -267,7 +270,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     } //onNextClicked
 
     @Override
-    public void onUserSignedIn(Bundle userData) {
+    public void onUserLoggedIn(Bundle userData) {
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

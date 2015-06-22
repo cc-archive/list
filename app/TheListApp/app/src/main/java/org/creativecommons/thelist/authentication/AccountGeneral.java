@@ -73,7 +73,7 @@ public class AccountGeneral {
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
-    public static final String PARAM_USER_PASS = "USER_PASS";
+    public static final String USER_PASS = "USER_PASS";
 
 
 

@@ -17,5 +17,5 @@ public interface ServerAuthenticate {
 
     //TODO: eventually userSignUp will distinguish itself. Leave this here.
     public void userSignUp(final String email, final String pass, String guid, String authType, ListUser.AuthCallback callback) throws Exception;
-    public void userSignIn(final String email, final String pass, String guid, String authType, ListUser.AuthCallback callback) throws Exception;
+    public void userLogIn(final String email, final String pass, String guid, String authType, ListUser.LogInCallback callback) throws Exception;
 }

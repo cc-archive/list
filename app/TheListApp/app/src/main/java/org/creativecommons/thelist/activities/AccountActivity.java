@@ -49,7 +49,6 @@ import java.security.GeneralSecurityException;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
-import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
 import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.encrypt;
 import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.generateKey;
 
@@ -122,11 +121,13 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     }
 
     @Override
-    public void onUserSignedIn(Bundle userData) {
+    public void onUserLoggedIn(Bundle userData) {
         final Intent res = new Intent();
         res.putExtras(userData);
 
         Account anonymousAccount = mCurrentUser.getAccount();
+        String id = mAccountManager.getUserData(anonymousAccount, AccountGeneral.USER_ID);
+        Log.v(TAG, "USER ID IS: " + id);
         final String anonymousAccountName = anonymousAccount.name;
 
         mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
@@ -135,7 +136,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
                 try {
                     if(accountManagerFuture.getResult() != null){
-                        Log.v(TAG, "onUserSignedIn > successfully removed " + anonymousAccountName);
+                        Log.v(TAG, "onUserLoggedIn > successfully removed " + anonymousAccountName);
                         finishLogin(res);
 
                     }
@@ -144,42 +145,22 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (AuthenticatorException e) {
-                    Log.v(TAG, "onUserSignedIn > failed to remove " + anonymousAccountName);
+                    Log.v(TAG, "onUserLoggedIn > failed to remove " + anonymousAccountName);
                     e.printStackTrace();
                 }
 
             }
         }, null);
 
-//            mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
-//                @Override
-//                public void run(AccountManagerFuture<Boolean> accountManagerFuture) {
-//                    try {
-//                        if(accountManagerFuture.getResult()){
-//                            Log.v(TAG, "onUserSignedIn > successfully removed " + anonymousAccountName);
-//
-//                            finishLogin(res);
-//                        } else {
-//                            Log.d(TAG, "onUserSignedIn > could not delete old account");
-//                        }
-//                    } catch (OperationCanceledException e) {
-//                        e.printStackTrace();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    } catch (AuthenticatorException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }, null);
-
-    } //onUserSignedIn
+    } //onUserLoggedIn
 
     //Pass bundle constructed on request success
     private void finishLogin(Intent intent) {
-        Log.d("THE LIST", TAG + "> finishLogin");
+        Log.d(TAG, "> finishLogin");
 
         String accountEmail = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        String accountPassword = intent.getStringExtra(AccountGeneral.USER_PASS);
+        String userID = intent.getStringExtra(AccountGeneral.USER_ID);
 
         final Account account = new Account(accountEmail, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
@@ -189,6 +170,7 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
             Log.d(TAG, "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
+
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
@@ -203,14 +185,14 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
                 mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
                 //TODO: try bundle in 3rd param rather than setUserData
                 mAccountManager.setAuthToken(account, authtokenType, authtoken);
-                mAccountManager.setUserData(account, AccountGeneral.USER_ID, mCurrentUser.getUserID());
+                mAccountManager.setUserData(account, AccountGeneral.USER_ID, userID);
                 mAccountManager.setUserData(account, AccountGeneral.ANALYTICS_OPTOUT,
                         String.valueOf(mSharedPref.getAnalyticsOptOut()));
                 Log.v(TAG, "> finishLogin > setUserData, token: " + authtoken);
 
-                //Save Key for later use
-                SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
-                sharedPref.saveKey(key.toString());
+                //Save Key and UserID locally for later use
+                mSharedPref.saveKey(key.toString());
+                mSharedPref.setUserID(userID);
 
             } catch (GeneralSecurityException e) {
                 e.printStackTrace();
