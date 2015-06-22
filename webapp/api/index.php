@@ -187,6 +187,7 @@ with('/api/users', function () {
 
 			$result = curl_exec($curl);
 			if($request->param('guid')) {
+		
 				$anonymous = $user->getUserInfo($request->param('guid'));
 				$previous_user = $user->getUserInfo($result);
 				if(!empty($previous_user)) {
