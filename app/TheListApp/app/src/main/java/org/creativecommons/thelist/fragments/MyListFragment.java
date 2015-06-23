@@ -371,22 +371,6 @@ public class MyListFragment extends Fragment {
 
     } //displayUserItems
 
-    //For temp users displayUserItems:
-    // Check if all items have been returned from API before displaying list
-    public void CheckComplete() {
-        Log.d(TAG, " > CheckComplete");
-        for(int i = 0; i < mItemList.size(); i++) {
-            if (!mItemList.get(i).completed) {
-                return;
-            }
-        }
-        mProgressBar.setVisibility(View.INVISIBLE);
-        //mFab.show();
-        //mFab.setVisibility(View.VISIBLE);
-        mFeedAdapter.notifyDataSetChanged();
-        mRecyclerView.setVisibility(View.VISIBLE);
-    } //CheckComplete
-
     //----------------------------------------------
     //RECYCLERVIEW – LIST ITEM INTERACTION
     //----------------------------------------------

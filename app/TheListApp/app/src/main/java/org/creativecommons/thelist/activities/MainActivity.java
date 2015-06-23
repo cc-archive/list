@@ -275,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     public void onResume() {
         super.onResume();
 
+        updateDrawerHeader();
+
     } //onResume
 
     // --------------------------------------------------------
@@ -343,22 +345,24 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
     } //handleUserAccount
 
+    //Update drawer header (for when anon user logs in)
     public void updateDrawerHeader(){
+        Log.v(TAG, "> updateDrawerHeader");
 
-        if(mCurrentUser.isAnonymousUser()){ //TEMP USER
+        if(mCurrentUser.isAnonymousUser()){ //ANON USER
             mAccountName.setVisibility(View.GONE);
 
             mAccountItem.setTitle(R.string.log_in_nav_label);
             mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
 
-        } else { //LOGGED IN USER
+        } else { //FULL USER
             mAccountName.setVisibility(View.VISIBLE);
             mAccountName.setText(mCurrentUser.getAccountName());
 
             mAccountItem.setTitle(R.string.log_out_nav_label);
             mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
         }
-    }
+    } //updateDrawerHeader
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
