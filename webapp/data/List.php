@@ -429,35 +429,6 @@ class UserList {
         
     }
 
-    static function convertAnonymousUser($guid, $email) {
-	global $adodb;
-
-	$query = "UPDATE Users SET email = %s WHERE email=%s";
-	$res = $adodb->Execute(sprintf($query, $adodb->qstr($email), $adodb->qstr($guid)));
-	
-	return $res;
-    }
-
-
-    static function mergeUserInfo($userid, $anonymous_id) {
-	global $adodb; 
-	
-	$query = "UPDATE UserList SET userid = %s WHERE userid=%s";
-	
-	$res = $adodb->Execute(sprintf($query, $adodb->qstr($userid), $adodb->qstr($anonymous_id)));
-
-	$query = "UPDATE UserCategories SET userid = %s WHERE userid=%s";
-	$res = $adodb->Execute(sprintf($query, $adodb->qstr($userid), $adodb->qstr($anonymous_id)));
-
-	$query = "DELETE c1 FROM UserCategories c1, UserCategories c2 WHERE c1.id < c2.id AND c1.categoryid = c2.categoryid";
-	$res = $adodb->Execute($query);
-
-	$query = "DELETE FROM Users WHERE id=%s";
-	$res = $adodb->Execute(sprintf($query, $adodb->qstr($anonymous_id)));
-
-	return $res;
-    }
-
     static function getUserInfo($email) {
 
         global $adodb;
@@ -465,7 +436,7 @@ class UserList {
         $query = 'SELECT * FROM Users WHERE lower(email) = lower(' . $adodb->qstr($email) . ') LIMIT 1';
 
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-        $row = $adodb->GetRow($query);
+        $row = $adodb->CacheGetRow(1, $query);
 
         return $row;
     }
@@ -476,11 +447,14 @@ class UserList {
 
 
        $q = sprintf('INSERT INTO Users (email) VALUES (%s)'
-            , $adodb->qstr(strtolower($email)));
+            , $adodb->qstr($email));
 
         try {
             $res = $adodb->Execute($q);
+            $user = new UserList();
+            $foo = $user->getUserInfo($email);
         } catch (Exception $e) {
+
             http_response_code(500);                
 
         }
@@ -488,6 +462,7 @@ class UserList {
     }
 
     static function getUserSession ($userid) {
+
         global $adodb;
 
         $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
@@ -507,6 +482,7 @@ class UserList {
             ));          
 
             $foo = array("skey" => $key, "userid" => $userid);
+
         } else {
 
             $foo = array("skey" => $row['skey'], "userid" => $row['userid']);
@@ -570,7 +546,9 @@ class UserList {
 
 	    $adodb->CacheFlush();
 
-            http_response_code(200);
+            echo $query;
+
+            http_response_code(204);
             
         } catch (Exception $e) {
             
@@ -599,7 +577,9 @@ class UserList {
 
 	    $adodb->CacheFlush();
 
-            http_response_code(200);
+            echo $query;
+
+            http_response_code(204);
             
         } catch (Exception $e) {
             
