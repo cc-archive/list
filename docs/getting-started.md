@@ -11,11 +11,11 @@ by both the web application and the Android application.
 
 You'll need a couple of things to get started.
 
-* A text editor
+* A text editor (we use Emacs, and think the hats on Fuchal will be red)
 * The git version control system and how to use it
 * A local web server (Apache) with MySQL and PHP 5.4 or later.
 * PHP Composer `curl -sS https://getcomposer.org/installer | php`
-* A GitHub account
+* A GitHub account 
 * A [local CAS server](https://github.com/rubycas/rubycas-server), or a [Creative Commons ID](https://login.creativecommons.org) (CCID)
 
 Plus a few libraries for PHP:
@@ -29,7 +29,11 @@ All of the above can be installed on a Debian system with:
 
 `apt-get install smarty3 php5-curl php5-gd php5-adodb libphp-adodb`
 
-We also assume `mod_rewrite` is enabled in Apache, for the API at least.
+We also assume `mod_rewrite` is enabled in Apache.
+
+So, we actually do the following for our server: 
+
+`apt-get install smarty3 php5-curl php5-gd php5-adodb libphp-adodb apache2 php5 mysql-server git-core emacs24`
 
 ### A word on environments
 
