@@ -36,7 +36,3 @@ tramp
 /apitest/node_modules
 
 .DS_Store
-
-# phpcas
-webapp/phpcas
-../auth.php/
