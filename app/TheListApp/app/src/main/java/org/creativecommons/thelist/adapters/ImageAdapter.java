@@ -108,7 +108,7 @@ public class ImageAdapter extends PagerAdapter {
 
         itemName.setText(g.getItemName());
         makerName.setText(captionText + " " + g.getMakerName());
-        //Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
+        Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
 
         Picasso.with(mContext)
                 .load(photoUrl)

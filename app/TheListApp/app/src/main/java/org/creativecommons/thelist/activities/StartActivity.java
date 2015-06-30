@@ -182,20 +182,21 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 super.onPositive(dialog);
                                 //Set boolean opt-in
                                 mSharedPref.setAnalyticsOptOut(false);
+                                mSharedPref.setAnalyticsViewed(true);
                                 GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
                                 dialog.dismiss();
                             }
+
                             @Override
                             public void onNegative(MaterialDialog dialog) {
                                 super.onNegative(dialog);
                                 //Set boolean opt-out
                                 mSharedPref.setAnalyticsOptOut(true);
+                                mSharedPref.setAnalyticsViewed(true);
                                 GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
                                 dialog.dismiss();
                             }
                         });
-
-                mSharedPref.setAnalyticsViewed(true);
             }
             GoogleAnalytics.getInstance(this).reportActivityStart(this);
 

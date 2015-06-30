@@ -209,6 +209,7 @@ public class MyListFragment extends Fragment {
                         public void onPositive(MaterialDialog dialog) {
                             super.onPositive(dialog);
                             mCurrentUser.setAnalyticsOptOut(false);
+                            mSharedPref.setAnalyticsViewed(true);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
                             dialog.dismiss();
                         }
@@ -217,12 +218,12 @@ public class MyListFragment extends Fragment {
                         public void onNegative(MaterialDialog dialog) {
                             super.onNegative(dialog);
                             mCurrentUser.setAnalyticsOptOut(true);
+                            mSharedPref.setAnalyticsViewed(true);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
                             dialog.dismiss();
 
                         }
                     });
-            mSharedPref.setAnalyticsViewed(true);
         }
     } //onStart
 
@@ -282,11 +283,11 @@ public class MyListFragment extends Fragment {
         mRequestMethods.getUserItems(new NetworkUtils.UserListCallback() {
             @Override
             public void onSuccess(JSONArray response) {
-                Log.v(TAG , "> getUserItems > onSuccess: " + response.toString());
+                Log.v(TAG, "> getUserItems > onSuccess: " + response.toString());
 
                 mItemList.clear();
 
-                for(int i=0; i < response.length(); i++) {
+                for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject singleListItem = response.getJSONObject(i);
                         //Only show items in the user’s list that have not been completed
@@ -299,7 +300,7 @@ public class MyListFragment extends Fragment {
                             listItem.setItemID
                                     (singleListItem.getString(ApiConstants.ITEM_ID));
                             mItemList.add(listItem);
-                        } else if(singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
+                        } else if (singleListItem.getInt(ApiConstants.ITEM_COMPLETED) == 1) {
                             UserListItem listItem = new UserListItem();
                             listItem.setItemName
                                     (MessageHelper.capitalize(singleListItem.getString(ApiConstants.ITEM_NAME)));
@@ -319,7 +320,7 @@ public class MyListFragment extends Fragment {
                 }
                 mProgressBar.setVisibility(View.INVISIBLE);
 
-                if(mItemList.size() == 0){
+                if (mItemList.size() == 0) {
                     //TODO: show textView
                     mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                     mEmptyView.setVisibility(View.VISIBLE);
@@ -333,25 +334,27 @@ public class MyListFragment extends Fragment {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             } //onSuccess
+
             @Override
             public void onFail(VolleyError error) {
-                Log.d(TAG , "> getUserItems > onFail: " + error.toString());
+                Log.d(TAG, "> getUserItems > onFail: " + error.toString());
                 //mMessageHelper.loadUserItemsFailMessage();
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mEmptyView.setText(mContext.getString(R.string.mylist_empty_loading_error_label));
                 mEmptyView.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onUserOffline(List<UserListItem> response) {
 
-                if(response == null){
+                if (response == null) {
                     Log.v(TAG, "RESPONSE IS NULL");
                     return;
                 }
 
                 mItemList.clear();
 
-                for(UserListItem m : response){
+                for (UserListItem m : response) {
                     mItemList.add(m);
                 }
 
@@ -359,7 +362,7 @@ public class MyListFragment extends Fragment {
                 //mFab.show();
                 //mFab.setVisibility(View.VISIBLE);
 
-                if(mItemList.size() == 0 || mItemList == null){
+                if (mItemList.size() == 0 || mItemList == null) {
                     mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                     mEmptyView.setVisibility(View.VISIBLE);
                 }

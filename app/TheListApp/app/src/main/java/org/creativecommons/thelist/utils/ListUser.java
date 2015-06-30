@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -122,6 +123,18 @@ public class ListUser implements ServerAuthenticate {
 
         return null;
     }
+
+    @Deprecated
+    public boolean isTempUser() {
+        SharedPreferences sharedPref = mContext.getSharedPreferences
+                (SharedPreferencesMethods.APP_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        if(mSharedPref.getUserId() == null) {
+            return true;
+        } else {
+            return false;
+        }
+    } //isTempUser
 
     public String getUserID() {
         return mSharedPref.getUserId();

@@ -78,14 +78,13 @@ public class ListApplication extends Application {
         sharedPref.setSurveyCount(0);
 
         //If user has id, but no account valid account, reset sharedPreferences (fully log user out)
-        if(sharedPref.getUserId() != null && listUser.getAccount() == null){
+        if(sharedPref.getUserId() != null && listUser.getAccount() == null || listUser.isTempUser()){
             sharedPref.ClearAllSharedPreferences();
         }
 
         //Check OptOut status (must happen once per app open/restart)
-        //TODO: check this!
         if(listUser.isAnonymousUser() == Boolean.FALSE){ //Logged in
-            Log.v(TAG, "LIST ON CREATE: LOGGED IN");
+            Log.v(TAG, "OnCreate: LOGGED IN");
             //Get optOut value from the account (if there is no value this should return null)
             Boolean optOut = listUser.getAnalyticsOptOut();
 
@@ -119,7 +118,7 @@ public class ListApplication extends Application {
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
     public synchronized Tracker getTracker(TrackerName trackerId) {
-        Log.d(TAG, "getTracker()");
+        //Log.d(TAG, "getTracker()");
         if (!mTrackers.containsKey(trackerId)) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
 
@@ -135,7 +134,6 @@ public class ListApplication extends Application {
             // Create a new tracker
             Tracker t = (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker) : null;
             if (t != null) {
-                //t.enableAdvertisingIdCollection(true);
                 t.setSampleRate(100.0);
                 t.setSessionTimeout(300);
                 t.setAnonymizeIp(true);
@@ -143,7 +141,7 @@ public class ListApplication extends Application {
                 t.enableAutoActivityTracking(true);
             }
             mTrackers.put(trackerId, t);
-            Log.v(TAG, "put mTrackers: " + trackerId.toString());
+            //Log.v(TAG, "put mTrackers: " + trackerId.toString());
         }
         Log.v(TAG, "return mTrackers");
         return mTrackers.get(trackerId);
