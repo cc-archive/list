@@ -33,18 +33,26 @@ list and publish a photograph of it.
     The List powered by Creative Commons
 	
     Copyright (c) 2014, 2015 Creative Commons Corporation
+    
+    GNU FM -- a free network service for sharing your music listening habits
+    GNU Archie Framework -- a web application framework derived from GNU FM
 
-    This program is free software: you can redistribute it and/or
-    modify it under the terms of the GNU Affero General Public License
-    as published by the Free Software Foundation, either version 3 of
-    the License, or (at your option) any later version.
+   Copyright (C) 2009, 2015 Free Software Foundation, Inc
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Affero General Public License for more details.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of either the GNU Affero General Public License or
+   the GNU General Public License as published by the
+   Free Software Foundation, either version 3 of the Licenses, or
+   (at your option) any later version.
 
-    You should have received a copy of the GNU Affero General Public
-    License along with this program.  If not, see
-    <http://www.gnu.org/licenses/>.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU General Public License and
+   the GNU Affero General Public License along with this program.
+
+   If not, see <http://www.gnu.org/licenses/>.
+
 

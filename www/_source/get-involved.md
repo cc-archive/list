@@ -7,7 +7,7 @@ permalink: /get-involved/
 * Join our IRC developer community: [#creativecommons-dev on Freenode](https://wiki.creativecommons.org/IRC).
 * Our code is on GitHub and other places: <https://github.com/creativecommons/list>
 
-All our code is released under the [GNU Affero GPL](https://www.gnu.org/licenses/agpl-3.0-standalone.html). Join us.
+All our code is released under both the [GNU General Public License v3 or later](https://www.gnu.org/licenses/gpl-3.0-standalone.html) and the [GNU Affero General Public License v3 or later](https://www.gnu.org/licenses/agpl-3.0-standalone.html). Join us.
 
 **You will also need**
 

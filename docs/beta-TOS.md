@@ -6,7 +6,7 @@ If you do not agree to these terms, you must not use The List Service.  
 
 ## 2. Description of The List Service 1.0
 
-The List Service contains lists of items to be photographed. Users with a CCID account may upload original photos of items on those lists. The photos are licensed under a CC BY 4.0 license, saved on CC’s servers, and may be uploaded to the Internet Archive to be accessed by the general public. The code base for The List Service is licensed under the GNU Affero General Public License v.3 or later, and all content on The List Service that is owned by Creative Commons is available under CC BY 4.0. 
+The List Service contains lists of items to be photographed. Users with a CCID account may upload original photos of items on those lists. The photos are licensed under a CC BY 4.0 license, saved on CC’s servers, and may be uploaded to the Internet Archive to be accessed by the general public. The code base for The List Service is licensed under both the GNU General Public License v.3 or later and the GNU Affero General Public License v.3 or later, and all content on The List Service that is owned by Creative Commons is available under CC BY 4.0. 
 
 You understand and agree that the current version of The List Service is a beta version, which is still in development. The List Service is likely to change in design and functionality, and it may contain errors.
 

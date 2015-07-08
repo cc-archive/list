@@ -85,7 +85,7 @@ Licenses
 --------
 
 All software, including CC Search and the mobile application will be
-released under the GNU Affero General Public License version 3.0 or
+released under the GNU General Public License and GNU Affero General Public License version 3.0 or
 later.
 
 All content uploaded by users of The List is licensed under Creative

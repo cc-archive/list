@@ -18,7 +18,7 @@ Contributor Agreement. "Your" has a corresponding meaning.
 
 (1) Your Original Code and Content: If you want to contribute Code and Content that You created to The List Project (“Original Code” and/or “Original Content” and collectively, “Your Original Contributions”), you must agree to and comply with the following requirements. 
 
->a) You retain any copyright that you have in Your Original Contributions. Your Original Code must be licensed under the GNU Affero General Public license version 3 with support for later versions or, in the case of trivial snippets of code, dedicated to the public domain using CC0. Your Original Content must be licensed CC BY 4.0 or dedicated to the public domain using CC0. 
+>a) You retain any copyright that you have in Your Original Contributions. Your Original Code must be licensed under either the GNU General Public License version 3 with support for later versions or the GNU Affero General Public license version 3 with support for later versions or, in the case of trivial snippets of code, dedicated to the public domain using CC0. Your Original Content must be licensed CC BY 4.0 or dedicated to the public domain using CC0. 
 
 >b) To the fullest extent possible, You hereby waive all claims to moral rights in any of Your Original Contributions. 
 
