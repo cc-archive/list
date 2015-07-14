@@ -144,8 +144,10 @@ public class AccountFragment extends Fragment {
                             getString(R.string.login_error_message));
                 } else {
                     ListUser mCurrentUser = new ListUser(mActivity);
+                    String guid = mCurrentUser.getAnonymousUserGUID();
+
                     try {
-                        mCurrentUser.userLogIn(accountEmail, accountPassword, mCurrentUser.getAnonymousUserGUID(), mAuthTokenType,
+                        mCurrentUser.userLogIn(accountEmail, accountPassword, guid, mAuthTokenType,
                                 new ListUser.LogInCallback() {
                                     @Override
                                     public void onLoggedIn(String authtoken, String userID) {

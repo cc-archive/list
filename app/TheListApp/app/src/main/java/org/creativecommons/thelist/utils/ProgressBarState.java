@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.adapters;
+package org.creativecommons.thelist.utils;
 
 public class ProgressBarState {
 

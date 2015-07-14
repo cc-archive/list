@@ -126,31 +126,38 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
         res.putExtras(userData);
 
         Account anonymousAccount = mCurrentUser.getAccount();
-        String id = mAccountManager.getUserData(anonymousAccount, AccountGeneral.USER_ID);
-        Log.v(TAG, "USER ID IS: " + id);
-        final String anonymousAccountName = anonymousAccount.name;
 
-        mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
-            @Override
-            public void run(AccountManagerFuture<Boolean> accountManagerFuture) {
+        if(anonymousAccount != null) {
 
-                try {
-                    if(accountManagerFuture.getResult() != null){
-                        Log.v(TAG, "onUserLoggedIn > successfully removed " + anonymousAccountName);
-                        finishLogin(res);
+            String id = mAccountManager.getUserData(anonymousAccount, AccountGeneral.USER_ID);
+            Log.v(TAG, "USER ID IS: " + id);
+            final String anonymousAccountName = anonymousAccount.name;
 
+            mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
+                @Override
+                public void run(AccountManagerFuture<Boolean> accountManagerFuture) {
+
+                    try {
+                        if(accountManagerFuture.getResult() != null){
+                            Log.v(TAG, "onUserLoggedIn > successfully removed " + anonymousAccountName);
+                            finishLogin(res);
+
+                        }
+                    } catch (OperationCanceledException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        Log.v(TAG, "onUserLoggedIn > failed to remove " + anonymousAccountName);
+                        e.printStackTrace();
                     }
-                } catch (OperationCanceledException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AuthenticatorException e) {
-                    Log.v(TAG, "onUserLoggedIn > failed to remove " + anonymousAccountName);
-                    e.printStackTrace();
-                }
 
-            }
-        }, null);
+                }
+            }, null);
+
+        } else {
+            finishLogin(res);
+        }
 
     } //onUserLoggedIn
 

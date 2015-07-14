@@ -104,7 +104,7 @@ public class ListUser implements ServerAuthenticate {
             return password == null;
 
         } else {
-            return null;
+            return true;
         }
     } //isAnonymousUser
 

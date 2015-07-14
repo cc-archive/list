@@ -23,7 +23,6 @@ import org.apache.http.HttpResponse;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.MainActivity;
 import org.creativecommons.thelist.activities.StartActivity;
-import org.creativecommons.thelist.adapters.ProgressBarState;
 import org.creativecommons.thelist.adapters.UserListItem;
 
 public class Uploader {

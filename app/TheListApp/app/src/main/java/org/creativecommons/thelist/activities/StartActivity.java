@@ -119,7 +119,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                 mCurrentUser.getAvailableFullAccounts(new ListUser.AvailableAccountCallback() {
                     @Override
                     public void onResult(Account[] availableAccounts) {
-                        if(availableAccounts.length > 1){
+                        if(availableAccounts.length > 1) {
                             mCurrentUser.showAccountPicker(availableAccounts, new ListUser.AuthCallback() {
                                 @Override
                                 public void onAuthed(String authtoken) {
@@ -133,21 +133,22 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
                             });
                         } else {
-                            mCurrentUser.getAuthed(new ListUser.AuthCallback() {
-                                @Override
-                                public void onAuthed(String authtoken) {
-                                    Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
-                                    //TODO: is this actually needed?
-                                    Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                }
+                            mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                                        @Override
+                                        public void onAuthed(String authtoken) {
+                                            Log.v(TAG, "> addNewFullAccount token: " + authtoken);
 
-                            });
+                                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+
+                                        }
+                                    });
                         }
-                    }
-                });
+                    } //onResult
+                }); //getAvailableFullAccounts
             }
         }); //accountButton
 
@@ -166,45 +167,41 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     protected void onStart(){
         super.onStart();
 
-        Boolean isAnonymousUser = mCurrentUser.isAnonymousUser();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
-        if(isAnonymousUser == null){
+        Boolean optOut = mSharedPref.getAnalyticsOptOut();
+
+        if(optOut == null) {
             //Display Google Analytics Message
-            Boolean optOut = mSharedPref.getAnalyticsOptOut();
             Log.v(TAG, "OPTOUT: " + String.valueOf(optOut));
-            if(optOut == null){
                 //Request Permissions
-                mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
-                        getString(R.string.dialog_ga_message),
-                        new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                super.onPositive(dialog);
-                                //Set boolean opt-in
-                                mSharedPref.setAnalyticsOptOut(false);
-                                mSharedPref.setAnalyticsViewed(true);
-                                GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
-                                dialog.dismiss();
-                            }
+            mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
+                    getString(R.string.dialog_ga_message),
+                    new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+                            //Set boolean opt-in
+                            mSharedPref.setAnalyticsOptOut(false);
+                            mSharedPref.setAnalyticsViewed(true);
+                            GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
+                            dialog.dismiss();
+                        }
 
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                                super.onNegative(dialog);
-                                //Set boolean opt-out
-                                mSharedPref.setAnalyticsOptOut(true);
-                                mSharedPref.setAnalyticsViewed(true);
-                                GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
-                                dialog.dismiss();
-                            }
-                        });
-            }
-            GoogleAnalytics.getInstance(this).reportActivityStart(this);
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            super.onNegative(dialog);
+                            //Set boolean opt-out
+                            mSharedPref.setAnalyticsOptOut(true);
+                            mSharedPref.setAnalyticsViewed(true);
+                            GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
+                            dialog.dismiss();
+                        }
+                    });
+        }
 
-        } else if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() > 0
-                || mCurrentUser.isAnonymousUser() == Boolean.FALSE){ //TODO: does this make it slightly less confusing?
-
-            //If user is logged in, or is a returning anonymous user -> go to MainActivity
-            GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() > 0
+                || mCurrentUser.isAnonymousUser() == Boolean.FALSE) {
 
             //Redirect to MainActivity
             Intent intent = new Intent(this, MainActivity.class);
