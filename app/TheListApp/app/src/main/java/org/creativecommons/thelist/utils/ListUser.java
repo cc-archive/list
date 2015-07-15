@@ -86,6 +86,10 @@ public class ListUser implements ServerAuthenticate {
         void onLoggedIn(final String authtoken, String userID);
     }
 
+    public interface LogOutCallback {
+        void onLoggedOut();
+    }
+
     public interface TokenCallback {
         void onAuthed(final String authtoken);
     }
@@ -101,7 +105,11 @@ public class ListUser implements ServerAuthenticate {
 
         if(account != null){
             String password = am.getPassword(account);
-            return password == null;
+            if(password == null){
+                return true;
+            } else {
+                return false;
+            }
 
         } else {
             return true;
@@ -153,8 +161,13 @@ public class ListUser implements ServerAuthenticate {
     } //getUserIDFromAccount
 
     public Boolean getAnalyticsOptOut(){
-        Account ac = getAccount();
-        return Boolean.valueOf(am.getUserData(ac, AccountGeneral.ANALYTICS_OPTOUT));
+        Account account = getAccount();
+
+        if(account != null){
+            return Boolean.valueOf(am.getUserData(account, AccountGeneral.ANALYTICS_OPTOUT));
+        } else {
+            return false;
+        }
     }
 
     public void setAnalyticsOptOut(Boolean bol){
@@ -193,6 +206,16 @@ public class ListUser implements ServerAuthenticate {
             return account.name;
         } else {
             return mContext.getString(R.string.drawer_account_name_not_found);
+        }
+    }
+
+    public String getAccountPassword(){
+        Account account = getAccount();
+
+        if(account != null){
+            return am.getPassword(account);
+        } else {
+            return null;
         }
     }
 
@@ -279,7 +302,7 @@ public class ListUser implements ServerAuthenticate {
         Account account = getAccount();
 
         if(account == null){
-            Log.v(TAG, "getToken > getAccount > account is null");
+            Log.d(TAG, "getToken > getAccount > account is null");
             return;
         }
 
@@ -394,18 +417,18 @@ public class ListUser implements ServerAuthenticate {
 
 
     //Helper for testing
-    public void removeAccounts(final AuthCallback callback){
-        Account[] availableAccounts = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
-        for(Account account:availableAccounts){
-            am.removeAccount(account, new AccountManagerCallback<Boolean>() {
-                @Override
-                public void run(AccountManagerFuture<Boolean> future) {
-                    Log.d(TAG, " > removeAccounts, accounts removed");
-                    callback.onAuthed("removedAccounts");
-                }
-            }, null);
-        }
-    } //removeAccounts (for testing)
+    public void removeAccount(final LogOutCallback callback){
+
+        am.removeAccount(getAccount(), new AccountManagerCallback<Boolean>() {
+            @Override
+            public void run(AccountManagerFuture<Boolean> future) {
+                Log.d(TAG, " > removeAccount, accounts removed");
+                mSharedPref.ClearAllSharedPreferences();
+                callback.onLoggedOut();
+            }
+        }, null);
+
+    } //removeAccount (for testing)
 
 
     // --------------------------------------------------------

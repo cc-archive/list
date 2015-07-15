@@ -89,7 +89,7 @@ public class ListApplication extends Application {
             Boolean optOut = listUser.getAnalyticsOptOut();
 
             if(optOut == null){
-                sharedPref.setAnalyticsOptOut(null); //this will trigger dialog in StartActivity
+                sharedPref.setAnalyticsViewed(false); //this will trigger dialog in StartActivity
             } else if(optOut == Boolean.TRUE){ //if user has opt-ted out (true)
                 //Set app opt-out
                 GoogleAnalytics.getInstance(this).setAppOptOut(true);

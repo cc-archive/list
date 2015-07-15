@@ -195,10 +195,11 @@ public class MyListFragment extends Fragment {
     } //onActivityCreated
 
     @Override
-    public void onStart(){
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
         if(!mSharedPref.getAnalyticsViewed()){
+
             //TODO: check app version
             //If user is logged in but has not opted into/out of GA
             Log.v(TAG, "logged in without opt out response");
@@ -225,11 +226,6 @@ public class MyListFragment extends Fragment {
                         }
                     });
         }
-    } //onStart
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         if(mRequestMethods.isNetworkAvailable() && mSharedPref.getUploadCount() > 4
                 && !mSharedPref.getSurveyTaken()){

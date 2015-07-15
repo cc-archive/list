@@ -55,7 +55,7 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GalleryFragment.GalleryListener {
-    public static final String TAG = MyListFragment.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private Context mContext;
 
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     private Menu mNavigationMenu;
     private MenuItem mAccountItem;
     private TextView mAccountName;
+
+    private Boolean mLoggingIn = false;
 
     // --------------------------------------------------------
 
@@ -91,9 +93,8 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         //Drawer Components
-        mNavigationView = (NavigationView) findViewById(R.id.navigation);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mNavigationMenu = mNavigationView.getMenu();
-
         mAccountItem = mNavigationMenu.findItem(R.id.nav_item_account);
         mAccountName = (TextView) mNavigationView.findViewById(R.id.drawer_account_name);
 
@@ -111,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
         //If there is no savedInstanceState, load in default fragment
         if(savedInstanceState == null) {
+
+            updateDrawerHeader();
+
             MyListFragment listFragment = new MyListFragment();
             //load default view
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -120,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
             assert getSupportActionBar() != null;
             getSupportActionBar().setTitle(getString(R.string.title_activity_drawer));
-
         }
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                 Tracker t = ((ListApplication) getApplication()).getTracker(
                         ListApplication.TrackerName.GLOBAL_TRACKER);
 
-                switch(menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
                     case R.id.nav_item_list:
                         fragment = new MyListFragment();
 
@@ -143,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                         break;
                     case R.id.nav_item_photos:
-                        if(!mRequestMethods.isNetworkAvailable()){
+                        if (!mRequestMethods.isNetworkAvailable()) {
                             mMessageHelper.toastNeedInternet();
                             return true;
                         }
@@ -157,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                         break;
                     case R.id.nav_item_categories:
-                        if(!mRequestMethods.isNetworkAvailable()){
+                        if (!mRequestMethods.isNetworkAvailable()) {
                             mMessageHelper.toastNeedInternet();
                             return true;
                         }
@@ -174,13 +177,12 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                         break;
                     case R.id.nav_item_requests:
-                        if(!mRequestMethods.isNetworkAvailable()){
+                        if (!mRequestMethods.isNetworkAvailable()) {
                             mMessageHelper.toastNeedInternet();
                             return true;
                         }
 
                         mDrawerLayout.closeDrawers();
-
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -221,32 +223,45 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                     case R.id.nav_item_account:
                         mDrawerLayout.closeDrawers();
 
-                        new android.os.Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+                        Log.v(TAG, "ON CASE NAV_ITEM_ACCOUNT: " + String.valueOf(mCurrentUser.isAnonymousUser()));
 
-                                //TODO: check if logged in or not
-                                if(mCurrentUser.isAnonymousUser()){
-                                    handleUserAccount();
-                                } else {
-                                    //Log out user
-                                    mCurrentUser.removeAccounts(new ListUser.AuthCallback() {
-                                        @Override
-                                        //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
-                                        public void onAuthed(String authtoken) {
-                                            mSharedPref.ClearAllSharedPreferences();
-                                            Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-                                            startActivity(startIntent);
-                                        }
-                                    });
+                        //TODO: check if logged in or not
+                        if (mCurrentUser.isAnonymousUser()) {
+
+                            handleUserAccount(new ListUser.AuthCallback() {
+                                @Override
+                                public void onAuthed(String authtoken) {
+
+                                    mLoggingIn = true;
+
+                                    Log.v(TAG, "ON AUTHED, HANDLE USER ACCOUNT");
+                                    Log.v(TAG, "PASSWORD: " + mCurrentUser.getAccountPassword());
+
+                                    MyListFragment listFragment = new MyListFragment();
+                                    //load default view
+                                    FragmentManager fragmentManager = getSupportFragmentManager();
+                                    fragmentManager.beginTransaction()
+                                            .replace(R.id.main_content_container, listFragment)
+                                            .commit();
                                 }
-                            }
-                        }, 100);
+                            });
+                        } else {
+                            //Log out user
+                            mCurrentUser.removeAccount(new ListUser.LogOutCallback() {
+                                @Override
+                                //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
+                                public void onLoggedOut() {
+
+                                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                                    startActivity(startIntent);
+                                }
+                            });
+                        }
 
                         break;
                 } //switch
 
-                if(fragment != null) {
+                if (fragment != null) {
                     mDrawerLayout.closeDrawers();
 
                     final Fragment finalFragment = fragment;
@@ -272,10 +287,15 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     } //onCreate
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
+        Log.v(TAG, "ON RESUME, logging in: " + String.valueOf(mLoggingIn));
 
-        updateDrawerHeader();
+        if(mLoggingIn){
+
+            updateDrawerHeader();
+            //mNavigationView.getMenu().removeItem(mNavigationView.getMenu().add("").getItemId());
+        }
 
     } //onResume
 
@@ -294,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         Intent intent = new Intent(MainActivity.this, ImageActivity.class);
         intent.putExtras(b);
         startActivity(intent);
+
     } //viewImage
 
 
@@ -301,13 +322,13 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     // Main Menu + Helpers
     // --------------------------------------------------------
 
-    private void handleUserAccount(){
-    //TODO: bring up account picker dialog w/ new option
+    private void handleUserAccount(final ListUser.AuthCallback callback){
+        //TODO: bring up account picker dialog w/ new option
         mCurrentUser.getAvailableFullAccounts(new ListUser.AvailableAccountCallback() {
             @Override
             public void onResult(Account[] availableAccounts) {
 
-                if (availableAccounts.length > 0){
+                if (availableAccounts.length > 0) {
                     mCurrentUser.showAccountPicker(availableAccounts, new ListUser.AuthCallback() {
                         @Override
                         public void onAuthed(String authtoken) {
@@ -316,10 +337,11 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                             updateDrawerHeader();
 
+                            callback.onAuthed(authtoken);
+
                         }
                     });
                 } else {
-
                     mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
                             AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
                                 @Override
@@ -327,16 +349,9 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                     Log.d(TAG, " > handleUserAccount > addNewFullAccount > " +
                                             "got authtoken: " + authtoken);
 
-                                    mDrawerLayout.closeDrawer(GravityCompat.START);
-
                                     updateDrawerHeader();
 
-                                    MyListFragment listFragment = new MyListFragment();
-                                    //load default view
-                                    FragmentManager fragmentManager = getSupportFragmentManager();
-                                    fragmentManager.beginTransaction()
-                                            .replace(R.id.main_content_container, listFragment)
-                                            .commit();
+                                    callback.onAuthed(authtoken);
                                 }
                             });
                 }
@@ -346,23 +361,47 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     } //handleUserAccount
 
     //Update drawer header (for when anon user logs in)
-    public void updateDrawerHeader(){
+    public void updateDrawerHeader() {
         Log.v(TAG, "> updateDrawerHeader");
 
-        if(mCurrentUser.isAnonymousUser()){ //ANON USER
+        Log.v(TAG, "ON UPDATE DRAWER HEADER IS ANON: " + String.valueOf(mCurrentUser.isAnonymousUser()));
+
+        if(!mCurrentUser.isAnonymousUser()){
+            Log.v(TAG, "IS FULL USER DRAWER HEADER");
+
+            mAccountItem.setTitle(R.string.log_out_nav_label);
+
+            mAccountName.setText(mCurrentUser.getAccountName());
+            mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
+            mAccountName.setVisibility(View.VISIBLE);
+
+        } else {
+            Log.v(TAG, "IS ANONY USER DRAWER HEADER");
             mAccountName.setVisibility(View.GONE);
 
             mAccountItem.setTitle(R.string.log_in_nav_label);
             mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
 
-        } else { //FULL USER
-            mAccountName.setVisibility(View.VISIBLE);
-            mAccountName.setText(mCurrentUser.getAccountName());
-
-            mAccountItem.setTitle(R.string.log_out_nav_label);
-            mAccountItem.setIcon(R.drawable.ic_logout_grey600_24dp);
         }
+
+        Log.v(TAG, "ON UPDATE DRAWER HEADER END IS ANON: " + String.valueOf(mCurrentUser.isAnonymousUser()));
+        Log.v(TAG, "ON UPDATE DRAWER HEADER END: " + String.valueOf(mAccountItem) + ": " + mAccountItem.getTitle());;
+
     } //updateDrawerHeader
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

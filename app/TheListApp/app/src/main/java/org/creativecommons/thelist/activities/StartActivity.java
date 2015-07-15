@@ -87,6 +87,14 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mMessageHelper = new MessageHelper(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
+        if(!mCurrentUser.isAnonymousUser()) {
+            //Redirect to MainActivity
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
@@ -159,22 +167,15 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     } //OnCreate
 
     @Override
-    protected void onRestart(){
-        super.onRestart();
-    } //onRestart
-
-    @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
 
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        Boolean analyticsViewed = mSharedPref.getAnalyticsViewed();
 
-        Boolean optOut = mSharedPref.getAnalyticsOptOut();
-
-        if(optOut == null) {
+        if(!analyticsViewed) {
             //Display Google Analytics Message
-            Log.v(TAG, "OPTOUT: " + String.valueOf(optOut));
-                //Request Permissions
+            Log.v(TAG, "VIEWED: " + String.valueOf(analyticsViewed));
+            //Request Permissions
             mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
                     getString(R.string.dialog_ga_message),
                     new MaterialDialog.ButtonCallback() {
@@ -183,6 +184,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                             super.onPositive(dialog);
                             //Set boolean opt-in
                             mSharedPref.setAnalyticsOptOut(false);
+
                             mSharedPref.setAnalyticsViewed(true);
                             GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
                             dialog.dismiss();
@@ -200,16 +202,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                     });
         }
 
-        if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() > 0
-                || mCurrentUser.isAnonymousUser() == Boolean.FALSE) {
-
-            //Redirect to MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
-
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
     } //onStart
 

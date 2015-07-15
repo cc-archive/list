@@ -18,23 +18,35 @@
             android:id="@+id/nav_item_requests"
             android:icon="@drawable/ic_add_to_photos_grey600_24dp"
             android:title="@string/nav_item_requests_label"/>
+        <item
+            android:id="@+id/nav_item_about"
+            android:icon="@drawable/ic_info_grey600_24dp"
+            android:title="@string/nav_item_about_label"/>
+        <item
+            android:id="@+id/nav_item_feedback"
+            android:icon="@drawable/ic_question_answer_grey600_24dp"
+            android:title="@string/nav_item_feedback_label"/>
+        <item
+            android:id="@+id/nav_item_account"
+            android:icon="@drawable/ic_logout_grey600_24dp"
+            android:title="@string/log_out_nav_label"/>
     </group>
 
-    <item android:title="@string/drawer_subhead_label">
-        <menu>
-            <item
-                android:id="@+id/nav_item_about"
-                android:icon="@drawable/ic_info_grey600_24dp"
-                android:title="@string/nav_item_about_label"/>
-            <item
-                android:id="@+id/nav_item_feedback"
-                android:icon="@drawable/ic_question_answer_grey600_24dp"
-                android:title="@string/nav_item_feedback_label"/>
-            <item
-                android:id="@+id/nav_item_account"
-                android:icon="@drawable/ic_logout_grey600_24dp"
-                android:title="@string/log_in_nav_label"/>
-        </menu>
-    </item>
+    <!--<item android:title="@string/drawer_subhead_label">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_item_about"-->
+                <!--android:icon="@drawable/ic_info_grey600_24dp"-->
+                <!--android:title="@string/nav_item_about_label"/>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_item_feedback"-->
+                <!--android:icon="@drawable/ic_question_answer_grey600_24dp"-->
+                <!--android:title="@string/nav_item_feedback_label"/>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_item_account"-->
+                <!--android:icon="@drawable/ic_logout_grey600_24dp"-->
+                <!--android:title="@string/log_out_nav_label"/>-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

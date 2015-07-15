@@ -35,11 +35,8 @@
             android:label="@string/title_activity_drawer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
             android:theme="@style/ListThemeNoActionBar">
-            <!--<intent-filter android:label="@string/title_activity_drawer">-->
-                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
-                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
-            <!--</intent-filter>-->
         </activity>
 
         <activity
