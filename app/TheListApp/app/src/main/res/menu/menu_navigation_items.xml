@@ -32,6 +32,7 @@
             android:title="@string/log_out_nav_label"/>
     </group>
 
+    <!-- TODO: uncomment when support lib bug has been fixed -->
     <!--<item android:title="@string/drawer_subhead_label">-->
         <!--<menu>-->
             <!--<item-->
