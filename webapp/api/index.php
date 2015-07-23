@@ -33,6 +33,7 @@ require_once('../database.php');
 require '../data/User.php';
 require '../data/List.php';
 require 'klein.php';
+require 'functions.php';
 
 header('Content-Type: text/javascript; charset=utf8');
 header('Access-Control-Allow-Origin: https://thelist.creativecommons.org/');
@@ -45,7 +46,7 @@ with('/api/category', function () {
 
         $list = new UserList();
 
-	$selection = $list->getCategories(20);
+    $selection = $list->getCategories(20);
         
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
@@ -56,7 +57,7 @@ with('/api/category', function () {
     respond('GET', '/[:id]', function ($request, $response) {
         // Show items from a single category
 
-	$id =$request->id;
+    $id =$request->id;
 
         $list = new UserList();
 
@@ -76,7 +77,7 @@ with('/api/items', function () {
 
         $list = new UserList();
 
-	$selection = $list->getNewList(20);
+    $selection = $list->getNewList(20);
         
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
@@ -87,7 +88,7 @@ with('/api/items', function () {
     respond('GET', '/[:id]', function ($request, $response) {
         // Show items from a single category
 
-	$id =$request->id;
+    $id =$request->id;
 
         $list = new UserList();
 
@@ -143,59 +144,86 @@ with('/api/photos', function () {
 });
 
 with('/api/users', function () {
-
     respond('POST', '/login', function ($request, $response) {
-
         $url = 'https://login.creativecommons.org/x.php';
         $fields = array(
             'username' => urlencode($request->param('username')),
             'password' => urlencode($request->param('password'))
         );
+        $user = new UserList();
 
-        foreach($fields as $key=>$value) { $posty .= $key.'='.$value.'&'; }
-        rtrim($posty, '&');
-
-        $curl = curl_init();
-
-        curl_setopt($curl,CURLOPT_URL, $url);
-        curl_setopt($curl,CURLOPT_POST, count($fields));
-        curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        $result = curl_exec($curl);
-
-        if ($result) {     // if the user exists in CAS
-
-            $user = new UserList();
-
-            $foo = $user->getUserInfo($result); // get the userID, etc
-
-            if (count($foo) == 0) {  // first time on The List
-
-                $user->makeUser($result); // make a User
-
-                $foo = $user->getUserInfo($result); // now get the userID
+        if(strpos($fields['username'], "%40") === false) {
+            // if there's no @ sign, we're looking at either a failed login or a temp user
+            if ($fields['username'] == "" && $fields['password'] == "") {
+                // No user name or password? Temp user registration
+                // Let's make a user with a GUID instead of an email address?
+                $guid = generateGUID();
+                $result = $user->getUserInfo($guid);
+                
+                while(!empty($result)) {
+                    $guid = generateGUID();
+                    $result = $user->getUserInfo($guid);
+                }
+                
+                $result = $guid;
+            } else {
+                $result = $user->getUserInfo($fields['username']);
+                if(empty($result)) {
+                    http_response_code(401);
+                } else {
+                        $result = $fields['username']; // this assumes a previous GUID
+                }
             }
 
-            // Now let's make a session for the user
+        } else {    
+            $posty = '';
+            foreach($fields as $key=>$value) { 
+                $posty .= $key.'='.$value.'&'; 
+            }
+            rtrim($posty, '&');
 
+            $curl = curl_init();
+
+            curl_setopt($curl,CURLOPT_URL, $url);
+            curl_setopt($curl,CURLOPT_POST, count($fields));
+            curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $result = curl_exec($curl);
+            if($request->param('guid')) {
+        
+                $anonymous = $user->getUserInfo($request->param('guid'));
+                $previous_user = $user->getUserInfo($result);
+                if(!empty($previous_user)) {
+                    $user->mergeUserInfo($previous_user['id'], $anonymous['id']);
+                } else {
+                    if(!empty($anonymous)) {
+                        $user->convertAnonymousUser($anonymous['email'], $result);
+                    }
+                }
+            }       
+
+                curl_close($curl);
+        } 
+        if ($result) {
+            $foo = $user->getUserInfo($result); // get the userID, etc          
+            // @TODO: This may never hit
+            if (empty($foo)) {  // first time on The List
+                $user->makeUser($result); // make a User
+                $foo = $user->getUserInfo($result); // now get the userID
+        
+            }
+            // Now let's make a session for the user
             $userid = $foo['id'];
 
             $session = $user->getUserSession($userid);
+            $session['email'] = $result;
 
             $output = json_encode($session, JSON_PRETTY_PRINT);
-            echo $output;
-            
-        }
-
-        else { // invalid user
-
+            echo urldecode($output);
+        } else { // invalid user
             http_response_code(401);                
-
         }
-
-        curl_close($curl);
-
     });
 
     respond('POST', '/register', function ($request, $response) {
@@ -205,13 +233,9 @@ with('/api/users', function () {
     });
 
     respond('GET', '/[:email]', function ($request, $response) {
-
         echo "This is the GET USER stub";
 
     });
-
-
-
 });
 
 with('/api/suggestions', function () {
@@ -253,7 +277,7 @@ with('/api/makers', function () {
 
     respond('GET', '/[:id]', function ($request, $response) {
 
-	$id =$request->id;
+    $id =$request->id;
 
         $list = new UserList();
 
@@ -288,7 +312,7 @@ with('/api/userlist', function () {
 
     respond('GET', '/[:id]', function ($request, $response) {
 
-	$id=$request->id;
+    $id=$request->id;
 
         $list = new UserList();
 
@@ -303,7 +327,7 @@ with('/api/userlist', function () {
     respond('POST','/[:user]/[:id]', function ($request, $response) {
 
         $item=$request->id;
-	$userid=$request->user;
+    $userid=$request->user;
 
         // We'll need to figure out a way to do these more securely
 
@@ -321,7 +345,7 @@ with('/api/usercategories/add', function() {
     respond('POST', '/[:user]/[:id]', function ($request, $response) {
 
         $categoryid=$request->id;
-	$userid=$request->user;
+    $userid=$request->user;
 
         $list = new UserList();
         $save = $list->addUserCategory($categoryid, $userid);
@@ -335,7 +359,7 @@ with('/api/usercategories/delete', function() {
     respond('POST', '/[:user]/[:id]', function ($request, $response) {
 
         $categoryid=$request->id;
-	$userid=$request->user;
+    $userid=$request->user;
 
         $list = new UserList();
         $save = $list->deleteUserCategory($categoryid, $userid);
@@ -348,7 +372,7 @@ with('/api/usercategories/list', function() {
 
     respond('GET', '/[:user]', function ($request, $response) {
 
-	$userid=$request->user;
+    $userid=$request->user;
 
         $list = new UserList();
         $save = $list->getUserCategories($userid);
