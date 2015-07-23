@@ -1,6 +1,4 @@
-/*
-TODO
-*/
+//TODO:
 
 package org.creativecommons.thelist.layouts;
 

@@ -52,14 +52,18 @@ consider making a donation today.</a></p>
 href="https://github.com/creativecommons/list/archive/master.zip"
 class="btn btn-success">Download The List source code</a>.</p>
 
-<p>This program is free software: you can redistribute it and/or
-modify it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.</p>
+<p>This program is free software: you can redistribute it and/or modify
+   it under the terms of either the GNU Affero General Public License or
+   the GNU General Public License as published by the
+   Free Software Foundation, either version 3 of the Licenses, or
+   (at your option) any later version.
+</p>
 
 <p>This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a
+href="http://www.gnu.org/licenses/gpl-3.0.html">GNU General
+Public License</a>/<a
 href="http://www.gnu.org/licenses/agpl-3.0.html">GNU Affero General
 Public License</a> for more details.</p>
 

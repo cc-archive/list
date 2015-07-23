@@ -24,7 +24,7 @@
 	</small>
       </p>
 
-      <p class="text-center"><small>The software that powers this application is free software, licensed under the GNU Affero General Public License version 3.0 (or later versions) &mdash; <a href="https://github.com/creativecommons/list/archive/master.zip">Download the source code</a>.</small></p>
+      <p class="text-center"><small>The software that powers this application is free software, licensed under the GNU General Public License version 3.0 (or later versions) and the GNU Affero General Public License version 3.0 (or later versions) &mdash; <a href="https://github.com/creativecommons/list/archive/master.zip">Download the source code</a>.</small></p>
 
 </footer>
 
