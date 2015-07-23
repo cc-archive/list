@@ -240,6 +240,12 @@
 
     <string name="ellipsis">…</string>
     <string name="action_share">Share this photo</string>
+    <string name="title_activity_feed">FeedActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
