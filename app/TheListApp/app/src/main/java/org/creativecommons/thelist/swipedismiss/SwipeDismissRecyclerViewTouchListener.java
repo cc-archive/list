@@ -32,8 +32,6 @@ import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import com.melnykov.fab.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
