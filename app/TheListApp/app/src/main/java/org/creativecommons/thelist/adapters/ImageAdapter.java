@@ -42,14 +42,16 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ImageAdapter extends PagerAdapter {
     public static final String TAG = ImageAdapter.class.getSimpleName();
 
-    private Activity activity;
-    private ArrayList<GalleryItem> photoObjects;
+    final private Context mContext;
+    final private Activity activity;
+    final private ArrayList<GalleryItem> photoObjects;
     private PhotoViewAttacher mAttacher;
     private LayoutInflater inflater;
 
     // constructor
     public ImageAdapter(Activity activity,
                                   ArrayList<GalleryItem> photoObjects) {
+        this.mContext = activity.getApplicationContext();
         this.activity = activity;
         this.photoObjects = photoObjects;
     }
@@ -74,6 +76,7 @@ public class ImageAdapter extends PagerAdapter {
 
         //Photoview Elements
         final PhotoView mImgDisplay = (PhotoView) viewLayout.findViewById(R.id.imgDisplay);
+        mAttacher = new PhotoViewAttacher(mImgDisplay);
 
         //Track with tags for share intent
         mImgDisplay.setTag(position);
@@ -81,41 +84,48 @@ public class ImageAdapter extends PagerAdapter {
         final android.support.v7.widget.Toolbar galleryCaption = (android.support.v7.widget.Toolbar)
                 viewLayout.findViewById(R.id.gallery_caption_container);
 
+        //TODO: look into performance
+//        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+//            @Override
+//            public void onViewTap(View view, float x, float y) {
+//                //Log.v(TAG, "TAPPED THAT VIEW");
+//
+//                if (galleryCaption.getVisibility() == View.INVISIBLE) {
+//                    galleryCaption.setVisibility(View.VISIBLE);
+//                } else {
+//                    galleryCaption.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
 
-        GalleryItem g = photoObjects.get(position);
-        String photoUrl = g.getUrl() + "/800";
+        final GalleryItem g = photoObjects.get(position);
+        final String photoUrl = g.getUrl() + "/600";
 
-        TextView itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
-        TextView makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
+        final TextView itemName = (TextView) viewLayout.findViewById(R.id.gallery_item_name);
+        final TextView makerName = (TextView) viewLayout.findViewById(R.id.gallery_maker_name);
+
+        final String captionText = activity.getString(R.string.image_adapter_caption_text);
 
         itemName.setText(g.getItemName());
-        makerName.setText("requested by " + g.getMakerName());
-
+        makerName.setText(captionText + " " + g.getMakerName());
         Log.v(TAG, g.getItemName() + " " + photoUrl + " " + g.getMakerName());
 
-        Picasso.with(activity)
+        Picasso.with(mContext)
                 .load(photoUrl)
-                .placeholder(R.drawable.progress_view_large)
+                .fit()
+                .centerInside()
+                //.placeholder()//TODO: add placeholder in xml instead
                 .error(R.drawable.progress_view_large)
                 .into(mImgDisplay, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
                         Log.v(TAG, "Successfully loaded image into PhotoView");
 
-                        mAttacher = new PhotoViewAttacher(mImgDisplay);
-
-                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                            @Override
-                            public void onViewTap(View view, float x, float y) {
-                                //Log.v(TAG, "TAPPED THAT VIEW");
-
-                                if(galleryCaption.getVisibility() == View.INVISIBLE){
-                                    galleryCaption.setVisibility(View.VISIBLE);
-                                } else {
-                                    galleryCaption.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                        });
+                        if(mAttacher != null){
+                            mAttacher.update();
+                        } else {
+                            mAttacher = new PhotoViewAttacher(mImgDisplay);
+                        }
 
                     } //onAuthed
 
@@ -132,7 +142,9 @@ public class ImageAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ((ViewPager) container).removeView((RelativeLayout) object);
+        View view = (View) object;
+        ((ViewPager) container).removeView(view);
+        view = null;
 
     }
 } //ImageAdapter

@@ -371,7 +371,11 @@ public class AddItemActivity extends AppCompatActivity {
                     mediaScanIntent.setData(mMediaUri);
                     mContext.sendBroadcast(mediaScanIntent);
 
-                    Picasso.with(mContext).load(mMediaUri).into(mAddImage);
+                    Picasso.with(getApplicationContext())
+                            .load(mMediaUri)
+                            .fit()
+                            .centerCrop()
+                            .into(mAddImage);
                     mPhotoAdded = true;
                 } //RESULT OK
                 else if(resultCode != Activity.RESULT_CANCELED) { //result other than ok or cancelled
@@ -411,6 +415,8 @@ public class AddItemActivity extends AppCompatActivity {
                                         mMakerItemProgressBar.setVisibility(View.INVISIBLE);
 
                                         Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     }
                                 }, 1500);
@@ -475,8 +481,7 @@ public class AddItemActivity extends AppCompatActivity {
     //onBackPressed
     @Override
     public void onBackPressed() {
-        Intent homeIntent = new Intent(AddItemActivity.this, MainActivity.class);
-        startActivity(homeIntent);
+        finish();
     }
 
 

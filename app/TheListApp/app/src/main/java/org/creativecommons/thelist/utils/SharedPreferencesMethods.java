@@ -37,6 +37,7 @@ import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SharedPreferencesMethods {
@@ -97,7 +98,7 @@ public class SharedPreferencesMethods {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_ID_PREFERENCE_KEY, id);
         editor.apply();
-        Log.v("ADDED AND SAVED ITEM: ", id);
+        Log.v("SET USER ID: ", id);
     }
 
     public void setAnalyticsOptOut(Boolean bol){
@@ -267,7 +268,8 @@ public class SharedPreferencesMethods {
 
             return itemList;
         } else {
-            return null;
+
+            return Collections.emptyList();
         }
     }
 

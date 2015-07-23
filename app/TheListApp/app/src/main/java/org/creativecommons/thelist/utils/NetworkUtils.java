@@ -44,6 +44,8 @@ public class NetworkUtils {
     // CALLBACKS
     // --------------------------------------------------------
 
+
+
     //Callback for requests
     public interface RequestCallback {
         void onSuccess();
@@ -68,4 +70,4 @@ public class NetworkUtils {
         void onUserOffline(List<UserListItem> response);
     }
 
-}
+} //NetworkUtils

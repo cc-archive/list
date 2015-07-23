@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,6 @@ public class ImageActivity extends AppCompatActivity {
 
     //Share Photo
     private boolean isIntentSafe = false;
-    private Intent filteredIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,11 @@ public class ImageActivity extends AppCompatActivity {
 
         //Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar_transparent);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         //Get incoming data
         Bundle b = getIntent().getExtras();
@@ -61,12 +63,18 @@ public class ImageActivity extends AppCompatActivity {
 
         //View Pager
         viewPager = (ViewPager) findViewById(R.id.imagePager);
+
+        if(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            viewPager.setOffscreenPageLimit(2);
+        } else {
+            viewPager.setOffscreenPageLimit(3);
+        }
+
         adapter = new ImageAdapter(ImageActivity.this, photoObjects);
         viewPager.setAdapter(adapter);
 
         //Displaying selected image first
         viewPager.setCurrentItem(position);
-
 
     } //onCreate
 
@@ -136,5 +144,27 @@ public class ImageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //TODO: investigate further
+//    @Override
+//    public void onTrimMemory(int level) {
+//        switch(level){
+//            case TRIM_MEMORY_UI_HIDDEN:
+//
+//            break;
+//
+//            case TRIM_MEMORY_RUNNING_LOW:
+//            break;
+//
+//            case TRIM_MEMORY_RUNNING_CRITICAL:
+//                break;
+//        }
+//
+//        super.onTrimMemory(level);
+//    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "onDestroy");
+    }
 } //ImageActivity

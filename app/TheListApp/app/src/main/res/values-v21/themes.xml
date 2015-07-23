@@ -3,6 +3,7 @@
     <style name="ListTheme" parent="ListThemeBase">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorSecondary</item>
         <item name="colorControlNormal">@color/colorSecondary</item>
         <item name="colorControlActivated">@color/colorSecondaryDark</item>
         <item name="colorControlHighlight">@color/colorSecondaryLight</item>
@@ -21,6 +22,12 @@
 
     <style name="ListThemeStatus" parent="ListTheme">
         <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+    <!-- NavigationView Style -->
+    <style name="NavigationViewTheme" parent="ListTheme">
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="colorControlHighlight">@color/colorPrimaryUltraLight</item>
     </style>
 
     <style name="ListThemeNoActionBar" parent="ListTheme">

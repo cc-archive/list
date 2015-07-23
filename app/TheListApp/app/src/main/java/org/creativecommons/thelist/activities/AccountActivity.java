@@ -21,6 +21,10 @@ package org.creativecommons.thelist.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,16 +40,15 @@ import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.fragments.AccountFragment;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_IS_ADDING_NEW_ACCOUNT;
-import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
 import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.encrypt;
 import static org.creativecommons.thelist.authentication.AesCbcWithIntegrity.generateKey;
 
@@ -59,7 +62,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     //Helpers
     private AccountManager mAccountManager;
     private ListUser mCurrentUser;
-    private RequestMethods mRequestMethods;
     private SharedPreferencesMethods mSharedPref;
 
     private String mAuthTokenType;
@@ -80,7 +82,6 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
         mAccountManager = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(AccountActivity.this);
-        mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
         //Google Analytics Tracker
@@ -120,26 +121,63 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
     }
 
     @Override
-    public void onUserSignedIn(Bundle userData) {
+    public void onUserLoggedIn(Bundle userData) {
         final Intent res = new Intent();
         res.putExtras(userData);
-        finishLogin(res);
-    } //onUserSignedIn
+
+        Account anonymousAccount = mCurrentUser.getAccount();
+
+        if(anonymousAccount != null) {
+
+            String id = mAccountManager.getUserData(anonymousAccount, AccountGeneral.USER_ID);
+            Log.v(TAG, "USER ID IS: " + id);
+            final String anonymousAccountName = anonymousAccount.name;
+
+            mAccountManager.removeAccount(anonymousAccount, new AccountManagerCallback<Boolean>() {
+                @Override
+                public void run(AccountManagerFuture<Boolean> accountManagerFuture) {
+
+                    try {
+                        if(accountManagerFuture.getResult() != null){
+                            Log.v(TAG, "onUserLoggedIn > successfully removed " + anonymousAccountName);
+                            finishLogin(res);
+
+                        }
+                    } catch (OperationCanceledException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        Log.v(TAG, "onUserLoggedIn > failed to remove " + anonymousAccountName);
+                        e.printStackTrace();
+                    }
+
+                }
+            }, null);
+
+        } else {
+            finishLogin(res);
+        }
+
+    } //onUserLoggedIn
 
     //Pass bundle constructed on request success
     private void finishLogin(Intent intent) {
-        Log.d("THE LIST", TAG + "> finishLogin");
+        Log.d(TAG, "> finishLogin");
 
         String accountEmail = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        String accountPassword = intent.getStringExtra(AccountGeneral.USER_PASS);
+        String userID = intent.getStringExtra(AccountGeneral.USER_ID);
+
         final Account account = new Account(accountEmail, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
 
-        //TODO: is this working or skipping to setPassword?
+        //TODO: review when signin is available
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
             Log.d(TAG, "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
+
 
             // Creating the account on the device and setting the auth token we got
             // (Not setting the auth token will cause another call to the server to authenticate the user)
@@ -152,20 +190,16 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
                 //Create new account
                 mAccountManager.addAccountExplicitly(account, cryptoPass.toString(), null);
+                //TODO: try bundle in 3rd param rather than setUserData
                 mAccountManager.setAuthToken(account, authtokenType, authtoken);
-                mAccountManager.setUserData(account, AccountGeneral.USER_ID, mCurrentUser.getUserID());
+                mAccountManager.setUserData(account, AccountGeneral.USER_ID, userID);
                 mAccountManager.setUserData(account, AccountGeneral.ANALYTICS_OPTOUT,
                         String.valueOf(mSharedPref.getAnalyticsOptOut()));
                 Log.v(TAG, "> finishLogin > setUserData, token: " + authtoken);
 
-                //Save Key for later use
-                SharedPreferencesMethods sharedPref = new SharedPreferencesMethods(mContext);
-                sharedPref.saveKey(key.toString());
-
-                //Add items chosen before login to userlist
-                mRequestMethods.addSavedItemsToUserList();
-                //TODO: also add category preferences (+ callback?) for these two?
-                //mCurrentUser.addSavedCategoriesToUserList();
+                //Save Key and UserID locally for later use
+                mSharedPref.saveKey(key.toString());
+                mSharedPref.setUserID(userID);
 
             } catch (GeneralSecurityException e) {
                 e.printStackTrace();

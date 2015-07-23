@@ -11,9 +11,9 @@
 
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/uploadProgressBar"
             android:visibility="gone"
             android:indeterminate="true"
-            android:id="@+id/uploadProgressBar"
             android:layout_marginTop="-7dp"
             android:layout_marginBottom="-6dp"
             android:layout_width="match_parent"
@@ -49,13 +49,16 @@
         android:textColor="@color/secondary_text_default_material_light"
         android:text="@string/my_list_empty_label" />
 
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add_white_24dp"
+        app:borderWidth="0dp"
         app:elevation="8dp"
+        android:layout_margin="16dp"
         android:layout_gravity="end|bottom"/>
 
 </android.support.design.widget.CoordinatorLayout>
-

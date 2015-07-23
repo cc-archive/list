@@ -4,3 +4,9 @@
 /.idea/libraries
 .DS_Store
 /build
+
+.idea/libraries
+app/build
+
+# TraceView captures
+/captures

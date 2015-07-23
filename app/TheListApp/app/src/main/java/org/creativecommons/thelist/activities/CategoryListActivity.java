@@ -74,11 +74,6 @@ public class CategoryListActivity extends AppCompatActivity {
     private GridLayoutManager mGridLayoutManager;
     private List<CategoryListItem> mCategoryList = new ArrayList<>();
 
-    //GridView
-//    private GridView mGridView;
-//    private List<CategoryListItem> mCategoryList = new ArrayList<>();
-//    private CategoryListAdapter adapter;
-
     //UI Elements
     private ProgressBar mProgressBar;
     private Menu menu;
@@ -107,10 +102,15 @@ public class CategoryListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
-
         //UI Elements
         mProgressBar = (ProgressBar) findViewById(R.id.category_progress_bar);
         mProgressBar.setVisibility(View.VISIBLE);
+
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
 
         //Set up Helper Message if new user
         if(!mSharedPref.getCategoryHelperViewed()){
@@ -136,58 +136,35 @@ public class CategoryListActivity extends AppCompatActivity {
                 Log.v(TAG, "> getCategories > onSuccess: " + response);
                 mCategoryData = response;
 
-                //Get user’s pre-selected categories
-                if(!(mCurrentUser.isTempUser())){
-                    //If user is logged in, request any pre-selected categories
-                    mRequestMethods.getUserCategories(new NetworkUtils.ResponseCallback() {
-                        @Override
-                        public void onSuccess(JSONArray response) {
-                            Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
+                mRequestMethods.getUserCategories(new NetworkUtils.ResponseCallback() {
+                    @Override
+                    public void onSuccess(JSONArray response) {
+                        Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
 
-                            //Create list of category ids
-                            if(response.length() > 0) {
-                                //Get array of catIds
-                                for(int i = 0; i < response.length(); i++){
-                                    try {
-                                        JSONObject singleCat = response.getJSONObject(i);
-                                        mUserCategories.add(i, singleCat.getInt("categoryid"));
+                        //Create list of category ids
+                        if(response.length() > 0) {
+                            //Get array of catIds
+                            for(int i = 0; i < response.length(); i++){
+                                try {
+                                    JSONObject singleCat = response.getJSONObject(i);
+                                    mUserCategories.add(i, singleCat.getInt("categoryid"));
+                                    //Log.v(TAG, "pre-existing catgory added: " + singleCat.getInt("categoryid"));
 
-                                        Log.v("USERCATS", "add: " + singleCat.getInt("categoryid"));
-
-                                    } catch (JSONException e) {
-                                        Log.e(TAG, e.getMessage());
-                                    }
+                                } catch (JSONException e) {
+                                    Log.e(TAG, e.getMessage());
                                 }
-                                Log.v(TAG, "user’s category list: " + mUserCategories.toString());
                             }
-                            updateList();
-                        } //getUserCategories > onSuccess
-                        @Override
-                        public void onFail(VolleyError error) {
-                            Log.v(TAG, "> getUserCategories > onFail " + error.toString());
-                            mMessageHelper.showDialog(mContext, getString(R.string.error_title),
-                                    getString(R.string.error_message));
+                            Log.v(TAG, "user’s category list: " + mUserCategories.toString());
                         }
-                    });
-                } else { //TODO: REMOVE WITH Anonymous Users
-
-                    JSONArray tempUserCategories = mSharedPref.getCategorySharedPreference();
-
-                    Log.v(TAG, "TEMP USER CATS: " + tempUserCategories);
-
-                    if(tempUserCategories != null && tempUserCategories.length() > 0){
-                        //Convert to list + add to mUserCategories
-                        for(int i = 0; i < tempUserCategories.length(); i++){
-                            try {
-                                mUserCategories.add(i, tempUserCategories.getInt(i));
-                                Log.v(TAG, " TEMPUSER CATEGORIES: " + mUserCategories.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        updateList();
+                    } //getUserCategories > onSuccess
+                    @Override
+                    public void onFail(VolleyError error) { //could not get user’s categories
+                        Log.v(TAG, "> getUserCategories > onFail " + error.toString());
+                        mMessageHelper.showDialog(mContext, getString(R.string.error_title),
+                                getString(R.string.error_message));
                     }
-                    updateList();
-                }
+                });
             } //getCategories > onSuccess
             @Override
             public void onFail(VolleyError error) {
@@ -245,37 +222,6 @@ public class CategoryListActivity extends AppCompatActivity {
         }
     } //updateList
 
-    public void saveUserCategories(){
-        //List<Integer> userCategories = ((CategoryAdapter)mCategoryAdapter).getSelectedItems();
-        //Log.v(TAG, "SELECTED ITEMS: " + userCategories.toString());
-
-        Intent intent;
-
-        if(mCurrentUser.isTempUser()){ //TEMP USER
-//
-//            if(userCategories.size() < 1){
-//                mMessageHelper.showDialog(mContext, "No Categories Selected",
-//                        "Pick at least one category so you can received List recommendations");
-//                return;
-//            }
-//            //Save user categories to shared preferences
-//            mSharedPref.saveSharedPreference
-//                    (SharedPreferencesMethods.CATEGORY_PREFERENCE_KEY, userCategories.toString());
-//
-            if(mSharedPref.getUserItemCount() == 0){
-                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-                startActivity(intent);
-            } else {
-                intent = new Intent(CategoryListActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        } else {
-            intent = new Intent(CategoryListActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
-    } //saveUserCategories
-
     @Override
     public void onStart(){
         super.onStart();
@@ -286,14 +232,6 @@ public class CategoryListActivity extends AppCompatActivity {
     public void onStop(){
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    //onBackPressed
-    @Override
-    public void onBackPressed() {
-        saveUserCategories();
-
-
     }
 
     @Override
@@ -313,9 +251,25 @@ public class CategoryListActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_done) {
-            saveUserCategories();
+
+            Intent intent;
+
+            if(mCurrentUser.isAnonymousUser()){
+
+                //TODO: get user item count (if not zero, send to MainActivity) --> part of profile endpoint?
+                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+                startActivity(intent);
+
+            } else {
+                intent = new Intent(CategoryListActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-}
+
+} //CategoryListActivity

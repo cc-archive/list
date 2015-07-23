@@ -36,6 +36,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ServerError;
+import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
@@ -83,6 +87,14 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mMessageHelper = new MessageHelper(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
+        if(!mCurrentUser.isAnonymousUser()) {
+            //Redirect to MainActivity
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
@@ -112,36 +124,39 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             //If you have accounts > show picker; if not, show login
             @Override
             public void onClick(View v) {
-                Account availableAccounts[] = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
+                mCurrentUser.getAvailableFullAccounts(new ListUser.AvailableAccountCallback() {
+                    @Override
+                    public void onResult(Account[] availableAccounts) {
+                        if(availableAccounts.length > 1) {
+                            mCurrentUser.showAccountPicker(availableAccounts, new ListUser.AuthCallback() {
+                                @Override
+                                public void onAuthed(String authtoken) {
+                                    Log.d(TAG, "I have an account > Got an authtoken");
+                                    //TODO: is this actually needed?
+                                    Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
 
-                //TODO: switch getAuthed: login to first account if there if only one, if there is more than more go to accountPicker
-                if(availableAccounts.length > 1){
-                    mCurrentUser.showAccountPicker(new ListUser.AuthCallback() {
-                        @Override
-                        public void onAuthed(String authtoken) {
-                            Log.d(TAG, "I have an account > Got an authtoken");
-                            //TODO: is this actually needed?
-                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                            });
+                        } else {
+                            mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                                    AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                                        @Override
+                                        public void onAuthed(String authtoken) {
+                                            Log.v(TAG, "> addNewFullAccount token: " + authtoken);
+
+                                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+
+                                        }
+                                    });
                         }
-
-                    });
-                } else {
-                    mCurrentUser.getAuthed(new ListUser.AuthCallback() {
-                        @Override
-                        public void onAuthed(String authtoken) {
-                            Log.d(TAG, "I have an account + I re-authenticated > Got an authtoken");
-                            //TODO: is this actually needed?
-                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-
-                    });
-                }
+                    } //onResult
+                }); //getAvailableFullAccounts
             }
         }); //accountButton
 
@@ -152,69 +167,101 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     } //OnCreate
 
     @Override
-    protected void onRestart(){
-        super.onRestart();
-    } //onRestart
-
-    @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
-        if(!(mCurrentUser.isTempUser()) && mCurrentUser.getAccount() != null) {
-            GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
-            //Redirect to MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else { //TEMP USER
+        Boolean analyticsViewed = mSharedPref.getAnalyticsViewed();
 
+        if(!analyticsViewed) {
             //Display Google Analytics Message
-            Boolean optOut = mSharedPref.getAnalyticsOptOut();
-            Log.v(TAG, "OPTOUT" + String.valueOf(optOut));
-            if(optOut == null){
-                //Request Permissions
-                mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
-                        getString(R.string.dialog_ga_message),
-                        new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                super.onPositive(dialog);
-                                //Set boolean opt-in
-                                mSharedPref.setAnalyticsOptOut(false);
-                                GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
-                                dialog.dismiss();
-                            }
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                                super.onNegative(dialog);
-                                //Set boolean opt-out
-                                mSharedPref.setAnalyticsOptOut(true);
-                                GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
-                                dialog.dismiss();
-                            }
-                        });
-            }
-            GoogleAnalytics.getInstance(this).reportActivityStart(this);
+            Log.v(TAG, "VIEWED: " + String.valueOf(analyticsViewed));
+            //Request Permissions
+            mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
+                    getString(R.string.dialog_ga_message),
+                    new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            super.onPositive(dialog);
+                            //Set boolean opt-in
+                            mSharedPref.setAnalyticsOptOut(false);
+
+                            mSharedPref.setAnalyticsViewed(true);
+                            GoogleAnalytics.getInstance(mContext).setAppOptOut(false);
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            super.onNegative(dialog);
+                            //Set boolean opt-out
+                            mSharedPref.setAnalyticsOptOut(true);
+                            mSharedPref.setAnalyticsViewed(true);
+                            GoogleAnalytics.getInstance(mContext).setAppOptOut(true);
+                            dialog.dismiss();
+                        }
+                    });
         }
+
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
     } //onStart
 
     @Override
     protected void onStop(){
         super.onStop();
-        Log.v(TAG, "ON STOP CALLED");
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-        Log.v(TAG, "ON STOP CALLED – AFTER GA CALLED");
     } //onStop
 
     @Override
     public void onNextClicked() {
-        Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
-        startActivity(intent);
-    }
+        //TODO: login user as anonymous
+
+        Account account = mCurrentUser.getAccount();
+
+        if(account == null){ //if there is no previously existing user
+
+            mCurrentUser.createAnonymousUser(new ListUser.AnonymousUserCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.v(TAG, "> createAnonymousUser > onSuccess");
+
+                    Account account = mCurrentUser.getAccount();
+                    String userID = am.getUserData(account, AccountGeneral.USER_ID);
+
+                    Log.v(TAG, "USER ID: " + userID);
+
+                    Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onAccountFail(Boolean bol) {
+                    Log.v(TAG, "> createAnonymousUser > onAccountFail: " + bol.toString());
+                    //TODO: if account fails to be created in
+                }
+
+                @Override
+                public void onFail(VolleyError error) {
+                    Log.v(TAG, "> createAnonymousUser > onFail: "  + error.getMessage());
+
+                    if (error instanceof NoConnectionError || error instanceof NetworkError) {
+                        //TODO: need an working internet connection
+                    } else if (error instanceof ServerError) {
+                        //TODO: we’re experiencing some problems dialog
+                    }
+                }
+            });
+
+        } else {
+            //TODO: what happens if you already have an account on the phone: account picker?
+            Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+            startActivity(intent);
+        }
+
+    } //onNextClicked
 
     @Override
-    public void onUserSignedIn(Bundle userData) {
+    public void onUserLoggedIn(Bundle userData) {
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -232,7 +279,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     @Override
     public void onCancelLogin() {
         getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .remove(loginFragment)
                 .commit();
         mFrameLayout.setClickable(false);

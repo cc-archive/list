@@ -21,10 +21,10 @@ package org.creativecommons.thelist.fragments;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +42,6 @@ import org.creativecommons.thelist.utils.MessageHelper;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_NAME;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_ACCOUNT_TYPE;
 import static org.creativecommons.thelist.authentication.AccountGeneral.ARG_AUTH_TYPE;
-import static org.creativecommons.thelist.authentication.AccountGeneral.PARAM_USER_PASS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +74,7 @@ public class AccountFragment extends Fragment {
 
     //LISTENER
     public interface AuthListener {
-        public void onUserSignedIn(Bundle userData);
+        public void onUserLoggedIn(Bundle userData);
         public void onUserSignedUp(Bundle userData);
         public void onCancelLogin();
     }
@@ -115,9 +114,9 @@ public class AccountFragment extends Fragment {
         String accountName = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         final String accountType = mActivity.getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
         mAuthTokenType = mActivity.getIntent().getStringExtra(ARG_AUTH_TYPE);
-        if (mAuthTokenType == null)
+        if (mAuthTokenType == null) {
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
-
+        }
         if (accountName != null) {
             ((EditText) mActivity.findViewById(R.id.accountName)).setText(accountName);
         }
@@ -145,12 +144,14 @@ public class AccountFragment extends Fragment {
                             getString(R.string.login_error_message));
                 } else {
                     ListUser mCurrentUser = new ListUser(mActivity);
+                    String guid = mCurrentUser.getAnonymousUserGUID();
+
                     try {
-                        mCurrentUser.userSignIn(accountEmail, accountPassword, mAuthTokenType,
-                                new ListUser.AuthCallback() {
+                        mCurrentUser.userLogIn(accountEmail, accountPassword, guid, mAuthTokenType,
+                                new ListUser.LogInCallback() {
                                     @Override
-                                    public void onAuthed(String authtoken) {
-                                        Log.v(TAG, "> userSignIn > onAuthed :" + authtoken);
+                                    public void onLoggedIn(String authtoken, String userID) {
+                                        Log.v(TAG, "> userLogIn > onLoggedIn :" + authtoken);
 
                                         //TODO: authtoken stuff
                                         Bundle data = new Bundle();
@@ -158,10 +159,12 @@ public class AccountFragment extends Fragment {
                                         data.putString(AccountManager.KEY_ACCOUNT_NAME, accountEmail);
                                         data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                                         data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                                        data.putString(PARAM_USER_PASS, accountPassword);
+
+                                        data.putString(AccountGeneral.USER_ID, userID);
+                                        data.putString(AccountGeneral.USER_PASS, accountPassword);
 
                                         //Create Bundle to create Account
-                                        mCallback.onUserSignedIn(data);
+                                        mCallback.onUserLoggedIn(data);
                                     }
                                 });
                     } catch (Exception e) {
@@ -201,7 +204,7 @@ public class AccountFragment extends Fragment {
 //                                data.putString(AccountManager.KEY_ACCOUNT_NAME, accountEmail);
 //                                data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
 //                                data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-//                                data.putString(PARAM_USER_PASS, accountPassword);
+//                                data.putString(USER_PASS, accountPassword);
 //
 //                                mCallback.onUserSignedUp(data);
 //                            }

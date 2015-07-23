@@ -1,24 +1,16 @@
-<!--<org.lucasr.dspec.DesignSpecFrameLayout-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_width="match_parent"-->
-    <!--app:designSpec="@raw/spec"-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto">-->
-<!--</org.lucasr.dspec.DesignSpecFrameLayout>-->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    tools:context="org.creativecommons.thelist.fragments.NavigationDrawerFragment">
+    tools:context="org.creativecommons.thelist.misc.NavigationDrawerFragment">
 
     <include layout="@layout/drawer_header"
         android:id="@+id/drawer_header"
         android:layout_height="178dp"
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_alignParentTop="true"/>
-    
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/drawer_recyclerView"
         android:background="@color/app_white"
