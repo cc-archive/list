@@ -255,6 +255,7 @@
     <string name="add_item_toast_error">There was a problem adding your item</string>
     <string name="remove_item_toast_error">There was a problem deleting your item. Pull to refresh.</string>
 
+    <string name="title_activity_feed">FeedActivity</string>
 
 
 </resources>
