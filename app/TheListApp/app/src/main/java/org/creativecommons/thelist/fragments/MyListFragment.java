@@ -117,12 +117,31 @@ public class MyListFragment extends Fragment {
     protected ProgressBar mProgressBar;
     protected TextView mEmptyView;
 
+    //Interface with Activity
+    public LoginListener mCallback;
+
     // --------------------------------------------------------
 
+    //LISTENERS
+    public interface LoginListener {
+        public void isLoggedIn();
+    }
 
     public MyListFragment() {
         // Required empty public constructor
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (LoginListener) activity;
+        } catch(ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + activity.getString(R.string.listlogin_callback_exception_message));
+        }
+    } //onAttach
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -175,7 +194,6 @@ public class MyListFragment extends Fragment {
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.feedSwipeRefresh);
         mRecyclerView = (RecyclerView)activity.findViewById(R.id.feedRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        //TODO: Try dividers in layout instead?
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
@@ -318,12 +336,10 @@ public class MyListFragment extends Fragment {
                 mProgressBar.setVisibility(View.INVISIBLE);
 
                 if (mItemList.size() == 0) {
-                    //TODO: show textView
                     mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
                     mEmptyView.setVisibility(View.VISIBLE);
 
                 } else {
-                    //TODO: hide textView
                     mEmptyView.setVisibility(View.GONE);
                     Collections.reverse(mItemList);
 
@@ -621,7 +637,7 @@ public class MyListFragment extends Fragment {
     //Start Upload + Respond
     public void startPhotoUpload(){
 
-        if(!(mCurrentUser.isAnonymousUser())){ //IF NOT TEMP USER
+        if(!(mCurrentUser.isAnonymousUser())){ //IF NOT ANON USER
             mCurrentUser.getToken(new ListUser.TokenCallback() { //getToken
                 @Override
                 public void onAuthed(String authtoken) {
@@ -638,12 +654,14 @@ public class MyListFragment extends Fragment {
                         @Override
                         public void onAuthed(String authtoken) {
                             Log.d(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
+
                             try {
                                 mItemList.remove(mItemToBeUploaded);
                                 mFeedAdapter.notifyDataSetChanged();
                                 performPhotoUpload();
+                                mCallback.isLoggedIn();
                             } catch (Exception e) {
-                                Log.d(TAG, "addAccount > " + e.getMessage());
+                                Log.d(TAG, "addNewFullAccount > " + e.getMessage());
                             }
                         }
 

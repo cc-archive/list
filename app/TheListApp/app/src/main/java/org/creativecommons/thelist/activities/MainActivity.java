@@ -56,7 +56,7 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements GalleryFragment.GalleryListener {
+public class MainActivity extends AppCompatActivity implements GalleryFragment.GalleryListener, MyListFragment.LoginListener {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private Context mContext;
@@ -236,9 +236,6 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                                     mLoggingIn = true;
 
-                                    Log.v(TAG, "ON AUTHED, HANDLE USER ACCOUNT");
-                                    Log.v(TAG, "PASSWORD: " + mCurrentUser.getAccountPassword());
-
                                     MyListFragment listFragment = new MyListFragment();
                                     //load default view
                                     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -294,17 +291,17 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         Log.v(TAG, "ON RESUME, logging in: " + String.valueOf(mLoggingIn));
 
         if(mLoggingIn){
-
             updateDrawerHeader();
-            //mNavigationView.getMenu().removeItem(mNavigationView.getMenu().add("").getItemId());
         }
 
     } //onResume
 
     // --------------------------------------------------------
-    // Gallery Fragment
+    // Fragment Callbacks
     // --------------------------------------------------------
 
+
+    //GalleryFragment
     @Override
     public void viewImage(ArrayList<GalleryItem> photoObjects, int position) {
 
@@ -319,6 +316,11 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
     } //viewImage
 
+    //MyListFragment
+    @Override
+    public void isLoggedIn() {
+        updateDrawerHeader();
+    }
 
     // --------------------------------------------------------
     // Main Menu + Helpers

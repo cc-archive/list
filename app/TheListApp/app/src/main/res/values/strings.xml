@@ -206,6 +206,7 @@
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
     <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
     <string name="gallery_callback_exception_message">" must implement GalleryFragment.GalleryListener"</string>
+    <string name="listlogin_callback_exception_message">" must implement MyListFragment.GalleryListener"</string>
 
     <!-- Fragment/Activity Bundle Keys -->
     <string name="item_id_bundle_key">item</string>
