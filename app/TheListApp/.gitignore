@@ -4,9 +4,12 @@
 /.idea/libraries
 .DS_Store
 /build
+<<<<<<< HEAD
 
 .idea/libraries
 app/build
 
 # TraceView captures
+=======
+>>>>>>> a19b22764cd62c97ecda3ba79032f322eda5e043
 /captures

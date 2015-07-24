@@ -10,9 +10,7 @@
         card_view:cardUseCompatPadding="true"
         card_view:cardElevation="4dp"
         card_view:cardCornerRadius="3dp"
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/cardView">
 
         <RelativeLayout
             android:layout_width="match_parent"

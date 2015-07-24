@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Photographed by Ryan Merkley"
-            android:layout_below="@+id/discover_card_title"
+            android:layout_below="@id/discover_card_title"
             android:textColor="@color/secondary_text_material_light"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
