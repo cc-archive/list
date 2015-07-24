@@ -46,6 +46,7 @@ import com.google.android.gms.analytics.Tracker;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.fragments.DiscoverFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.utils.ListApplication;
@@ -117,15 +118,15 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
             updateDrawerHeader();
 
-            MyListFragment listFragment = new MyListFragment();
+            DiscoverFragment discoverFragment = new DiscoverFragment();
             //load default view
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_content_container, listFragment)
+                    .replace(R.id.main_content_container, discoverFragment)
                     .commit();
 
             assert getSupportActionBar() != null;
-            getSupportActionBar().setTitle(getString(R.string.title_activity_drawer));
+            getSupportActionBar().setTitle(getString(R.string.app_name_short));
         }
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -138,6 +139,15 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         ListApplication.TrackerName.GLOBAL_TRACKER);
 
                 switch (menuItem.getItemId()) {
+                    case R.id.nav_item_home:
+                        fragment = new DiscoverFragment();
+
+                        //Set screen name.
+                        t.setScreenName("Discover");
+                        // Send a screen view.
+                        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+                        break;
                     case R.id.nav_item_list:
                         fragment = new MyListFragment();
 
@@ -239,11 +249,11 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                     Log.v(TAG, "ON AUTHED, HANDLE USER ACCOUNT");
                                     Log.v(TAG, "PASSWORD: " + mCurrentUser.getAccountPassword());
 
-                                    MyListFragment listFragment = new MyListFragment();
+                                    DiscoverFragment discoverFragment = new DiscoverFragment();
                                     //load default view
                                     FragmentManager fragmentManager = getSupportFragmentManager();
                                     fragmentManager.beginTransaction()
-                                            .replace(R.id.main_content_container, listFragment)
+                                            .replace(R.id.main_content_container, discoverFragment)
                                             .commit();
                                 }
                             });
@@ -271,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         @Override
                         public void run() {
                             menuItem.setChecked(true);
+                            //TODO: set variable to handle this when tabs exist
                             getSupportActionBar().setTitle(menuItem.getTitle());
 
                             FragmentManager fragmentManager = getSupportFragmentManager();

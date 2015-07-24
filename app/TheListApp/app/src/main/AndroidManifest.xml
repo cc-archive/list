@@ -43,6 +43,19 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
+            android:name=".activities.FeedActivity"
+            android:label="@string/title_activity_feed"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTask"
+            android:theme="@style/ListThemeNoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activities.StartActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -62,10 +75,6 @@
             android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ListThemeStatus" >
-
-            <!-- <meta-data -->
-            <!-- android:name="android.support.PARENT_ACTIVITY" -->
-            <!-- android:value=".activities.DrawerActivity" /> -->
         </activity>
         <activity
             android:name=".activities.ImageActivity"
@@ -151,15 +160,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity
-            android:name=".activities.FeedActivity"
-            android:label="@string/title_activity_feed" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

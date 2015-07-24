@@ -2,9 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_item_home"
+            android:icon="@drawable/ic_home_grey600_24dp"
+            android:checked="true"
+            android:title="@string/nav_item_home_label"/>
+        <item
             android:id="@+id/nav_item_list"
             android:icon="@drawable/ic_view_list_grey600_24dp"
-            android:checked="true"
             android:title="@string/nav_item_list_label"/>
         <item
             android:id="@+id/nav_item_photos"

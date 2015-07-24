@@ -102,7 +102,7 @@ public class MyListFragment extends Fragment {
     //RecyclerView
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mFeedAdapter;
+    private RecyclerView.Adapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ViewGroup snackbarContainer;
     private List<UserListItem> mItemList = new ArrayList<>();
@@ -173,15 +173,15 @@ public class MyListFragment extends Fragment {
 
         //RecyclerView
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.feedSwipeRefresh);
-        mRecyclerView = (RecyclerView)activity.findViewById(R.id.feedRecyclerView);
+        mRecyclerView = (RecyclerView)activity.findViewById(R.id.listRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         //TODO: Try dividers in layout instead?
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(mContext);
-        mFeedAdapter = new UserListAdapter(mContext, mItemList);
-        mRecyclerView.setAdapter(mFeedAdapter);
+        mListAdapter = new UserListAdapter(mContext, mItemList);
+        mRecyclerView.setAdapter(mListAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         initRecyclerView();
@@ -327,7 +327,7 @@ public class MyListFragment extends Fragment {
                     mEmptyView.setVisibility(View.GONE);
                     Collections.reverse(mItemList);
 
-                    mFeedAdapter.notifyDataSetChanged();
+                    mListAdapter.notifyDataSetChanged();
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             } //onSuccess
@@ -364,7 +364,7 @@ public class MyListFragment extends Fragment {
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
 
-                mFeedAdapter.notifyDataSetChanged();
+                mListAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -390,7 +390,7 @@ public class MyListFragment extends Fragment {
 
                     if(!mRequestMethods.isNetworkAvailable()){
                         mMessageHelper.toastNeedInternet();
-                        mFeedAdapter.notifyDataSetChanged();
+                        mListAdapter.notifyDataSetChanged();
 
                         if(mItemList.size() == 0){
                             mEmptyView.setText(mContext.getString(R.string.mylist_offline_empty_label));
@@ -410,7 +410,7 @@ public class MyListFragment extends Fragment {
                     mRequestMethods.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
 
                     // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
-                    mFeedAdapter.notifyDataSetChanged();
+                    mListAdapter.notifyDataSetChanged();
 
                     //Snackbar message
                     Snackbar.make(snackbarContainer, "Item Deleted", Snackbar.LENGTH_LONG)
@@ -420,7 +420,7 @@ public class MyListFragment extends Fragment {
                                     mItemList.add(0, mLastDismissedItem);
                                     //re-add item to user’s list in DB
                                     mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
-                                    mFeedAdapter.notifyDataSetChanged();
+                                    mListAdapter.notifyDataSetChanged();
                                     mLayoutManager.scrollToPosition(0);
 
                                     if(mEmptyView.getVisibility() == View.VISIBLE){
@@ -628,7 +628,7 @@ public class MyListFragment extends Fragment {
                     Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
 
                     mItemList.remove(mItemToBeUploaded);
-                    mFeedAdapter.notifyDataSetChanged();
+                    mListAdapter.notifyDataSetChanged();
                     performPhotoUpload();
                 }
             });
@@ -640,7 +640,7 @@ public class MyListFragment extends Fragment {
                             Log.d(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
                             try {
                                 mItemList.remove(mItemToBeUploaded);
-                                mFeedAdapter.notifyDataSetChanged();
+                                mListAdapter.notifyDataSetChanged();
                                 performPhotoUpload();
                             } catch (Exception e) {
                                 Log.d(TAG, "addAccount > " + e.getMessage());
