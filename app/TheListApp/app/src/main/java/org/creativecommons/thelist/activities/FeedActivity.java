@@ -1,13 +1,17 @@
 package org.creativecommons.thelist.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.fragments.FeedFragment;
+import org.creativecommons.thelist.adapters.MainPagerAdapter;
+import org.creativecommons.thelist.fragments.DiscoverFragment;
+import org.creativecommons.thelist.fragments.MyListFragment;
 
 public class FeedActivity extends AppCompatActivity {
     public static final String TAG = FeedActivity.class.getSimpleName();
@@ -17,15 +21,26 @@ public class FeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        if(savedInstanceState == null){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
 
-            FeedFragment feedFragment = new FeedFragment();
-            //load default view
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_feed_container, feedFragment)
-                    .commit();
-        }
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+    } //onCreate
+
+    public void setupViewPager(ViewPager viewPager){
+        MainPagerAdapter mainPagerAdapter =
+                new MainPagerAdapter(getSupportFragmentManager());
+
+        mainPagerAdapter.addFragment(new DiscoverFragment(), "Discover");
+        mainPagerAdapter.addFragment(new MyListFragment(), "Contribute");
+        viewPager.setAdapter(mainPagerAdapter);
+
     }
 
     @Override

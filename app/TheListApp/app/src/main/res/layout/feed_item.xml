@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android.support.v7.cardview="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingTop="8dp">
 
     <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardUseCompatPadding="true"
+        card_view:cardElevation="4dp"
+        card_view:cardCornerRadius="3dp"
         android:id="@+id/cardView"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -15,32 +18,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/toolbar_card_top"/>
+            <include layout="@layout/toolbar_card_top"
+                android:id="@+id/discover_card_header"/>
 
             <ImageView
-                android:id="@+id/feed_card_photo"
+                android:id="@+id/discover_card_photo"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/nav_drawer_header" />
+                android:layout_below="@+id/discover_card_header"/>
 
             <RelativeLayout
-                android:id="@+id/feed_card_body_text"
+                android:id="@+id/discover_card_body_text"
+                android:layout_below="@+id/discover_card_photo"
+                android:padding="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/discover_card_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description of the photo in question"/>
+                    android:text="Description of the photo in question"
+                    android:textColor="@color/primary_text_default_material_light"
+                    android:paddingBottom="4dp"/>
                 <TextView
+                    android:id="@+id/discover_card_requestedby"
+                    android:layout_below="@+id/discover_card_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="requested by this person"/>
+                    android:text="requested by this person"
+                    android:textColor="@color/secondary_text_material_light" />
 
             </RelativeLayout>
 
-            <include layout="@layout/toolbar_card_bottom"/>
+            <include layout="@layout/toolbar_card_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/discover_card_body_text" />
 
         </RelativeLayout>
 

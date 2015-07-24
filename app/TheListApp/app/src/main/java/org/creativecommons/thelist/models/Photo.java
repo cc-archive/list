@@ -10,6 +10,7 @@ public class Photo implements Parcelable {
     public String category;
     public int likes;
     public String makerid;
+    public String makername;
     public String description;
     public String url;
     public String approved;
@@ -27,6 +28,7 @@ public class Photo implements Parcelable {
         parcel.writeString(this.category);
         parcel.writeInt(this.likes);
         parcel.writeString(this.makerid);
+        parcel.writeString(this.makername);
         parcel.writeString(this.description);
         parcel.writeString(this.url);
         parcel.writeString(this.approved);
@@ -42,6 +44,7 @@ public class Photo implements Parcelable {
         this.category = in.readString();
         this.likes = in.readInt();
         this.makerid = in.readString();
+        this.makername = in.readString();
         this.description = in.readString();
         this.url = in.readString();
         this.approved = in.readString();

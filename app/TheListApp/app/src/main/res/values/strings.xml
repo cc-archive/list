@@ -19,6 +19,7 @@
 
 
     <!-- Drawer Navigation Labels -->
+    <string name="nav_item_home_label">Home</string>
     <string name="nav_item_list_label">My List</string>
     <string name="nav_item_photos_label">My Photos</string>
     <string name="nav_item_categories_label">My Categories</string>
