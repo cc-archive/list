@@ -246,40 +246,41 @@ public class MyListFragment extends Fragment {
                     });
         }
 
-        if(mRequestMethods.isNetworkAvailable() && mSharedPref.getUploadCount() > 4
-                && !mSharedPref.getSurveyTaken()){
-            int surveyCount = mSharedPref.getSurveyCount();
-
-            //Check if should display survey item
-            if(surveyCount % 10 == 0){
-                mMessageHelper.takeSurveyDialog(mContext, getString(R.string.dialog_survey_title),
-                        getString(R.string.dialog_survey_message),
-                        new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                super.onPositive(dialog);
-
-                                //Set survey taken
-                                mSharedPref.setSurveyTaken(true);
-
-                                //Go to link
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse(getString(R.string.dialog_survey_link)));
-                                startActivity(browserIntent);
-                                dialog.dismiss();
-                            }
-
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                                super.onNegative(dialog);
-                                dialog.dismiss();
-                            }
-                        });
-            } //survey check
-
-            //Increase count
-            mSharedPref.setSurveyCount(surveyCount + 1);
-        } //surveyTaken
+        //TODO: re-enable surveys when new survey is created
+//        if(mRequestMethods.isNetworkAvailable() && mSharedPref.getUploadCount() > 4
+//                && !mSharedPref.getSurveyTaken()){
+//            int surveyCount = mSharedPref.getSurveyCount();
+//
+//            //Check if should display survey item
+//            if(surveyCount % 10 == 0){
+//                mMessageHelper.takeSurveyDialog(mContext, getString(R.string.dialog_survey_title),
+//                        getString(R.string.dialog_survey_message),
+//                        new MaterialDialog.ButtonCallback() {
+//                            @Override
+//                            public void onPositive(MaterialDialog dialog) {
+//                                super.onPositive(dialog);
+//
+//                                //Set survey taken
+//                                mSharedPref.setSurveyTaken(true);
+//
+//                                //Go to link
+//                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                        Uri.parse(getString(R.string.dialog_survey_link)));
+//                                startActivity(browserIntent);
+//                                dialog.dismiss();
+//                            }
+//
+//                            @Override
+//                            public void onNegative(MaterialDialog dialog) {
+//                                super.onNegative(dialog);
+//                                dialog.dismiss();
+//                            }
+//                        });
+//            } //survey check
+//
+//            //Increase count
+//            mSharedPref.setSurveyCount(surveyCount + 1);
+//        } //surveyTaken
 
         if(mItemToBeUploaded != null && mRequestMethods.isNetworkAvailable()){
             return;

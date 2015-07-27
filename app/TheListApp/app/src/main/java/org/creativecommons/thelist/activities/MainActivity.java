@@ -24,7 +24,6 @@ package org.creativecommons.thelist.activities;
 import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -206,22 +205,23 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         }, 250);
 
                         break;
-                    case R.id.nav_item_feedback:
-                        mDrawerLayout.closeDrawers();
-
-                        //Set survey taken
-                        mSharedPref.setSurveyTaken(true);
-
-                        new android.os.Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse(getString(R.string.dialog_survey_link)));
-                                startActivity(browserIntent);
-                            }
-                        }, 100);
-
-                        break;
+                        //TODO: uncomment when survey is updated
+//                    case R.id.nav_item_feedback:
+//                        mDrawerLayout.closeDrawers();
+//
+//                        //Set survey taken
+//                        mSharedPref.setSurveyTaken(true);
+//
+//                        new android.os.Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+//                                        Uri.parse(getString(R.string.dialog_survey_link)));
+//                                startActivity(browserIntent);
+//                            }
+//                        }, 100);
+//
+//                        break;
                     case R.id.nav_item_account:
                         mDrawerLayout.closeDrawers();
 
