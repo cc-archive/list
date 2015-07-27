@@ -89,7 +89,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mMessageHelper = new MessageHelper(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
-        if(!mCurrentUser.isAnonymousUser()) {
+        if(!mCurrentUser.isAnonymousUser() || mSharedPref.getAnalyticsViewed()) {
             //Redirect to MainActivity
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

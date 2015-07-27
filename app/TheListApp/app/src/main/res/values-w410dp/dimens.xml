@@ -22,7 +22,7 @@
     <dimen name="text_size_title">20sp</dimen>
     <dimen name="text_size_headline">24sp</dimen>
     <dimen name="text_size_display1">34sp</dimen>
-    
+
     <dimen name="snackbar_text">14sp</dimen>
 
     <dimen name="snackbar_height">48dp</dimen>
@@ -31,10 +31,8 @@
     <dimen name="fab_top_padding">16dp</dimen>
     <dimen name="list_item_padding">20dp</dimen>
 
-    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
-         https://developer.android.com/design/patterns/navigation-drawer.html -->
-    <dimen name="nav_drawer_width">300dp</dimen>
+    <dimen name="nav_drawer_width">320dp</dimen>
     <dimen name="app_bar_top_padding">24dp</dimen>
-    <dimen name="nav_drawer_header_height">154dp</dimen>
+    <dimen name="nav_drawer_header_height">178dp</dimen>
 
 </resources>
