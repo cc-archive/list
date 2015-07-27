@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    style="@style/fragment_layout_main"
+    android:background="@color/translucent_background"
+    android:paddingTop="@dimen/fragment_account_padding_top"
+    android:paddingBottom="@dimen/fragment_account_padding_bottom"
+    android:paddingLeft="@dimen/fragment_account_padding_horizontal"
+    android:paddingRight="@dimen/fragment_account_padding_horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-    <Button
-        style="@style/flat_button_dark"
-        android:text="@string/cancel_button_label"
-        android:id="@+id/cancelButton"
-        android:layout_weight="0"
-        android:layout_gravity="right" />
 
     <RelativeLayout
         android:id="@+id/section_loading"
@@ -20,10 +17,11 @@
         android:layout_gravity="center">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/terms_logo"
             android:id="@+id/login_icon"
+            android:layout_height="@dimen/fragment_account_login_icon_height"
+            android:layout_width="@dimen/fragment_account_login_icon_width"
+            android:layout_centerInParent="true"
+            android:src="@drawable/terms_logo"
             android:contentDescription="@string/cc_logo_contentDescription" />
     </RelativeLayout>
 
@@ -35,12 +33,12 @@
         android:paddingTop="20dp"
         android:layout_marginBottom="20dp">
         <TextView
-            android:text="@string/login_fragment_title"
+            android:text="@string/account_fragment_title"
             android:id="@+id/account_title"
             style="@style/fragment_title" />
         <TextView
             style="@style/fragment_text"
-            android:text="@string/login_fragment_text"
+            android:text="@string/account_fragment_text"
             android:id="@+id/random_item_text"
             android:layout_below="@+id/account_title"
             android:textColor="@color/primary_text_default_material_dark" />
@@ -55,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/login_fields"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp">
 
             <!-- Dummy view -->
@@ -82,22 +80,36 @@
                 android:layout_marginBottom="10dp"
                 android:textCursorDrawable="@null"/>
 
-            <Button
-                style="@style/raised_button"
-                android:id="@+id/loginButton"
-                android:layout_height="wrap_content"
+            <LinearLayout android:id="@+id/buttonOptions"
                 android:layout_width="match_parent"
-                android:text="@string/login_button_label"
-                android:layout_below="@+id/accountPassword"/>
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/accountPassword">
+
+                <Button android:id="@+id/loginButton"
+                    style="@style/raised_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/login_button_label"
+                    android:layout_weight="1"/>
+
+                <Button android:id="@+id/cancelButton"
+                    style="@style/raised_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/cancel_button_label"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
             <!--TODO: fix ime options when sign up is enabled-->
-            <Button android:id="@+id/signUpButton"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/signUpButton_label"
-                android:padding="10dp"/>
+            <!--<Button android:id="@+id/signUpButton"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:text="@string/signUpButton_label"-->
+                <!--android:padding="10dp"/>-->
 
             <TextView
                 style="@style/clickable_text"
@@ -107,7 +119,7 @@
                 android:textColor="@color/secondary_text_material_dark"
                 android:text="@string/new_account_text"
                 android:id="@+id/signUp"
-                android:layout_below="@+id/loginButton" />
+                android:layout_below="@+id/buttonOptions" />
         </RelativeLayout>
     </ScrollView>
 

@@ -126,7 +126,7 @@ public class AccountFragment extends Fragment {
         //UI Elements
         cancelButton = (Button) mActivity.findViewById(R.id.cancelButton);
         loginButton = (Button) mActivity.findViewById(R.id.loginButton);
-        signUpButton = (Button) mActivity.findViewById(R.id.signUpButton);
+        //signUpButton = (Button) mActivity.findViewById(R.id.signUpButton);
 
         accountEmailField = (EditText)mActivity.findViewById(R.id.accountName);
         accountPasswordField = (EditText)mActivity.findViewById(R.id.accountPassword);
