@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,6 +43,7 @@ import com.android.volley.VolleyError;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryAdapter;
 import org.creativecommons.thelist.adapters.GalleryItem;
+import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -65,8 +67,9 @@ public class GalleryFragment extends Fragment {
     private RequestMethods mRequestMethods;
 
     //UI Elements
-    private TextView mEmptyView;
     private ProgressBar mProgressBar;
+    private TextView mEmptyView;
+    private Button mLoginButton;
 
     //RecyclerView
     private RecyclerView mRecyclerView;
@@ -82,7 +85,8 @@ public class GalleryFragment extends Fragment {
 
     //LISTENERS
     public interface GalleryListener {
-        public void viewImage(ArrayList<GalleryItem> photoObjects, int position);
+        void viewImage(ArrayList<GalleryItem> photoObjects, int position);
+        void onLoginClick();
     }
 
     public GalleryFragment() {
@@ -121,8 +125,9 @@ public class GalleryFragment extends Fragment {
         mRequestMethods = new RequestMethods(mContext);
 
         //UI Elements
-        mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
         mProgressBar = (ProgressBar) activity.findViewById(R.id.gallery_progressBar);
+        mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
+        mLoginButton = (Button) activity.findViewById(R.id.gallery_login_button);
 
         //RecyclerView
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.gallerySwipeRefresh);
@@ -155,10 +160,29 @@ public class GalleryFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+                mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewFullAccount
+                            @Override
+                            public void onAuthed(String authtoken) {
+                                Log.v(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
+
+                            }
+
+                        });
+
                 refreshItems();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCallback.onLoginClick();
+            }
+        });
+
     } //onActivityCreated
 
     @Override
@@ -167,65 +191,71 @@ public class GalleryFragment extends Fragment {
     } //onResume
 
     public void refreshItems(){
-        if(!mCurrentUser.isAnonymousUser()){
-            mRequestMethods.getUserPhotos(new NetworkUtils.ResponseCallback() {
-                @Override
-                public void onSuccess(JSONArray response) {
-                    Log.v(TAG, " > getUserPhotos > onAuthed" + response.toString());
-                    mPhotoList.clear();
 
-                    for(int i = 0; i < response.length(); i++){
-                        GalleryItem galleryItem = new GalleryItem();
+        if(mCurrentUser.isAnonymousUser()){
 
-                        try {
-                            JSONObject singlePhotoItem = response.getJSONObject(i);
-                            String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
-                            String itemName = singlePhotoItem.getString(ApiConstants.USER_PHOTO_TITLE);
-                            String makerName = singlePhotoItem.getString(ApiConstants.USER_PHOTO_MAKER); //TODO: set this in ApiConstants when it exists
+            mLoginButton.setVisibility(View.VISIBLE);
 
-                            galleryItem.setItemName(itemName);
-                            galleryItem.setMakerName("Creative Commons");
-                            galleryItem.setUrl(photoUrl);
-
-//                            if(photoUrl == null){
-//                                galleryItem.setProgress(true);
-//                            }
-                            mPhotoList.add(galleryItem);
-                        } catch (JSONException e) {
-                            Log.v(TAG, e.getMessage());
-                        }
-                    }
-
-                    Log.v(TAG, "PHOTOLIST RESPONSE " + mPhotoList);
-
-                    mProgressBar.setVisibility(View.INVISIBLE);
-
-                    if(mPhotoList.size() == 0){
-                        //TODO: show textView
-                        mEmptyView.setText(R.string.empty_gallery_label_logged_in);
-                        mEmptyView.setVisibility(View.VISIBLE);
-                        Log.v(TAG, "VIEW IS EMPTY");
-                    } else {
-                        //TODO: hide textView
-                        mEmptyView.setVisibility(View.GONE);
-                        Log.v(TAG, "VIEW HAS PHOTO ITEMS");
-                        Collections.reverse(mPhotoList);
-                        mGalleryAdapter.notifyDataSetChanged();
-                    }
-                }
-                @Override
-                public void onFail(VolleyError error) {
-                    Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                    mEmptyView.setText("Problem loading your photos.\nTry reloading the page!");
-                    mEmptyView.setVisibility(View.VISIBLE);
-                }
-            });
-        } else {
             mProgressBar.setVisibility(View.INVISIBLE);
             mEmptyView.setText(mContext.getString(R.string.empty_gallery_label_temp));
             mEmptyView.setVisibility(View.VISIBLE);
+
+            return;
         }
+
+        mLoginButton.setVisibility(View.GONE);
+
+        mRequestMethods.getUserPhotos(new NetworkUtils.ResponseCallback() {
+            @Override
+            public void onSuccess(JSONArray response) {
+                Log.v(TAG, " > getUserPhotos > onAuthed" + response.toString());
+                mPhotoList.clear();
+
+                for(int i = 0; i < response.length(); i++){
+                    GalleryItem galleryItem = new GalleryItem();
+
+                    try {
+                        JSONObject singlePhotoItem = response.getJSONObject(i);
+                        String photoUrl = singlePhotoItem.getString(ApiConstants.USER_PHOTO_URL);
+                        String itemName = singlePhotoItem.getString(ApiConstants.USER_PHOTO_TITLE);
+                        String makerName = singlePhotoItem.getString(ApiConstants.USER_PHOTO_MAKER); //TODO: set this in ApiConstants when it exists
+
+                        galleryItem.setItemName(itemName);
+                        galleryItem.setMakerName("Creative Commons");
+                        galleryItem.setUrl(photoUrl);
+
+                        mPhotoList.add(galleryItem);
+                    } catch (JSONException e) {
+                        Log.v(TAG, e.getMessage());
+                    }
+                }
+
+                Log.v(TAG, "PHOTOLIST RESPONSE " + mPhotoList);
+
+                mProgressBar.setVisibility(View.INVISIBLE);
+
+                if(mPhotoList.size() == 0){
+                    //TODO: show textView
+                    mEmptyView.setText(R.string.empty_gallery_label_logged_in);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    Log.v(TAG, "VIEW IS EMPTY");
+                } else {
+                    //TODO: hide textView
+                    mEmptyView.setVisibility(View.GONE);
+                    Log.v(TAG, "VIEW HAS PHOTO ITEMS");
+                    Collections.reverse(mPhotoList);
+                    mGalleryAdapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFail(VolleyError error) {
+                Log.d(TAG, "> getUserPhotos > onFail: " + error.toString());
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mEmptyView.setText("Problem loading your photos.\nTry reloading the page!");
+                mEmptyView.setVisibility(View.VISIBLE);
+            }
+        });
+
     } //refreshItems
 
     @Override

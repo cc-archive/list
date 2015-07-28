@@ -123,6 +123,8 @@ public class AccountActivity extends org.creativecommons.thelist.authentication.
 
     @Override
     public void onUserLoggedIn(Bundle userData) {
+        Log.v(TAG, "> onUserLoggedIn");
+
         final Intent res = new Intent();
         res.putExtras(userData);
 

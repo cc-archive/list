@@ -18,6 +18,7 @@
         <item name="windowActionModeOverlay">true</item>
 
         <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <!--<item name="android:buttonStyle">@style/ButtonStyle</item>-->
     </style>
 
     <style name="ListThemeStatus" parent="ListTheme">

@@ -89,7 +89,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         mMessageHelper = new MessageHelper(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
 
-        if(!mCurrentUser.isAnonymousUser() || mSharedPref.getAnalyticsViewed()) {
+        if(!mCurrentUser.isAnonymousUser() || mSharedPref.getAnalyticsViewed() && mCurrentUser.isAnonymousUser()) {
             //Redirect to MainActivity
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -111,7 +111,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             @Override
             public void onClick(View v) {
 
-                //Load explainerFragment
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragment_container,explainerFragment)
                         .commit();

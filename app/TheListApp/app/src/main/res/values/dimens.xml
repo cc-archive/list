@@ -8,13 +8,12 @@
     <dimen name="fragment_vertical_margin">20dp</dimen>
     <dimen name="list_padding">8dp</dimen>
 
-    <!--Item Sizing-->
+    <!--General Item Sizing-->
     <dimen name="button_minHeight">36dp</dimen>
     <dimen name="button_largeHeight">50dp</dimen>
-    <dimen name="snackbar_height_single">48dp</dimen>
-    <dimen name="snackbar_height_multi">80dp</dimen>
+    <dimen name="list_item_padding">20dp</dimen>
 
-    <!--Text Sizing-->
+    <!--General Text Sizing-->
     <dimen name="text_size_button">14sp</dimen>
     <dimen name="text_size_body">14sp</dimen>
     <dimen name="text_size_caption">12sp</dimen>
@@ -22,17 +21,24 @@
     <dimen name="text_size_title">20sp</dimen>
     <dimen name="text_size_headline">24sp</dimen>
     <dimen name="text_size_display1">34sp</dimen>
-    
-    <dimen name="snackbar_text">14sp</dimen>
 
+
+    <!-- Snack Bar -->
+    <dimen name="snackbar_text">14sp</dimen>
     <dimen name="snackbar_height">48dp</dimen>
+    <dimen name="snackbar_height_single">48dp</dimen>
+    <dimen name="snackbar_height_multi">80dp</dimen>
+
+    <!-- Fab -->
     <dimen name="fab_height">56dp</dimen>
     <dimen name="fab_bottom_padding">16dp</dimen>
     <dimen name="fab_top_padding">16dp</dimen>
-    <dimen name="list_item_padding">20dp</dimen>
+
 
     <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html -->
+
+    <!-- Navigation Drawer -->
     <dimen name="nav_drawer_width">300dp</dimen>
     <dimen name="app_bar_top_padding">24dp</dimen>
     <dimen name="nav_drawer_header_height">154dp</dimen>
@@ -42,5 +48,9 @@
     <dimen name="fragment_account_padding_top">32dp</dimen>
     <dimen name="fragment_account_login_icon_height">175dp</dimen>
     <dimen name="fragment_account_login_icon_width">175dp</dimen>
+
+    <!-- Random Activity -->
+    <dimen name="random_item_text_size">36sp</dimen>
+    <dimen name="random_item_padding_top">50dp</dimen>
 
 </resources>

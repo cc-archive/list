@@ -33,14 +33,20 @@
 
     <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html -->
+
+    <!-- Navigation Drawer -->
     <dimen name="nav_drawer_width">300dp</dimen>
     <dimen name="app_bar_top_padding">24dp</dimen>
     <dimen name="nav_drawer_header_height">178dp</dimen>
 
+    <!-- Account Fragment -->
     <dimen name="fragment_account_padding_bottom">16dp</dimen>
     <dimen name="fragment_account_padding_horizontal">16dp</dimen>
     <dimen name="fragment_account_padding_top">32dp</dimen>
     <dimen name="fragment_account_login_icon_height">175dp</dimen>
     <dimen name="fragment_account_login_icon_width">175dp</dimen>
+
+    <!-- Random Activity -->
+    <dimen name="random_item_text_size">36sp</dimen>
 
 </resources>

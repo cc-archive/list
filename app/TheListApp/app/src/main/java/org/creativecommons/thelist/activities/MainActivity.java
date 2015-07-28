@@ -316,6 +316,30 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
     } //viewImage
 
+
+    //Gallery Fragment
+    @Override
+    public void onLoginClick() {
+        mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() {
+                    @Override
+                    public void onAuthed(String authtoken) {
+                        Log.d(TAG, " > addNewFullAccount > " +
+                                "got authtoken: " + authtoken);
+
+                        updateDrawerHeader();
+
+                        GalleryFragment galleryFragment = new GalleryFragment();
+                        //load default view
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.main_content_container, galleryFragment)
+                                .commitAllowingStateLoss();
+
+                    }
+                });
+    }
+
     //MyListFragment
     @Override
     public void isLoggedIn() {

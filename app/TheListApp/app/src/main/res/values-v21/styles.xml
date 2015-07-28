@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<style name="ButtonStyle" parent="android:Widget.Material.Button">-->
+        <!--<item name="android:theme">@style/Theme.AppCompat.Light</item>-->
+        <!--<item name="android:textColor">@color/app_white</item>-->
+        <!--<item name="android:color">@color/colorPrimary</item>-->
+    <!--</style>-->
+
+    <!--<style name="ButtonStyle.Borderless" parent="android:Widget.Material.Button.Borderless">-->
+        <!--<item name="android:textColor">@color/secondary_text_default_material_light</item>-->
+    <!--</style>-->
+
+    <!--<style name="ButtonStyle.Borderless.Coloured" parent="android:Widget.Material.Button.Borderless.Colored">-->
+        <!--<item name="android:textColor">@color/colorPrimary</item>-->
+    <!--</style>-->
+
+    <!--<style name="Button.Tinted" parent="Widget.AppCompat.Button">-->
+        <!--<item name="colorButtonNormal">@color/colorSecondary</item>-->
+        <!--<item name="colorControlHighlight">@color/colorPrimary</item>-->
+        <!--<item name="android:textColor">@android:color/white</item>-->
+    <!--</style>-->
+
+</resources>

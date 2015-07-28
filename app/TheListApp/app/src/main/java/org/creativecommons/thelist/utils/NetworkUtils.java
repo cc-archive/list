@@ -44,8 +44,6 @@ public class NetworkUtils {
     // CALLBACKS
     // --------------------------------------------------------
 
-
-
     //Callback for requests
     public interface RequestCallback {
         void onSuccess();
