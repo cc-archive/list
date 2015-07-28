@@ -41,7 +41,6 @@
             android:id="@+id/random_item_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Creative Commons needs a picture of a Time Machine from India"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:textSize="@dimen/random_item_text_size"

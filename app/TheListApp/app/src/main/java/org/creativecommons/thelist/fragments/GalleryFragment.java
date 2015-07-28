@@ -126,8 +126,8 @@ public class GalleryFragment extends Fragment {
 
         //UI Elements
         mProgressBar = (ProgressBar) activity.findViewById(R.id.gallery_progressBar);
-        mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
         mLoginButton = (Button) activity.findViewById(R.id.gallery_login_button);
+        mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
 
         //RecyclerView
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.gallerySwipeRefresh);
@@ -180,6 +180,8 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mCallback.onLoginClick();
+                mLoginButton.setVisibility(View.INVISIBLE);
+                mEmptyView.setVisibility(View.INVISIBLE);
             }
         });
 

@@ -256,7 +256,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
             Intent intent;
 
-            if(mCurrentUser.isAnonymousUser()){
+            if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() == 0){
 
                 //TODO: get user item count (if not zero, send to MainActivity) --> part of profile endpoint?
                 intent = new Intent(CategoryListActivity.this, RandomActivity.class);
