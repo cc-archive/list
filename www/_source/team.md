@@ -10,7 +10,6 @@ Meet the team behind The List.
 <img class="float-left" height="100" src="/img/mattl.jpg" title="Matt" />
 <img class="float-left" height="100" src="/img/alex.jpg" title="Alex" />
 <img class="float-left" height="100" src="/img/maciej.jpg" title="Maciej" />
-<img class="float-left" height="100" src="/img/david.jpg" title="David" />
 
 
 **Ryan Merkley**, CEO at Creative Commons. Dad. Geek. Amateur
@@ -25,5 +24,5 @@ Inc. Designer turned developer. Also in love with service design.
 
 **Maciej Jasiobedzki**, Technical Director at Playground Inc. Human being.
 
-**David Bartholomew**, Software Engineer at Playground Inc.
+
 
