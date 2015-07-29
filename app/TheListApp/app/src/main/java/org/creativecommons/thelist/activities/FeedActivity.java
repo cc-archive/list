@@ -40,7 +40,6 @@ public class FeedActivity extends AppCompatActivity {
         mainPagerAdapter.addFragment(new DiscoverFragment(), "Discover");
         mainPagerAdapter.addFragment(new MyListFragment(), "Contribute");
         viewPager.setAdapter(mainPagerAdapter);
-
     }
 
     @Override
