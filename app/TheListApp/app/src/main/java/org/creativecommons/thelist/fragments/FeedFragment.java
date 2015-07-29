@@ -1,30 +1,25 @@
 package org.creativecommons.thelist.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.api.ListApi;
-import org.creativecommons.thelist.api.ListService;
-import org.creativecommons.thelist.models.Photo;
-
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import org.creativecommons.thelist.adapters.MainPagerAdapter;
 
 
 public class FeedFragment extends android.support.v4.app.Fragment {
     public static final String TAG = FeedFragment.class.getSimpleName();
 
-    private ListApi api;
-    private ListService list;
+    private Activity mActivity;
 
+    //Tab Layout
+    private TabLayout mTabLayout;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -35,37 +30,37 @@ public class FeedFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feed, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_feed, container, false);
+
+        mActivity = getActivity();
+
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        setupViewPager(viewPager);
+
+        mTabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        mTabLayout.setupWithViewPager(viewPager);
+
+        return view;
+
+    } //onCreateView
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        api = new ListApi();
-        list = api.getService();
-
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        list.getPhotoFeed(new Callback<List<Photo>>() {
-            @Override
-            public void success(List<Photo> photos, Response response) {
-                Log.d(TAG, "getPhotoFeed > success: " + response.toString());
+    }
 
-                for (Photo photo : photos) {
-                    Log.v(TAG, photo.url);
-                }
+    public void setupViewPager(ViewPager viewPager){
+        MainPagerAdapter mainPagerAdapter =
+                new MainPagerAdapter(getChildFragmentManager());
 
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "getPhotoFeed > failure: " + error.getMessage());
-            }
-        });
+        mainPagerAdapter.addFragment(new DiscoverFragment(), "Discover");
+        mainPagerAdapter.addFragment(new MyListFragment(), "Contribute");
+        viewPager.setAdapter(mainPagerAdapter);
     }
 }

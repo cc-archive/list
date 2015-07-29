@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:elevation="7dp"
     tools:context="org.creativecommons.thelist.activities.MainActivity">
 
     <LinearLayout
@@ -13,9 +12,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/app_bar"
-            layout="@layout/app_bar" />
+        <include android:id="@+id/app_bar"
+            layout="@layout/app_bar"
+            app:layout_scrollFlags="scroll|enterAlways"/>
 
         <FrameLayout
             android:id="@+id/main_content_container"

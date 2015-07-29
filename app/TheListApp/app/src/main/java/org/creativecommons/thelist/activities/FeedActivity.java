@@ -13,7 +13,7 @@ import org.creativecommons.thelist.adapters.MainPagerAdapter;
 import org.creativecommons.thelist.fragments.DiscoverFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 
-public class FeedActivity extends AppCompatActivity {
+public class FeedActivity extends AppCompatActivity implements MyListFragment.LoginListener {
     public static final String TAG = FeedActivity.class.getSimpleName();
 
     @Override
@@ -24,11 +24,11 @@ public class FeedActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(viewPager);
 
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
     } //onCreate
@@ -62,5 +62,10 @@ public class FeedActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void isLoggedIn() {
+
     }
 }

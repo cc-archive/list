@@ -16,7 +16,7 @@
     <string name="title_activity_about">About The App</string>
     <string name="title_activity_add_item">Create an Item</string>
     <string name="title_activity_drawer">My List</string>
-
+    <string name="title_activity_feed">List Feed</string>
 
     <!-- Drawer Navigation Labels -->
     <string name="nav_item_home_label">Home</string>
@@ -207,7 +207,7 @@
     <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
     <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
     <string name="gallery_callback_exception_message">" must implement GalleryFragment.GalleryListener"</string>
-    <string name="listlogin_callback_exception_message">" must implement MyListFragment.GalleryListener"</string>
+    <string name="listlogin_callback_exception_message">" must implement MyListFragment.LoginListener"</string>
 
     <!-- Fragment/Activity Bundle Keys -->
     <string name="item_id_bundle_key">item</string>
@@ -257,6 +257,9 @@
     <string name="add_item_toast_error">There was a problem adding your item</string>
     <string name="remove_item_toast_error">There was a problem deleting your item. Pull to refresh.</string>
     <string name="gallery_login_button_label">LOG IN NOW</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

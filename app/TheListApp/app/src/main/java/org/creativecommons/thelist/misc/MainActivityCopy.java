@@ -19,12 +19,11 @@
 
 */
 
-package org.creativecommons.thelist.activities;
+package org.creativecommons.thelist.misc;
 
 import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -44,10 +43,14 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.AboutActivity;
+import org.creativecommons.thelist.activities.AddItemActivity;
+import org.creativecommons.thelist.activities.CategoryListActivity;
+import org.creativecommons.thelist.activities.ImageActivity;
+import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.DiscoverFragment;
-import org.creativecommons.thelist.fragments.FeedFragment;
 import org.creativecommons.thelist.fragments.GalleryFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 import org.creativecommons.thelist.utils.ListApplication;
@@ -58,8 +61,8 @@ import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements GalleryFragment.GalleryListener, MyListFragment.LoginListener {
-    public static final String TAG = MainActivity.class.getSimpleName();
+public class MainActivityCopy extends AppCompatActivity implements GalleryFragment.GalleryListener, MyListFragment.LoginListener {
+    public static final String TAG = MainActivityCopy.class.getSimpleName();
 
     private Context mContext;
 
@@ -73,9 +76,6 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
     private NavigationView mNavigationView;
 
     //Nav Menu
-    private Toolbar mToolbar;
-    private Boolean needsElevation = false;
-
     private Menu mNavigationMenu;
     private MenuItem mAccountItem;
     private TextView mAccountName;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
         mContext = this;
 
-        mCurrentUser = new ListUser(MainActivity.this);
+        mCurrentUser = new ListUser(MainActivityCopy.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
@@ -107,13 +107,14 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mToolbar = (Toolbar)findViewById(R.id.app_bar);
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
 
             assert getSupportActionBar() != null;
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+
         }
 
         //If there is no savedInstanceState, load in default fragment
@@ -121,11 +122,11 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
             updateDrawerHeader();
 
-            FeedFragment feedFragment = new FeedFragment();
+            DiscoverFragment discoverFragment = new DiscoverFragment();
             //load default view
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_content_container, feedFragment)
+                    .replace(R.id.main_content_container, discoverFragment)
                     .commit();
 
             assert getSupportActionBar() != null;
@@ -143,16 +144,23 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
 
                 switch (menuItem.getItemId()) {
                     case R.id.nav_item_home:
-                        fragment = new FeedFragment();
-
-                        needsElevation = false;
+                        fragment = new DiscoverFragment();
 
                         //Set screen name.
-                        t.setScreenName("Feed");
+                        t.setScreenName("Discover");
                         // Send a screen view.
                         t.send(new HitBuilders.ScreenViewBuilder().build());
 
                         break;
+//                    case R.id.nav_item_list:
+//                        fragment = new MyListFragment();
+//
+//                        // Set screen name.
+//                        t.setScreenName("My List");
+//                        // Send a screen view.
+//                        t.send(new HitBuilders.ScreenViewBuilder().build());
+//
+//                        break;
                     case R.id.nav_item_photos:
                         if (!mRequestMethods.isNetworkAvailable()) {
                             mMessageHelper.toastNeedInternet();
@@ -160,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         }
 
                         fragment = new GalleryFragment();
-
-                        needsElevation = true;
 
                         // Set screen name.
                         t.setScreenName("My Photos");
@@ -180,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent catIntent = new Intent(MainActivity.this, CategoryListActivity.class);
+                                Intent catIntent = new Intent(MainActivityCopy.this, CategoryListActivity.class);
                                 startActivity(catIntent);
                             }
                         }, 250);
@@ -196,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent reqIntent = new Intent(MainActivity.this, AddItemActivity.class);
+                                Intent reqIntent = new Intent(MainActivityCopy.this, AddItemActivity.class);
                                 startActivity(reqIntent);
                             }
                         }, 300);
@@ -208,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Intent aboutIntent = new Intent(MainActivity.this, AboutActivity.class);
+                                Intent aboutIntent = new Intent(MainActivityCopy.this, AboutActivity.class);
                                 startActivity(aboutIntent);
                             }
                         }, 250);
@@ -260,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                                 //TODO: probably should have its own callback w/out returned value (no authtoken anyway)
                                 public void onLoggedOut() {
 
-                                    Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+                                    Intent startIntent = new Intent(MainActivityCopy.this, StartActivity.class);
                                     startActivity(startIntent);
                                 }
                             });
@@ -278,24 +284,13 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
                         public void run() {
                             menuItem.setChecked(true);
                             //TODO: set variable to handle this when tabs exist
-
-                            if(finalFragment instanceof FeedFragment){
-                                getSupportActionBar().setTitle(getString(R.string.app_name_short));
-                            } else {
-                                getSupportActionBar().setTitle(menuItem.getTitle());
-                            }
+                            getSupportActionBar().setTitle(menuItem.getTitle());
 
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             fragmentManager.beginTransaction()
                                     .replace(R.id.main_content_container, finalFragment)
                                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                                     .commit();
-
-                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && needsElevation){
-                                mToolbar.setElevation(6);
-                            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !needsElevation)  {
-                                mToolbar.setElevation(0);
-                            }
                         }
                     }, 100);
                 }
@@ -331,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements GalleryFragment.G
         b.putInt("position", position);
 
         //Start detailed view
-        Intent intent = new Intent(MainActivity.this, ImageActivity.class);
+        Intent intent = new Intent(MainActivityCopy.this, ImageActivity.class);
         intent.putExtras(b);
         startActivity(intent);
 

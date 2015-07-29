@@ -73,15 +73,12 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_discover, container, false);
 
-
-        mContext = getActivity();
         mActivity = getActivity();
 
         //API
@@ -94,9 +91,6 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
         mLayoutManager = new LinearLayoutManager(mContext);
         mDiscoverRecyclerView.setLayoutManager(mLayoutManager);
         mDiscoverRecyclerView.setHasFixedSize(true);
-
-        mDiscoverAdapter = new DiscoverAdapter(mActivity, mPhotoList, mCardSelectionListener);
-        mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
 
         return view;
 
@@ -112,10 +106,14 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
         list.getPhotoFeed(new Callback<List<Photo>>() {
             @Override
             public void success(List<Photo> photos, Response response) {
-                Log.d(TAG, "getPhotoFeed > success: " + response.toString());
+                Log.d(TAG, "getPhotoFeed > success: " + response.getStatus());
 
                 mPhotoList = photos;
-                mDiscoverAdapter.notifyDataSetChanged();
+
+                mDiscoverAdapter = new DiscoverAdapter(mActivity, mPhotoList, mCardSelectionListener);
+                mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
+                //TODO: should work with notifyDataSetChanged
+                //mDiscoverAdapter.notifyDataSetChanged();
 
             }
 
@@ -124,7 +122,6 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
                 Log.d(TAG, "getPhotoFeed > failure: " + error.getMessage());
 
                 //TODO: show error message
-                mMessageHelper.networkFailMessage();
             }
         });
     }

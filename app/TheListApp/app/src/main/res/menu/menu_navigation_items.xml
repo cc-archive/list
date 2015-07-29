@@ -7,10 +7,6 @@
             android:checked="true"
             android:title="@string/nav_item_home_label"/>
         <item
-            android:id="@+id/nav_item_list"
-            android:icon="@drawable/ic_view_list_grey600_24dp"
-            android:title="@string/nav_item_list_label"/>
-        <item
             android:id="@+id/nav_item_photos"
             android:icon="@drawable/ic_photo_grey600_24dp"
             android:title="@string/nav_item_photos_label"/>
