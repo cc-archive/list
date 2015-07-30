@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.misc;
+package org.creativecommons.thelist.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
