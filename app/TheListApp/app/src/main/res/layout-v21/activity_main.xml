@@ -13,8 +13,7 @@
         android:orientation="vertical">
 
         <include android:id="@+id/app_bar"
-            layout="@layout/app_bar"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            layout="@layout/app_bar" />
 
         <FrameLayout
             android:id="@+id/main_content_container"

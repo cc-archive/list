@@ -43,7 +43,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".activities.FeedActivity"
+            android:name=".misc.FeedActivity"
             android:label="@string/title_activity_feed"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"

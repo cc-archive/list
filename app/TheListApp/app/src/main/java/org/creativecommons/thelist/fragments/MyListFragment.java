@@ -31,7 +31,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -51,12 +50,10 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.adapters.UserListAdapter;
 import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.layouts.DividerItemDecoration;
-import org.creativecommons.thelist.swipedismiss.SwipeDismissRecyclerViewTouchListener;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
@@ -113,7 +110,7 @@ public class MyListFragment extends Fragment {
     private TextView mUploadText;
 
     //UI Elements
-    private FloatingActionButton mFab;
+    //private FloatingActionButton mFab;
     protected ProgressBar mProgressBar;
     protected TextView mEmptyView;
 
@@ -166,29 +163,9 @@ public class MyListFragment extends Fragment {
         //Load UI Elements
         snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
         mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
-        //mUploadProgressBarContainer = (RelativeLayout) activity.findViewById(R.id.photoProgressBar);
         mUploadProgressBar = (ProgressBar) activity.findViewById(R.id.uploadProgressBar);
-        //mUploadText = (TextView) activity.findViewById(R.id.upload_text);
 
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
-
-        mFab = (FloatingActionButton) activity.findViewById(R.id.fab);
-        //mFab.setVisibility(View.GONE);
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(!NetworkUtils.isNetworkAvailable(mContext)){
-                    mMessageHelper.toastNeedInternet();
-                    return;
-                }
-
-                Intent hitMeIntent = new Intent(getActivity(), RandomActivity.class);
-                startActivity(hitMeIntent);
-
-            } //onClick
-        });
 
         //RecyclerView
         mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.feedSwipeRefresh);
@@ -394,72 +371,6 @@ public class MyListFragment extends Fragment {
 
     private void initRecyclerView(){
 
-        SwipeDismissRecyclerViewTouchListener touchListener = new SwipeDismissRecyclerViewTouchListener(
-                mRecyclerView, mSwipeRefreshLayout, new SwipeDismissRecyclerViewTouchListener.DismissCallbacks() {
-            @Override
-            public boolean canDismiss(int position) {
-                return true;
-            }
-            @Override
-            public void onDismiss(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                for (int position : reverseSortedPositions) {
-                    // TODO: this is temp solution for preventing blinking item onDismiss <-- OMG DEATH
-
-                    if(!mRequestMethods.isNetworkAvailable()){
-                        mMessageHelper.toastNeedInternet();
-                        mListAdapter.notifyDataSetChanged();
-
-                        if(mItemList.size() == 0){
-                            mEmptyView.setText(mContext.getString(R.string.mylist_offline_empty_label));
-                            mEmptyView.setVisibility(View.VISIBLE);
-                        }
-
-                        return;
-                    }
-
-                    mLayoutManager.findViewByPosition(position).setVisibility(View.GONE);
-                    //Get item details for UNDO
-                    lastDismissedItemPosition = position;
-                    mLastDismissedItem = mItemList.get(position);
-
-                    //What happens when item is swiped offscreen
-                    mItemList.remove(mLastDismissedItem);
-                    mRequestMethods.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
-
-                    // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
-                    mListAdapter.notifyDataSetChanged();
-
-                    //Snackbar message
-                    Snackbar.make(snackbarContainer, "Item Deleted", Snackbar.LENGTH_LONG)
-                            .setAction("Undo", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    mItemList.add(0, mLastDismissedItem);
-                                    //re-add item to user’s list in DB
-                                    mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
-                                    mListAdapter.notifyDataSetChanged();
-                                    mLayoutManager.scrollToPosition(0);
-
-                                    if(mEmptyView.getVisibility() == View.VISIBLE){
-                                        mEmptyView.setVisibility(View.INVISIBLE);
-                                    }
-
-                                }
-                            }).show();
-
-                    if(mItemList.size() == 0){
-                        mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
-                        mEmptyView.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
-        mRecyclerView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
-        LinearLayoutManager llm = (LinearLayoutManager)mRecyclerView.getLayoutManager();
-        mRecyclerView.setOnScrollListener(touchListener.makeScrollListener(llm));
-
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -474,8 +385,13 @@ public class MyListFragment extends Fragment {
                         activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
 
+                        //Get item details for UNDO
+                        lastDismissedItemPosition = position;
+                        mLastDismissedItem = mItemList.get(position);
+
                     }
                 }));
+
     } //initRecyclerView
 
     //----------------------------------------------
@@ -489,7 +405,7 @@ public class MyListFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
 
                     switch(which) {
-                        case 0:
+                        case 0: //Take Picture
                             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             if (mMediaUri == null) {
@@ -507,6 +423,38 @@ public class MyListFragment extends Fragment {
                             choosePhotoIntent.setType("image/*");
                             //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
                             startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
+                            break;
+                        case 2: //Delete this Item
+
+                            //What happens when item is swiped offscreen
+                            mItemList.remove(mLastDismissedItem);
+                            mRequestMethods.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
+
+                            // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
+                            mListAdapter.notifyDataSetChanged();
+
+                            //Snackbar message
+                            Snackbar.make(snackbarContainer, "Item Deleted", Snackbar.LENGTH_LONG)
+                                    .setAction("Undo", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            mItemList.add(0, mLastDismissedItem);
+                                            //re-add item to user’s list in DB
+                                            mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
+                                            mListAdapter.notifyDataSetChanged();
+                                            mLayoutManager.scrollToPosition(0);
+
+                                            if(mEmptyView.getVisibility() == View.VISIBLE){
+                                                mEmptyView.setVisibility(View.INVISIBLE);
+                                            }
+
+                                        }
+                                    }).show();
+
+                            if(mItemList.size() == 0){
+                                mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));
+                                mEmptyView.setVisibility(View.VISIBLE);
+                            }
                             break;
                     }
                 }
