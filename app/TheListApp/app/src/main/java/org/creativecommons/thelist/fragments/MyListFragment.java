@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +51,7 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.RandomActivity;
 import org.creativecommons.thelist.adapters.UserListAdapter;
 import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -105,14 +107,12 @@ public class MyListFragment extends Fragment {
     private List<UserListItem> mItemList = new ArrayList<>();
 
     //Upload Elements
-    //private RelativeLayout mUploadProgressBarContainer;
     private ProgressBar mUploadProgressBar;
-    private TextView mUploadText;
 
     //UI Elements
-    //private FloatingActionButton mFab;
-    protected ProgressBar mProgressBar;
-    protected TextView mEmptyView;
+    private Button mFindMoreButton;
+    private ProgressBar mProgressBar;
+    private TextView mEmptyView;
 
     //Interface with Activity
     public LoginListener mCallback;
@@ -162,9 +162,9 @@ public class MyListFragment extends Fragment {
 
         //Load UI Elements
         snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
-        mProgressBar = (ProgressBar) activity.findViewById(R.id.feedProgressBar);
+        mProgressBar = (ProgressBar) activity.findViewById(R.id.contributeProgressBar);
         mUploadProgressBar = (ProgressBar) activity.findViewById(R.id.uploadProgressBar);
-
+        mFindMoreButton = (Button) activity.findViewById(R.id.contribute_find_more);
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
 
         //RecyclerView
@@ -185,6 +185,14 @@ public class MyListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 displayUserItems();
+            }
+        });
+
+        mFindMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RandomActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -345,8 +353,8 @@ public class MyListFragment extends Fragment {
 
                 mItemList.clear();
 
-                for (UserListItem m : response) {
-                    mItemList.add(m);
+                for (UserListItem u : response) {
+                    mItemList.add(u);
                 }
 
                 mProgressBar.setVisibility(View.INVISIBLE);
@@ -415,14 +423,14 @@ public class MyListFragment extends Fragment {
                             }
                             else {
                                 takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
-                                startActivityForResult(takePhotoIntent, PhotoConstants.TAKE_PHOTO_REQUEST);
+                                getParentFragment().startActivityForResult(takePhotoIntent, PhotoConstants.TAKE_PHOTO_REQUEST);
                             }
                             break;
                         case 1: // Choose picture
                             Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             choosePhotoIntent.setType("image/*");
                             //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
-                            startActivityForResult(choosePhotoIntent,PhotoConstants.PICK_PHOTO_REQUEST);
+                            getParentFragment().startActivityForResult(choosePhotoIntent, PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
                         case 2: //Delete this Item
 
@@ -458,6 +466,7 @@ public class MyListFragment extends Fragment {
                             break;
                     }
                 }
+
                 private Uri getOutputMediaFileUri(int mediaType) {
                     // To be safe, you should check that the SDCard is mounted
                     // using Environment.getExternalStorageState() before doing this.

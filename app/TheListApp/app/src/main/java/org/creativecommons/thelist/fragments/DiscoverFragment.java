@@ -30,12 +30,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.DiscoverAdapter;
 import org.creativecommons.thelist.api.ListApi;
 import org.creativecommons.thelist.api.ListService;
 import org.creativecommons.thelist.models.Photo;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerViewUtils;
 
@@ -52,6 +54,8 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
 
     private Context mContext;
     private Activity mActivity;
+
+    private ListUser mCurrentUser;
     private MessageHelper mMessageHelper;
 
     //API
@@ -74,12 +78,21 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_discover, container, false);
 
+        mContext = getActivity();
         mActivity = getActivity();
+        mCurrentUser = new ListUser(mActivity);
 
         //API
         api = new ListApi();
@@ -92,15 +105,6 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
         mDiscoverRecyclerView.setLayoutManager(mLayoutManager);
         mDiscoverRecyclerView.setHasFixedSize(true);
 
-        return view;
-
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        //TODO: check for network connection
 
         //Request items for Discover feed
         list.getPhotoFeed(new Callback<List<Photo>>() {
@@ -112,8 +116,6 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
 
                 mDiscoverAdapter = new DiscoverAdapter(mActivity, mPhotoList, mCardSelectionListener);
                 mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
-                //TODO: should work with notifyDataSetChanged
-                //mDiscoverAdapter.notifyDataSetChanged();
 
             }
 
@@ -124,6 +126,9 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
                 //TODO: show error message
             }
         });
+
+        return view;
+
     }
 
     @Override
@@ -134,6 +139,7 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onLike(String photoID) {
         //TODO: on item liked
+
 
     }
 
@@ -146,6 +152,20 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onContribute(String itemID) {
         //TODO: on item add to contribute
+        Toast.makeText(mContext, "Added to Contribute tab", Toast.LENGTH_SHORT).show();
+
+        list.addItem(mCurrentUser.getUserID(), itemID, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.v(TAG, "onContribute > addItem, success: " + response.getStatus());
+
+                Toast.makeText(mContext, "success added", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.getMessage());
+            }
+        });
     }
 
 

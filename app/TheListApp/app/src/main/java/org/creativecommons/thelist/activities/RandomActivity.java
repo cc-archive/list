@@ -162,10 +162,14 @@ public class RandomActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                finish();
+
+                //TODO: if coming from CategoryListActivity, go to MainActivity.class
+//                Intent intent = new Intent(mContext, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+
             }
         }); //Done Button
     } //onCreate

@@ -7,6 +7,7 @@ public class Photo implements Parcelable {
     public String id;
     public String title;
     public String username;
+    public String itemid;
     public String category;
     public int likes;
     public String makerid;
@@ -25,6 +26,7 @@ public class Photo implements Parcelable {
         parcel.writeString(this.id);
         parcel.writeString(this.title);
         parcel.writeString(this.username);
+        parcel.writeString(this.itemid);
         parcel.writeString(this.category);
         parcel.writeInt(this.likes);
         parcel.writeString(this.makerid);
@@ -41,6 +43,7 @@ public class Photo implements Parcelable {
         this.id = in.readString();
         this.title = in.readString();
         this.username = in.readString();
+        this.itemid = in.readString();
         this.category = in.readString();
         this.likes = in.readInt();
         this.makerid = in.readString();

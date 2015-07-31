@@ -26,9 +26,9 @@
         android:id="@+id/contributeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_centerVertical="true"
         android:text="Contribute"
         android:textColor="@color/colorPrimary"
-        android:background="@null"
         android:layout_alignParentRight="true"/>
 </RelativeLayout>

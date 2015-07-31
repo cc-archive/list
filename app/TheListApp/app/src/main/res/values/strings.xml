@@ -11,8 +11,7 @@
     <string name="title_activity_explainer">What’s up with the List?</string>
     <string name="title_activity_account">Add Account</string>
     <string name="title_activity_start">Start The List</string>
-    <string name="title_activity_gallery">My Photos</string>
-    <string name="title_activity_image">Gallery</string>
+    <string name="title_activity_image"></string>
     <string name="title_activity_about">About The App</string>
     <string name="title_activity_add_item">Create an Item</string>
     <string name="title_activity_drawer">My List</string>
@@ -86,7 +85,7 @@
     <string-array name="listItem_choices">
         <item>Take Picture</item>
         <item>Choose Picture</item>
-        <item>Delete This Item</item>
+        <item>Delete Item</item>
     </string-array>
 
     <string-array name="photo_choices">

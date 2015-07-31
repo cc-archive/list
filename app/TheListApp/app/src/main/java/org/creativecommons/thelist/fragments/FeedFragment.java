@@ -2,8 +2,11 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -12,6 +15,8 @@ import android.view.ViewGroup;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.MainPagerAdapter;
+
+import java.util.List;
 
 
 public class FeedFragment extends android.support.v4.app.Fragment {
@@ -59,6 +64,32 @@ public class FeedFragment extends android.support.v4.app.Fragment {
 
     } //onCreateView
 
+
+    /*Support library bug fix credited to Artem Zinnatullin
+    Gist: https://gist.github.com/artem-zinnatullin/6916740
+    Github: https://github.com/artem-zinnatullin
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // notifying nested fragments (support library bug fix)
+        final FragmentManager childFragmentManager = getChildFragmentManager();
+
+        if (childFragmentManager != null) {
+            final List<Fragment> nestedFragments = childFragmentManager.getFragments();
+
+            if (nestedFragments == null || nestedFragments.size() == 0) return;
+
+            for (Fragment childFragment : nestedFragments) {
+                if (childFragment != null && !childFragment.isDetached() && !childFragment.isRemoving()) {
+                    childFragment.onActivityResult(requestCode, resultCode, data);
+                }
+            }
+        }
+    }
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -69,6 +100,9 @@ public class FeedFragment extends android.support.v4.app.Fragment {
         super.onResume();
 
     }
+
+
+
 
     public void setupViewPager(ViewPager viewPager){
         MainPagerAdapter mainPagerAdapter =

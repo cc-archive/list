@@ -1,22 +1,31 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <ProgressBar
+            android:id="@+id/uploadProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:visibility="gone"
             android:indeterminate="true"
-            android:id="@+id/uploadProgressBar"
             android:layout_marginTop="-7dp"
             android:layout_marginBottom="-6dp"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Button android:id="@+id/contribute_find_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="44dp"
+            android:textColor="@color/app_white"
+            android:layout_alignParentBottom="true"
+            android:text="FIND MORE"
+            android:background="@color/colorPrimaryDark"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/feedSwipeRefresh"
@@ -27,26 +36,25 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/listRecyclerView"/>
         </android.support.v4.widget.SwipeRefreshLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
+    <ProgressBar android:id="@+id/contributeProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/feedProgressBar"
+        style="?android:attr/progressBarStyleLarge"
         android:gravity="center"
         android:layout_gravity="center" />
 
-    <TextView
-        android:visibility="gone"
+    <TextView android:id="@+id/empty_list_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/empty_list_label"
+        android:visibility="gone"
         android:gravity="center"
         android:layout_gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/secondary_text_default_material_light"
         android:text="@string/my_list_empty_label" />
 
-</RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
 
