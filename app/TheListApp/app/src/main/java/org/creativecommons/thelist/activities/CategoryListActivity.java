@@ -105,12 +105,6 @@ public class CategoryListActivity extends BaseActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.category_progress_bar);
         mProgressBar.setVisibility(View.VISIBLE);
 
-
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(false);
-        }
-
         //Set up Helper Message if new user
         if(!mSharedPref.getCategoryHelperViewed()){
 
@@ -174,6 +168,12 @@ public class CategoryListActivity extends BaseActivity {
         });
     } //onCreate
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        mNavigationView.getMenu().findItem(R.id.nav_item_categories).setChecked(true);
+    }
 
     //UPDATE LIST WITH CONTENT
     private void updateList() {

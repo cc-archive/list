@@ -30,10 +30,10 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
+    public NavigationView mNavigationView;
 
     //Nav Menu
-    private Menu mNavigationMenu;
+    public Menu mNavigationMenu;
     private MenuItem mAccountItem;
     private TextView mAccountName;
 
@@ -189,7 +189,7 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
                     new android.os.Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            menuItem.setChecked(true);
+                            //menuItem.setChecked(true);
 
                             startActivity(finalIntent);
                             finish();

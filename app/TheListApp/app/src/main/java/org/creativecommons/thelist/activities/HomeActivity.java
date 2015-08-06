@@ -11,6 +11,7 @@ import org.creativecommons.thelist.fragments.DiscoverFragment;
 import org.creativecommons.thelist.fragments.MyListFragment;
 
 public class HomeActivity extends BaseActivity {
+    public static final String TAG = HomeActivity.class.getSimpleName();
 
     //Tab Layout
     private TabLayout mTabLayout;
@@ -37,6 +38,13 @@ public class HomeActivity extends BaseActivity {
         homePagerAdapter.addFragment(new DiscoverFragment(), "Discover");
         homePagerAdapter.addFragment(new MyListFragment(), "Contribute");
         viewPager.setAdapter(homePagerAdapter);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        mNavigationView.getMenu().findItem(R.id.nav_item_home).setChecked(true);
     }
 
     // --------------------------------------------------------
