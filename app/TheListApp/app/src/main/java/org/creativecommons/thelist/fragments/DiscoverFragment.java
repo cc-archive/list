@@ -37,6 +37,7 @@ import org.creativecommons.thelist.adapters.DiscoverAdapter;
 import org.creativecommons.thelist.api.ListApi;
 import org.creativecommons.thelist.api.ListService;
 import org.creativecommons.thelist.models.Photo;
+import org.creativecommons.thelist.models.Photos;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerViewUtils;
@@ -68,6 +69,8 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerViewUtils.cardSelectionListener mCardSelectionListener;
 
+    //Photo feed
+    private int mCurrentPage = 0;
     private List<Photo> mPhotoList = new ArrayList<>();
 
     // --------------------------------------------------------
@@ -107,18 +110,17 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
 
 
         //Request items for Discover feed
-        list.getPhotoFeed(new Callback<List<Photo>>() {
+        list.getPhotoFeed(new Callback<Photos>() {
             @Override
-            public void success(List<Photo> photos, Response response) {
+            public void success(Photos photos, Response response) {
                 Log.d(TAG, "getPhotoFeed > success: " + response.getStatus());
 
-                mPhotoList = photos;
+                mPhotoList = photos.photos;
+                mCurrentPage = photos.nextPage;
 
                 mDiscoverAdapter = new DiscoverAdapter(mActivity, mPhotoList, mCardSelectionListener);
                 mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
-
             }
-
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "getPhotoFeed > failure: " + error.getMessage());
@@ -129,7 +131,7 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
 
         return view;
 
-    }
+    } //onCreateView
 
     @Override
     public void onFlag(String photoID) {

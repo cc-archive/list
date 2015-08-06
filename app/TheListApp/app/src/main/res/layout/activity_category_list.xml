@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:context="org.creativecommons.thelist.activities.CategoryListActivity">
 
-    <include layout="@layout/helper_message"
-        android:visibility="gone"
+    <LinearLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/category_helper_message"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        <include android:id="@+id/app_bar"
+            layout="@layout/app_bar"
+            android:elevation="6dp"/>
 
-        <ProgressBar android:id="@+id/category_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <include layout="@layout/helper_message"
             android:visibility="gone"
-            android:layout_centerInParent="true"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/category_helper_message"/>
 
-        <android.support.v7.widget.RecyclerView
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/category_list_grid"/>
+            android:layout_height="fill_parent">
 
-    </RelativeLayout>
+            <ProgressBar android:id="@+id/category_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_centerInParent="true"/>
 
-</LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/category_list_grid"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/menu_navigation_items"
+        android:theme="@style/NavigationViewTheme"/>
+
+</android.support.v4.widget.DrawerLayout>
+

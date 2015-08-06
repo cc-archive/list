@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.adapters.MainPagerAdapter;
+import org.creativecommons.thelist.adapters.HomePagerAdapter;
 
 import java.util.List;
 
@@ -105,11 +105,11 @@ public class FeedFragment extends android.support.v4.app.Fragment {
 
 
     public void setupViewPager(ViewPager viewPager){
-        MainPagerAdapter mainPagerAdapter =
-                new MainPagerAdapter(getChildFragmentManager());
+        HomePagerAdapter homePagerAdapter =
+                new HomePagerAdapter(getChildFragmentManager());
 
-        mainPagerAdapter.addFragment(new DiscoverFragment(), "Discover");
-        mainPagerAdapter.addFragment(new MyListFragment(), "Contribute");
-        viewPager.setAdapter(mainPagerAdapter);
+        homePagerAdapter.addFragment(new DiscoverFragment(), "Discover");
+        homePagerAdapter.addFragment(new MyListFragment(), "Contribute");
+        viewPager.setAdapter(homePagerAdapter);
     }
 }

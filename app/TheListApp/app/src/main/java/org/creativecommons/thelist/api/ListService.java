@@ -21,9 +21,7 @@
 
 package org.creativecommons.thelist.api;
 
-import org.creativecommons.thelist.models.Photo;
-
-import java.util.List;
+import org.creativecommons.thelist.models.Photos;
 
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -38,18 +36,20 @@ public interface ListService {
     //User Profile
 
     //Photo Feed
-    @GET("/feed")
-    void getPhotoFeed(Callback<List<Photo>> callback);
+    @GET("/feed/")
+    void getPhotoFeed(Callback<Photos> callback);
+
+    @GET("/feed/{page}")
+    void getPhotoFeed(@Path("page") String page, Callback<Photos> callback);
 
 
-    // Contribute List
-
+    //Add to Contribute List
     @POST("/userlist/{userid}/{itemid}")
     void addItem(@Path("userid") String userid,
                  @Path("itemid") String itemid, Callback<Response> callback);
 
 
-    // Request List
+    // Request User’s List
 
 
     // Item Suggestion

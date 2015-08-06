@@ -22,14 +22,11 @@
 package org.creativecommons.thelist.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -55,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CategoryListActivity extends AppCompatActivity {
+public class CategoryListActivity extends BaseActivity {
     public static final String TAG = CategoryListActivity.class.getSimpleName();
 
     private Context mContext;
@@ -219,8 +216,8 @@ public class CategoryListActivity extends AppCompatActivity {
 
             mCategoryAdapter.notifyDataSetChanged();
 
-            MenuItem doneButton = menu.findItem(R.id.action_done);
-            doneButton.setVisible(true);
+            //MenuItem doneButton = menu.findItem(R.id.action_done);
+            //doneButton.setVisible(true);
         }
     } //updateList
 
@@ -236,42 +233,42 @@ public class CategoryListActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_category_list, menu);
-        this.menu = menu;
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_category_list, menu);
+//        this.menu = menu;
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_done) {
-
-            Intent intent;
-
-            if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() == 0){
-
-                //TODO: get user item count (if not zero, send to MainActivity) --> part of profile endpoint?
-                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
-                startActivity(intent);
-
-            } else {
-                intent = new Intent(CategoryListActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_done) {
+//
+//            Intent intent;
+//
+//            if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() == 0){
+//
+//                //TODO: get user item count (if not zero, send to MainActivity) --> part of profile endpoint?
+//                intent = new Intent(CategoryListActivity.this, RandomActivity.class);
+//                startActivity(intent);
+//
+//            } else {
+//                intent = new Intent(CategoryListActivity.this, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+//            }
+//
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 } //CategoryListActivity

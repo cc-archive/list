@@ -161,7 +161,7 @@ public class MyListFragment extends Fragment {
         mCurrentUser = new ListUser(getActivity());
 
         //Load UI Elements
-        snackbarContainer = (ViewGroup) activity.findViewById(R.id.snackbar_container);
+        snackbarContainer = (ViewGroup) activity.findViewById(R.id.main_content);
         mProgressBar = (ProgressBar) activity.findViewById(R.id.contributeProgressBar);
         mUploadProgressBar = (ProgressBar) activity.findViewById(R.id.uploadProgressBar);
         mFindMoreButton = (Button) activity.findViewById(R.id.contribute_find_more);
@@ -423,14 +423,14 @@ public class MyListFragment extends Fragment {
                             }
                             else {
                                 takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
-                                getParentFragment().startActivityForResult(takePhotoIntent, PhotoConstants.TAKE_PHOTO_REQUEST);
+                                startActivityForResult(takePhotoIntent, PhotoConstants.TAKE_PHOTO_REQUEST);
                             }
                             break;
                         case 1: // Choose picture
                             Intent choosePhotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
                             choosePhotoIntent.setType("image/*");
                             //mMediaUri = getOutputMediaFileUri(PhotoConstants.MEDIA_TYPE_IMAGE);
-                            getParentFragment().startActivityForResult(choosePhotoIntent, PhotoConstants.PICK_PHOTO_REQUEST);
+                            startActivityForResult(choosePhotoIntent, PhotoConstants.PICK_PHOTO_REQUEST);
                             break;
                         case 2: //Delete this Item
 
