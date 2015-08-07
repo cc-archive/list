@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.RequestMethods;
 
 import java.util.List;
 

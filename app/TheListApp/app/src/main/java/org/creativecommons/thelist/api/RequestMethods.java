@@ -19,7 +19,7 @@
 
 */
 
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.api;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -36,6 +36,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
+import org.creativecommons.thelist.utils.MessageHelper;
+import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
 
 import java.util.HashMap;

@@ -91,7 +91,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
         if(!mCurrentUser.isAnonymousUser() || mSharedPref.getAnalyticsViewed() && mCurrentUser.isAnonymousUser()) {
             //Redirect to MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -132,7 +132,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                 public void onAuthed(String authtoken) {
                                     Log.d(TAG, "I have an account > Got an authtoken");
                                     //TODO: is this actually needed?
-                                    Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(StartActivity.this, HomeActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
@@ -146,7 +146,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                                         public void onAuthed(String authtoken) {
                                             Log.v(TAG, "> addNewFullAccount token: " + authtoken);
 
-                                            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                            Intent intent = new Intent(StartActivity.this, HomeActivity.class);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
@@ -229,7 +229,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
                     Log.v(TAG, "USER ID: " + userID);
 
-                    Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+                    Intent intent = new Intent(StartActivity.this, MyCategoriesActivity.class);
                     startActivity(intent);
                 }
 
@@ -253,7 +253,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
         } else {
             //TODO: what happens if you already have an account on the phone: account picker?
-            Intent intent = new Intent(StartActivity.this, CategoryListActivity.class);
+            Intent intent = new Intent(StartActivity.this, MyCategoriesActivity.class);
             startActivity(intent);
         }
 
@@ -261,7 +261,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     @Override
     public void onUserLoggedIn(Bundle userData) {
-        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        Intent intent = new Intent(StartActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -269,7 +269,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     @Override
     public void onUserSignedUp(Bundle userData) {
-        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        Intent intent = new Intent(StartActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

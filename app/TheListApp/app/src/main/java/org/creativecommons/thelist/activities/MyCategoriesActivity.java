@@ -41,8 +41,8 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.NetworkUtils;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,8 +52,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CategoryListActivity extends BaseActivity {
-    public static final String TAG = CategoryListActivity.class.getSimpleName();
+public class MyCategoriesActivity extends BaseActivity {
+    public static final String TAG = MyCategoriesActivity.class.getSimpleName();
 
     private Context mContext;
 
@@ -86,7 +86,7 @@ public class CategoryListActivity extends BaseActivity {
 
         mContext = this;
 
-        mCurrentUser = new ListUser(CategoryListActivity.this);
+        mCurrentUser = new ListUser(MyCategoriesActivity.this);
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
@@ -172,6 +172,7 @@ public class CategoryListActivity extends BaseActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+        //TODO: possibly delay this?
         mNavigationView.getMenu().findItem(R.id.nav_item_categories).setChecked(true);
     }
 

@@ -47,9 +47,9 @@ import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.NetworkUtils;
+import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,8 +130,8 @@ public class GalleryFragment extends Fragment {
         mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
 
         //RecyclerView
-        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.gallerySwipeRefresh);
-        mRecyclerView = (RecyclerView)activity.findViewById(R.id.galleryRecyclerView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
+        mRecyclerView = (RecyclerView)activity.findViewById(R.id.myPhotosRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.hasFixedSize();
         mGridLayoutManager = new GridLayoutManager(activity, 3);

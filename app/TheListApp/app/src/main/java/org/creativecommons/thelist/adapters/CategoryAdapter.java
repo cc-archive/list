@@ -33,7 +33,7 @@ import android.widget.TextView;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.layouts.CheckableRelativeLayout;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.RequestMethods;
 
 import java.util.ArrayList;
 import java.util.List;

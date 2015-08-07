@@ -1,4 +1,4 @@
-package org.creativecommons.thelist.utils;
+package org.creativecommons.thelist.api;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

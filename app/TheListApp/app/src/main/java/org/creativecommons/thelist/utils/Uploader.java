@@ -21,9 +21,10 @@ import com.loopj.android.http.ResponseHandlerInterface;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
+import org.creativecommons.thelist.activities.HomeActivity;
 import org.creativecommons.thelist.activities.StartActivity;
 import org.creativecommons.thelist.adapters.UserListItem;
+import org.creativecommons.thelist.api.NetworkUtils;
 
 public class Uploader {
     public static final String TAG = Uploader.class.getSimpleName();
@@ -277,7 +278,7 @@ public class Uploader {
                 .setColor(mContext.getResources().getColor(R.color.colorSecondary))
                 .setSmallIcon(R.drawable.ic_party_mode_white_24dp);
 
-        Intent resultIntent = new Intent(mContext, MainActivity.class);
+        Intent resultIntent = new Intent(mContext, HomeActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);
         stackBuilder.addParentStack(StartActivity.class);

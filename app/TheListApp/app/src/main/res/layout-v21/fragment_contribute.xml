@@ -18,25 +18,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!--<SwipeRefreshLayout-->
+            <!--android:id="@+id/swipe_refresh_layout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listRecyclerView"
+                android:paddingBottom="44dp"/>
+
         <Button android:id="@+id/contribute_find_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="44dp"
             android:textColor="@color/app_white"
             android:layout_alignParentBottom="true"
-            android:text="FIND MORE"
+            android:text="@string/contribute_find_more_button_label"
             android:background="@color/colorPrimaryDark"/>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/feedSwipeRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/listRecyclerView"
-                android:paddingBottom="44dp"/>
-        </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
     <ProgressBar

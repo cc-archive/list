@@ -34,8 +34,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.MainActivity;
+import org.creativecommons.thelist.activities.HomeActivity;
 import org.creativecommons.thelist.activities.StartActivity;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.json.JSONArray;
 
 import java.util.Arrays;
@@ -158,7 +160,7 @@ public class MessageHelper {
                 .setAutoCancel(true)
                 .setTicker(ticker);
 
-        Intent resultIntent = new Intent(mContext, MainActivity.class);
+        Intent resultIntent = new Intent(mContext, HomeActivity.class);
         resultIntent.setAction(INTENT_ACTION);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         android.support.v4.app.TaskStackBuilder stackBuilder = android.support.v4.app.TaskStackBuilder.create(mContext);

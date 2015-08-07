@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_gravity="bottom"
     android:id="@+id/random_item_background"
-    tools:context="org.creativecommons.thelist.activities.RandomActivity">
+    tools:context="org.creativecommons.thelist.activities.SuggestionActivity">
 
     <Button
         style="@style/flat_button_light"

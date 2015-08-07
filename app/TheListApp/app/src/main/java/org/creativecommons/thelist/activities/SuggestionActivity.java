@@ -45,14 +45,14 @@ import org.creativecommons.thelist.layouts.AutoResizeTextView;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.NetworkUtils;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RandomActivity extends Activity {
-    public static final String TAG = RandomActivity.class.getSimpleName();
+public class SuggestionActivity extends Activity {
+    public static final String TAG = SuggestionActivity.class.getSimpleName();
 
     private Context mContext;
 
@@ -79,7 +79,7 @@ public class RandomActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_random);
+        setContentView(R.layout.activity_suggestion);
 
         mContext = this;
 
@@ -125,7 +125,7 @@ public class RandomActivity extends Activity {
 
                 //Toast: Confirm List Item has been added
                 //TODO: add this to addItemToUserList callback
-                final Toast toast = Toast.makeText(RandomActivity.this,
+                final Toast toast = Toast.makeText(SuggestionActivity.this,
                         "Added to Your List", Toast.LENGTH_SHORT);
                 toast.show();
                 new android.os.Handler().postDelayed(new Runnable() {
@@ -196,7 +196,7 @@ public class RandomActivity extends Activity {
             try {
                 if(itemPositionCount == mRandomItemData.length()) {
 
-                    Intent intent = new Intent(RandomActivity.this, MainActivity.class);
+                    Intent intent = new Intent(SuggestionActivity.this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -321,7 +321,7 @@ public class RandomActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_random, menu);
+        getMenuInflater().inflate(R.menu.menu_suggestion, menu);
         return true;
     }
 

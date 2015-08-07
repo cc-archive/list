@@ -7,8 +7,8 @@ import android.support.v7.widget.Toolbar;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.HomePagerAdapter;
+import org.creativecommons.thelist.fragments.ContributeFragment;
 import org.creativecommons.thelist.fragments.DiscoverFragment;
-import org.creativecommons.thelist.fragments.MyListFragment;
 
 public class HomeActivity extends BaseActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
@@ -27,6 +27,21 @@ public class HomeActivity extends BaseActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(viewPager);
 
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float v, int i1) {
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+//            }
+//        } );
+
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.setupWithViewPager(viewPager);
     }
@@ -36,7 +51,7 @@ public class HomeActivity extends BaseActivity {
                 new HomePagerAdapter(getSupportFragmentManager());
 
         homePagerAdapter.addFragment(new DiscoverFragment(), "Discover");
-        homePagerAdapter.addFragment(new MyListFragment(), "Contribute");
+        homePagerAdapter.addFragment(new ContributeFragment(), "Contribute");
         viewPager.setAdapter(homePagerAdapter);
     }
 
@@ -44,8 +59,35 @@ public class HomeActivity extends BaseActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+        //TODO: possibly delay this?
         mNavigationView.getMenu().findItem(R.id.nav_item_home).setChecked(true);
     }
+
+    //    protected void enableDisableSwipeRefresh(boolean enable) {
+//        if (mSwipeRefreshLayout != null) {
+//            mSwipeRefreshLayout.setEnabled(enable);
+//        }
+//    }
+
+
+//    public void setUpSwipeRefresh(){
+//        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+//        if (mSwipeRefreshLayout != null) { //if exists in view tree
+//
+//            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    //requestDataRefresh(); //TODO: make it do stuff
+//
+//                }
+//            });
+//
+//            if (mSwipeRefreshLayout instanceof MultiSwipeRefreshLayout) {
+//                MultiSwipeRefreshLayout mswrl = (MultiSwipeRefreshLayout) mSwipeRefreshLayout;
+//                mswrl.setCanChildScrollUpCallback(this);
+//            }
+//        }
+//    }
 
     // --------------------------------------------------------
     // Fragment Callbacks

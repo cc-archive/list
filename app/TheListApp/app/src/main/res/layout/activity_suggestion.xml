@@ -1,19 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="28dp"
+    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:layout_gravity="bottom"
     android:id="@+id/random_item_background"
-    tools:context="org.creativecommons.thelist.activities.RandomActivity">
+    tools:context="org.creativecommons.thelist.activities.SuggestionActivity">
 
     <Button
         style="@style/flat_button_light"
         android:text="@string/action_done"
-        android:textSize="16sp"
         android:visibility="invisible"
-        android:layout_marginTop="16dp"
         android:layout_marginRight="12dp"
         android:textColor="@color/secondary_text_material_light"
         android:id="@+id/doneButton"
@@ -29,6 +27,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/buttons_container"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:id="@+id/text_container"
@@ -40,17 +39,17 @@
 
         <org.creativecommons.thelist.layouts.AutoResizeTextView
             android:id="@+id/random_item_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:textSize="@dimen/random_item_text_size"
             android:textStyle="normal"
-            android:maxLines="6"
-            android:lineSpacingMultiplier="1.25"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:lineSpacingMultiplier="1.25"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/buttons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -71,7 +70,7 @@
 
         <!--TODO: re-add Camera Button (if this is functionality we want)-->
         <ImageButton android:id="@+id/CameraButton"
-            android:contentDescription="Take A Picture"
+            android:contentDescription="Click to take A Picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
@@ -82,7 +81,7 @@
 
         <ImageButton
             android:id="@+id/NoButton"
-            android:contentDescription="Pass on this item"
+            android:contentDescription="Click to pass on this item"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="invisible"

@@ -52,8 +52,6 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-//        Intent homeIntent = new Intent(AboutActivity.this, MainActivity.class);
-//        startActivity(homeIntent);
     }
 
     @Override

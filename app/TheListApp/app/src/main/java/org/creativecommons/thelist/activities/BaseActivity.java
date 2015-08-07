@@ -4,9 +4,11 @@ import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,19 +16,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.fragments.MyListFragment;
+import org.creativecommons.thelist.fragments.ContributeFragment;
+import org.creativecommons.thelist.layouts.MultiSwipeRefreshLayout;
 import org.creativecommons.thelist.utils.ListUser;
 
-public class BaseActivity extends AppCompatActivity implements MyListFragment.LoginListener {
+public class BaseActivity extends AppCompatActivity implements ContributeFragment.LoginListener,
+        AppBarLayout.OnOffsetChangedListener,
+        MultiSwipeRefreshLayout.CanChildScrollUpCallback {
+
     public static final String TAG = BaseActivity.class.getSimpleName();
 
     private Context mContext;
 
-    private ListUser mCurrentUser;
+    public ListUser mCurrentUser;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -39,6 +44,9 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
 
     //Toolbar
     private Toolbar mToolbar;
+    private AppBarLayout appBarLayout;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Boolean mLoggingIn = false;
 
@@ -65,6 +73,7 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
         setUpToolbar();
         setUpNavigation();
 
+        //Fade in main content
         View mainContent = findViewById(R.id.main_content);
         if (mainContent != null) {
             mainContent.setAlpha(0);
@@ -80,10 +89,18 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
         super.onResume();
         Log.v(TAG, "ON RESUME, logging in: " + String.valueOf(mLoggingIn));
 
+        //appBarLayout.addOnOffsetChangedListener(this);
+
         if(mLoggingIn){
             updateDrawerHeader();
         }
     } //onResume
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //appBarLayout.removeOnOffsetChangedListener(this);
+    }
 
     // --------------------------------------------------------
     // Helpers
@@ -117,6 +134,11 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
             @Override
             public boolean onNavigationItemSelected(final MenuItem menuItem) {
 
+                if(menuItem.isChecked()){
+                    mDrawerLayout.closeDrawers();
+                    return true;
+                }
+
                 Intent intent = null;
 
                 switch (menuItem.getItemId()) {
@@ -125,13 +147,11 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
                         break;
 
                     case R.id.nav_item_photos:
-                        Toast.makeText(mContext, "Go to PhotoActivity", Toast.LENGTH_SHORT).show();
-
-                        //intent = new Intent(this, MyPhotosActivity.class);
+                        intent = new Intent(mContext, MyPhotosActivity.class);
 
                         break;
                     case R.id.nav_item_categories:
-                        intent = new Intent(mContext, CategoryListActivity.class);
+                        intent = new Intent(mContext, MyCategoriesActivity.class);
                         break;
 
                     case R.id.nav_item_requests:
@@ -182,15 +202,15 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
                         break;
                 } //switch
 
-                if(intent != null){
+                if (intent != null) {
 
                     final Intent finalIntent = intent;
+                    finalIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
                     new android.os.Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             //menuItem.setChecked(true);
-
                             startActivity(finalIntent);
                             finish();
                         }
@@ -277,8 +297,22 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
     } //updateDrawerHeader
 
     // --------------------------------------------------------
-    // Fragment Callbacks
+    // Listener Callbacks
     // --------------------------------------------------------
+
+    @Override
+    public boolean canSwipeRefreshChildScrollUp() {
+        return false;
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            mSwipeRefreshLayout.setEnabled(true);
+        } else {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+    }
 
     @Override
     public void isLoggedIn() {
@@ -300,5 +334,6 @@ public class BaseActivity extends AppCompatActivity implements MyListFragment.Lo
 
         return super.onOptionsItemSelected(item);
     }
+
 
 } //BaseActivity

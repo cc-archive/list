@@ -16,6 +16,7 @@
     <string name="title_activity_add_item">Create an Item</string>
     <string name="title_activity_drawer">My List</string>
     <string name="title_activity_home">Home</string>
+    <string name="title_activity_my_photos">My Photos</string>
 
     <!-- Drawer Navigation Labels -->
     <string name="nav_item_home_label">Home</string>
@@ -256,7 +257,6 @@
     <string name="add_item_toast_error">There was a problem adding your item</string>
     <string name="remove_item_toast_error">There was a problem deleting your item. Pull to refresh.</string>
     <string name="gallery_login_button_label">LOG IN NOW</string>
-
-
+    <string name="contribute_find_more_button_label">FIND MORE</string>
 
 </resources>

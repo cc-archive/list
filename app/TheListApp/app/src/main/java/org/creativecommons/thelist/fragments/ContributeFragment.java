@@ -33,7 +33,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +50,7 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
-import org.creativecommons.thelist.activities.RandomActivity;
+import org.creativecommons.thelist.activities.SuggestionActivity;
 import org.creativecommons.thelist.adapters.UserListAdapter;
 import org.creativecommons.thelist.adapters.UserListItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
@@ -59,10 +58,10 @@ import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.NetworkUtils;
+import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
@@ -77,8 +76,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MyListFragment extends Fragment {
-    public static final String TAG = MyListFragment.class.getSimpleName();
+public class ContributeFragment extends Fragment {
+    public static final String TAG = ContributeFragment.class.getSimpleName();
     private Context mContext;
 
     //Helper Methods
@@ -99,7 +98,7 @@ public class MyListFragment extends Fragment {
     private Uri mMediaUri;
 
     //RecyclerView
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    //private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -117,6 +116,7 @@ public class MyListFragment extends Fragment {
     //Interface with Activity
     public LoginListener mCallback;
 
+
     // --------------------------------------------------------
 
     //LISTENERS
@@ -124,7 +124,7 @@ public class MyListFragment extends Fragment {
         public void isLoggedIn();
     }
 
-    public MyListFragment() {
+    public ContributeFragment() {
         // Required empty public constructor
     }
 
@@ -144,7 +144,7 @@ public class MyListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_list, container, false);
+        return inflater.inflate(R.layout.fragment_contribute, container, false);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class MyListFragment extends Fragment {
         mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
 
         //RecyclerView
-        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.feedSwipeRefresh);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = (RecyclerView)activity.findViewById(R.id.listRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
@@ -181,17 +181,17 @@ public class MyListFragment extends Fragment {
         mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         initRecyclerView();
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                displayUserItems();
-            }
-        });
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                displayUserItems();
+//            }
+//        });
 
         mFindMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RandomActivity.class);
+                Intent intent = new Intent(getActivity(), SuggestionActivity.class);
                 startActivity(intent);
             }
         });
@@ -330,7 +330,7 @@ public class MyListFragment extends Fragment {
                     Collections.reverse(mItemList);
 
                     mListAdapter.notifyDataSetChanged();
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    //mSwipeRefreshLayout.setRefreshing(false);
                 }
             } //onSuccess
 
@@ -367,7 +367,7 @@ public class MyListFragment extends Fragment {
                 }
 
                 mListAdapter.notifyDataSetChanged();
-                mSwipeRefreshLayout.setRefreshing(false);
+                //mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 

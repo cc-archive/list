@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?actionBarSize"
-    app:layout_scrollFlags="scroll"
+    app:layout_scrollFlags="scroll|enterAlways"
     android:background="@color/colorPrimary"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />

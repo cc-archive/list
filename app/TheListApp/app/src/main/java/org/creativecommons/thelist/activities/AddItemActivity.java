@@ -54,9 +54,9 @@ import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.utils.NetworkUtils;
+import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
-import org.creativecommons.thelist.utils.RequestMethods;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -415,7 +415,7 @@ public class AddItemActivity extends AppCompatActivity {
                                                 Toast.LENGTH_LONG).show();
                                         mMakerItemProgressBar.setVisibility(View.INVISIBLE);
 
-                                        Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
+                                        Intent intent = new Intent(AddItemActivity.this, HomeActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
