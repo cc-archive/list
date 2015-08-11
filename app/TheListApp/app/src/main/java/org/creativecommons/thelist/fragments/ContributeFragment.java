@@ -279,7 +279,7 @@ public class ContributeFragment extends Fragment {
     //LIST ITEM REQUEST + UPDATE VIEW
     //----------------------------------------------
 
-    private void displayUserItems() {
+    public void displayUserItems() {
 
         mRequestMethods.getUserItems(new NetworkUtils.UserListCallback() {
             @Override

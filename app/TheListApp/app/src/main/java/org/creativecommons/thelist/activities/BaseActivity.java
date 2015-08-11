@@ -4,11 +4,9 @@ import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,12 +18,9 @@ import android.widget.TextView;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.fragments.ContributeFragment;
-import org.creativecommons.thelist.layouts.MultiSwipeRefreshLayout;
 import org.creativecommons.thelist.utils.ListUser;
 
-public class BaseActivity extends AppCompatActivity implements ContributeFragment.LoginListener,
-        AppBarLayout.OnOffsetChangedListener,
-        MultiSwipeRefreshLayout.CanChildScrollUpCallback {
+public class BaseActivity extends AppCompatActivity implements ContributeFragment.LoginListener {
 
     public static final String TAG = BaseActivity.class.getSimpleName();
 
@@ -44,9 +39,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 
     //Toolbar
     private Toolbar mToolbar;
-    private AppBarLayout appBarLayout;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Boolean mLoggingIn = false;
 
@@ -300,19 +292,19 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
     // Listener Callbacks
     // --------------------------------------------------------
 
-    @Override
-    public boolean canSwipeRefreshChildScrollUp() {
-        return false;
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (i == 0) {
-            mSwipeRefreshLayout.setEnabled(true);
-        } else {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
-    }
+//    @Override
+//    public boolean canSwipeRefreshChildScrollUp() {
+//        return false;
+//    }
+//
+//    @Override
+//    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+//        if (i == 0) {
+//            mSwipeRefreshLayout.setEnabled(true);
+//        } else {
+//            mSwipeRefreshLayout.setEnabled(false);
+//        }
+//    }
 
     @Override
     public void isLoggedIn() {

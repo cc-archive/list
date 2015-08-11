@@ -9,7 +9,7 @@
  language governing permissions and limitations under the License.
  */
 
-package org.creativecommons.thelist.misc;
+package org.creativecommons.thelist.authentication;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -24,8 +24,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.creativecommons.thelist.activities.AccountActivity;
-import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.authentication.AesCbcWithIntegrity;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 

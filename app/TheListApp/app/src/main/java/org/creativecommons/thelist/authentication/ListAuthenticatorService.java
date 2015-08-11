@@ -15,12 +15,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import org.creativecommons.thelist.misc.ListAuthenticator;
-
 public class ListAuthenticatorService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+
         ListAuthenticator authenticator = new ListAuthenticator(this);
         return authenticator.getIBinder();
     }

@@ -108,6 +108,13 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
         mDiscoverRecyclerView.setLayoutManager(mLayoutManager);
         mDiscoverRecyclerView.setHasFixedSize(true);
 
+        displayFeed();
+
+        return view;
+
+    } //onCreateView
+
+    public void displayFeed(){
 
         //Request items for Discover feed
         list.getPhotoFeed(new Callback<Photos>() {
@@ -129,9 +136,7 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
             }
         });
 
-        return view;
-
-    } //onCreateView
+    } //displayFeed
 
     @Override
     public void onFlag(String photoID) {
