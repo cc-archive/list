@@ -41,7 +41,7 @@
 
     <screenName name="org.creativecommons.thelist.fragments.ContributeFragment">My List</screenName>
     <screenName name="org.creativecommons.thelist.fragments.AddItemFragment">Request an Item</screenName>
-    <screenName name="org.creativecommons.thelist.fragments.GalleryFragment">My Photos</screenName>
+    <screenName name="org.creativecommons.thelist.fragments.MyPhotosFragment">My Photos</screenName>
 
 
     <!-- If ga_autoActivityTracking is enabled, an alternate screen name can be specified to

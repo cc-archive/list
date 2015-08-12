@@ -86,23 +86,22 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         });
 
 
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float v, int i1) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
-//            }
-//        } );
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float v, int i1) {
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+            }
 
-    }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
+
+    } //onCreate
 
     public void setupViewPager(ViewPager viewPager){
         HomePagerAdapter homePagerAdapter =
@@ -113,6 +112,12 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         viewPager.setAdapter(homePagerAdapter);
     }
 
+    public void enableDisableSwipeRefresh(boolean enable) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setEnabled(enable);
+        }
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -120,11 +125,6 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         //TODO: possibly delay this?
         mNavigationView.getMenu().findItem(R.id.nav_item_home).setChecked(true);
     }
-
-//    @Override
-//    public boolean canSwipeRefreshChildScrollUp() {
-//        return mSwipeRefreshLayout.getScrollY() > 10;
-//    }
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {

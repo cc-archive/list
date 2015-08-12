@@ -181,13 +181,6 @@ public class ContributeFragment extends Fragment {
         mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         initRecyclerView();
 
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                displayUserItems();
-//            }
-//        });
-
         mFindMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -358,8 +351,6 @@ public class ContributeFragment extends Fragment {
                 }
 
                 mProgressBar.setVisibility(View.INVISIBLE);
-                //mFab.show();
-                //mFab.setVisibility(View.VISIBLE);
 
                 if (mItemList.size() == 0 || mItemList == null) {
                     mEmptyView.setText(mContext.getString(R.string.my_list_empty_label));

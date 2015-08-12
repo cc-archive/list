@@ -25,8 +25,10 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
     public static final String TAG = BaseActivity.class.getSimpleName();
 
     private Context mContext;
-
     public ListUser mCurrentUser;
+
+    private Toolbar mToolbar;
+    //private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -36,9 +38,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
     public Menu mNavigationMenu;
     private MenuItem mAccountItem;
     private TextView mAccountName;
-
-    //Toolbar
-    private Toolbar mToolbar;
 
     private Boolean mLoggingIn = false;
 
@@ -65,6 +64,8 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
         setUpToolbar();
         setUpNavigation();
 
+        //trySetUpSwipeRefresh();
+
         //Fade in main content
         View mainContent = findViewById(R.id.main_content);
         if (mainContent != null) {
@@ -81,18 +82,10 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
         super.onResume();
         Log.v(TAG, "ON RESUME, logging in: " + String.valueOf(mLoggingIn));
 
-        //appBarLayout.addOnOffsetChangedListener(this);
-
         if(mLoggingIn){
             updateDrawerHeader();
         }
     } //onResume
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //appBarLayout.removeOnOffsetChangedListener(this);
-    }
 
     // --------------------------------------------------------
     // Helpers
@@ -113,7 +106,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
     } //setUpToolbar
 
     private void setUpNavigation(){
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -204,7 +196,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
                         public void run() {
                             //menuItem.setChecked(true);
                             startActivity(finalIntent);
-                            finish();
                         }
                     }, NAVDRAWER_LAUNCH_DELAY);
 
@@ -225,6 +216,15 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
         });
 
     } //setUpNavigation
+
+//    private void trySetUpSwipeRefresh(){
+//        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+//
+//        if(mSwipeRefreshLayout != null){
+//
+//        }
+//
+//    }
 
     private void handleUserAccount(final ListUser.AuthCallback callback){
         //TODO: bring up account picker dialog w/ new option
@@ -288,23 +288,33 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 
     } //updateDrawerHeader
 
+
+    //Nav Drawer Behaviour
+    protected boolean isNavDrawerOpen() {
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
+    }
+
+    protected void closeNavDrawer() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isNavDrawerOpen()) {
+            closeNavDrawer();
+        } else if(!(this instanceof HomeActivity)) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     // --------------------------------------------------------
     // Listener Callbacks
     // --------------------------------------------------------
-
-//    @Override
-//    public boolean canSwipeRefreshChildScrollUp() {
-//        return false;
-//    }
-//
-//    @Override
-//    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-//        if (i == 0) {
-//            mSwipeRefreshLayout.setEnabled(true);
-//        } else {
-//            mSwipeRefreshLayout.setEnabled(false);
-//        }
-//    }
 
     @Override
     public void isLoggedIn() {

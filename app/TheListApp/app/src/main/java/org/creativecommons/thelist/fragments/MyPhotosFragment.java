@@ -43,13 +43,12 @@ import com.android.volley.VolleyError;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryAdapter;
 import org.creativecommons.thelist.adapters.GalleryItem;
-import org.creativecommons.thelist.authentication.AccountGeneral;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
-import org.creativecommons.thelist.api.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,8 +56,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class GalleryFragment extends Fragment {
-    public static final String TAG = GalleryFragment.class.getSimpleName();
+public class MyPhotosFragment extends Fragment {
+    public static final String TAG = MyPhotosFragment.class.getSimpleName();
 
     private Context mContext;
 
@@ -89,7 +88,7 @@ public class GalleryFragment extends Fragment {
         void onLoginClick();
     }
 
-    public GalleryFragment() {
+    public MyPhotosFragment() {
         // Required empty public constructor
     }
 
@@ -109,7 +108,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gallery, container, false);
+        return inflater.inflate(R.layout.fragment_my_photos, container, false);
     } //onCreateView
 
     @Override
@@ -130,7 +129,6 @@ public class GalleryFragment extends Fragment {
         mEmptyView = (TextView) activity.findViewById(R.id.empty_gallery_label);
 
         //RecyclerView
-        mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = (RecyclerView)activity.findViewById(R.id.myPhotosRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.hasFixedSize();
@@ -156,25 +154,6 @@ public class GalleryFragment extends Fragment {
 
         //Show user Photos
         refreshItems();
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
-                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewFullAccount
-                            @Override
-                            public void onAuthed(String authtoken) {
-                                Log.v(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
-
-                            }
-
-                        });
-
-                refreshItems();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override

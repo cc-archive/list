@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--MaterialEditText: Copyright 2014 rengwuxian-->
-
-<!--Licensed under the Apache License, Version 2.0 (the "License");-->
-<!--you may not use this file except in compliance with the License.-->
-<!--You may obtain a copy of the License at-->
-
-<!--http://www.apache.org/licenses/LICENSE-2.0-->
-
-<!--Unless required by applicable law or agreed to in writing, software-->
-<!--distributed under the License is distributed on an "AS IS" BASIS,-->
-<!--WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.-->
-<!--See the License for the specific language governing permissions and-->
-<!--limitations under the License.-->
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -78,8 +65,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="2"
+                    android:paddingBottom="8dp"
                     android:id="@+id/title_spinner_container">
-                    <com.rengwuxian.materialedittext.MaterialEditText
+                    <EditText
                         android:id="@+id/add_item_title"
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -88,10 +76,7 @@
                         android:hint="Item Name"
                         android:imeOptions="actionDone"
                         android:singleLine="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        app:met_baseColor="@color/secondary_text_material_light"
-                        app:met_floatingLabel="normal"
-                        app:met_primaryColor="@color/colorSecondary" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                     <Spinner
                         android:id="@+id/category_spinner"
@@ -102,7 +87,7 @@
                         android:prompt="@string/category_prompt" />
                 </LinearLayout>
 
-                <com.rengwuxian.materialedittext.MaterialEditText
+                <EditText
                     android:id="@+id/add_item_description"
                     android:layout_below="@id/title_spinner_container"
                     android:layout_width="match_parent"
@@ -110,12 +95,7 @@
                     android:imeOptions="actionDone"
                     android:hint="Description (optional)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    app:met_baseColor="@color/secondary_text_material_light"
-                    app:met_floatingLabel="normal"
-                    app:met_singleLineEllipsis="true"
-                    app:met_maxCharacters="120"
-                    android:layout_marginBottom="16dp"
-                    app:met_primaryColor="@color/colorSecondary" />
+                    android:layout_marginBottom="16dp" />
             </RelativeLayout>
 
             <RelativeLayout android:id="@+id/sticky_footer_container"

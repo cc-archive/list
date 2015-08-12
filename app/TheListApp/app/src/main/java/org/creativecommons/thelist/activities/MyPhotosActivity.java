@@ -23,7 +23,9 @@ package org.creativecommons.thelist.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,26 +33,55 @@ import android.view.MenuItem;
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.GalleryItem;
 import org.creativecommons.thelist.authentication.AccountGeneral;
-import org.creativecommons.thelist.fragments.GalleryFragment;
+import org.creativecommons.thelist.fragments.MyPhotosFragment;
 import org.creativecommons.thelist.utils.ListUser;
 
 import java.util.ArrayList;
 
-public class MyPhotosActivity extends BaseActivity implements GalleryFragment.GalleryListener {
+public class MyPhotosActivity extends BaseActivity implements
+        MyPhotosFragment.GalleryListener, AppBarLayout.OnOffsetChangedListener {
     public static final String TAG = MyPhotosActivity.class.getSimpleName();
+
+    private AppBarLayout mAppBarLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private MyPhotosFragment mMyPhotosFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_photos);
 
-        GalleryFragment galleryFragment = new GalleryFragment();
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+        mMyPhotosFragment = new MyPhotosFragment();
         //load default view
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, galleryFragment)
+                .replace(R.id.fragment_container, mMyPhotosFragment)
                 .commit();
-    }
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewFullAccount
+                            @Override
+                            public void onAuthed(String authtoken) {
+                                Log.v(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
+                            }
+
+                        });
+
+                mMyPhotosFragment.refreshItems();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+    } //onCreate
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -105,16 +136,37 @@ public class MyPhotosActivity extends BaseActivity implements GalleryFragment.Ga
 
                         updateDrawerHeader();
 
-                        GalleryFragment galleryFragment = new GalleryFragment();
+                        MyPhotosFragment myPhotosFragment = new MyPhotosFragment();
                         //load default view
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .replace(R.id.main_content_container, galleryFragment)
+                                .replace(R.id.main_content_container, myPhotosFragment)
                                 .commitAllowingStateLoss();
 
                     }
                 });
 
+    } //onLoginClick
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            mSwipeRefreshLayout.setEnabled(true);
+        } else {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAppBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
 } //MyPhotosActivity

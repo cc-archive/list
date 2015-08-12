@@ -29,7 +29,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,14 +49,14 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.layouts.SpinnerObject;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
-import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +69,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddItemActivity extends BaseActivity {
     public static final String TAG = AddItemActivity.class.getSimpleName();
 
     private Context mContext;
@@ -479,12 +479,6 @@ public class AddItemActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    //onBackPressed
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -501,7 +495,8 @@ public class AddItemActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 

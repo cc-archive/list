@@ -9,7 +9,7 @@
         android:layout_above="@+id/add_item_footer"
         android:layout_height="1dp"
         android:paddingTop="16dp"
-        android:background="@color/md_divider_black"/>
+        android:background="@color/divider_material_black"/>
 
     <RelativeLayout
         android:id="@+id/add_item_footer"

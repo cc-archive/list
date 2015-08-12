@@ -34,7 +34,6 @@ android {
 }
 
 dependencies {
-    compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.mcxiaoke.volley:library:1.0.15'
     compile 'commons-io:commons-io:2.4'
@@ -43,10 +42,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:cardview-v7:22.2.0'
     compile 'com.afollestad:material-dialogs:0.7.6.0'
-    //compile 'org.lucasr.dspec:dspec:0.1.1'
-    //compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'ch.acra:acra:4.6.1'
-    compile 'com.rengwuxian.materialedittext:library:2.0.3'
     compile 'de.hdodenhof:circleimageview:1.2.2'
     compile 'com.github.chrisbanes.photoview:library:1.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'

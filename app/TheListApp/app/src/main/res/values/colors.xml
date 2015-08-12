@@ -80,7 +80,7 @@
     <color name="hint_disabled_text_material_light">#c4c6c8</color>
 
     <!--Divider Black 12%-->
-    <color name="divider_material_black">@color/md_divider_black</color>
+    <color name="divider_material_black">@color/secondary_text_default_material_dark</color>
 
     <!-- White 87% -->
     <color name="primary_text_default_material_dark">#deffffff</color>
@@ -89,8 +89,8 @@
     <!--Hint/Disabled 30% White-->
     <color name="hint_disabled_text_material_dark">@color/abc_primary_text_disable_only_material_dark</color>
 
-    <!--Divider Black 12%-->
-    <color name="divider_material_white">@color/md_divider_white</color>
+    <!--Divider White 12%-->
+    <color name="divider_material_white">@color/secondary_text_default_material_light</color>
 
     <!--Background Colours-->
     <color name="translucent_background">#D9000000</color>

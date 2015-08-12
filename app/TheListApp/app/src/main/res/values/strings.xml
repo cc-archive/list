@@ -11,11 +11,11 @@
     <string name="title_activity_explainer">What’s up with the List?</string>
     <string name="title_activity_account">Add Account</string>
     <string name="title_activity_start">Start The List</string>
+    <!-- TODO: figure out image activity not having title-->
     <string name="title_activity_image"></string>
     <string name="title_activity_about">About The App</string>
     <string name="title_activity_add_item">Create an Item</string>
-    <string name="title_activity_drawer">My List</string>
-    <string name="title_activity_home">Home</string>
+    <string name="title_activity_home">The List</string>
     <string name="title_activity_my_photos">My Photos</string>
 
     <!-- Drawer Navigation Labels -->
