@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:id="@+id/random_item_background"
+    tools:context="org.creativecommons.thelist.activities.SuggestionActivity">
+
+    <Button
+        style="@style/flat_button_light"
+        android:text="@string/action_done"
+        android:visibility="invisible"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="12dp"
+        android:textColor="@color/secondary_text_material_light"
+        android:id="@+id/doneButton"
+        android:layout_alignParentRight="true"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/progressBar" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:id="@+id/text_container"
+        android:paddingTop="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="false">
+
+        <org.creativecommons.thelist.layouts.AutoResizeTextView
+            android:id="@+id/random_item_text"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:textSize="36sp"
+            android:textStyle="normal"
+            android:maxLines="6"
+            android:lineSpacingMultiplier="1.25"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp">
+
+        <ImageButton android:id="@+id/YesButton"
+            android:contentDescription="Add Item To My List"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/btn_checkmark"
+            android:layout_gravity="center_vertical" />
+
+        <!--TODO: re-add Camera Button (if this is functionality we want)-->
+        <ImageButton android:id="@+id/CameraButton"
+            android:contentDescription="Take A Picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_weight="0"
+            android:layout_gravity="center"
+            android:src="@drawable/random_camera"
+            android:background="@drawable/rounded_corners" />
+
+        <ImageButton
+            android:id="@+id/NoButton"
+            android:contentDescription="Pass on this item"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:background="@drawable/rounded_corners"
+            android:src="@drawable/btn_x" />
+    </LinearLayout>
+
+</RelativeLayout>

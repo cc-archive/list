@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="TypographyDashes">
+
+    <!-- The apps Analytics Tracking Id -->
+    <string name="ga_trackingId">UA-2010376-31</string>
+
+    <!-- Percentage of events to include in reports -->
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <!-- Enable automatic Activity measurement -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- the Local LogLevel for Analytics -->
+    <string name="ga_logLevel">verbose</string>
+
+    <!--Hide user IPs from results-->
+    <string name="ga_anonymizeIp">true</string>
+
+    <!-- how often the dispatcher should fire -->
+    <integer name="ga_dispatchPeriod">30</integer>
+
+    <!-- catch and report uncaught exceptions from the app -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <!-- Treat events as test events and don't send to google -->
+    <bool name="ga_dryRun">false</bool>
+
+    <!--How long a session exists before giving up-->
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <!-- The screen names that will appear in reports -->
+    <screenName name="org.creativecommons.thelist.activities.MainActivity">Main Feed</screenName>
+    <screenName name="org.creativecommons.thelist.activities.SuggestionActivity">Random Item Suggestions</screenName>
+    <screenName name="org.creativecommons.thelist.activities.MyCategoriesActivity">Pick Categories</screenName>
+    <screenName name="org.creativecommons.thelist.activities.StartActivity">Start Screen</screenName>
+    <screenName name="org.creativecommons.thelist.activities.AboutActivity">About The App</screenName>
+    <screenName name="org.creativecommons.thelist.activities.AccountActivity">Log Into Your CCID</screenName>
+    <screenName name="org.creativecommons.thelist.activities.ImageActivity">Gallery</screenName>
+
+    <screenName name="org.creativecommons.thelist.fragments.ContributeFragment">My List</screenName>
+    <screenName name="org.creativecommons.thelist.fragments.AddItemFragment">Request an Item</screenName>
+    <screenName name="org.creativecommons.thelist.fragments.MyPhotosFragment">My Photos</screenName>
+
+
+    <!-- If ga_autoActivityTracking is enabled, an alternate screen name can be specified to
+    substitute for the full length canonical Activity name in screen view hit. In order to
+    specify an alternate screen name use an <screenName> element, with the name attribute
+    specifying the canonical name, and the value the alias to use instead. -->
+
+
+</resources>

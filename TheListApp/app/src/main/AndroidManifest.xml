@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.creativecommons.thelist" >
+
+    <!-- App Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Account Permissions -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+    <application
+        android:name=".utils.ListApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name_short"
+        android:theme="@style/ListThemeNoActionBar" >
+        <activity
+            android:name=".activities.SplashScreen"
+            android:label="@string/app_name_short"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+
+
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+        </activity>
+
+        <!-- TODO: remove once BaseActivity has replaced everything -->
+        <!-- <activity -->
+        <!-- android:name=".activities.MainActivity" -->
+        <!-- android:label="@string/title_activity_drawer" -->
+        <!-- android:launchMode="singleTask" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@style/ListThemeNoActionBar" -->
+        <!-- android:windowSoftInputMode="adjustResize" > -->
+        <!-- <intent-filter android:label="@string/title_activity_drawer"> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+
+        <activity
+            android:name=".activities.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".activities.StartActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/ListTheme" >
+        </activity>
+        <activity
+            android:name=".activities.AccountActivity"
+            android:label="@string/title_activity_account"
+            android:screenOrientation="portrait"
+            android:theme="@style/ListThemeNoActionBar"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".activities.MyCategoriesActivity"
+            android:label="@string/title_activity_category_list"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.HomeActivity"
+            android:theme="@style/ListThemeNoActionBar" >
+        </activity>
+        <activity
+            android:name=".activities.ImageActivity"
+            android:label="@string/title_activity_image"
+            android:launchMode="singleTask"
+            android:parentActivityName=".activities.MyPhotosActivity"
+            android:theme="@style/ListThemeNoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MyPhotosActivity" />
+        </activity>
+        <activity
+            android:name=".activities.SuggestionActivity"
+            android:label="@string/title_activity_random"
+            android:launchMode="singleTask"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ListThemeNoActionBar" >
+        </activity>
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".activities.HomeActivity"
+            android:theme="@style/ListThemeStatus" >
+        </activity>
+        <activity
+            android:name=".activities.AddItemActivity"
+            android:label="@string/title_activity_add_item"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ListThemeStatus" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+        <!-- Authenticator -->
+        <service android:name=".authentication.ListAuthenticatorService" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <!-- Google Play Services -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!--
+          Optionally, register AnalyticsReceiver and AnalyticsService to support background
+          dispatching on non-Google Play devices
+        -->
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.MyPhotosActivity"
+            android:label="@string/title_activity_my_photos" >
+        </activity>
+    </application>
+
+</manifest>

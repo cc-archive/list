@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:weightSum="6"
+    android:padding="20dp"
+    tools:context="org.creativecommons.thelist.fragments.ExplainerFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
+        <ImageView
+            android:id="@+id/explainer_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/terms_logo"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="You‘ll be helping creators tell their stories – on Wikipedia, social media, in the news, or in campaigns.\n\nTogether were building a commons of creativity and knowledge for everyone"
+            android:id="@+id/explainer_text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"/>
+     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/section_text"
+        android:layout_weight="1">
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text=""
+            android:textColor="@color/app_white"
+            android:id="@+id/nextButton"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Theme Colours-->
+    <color name="colorPrimaryDark">#004D40</color>
+    <color name="colorPrimary">#00796B</color>
+    <color name="colorPrimaryLight">#26A69A</color>
+    <color name="colorPrimaryUltraLight">#B2DFDB</color>
+    <color name="colorSecondaryDark">#FF6F00</color>
+    <color name="colorSecondary">#FFA000</color>
+    <color name="colorSecondaryLight">#FFC107</color>
+
+
+    <!--General-->
+    <color name="app_black">#000000</color>
+    <color name="app_white">#ffffff</color>
+    <color name="app_grey">@color/hint_disabled_text_material_light</color>
+
+    <!-- Failure -->
+    <color name="colorFail">#E53935</color>
+
+
+    <!--Button Colours-->
+    <color name="NORMAL_STATE_COLOR">@color/colorPrimary</color>
+    <color name="PRESSED_STATE_COLOR">@color/colorPrimaryDark</color>
+    <color name="FOCUSED_STATE_COLOR">@color/colorSecondaryLight</color>
+
+    <color name="FAB_NORMAL_COLOR">@color/colorSecondary</color>
+    <color name="FAB_PRESSED_COLOR">@color/colorSecondaryDark</color>
+    <color name="FAB_RIPPLE_COLOR">@color/colorSecondaryLight</color>
+
+    <!--Category List Colours-->
+    <color name="category_default">@color/colorSecondaryLight</color>
+
+
+    <!--Category Colours-->
+
+    <!--People - Orange-->
+    <color name="people_100">#ffe0b2</color>
+    <color name="people_500">#ff9800</color>
+    <color name="people_700">#e65100</color>
+
+    <!--Places/Cities – Red-->
+    <color name="places_100">#ffcdd2</color>
+    <color name="places_500">#f44336</color>
+    <color name="places_900">#b71c1c</color>
+
+    <!--Clothing + Fashion – Indigo-->
+    <color name="clothing_100">#c5cae9</color>
+    <color name="clothing_500">#3f51b5</color>
+    <color name="clothing_900">#1a237e</color>
+
+    <!--Nature + Animals – Green-->
+    <color name="nature_100">#c8e6c9</color>
+    <color name="nature_500">#4caf50</color>
+    <color name="nature_900">#1b5e20</color>
+
+    <!--Food – Blue-->
+    <color name="food_100">#bbdefb</color>
+    <color name="food_500">#2196f3</color>
+    <color name="food_900">#0d47a1</color>
+
+    <!--Objects – Pink-->
+    <color name="objects_100">#f8bbd0</color>
+    <color name="objects_500">#e91e63</color>
+    <color name="objects_900">#880e4f</color>
+
+    <!--Default category-->
+    <color name="default_100">#cfd8dc</color>
+    <color name="default_500">#607d8b</color>
+    <color name="default_900">#263238</color>
+
+    <!--Text-->
+    <!-- Black 87% -->
+    <color name="primary_text_default_material_light">#de000000</color>
+    <!-- Black 54% -->
+    <color name="secondary_text_material_light">#8a000000</color>
+    <!--Hint/Disabled 26% Black-->
+    <!--<color name="hint_disabled_text_material_light">@color/abc_primary_text_disable_only_material_light</color>-->
+    <color name="hint_disabled_text_material_light">#c4c6c8</color>
+
+    <!--Divider Black 12%-->
+    <color name="divider_material_black">@color/secondary_text_default_material_dark</color>
+
+    <!-- White 87% -->
+    <color name="primary_text_default_material_dark">#deffffff</color>
+    <!-- White 38% -->
+    <color name="secondary_text_material_dark">#61ffffff</color>
+    <!--Hint/Disabled 30% White-->
+    <color name="hint_disabled_text_material_dark">@color/abc_primary_text_disable_only_material_dark</color>
+
+    <!--Divider White 12%-->
+    <color name="divider_material_white">@color/secondary_text_default_material_light</color>
+
+    <!--Background Colours-->
+    <color name="translucent_background">#D9000000</color>
+
+</resources>

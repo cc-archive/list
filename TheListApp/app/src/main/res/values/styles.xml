@@ -1,0 +1,145 @@
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--ActionBar-->
+    <style name="ActionBarTransparent" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <!--<item name="android:background">@android:color/transparent</item>-->
+        <item name="background">@color/colorPrimaryLight</item>
+    </style>
+
+    <!--Button-->
+    <style name="ButtonStyle" parent="android:Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:layout_marginTop">@dimen/button_padding_vertical_material</item>
+        <item name="android:layout_marginBottom">@dimen/button_padding_vertical_material</item>
+        <item name="android:textColor">@color/app_white</item>
+    </style>
+
+    <!--CheckBox-->
+    <style name="CheckBoxStyle" parent="android:Widget.CompoundButton.CheckBox">
+        <!--<item name="android:button">@drawable/btn_check</item>-->
+        <!--TODO: make icons in colorPrimary-->
+    </style>
+
+    <!--EditTextStyle-->
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <!--Can make changes to default in here-->
+    </style>
+
+    <!--Button Styles-->
+    <style name="button_snackbar" parent="ButtonStyle">
+        <item name="android:background">@color/primary_material_dark</item>
+        <item name="android:height">@dimen/snackbar_height_single</item>
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="raised_button" parent="ButtonStyle">
+        <item name="android:background">@drawable/material_button</item>
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+        <item name="android:minHeight">50dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="flat_button_default" parent="ButtonStyle">
+        <item name="android:background">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/primary_text_default_material_light</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
+    <style name="flat_button_light" parent="ButtonStyle">
+        <item name="android:background">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
+    <style name="flat_button_dark" parent="ButtonStyle">
+        <item name="android:background">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
+    <!--Clickable Text-->
+    <style name="clickable_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="android:layout_marginTop">@dimen/button_padding_vertical_material</item>
+        <item name="android:layout_marginBottom">@dimen/button_padding_vertical_material</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--Input Fields-->
+    <style name="input_fields" parent="@style/EditTextStyle">
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+        <item name="android:textColorHint">@color/primary_text_disabled_material_dark</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <!--Activity styles-->
+    <style name="layout_main">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/fragment_vertical_margin</item>
+    </style>
+
+    <!--About The App Text Styles-->
+    <!--<style name="about_text_body" parent="@style/text_body">-->
+        <!--&lt;!&ndash;Any changes to default go here&ndash;&gt;-->
+        <!--<item name="android:autoLink">web</item>-->
+    <!--</style>-->
+
+    <!--<style name="about_text_title" parent="@style/text_list_item_title">-->
+    <!--</style>-->
+
+    <!--Fragment Styles-->
+    <style name="fragment_layout_main">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/fragment_vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@color/translucent_background</item>
+    </style>
+
+    <style name="fragment_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+    </style>
+
+    <style name="fragment_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="android:layout_below">@+id/account_title</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textColor">@color/secondary_text_default_material_dark</item>
+    </style>
+
+    <style name="fragment_editText" parent="@style/EditTextStyle">
+        <item name="android:textColor">@color/primary_text_default_material_dark</item>
+    </style>
+
+</resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/translucent_background"
+    android:paddingTop="@dimen/fragment_account_padding_top"
+    android:paddingBottom="@dimen/fragment_account_padding_bottom"
+    android:paddingLeft="@dimen/fragment_account_padding_horizontal"
+    android:paddingRight="@dimen/fragment_account_padding_horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:id="@+id/section_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/login_icon"
+            android:layout_height="@dimen/fragment_account_login_icon_height"
+            android:layout_width="@dimen/fragment_account_login_icon_width"
+            android:layout_centerInParent="true"
+            android:src="@drawable/terms_logo"
+            android:contentDescription="@string/cc_logo_contentDescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:id="@+id/section_text"
+        android:paddingTop="20dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:text="@string/account_fragment_title"
+            android:id="@+id/account_title"
+            style="@style/fragment_title" />
+        <TextView
+            style="@style/fragment_text"
+            android:text="@string/account_fragment_text"
+            android:id="@+id/random_item_text"
+            android:layout_below="@+id/account_title"
+            android:textColor="@color/primary_text_default_material_dark" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_fields"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+
+            <!-- Dummy view -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
+
+            <EditText android:id="@+id/accountName"
+                style="@style/input_fields"
+                android:hint="@string/email_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:textCursorDrawable="@null"/>
+
+            <EditText android:id="@+id/accountPassword"
+                style="@style/input_fields"
+                android:ems="10"
+                android:layout_below="@+id/accountName"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                android:hint="@string/password_hint"
+                android:layout_marginBottom="10dp"
+                android:textCursorDrawable="@null"/>
+
+            <LinearLayout android:id="@+id/buttonOptions"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/accountPassword">
+
+                <Button android:id="@+id/loginButton"
+                    style="@style/raised_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/login_button_label"
+                    android:layout_weight="1"/>
+
+                <Button android:id="@+id/cancelButton"
+                    style="@style/raised_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/cancel_button_label"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!--TODO: fix ime options when sign up is enabled-->
+            <!--<Button android:id="@+id/signUpButton"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:text="@string/signUpButton_label"-->
+                <!--android:padding="10dp"/>-->
+
+            <TextView
+                style="@style/clickable_text"
+                android:padding="5dp"
+                android:layout_marginBottom="0dp"
+                android:textColorLink="@color/secondary_text_material_dark"
+                android:textColor="@color/secondary_text_material_dark"
+                android:text="@string/new_account_text"
+                android:id="@+id/signUp"
+                android:layout_below="@+id/buttonOptions" />
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

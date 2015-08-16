@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ListTheme" parent="ListThemeBase">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="colorControlNormal">@color/colorSecondary</item>
+        <item name="colorControlActivated">@color/colorSecondaryDark</item>
+        <item name="colorControlHighlight">@color/colorSecondaryLight</item>
+        <item name="android:colorButtonNormal">@color/colorPrimary</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <!--<item name="android:buttonStyle">@style/ButtonStyle</item>-->
+    </style>
+
+    <style name="ListThemeStatus" parent="ListTheme">
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+    <!-- NavigationView Style -->
+    <style name="NavigationViewTheme" parent="ListTheme">
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="colorControlHighlight">@color/colorPrimaryUltraLight</item>
+    </style>
+
+    <style name="ListThemeNoActionBar" parent="ListTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+</resources>

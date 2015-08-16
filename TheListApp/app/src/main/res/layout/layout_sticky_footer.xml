@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_above="@+id/add_item_footer"
+        android:layout_height="1dp"
+        android:paddingTop="16dp"
+        android:background="@color/divider_material_black"/>
+
+    <RelativeLayout
+        android:id="@+id/add_item_footer"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+
+        <Button android:id="@+id/add_item_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/action_done"/>
+    </RelativeLayout>
+
+</LinearLayout>

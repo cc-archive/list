@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item_home"
+            android:icon="@drawable/ic_home_grey600_24dp"
+            android:checked="true"
+            android:title="@string/nav_item_home_label"/>
+        <item
+            android:id="@+id/nav_item_photos"
+            android:icon="@drawable/ic_photo_grey600_24dp"
+            android:title="@string/nav_item_photos_label"/>
+        <item
+            android:id="@+id/nav_item_categories"
+            android:icon="@drawable/ic_bookmark_grey600_24dp"
+            android:title="@string/nav_item_categories_label"/>
+        <item
+            android:id="@+id/nav_item_requests"
+            android:icon="@drawable/ic_add_to_photos_grey600_24dp"
+            android:title="@string/nav_item_requests_label"/>
+        <item
+            android:id="@+id/nav_item_about"
+            android:icon="@drawable/ic_info_grey600_24dp"
+            android:title="@string/nav_item_about_label"/>
+        <!--<item-->
+            <!--android:id="@+id/nav_item_feedback"-->
+            <!--android:icon="@drawable/ic_question_answer_grey600_24dp"-->
+            <!--android:title="@string/nav_item_feedback_label"/>-->
+        <item
+            android:id="@+id/nav_item_account"
+            android:icon="@drawable/ic_logout_grey600_24dp"
+            android:title="@string/log_out_nav_label"/>
+    </group>
+
+    <!-- TODO: uncomment when support lib bug has been fixed -->
+    <!--<item android:title="@string/drawer_subhead_label">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_item_about"-->
+                <!--android:icon="@drawable/ic_info_grey600_24dp"-->
+                <!--android:title="@string/nav_item_about_label"/>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_item_feedback"-->
+                <!--android:icon="@drawable/ic_question_answer_grey600_24dp"-->
+                <!--android:title="@string/nav_item_feedback_label"/>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_item_account"-->
+                <!--android:icon="@drawable/ic_logout_grey600_24dp"-->
+                <!--android:title="@string/log_out_nav_label"/>-->
+        <!--</menu>-->
+    <!--</item>-->
+
+</menu>
