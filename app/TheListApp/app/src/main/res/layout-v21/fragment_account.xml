@@ -34,13 +34,13 @@
         android:layout_marginBottom="20dp">
         <TextView
             android:text="@string/account_fragment_title"
-            android:id="@+id/account_title"
+            android:id="@+id/start_app_title"
             style="@style/fragment_title" />
         <TextView
             style="@style/fragment_text"
             android:text="@string/account_fragment_text"
             android:id="@+id/random_item_text"
-            android:layout_below="@+id/account_title"
+            android:layout_below="@+id/start_app_title"
             android:textColor="@color/primary_text_default_material_dark" />
     </RelativeLayout>
 

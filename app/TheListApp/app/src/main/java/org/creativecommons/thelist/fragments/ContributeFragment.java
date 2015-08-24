@@ -76,6 +76,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ContributeFragment extends Fragment {
     public static final String TAG = ContributeFragment.class.getSimpleName();
     private Context mContext;
@@ -86,32 +89,26 @@ public class ContributeFragment extends Fragment {
     private MessageHelper mMessageHelper;
     private ListUser mCurrentUser;
 
-    //Item Management
-    private UserListItem mCurrentItem;
-    private int activeItemPosition;
+    //UI Elements
+    private ViewGroup snackbarContainer;
 
-    private UserListItem mItemToBeUploaded;
-    private int uploadItemPosition;
-
-    private UserListItem mLastDismissedItem;
-    private int lastDismissedItemPosition;
-    private Uri mMediaUri;
+    @Bind(R.id.contribute_find_more) Button mFindMoreButton;
+    @Bind(R.id.contributeProgressBar) ProgressBar mProgressBar;
+    @Bind(R.id.contribute_upload_progressBar) ProgressBar mUploadProgressBar;
+    @Bind(R.id.contribute_empty_list_label) TextView mEmptyView;
 
     //RecyclerView
-    //private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
+    @Bind(R.id.contribute_recyclerview) RecyclerView mRecyclerView;
+
     private RecyclerView.Adapter mListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ViewGroup snackbarContainer;
+
+    //Item Management
     private List<UserListItem> mItemList = new ArrayList<>();
-
-    //Upload Elements
-    private ProgressBar mUploadProgressBar;
-
-    //UI Elements
-    private Button mFindMoreButton;
-    private ProgressBar mProgressBar;
-    private TextView mEmptyView;
+    private UserListItem mCurrentItem;
+    private UserListItem mItemToBeUploaded;
+    private UserListItem mLastDismissedItem;
+    private Uri mMediaUri;
 
     //Interface with Activity
     public LoginListener mCallback;
@@ -144,7 +141,11 @@ public class ContributeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contribute, container, false);
+        View view = inflater.inflate(R.layout.fragment_contribute, container, false);
+
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override
@@ -154,22 +155,14 @@ public class ContributeFragment extends Fragment {
         mContext = getActivity();
         Activity activity = getActivity();
 
+        snackbarContainer = (ViewGroup) activity.findViewById(R.id.main_content);
+
         //Helpers
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
         mCurrentUser = new ListUser(getActivity());
 
-        //Load UI Elements
-        snackbarContainer = (ViewGroup) activity.findViewById(R.id.main_content);
-        mProgressBar = (ProgressBar) activity.findViewById(R.id.contributeProgressBar);
-        mUploadProgressBar = (ProgressBar) activity.findViewById(R.id.uploadProgressBar);
-        mFindMoreButton = (Button) activity.findViewById(R.id.contribute_find_more);
-        mEmptyView = (TextView) activity.findViewById(R.id.empty_list_label);
-
-        //RecyclerView
-        //mSwipeRefreshLayout = (SwipeRefreshLayout)activity.findViewById(R.id.swipe_refresh_layout);
-        mRecyclerView = (RecyclerView)activity.findViewById(R.id.listRecyclerView);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
@@ -381,11 +374,10 @@ public class ContributeFragment extends Fragment {
                         dialog.show();
 
                         //Get item details for photo upload
-                        activeItemPosition = position;
+                        //activeItemPosition = position;
                         mCurrentItem = mItemList.get(position);
 
                         //Get item details for UNDO
-                        lastDismissedItemPosition = position;
                         mLastDismissedItem = mItemList.get(position);
 
                     }
@@ -531,10 +523,10 @@ public class ContributeFragment extends Fragment {
             mMessageHelper.showSingleChoiceDialog(mContext, title, content, choices,
                     new MaterialDialog.ListCallbackSingleChoice() {
                         @Override
-                        public boolean onSelection (MaterialDialog materialDialog, View view,
-                                                    int i,CharSequence charSequence) {
+                        public boolean onSelection(MaterialDialog materialDialog, View view,
+                                                   int i, CharSequence charSequence) {
 
-                            if(charSequence == (choices[0])){
+                            if (charSequence == (choices[0])) {
                                 //Positive response
                                 startPhotoUpload();
 
@@ -560,7 +552,6 @@ public class ContributeFragment extends Fragment {
 
     public void prepForPhotoUpload(Intent data){
         mItemToBeUploaded = mCurrentItem;
-        uploadItemPosition = activeItemPosition;
 
         if(data == null) {
             //Toast.makeText(this,getString(R.string.general_error),Toast.LENGTH_LONG).show();

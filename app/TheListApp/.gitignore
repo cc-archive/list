@@ -5,6 +5,7 @@
 .DS_Store
 /build
 
+.idea
 .idea/libraries
 app/build
 

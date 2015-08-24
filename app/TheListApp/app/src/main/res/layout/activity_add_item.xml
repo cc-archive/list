@@ -112,7 +112,7 @@
                         android:id="@+id/divider"
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:background="@color/md_divider_black"/>
+                        android:background="@color/divider_material_black"/>
 
                     <Button android:id="@+id/add_item_button"
                         android:layout_width="wrap_content"

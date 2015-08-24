@@ -9,7 +9,7 @@
 
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
-            android:id="@+id/uploadProgressBar"
+            android:id="@+id/contribute_upload_progressBar"
             android:visibility="gone"
             android:indeterminate="true"
             android:layout_marginTop="-7dp"
@@ -26,7 +26,7 @@
             <android.support.v7.widget.RecyclerView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/listRecyclerView"
+                android:id="@+id/contribute_recyclerview"
                 android:paddingBottom="44dp"/>
 
         <Button android:id="@+id/contribute_find_more"
@@ -52,7 +52,7 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/empty_list_label"
+        android:id="@+id/contribute_empty_list_label"
         android:gravity="center"
         android:layout_gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"

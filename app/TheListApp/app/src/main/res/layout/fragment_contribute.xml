@@ -8,7 +8,7 @@
         android:layout_height="wrap_content">
 
         <ProgressBar
-            android:id="@+id/uploadProgressBar"
+            android:id="@+id/contribute_upload_progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:visibility="gone"
             android:indeterminate="true"
@@ -34,7 +34,7 @@
             <android.support.v7.widget.RecyclerView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/listRecyclerView"/>
+                android:id="@+id/contribute_recyclerview"/>
         </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
@@ -45,7 +45,7 @@
         android:gravity="center"
         android:layout_gravity="center" />
 
-    <TextView android:id="@+id/empty_list_label"
+    <TextView android:id="@+id/contribute_empty_list_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

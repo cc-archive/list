@@ -53,6 +53,9 @@ import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 public class StartActivity extends FragmentActivity implements ExplainerFragment.OnClickListener,
         AccountFragment.AuthListener {
@@ -66,10 +69,10 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
     private SharedPreferencesMethods mSharedPref;
 
     //UI Elements
-    protected Button mAccountButton;
-    protected FrameLayout mFrameLayout;
-    protected Button mStartButton;
-    protected TextView mTermsLink;
+    @Bind(R.id.fragment_container) FrameLayout mFrameLayout;
+    @Bind(R.id.start_account_button) Button mAccountButton;
+    @Bind(R.id.start_new_button) Button mStartButton;
+    @Bind(R.id.cc_logo_label) TextView mTermsLink;
 
     //Fragment
     ExplainerFragment explainerFragment = new ExplainerFragment();
@@ -83,6 +86,10 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         setContentView(R.layout.activity_start);
 
         mContext = this;
+        ButterKnife.bind(this);
+
+        //Google Analytics Tracker
+        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
         am = AccountManager.get(getBaseContext());
         mCurrentUser = new ListUser(StartActivity.this);
@@ -96,15 +103,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-
-        //Google Analytics Tracker
-        ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
-
-        //UI Elements
-        mFrameLayout = (FrameLayout)findViewById(R.id.fragment_container);
-        mStartButton = (Button) findViewById(R.id.startButton);
-        mAccountButton = (Button) findViewById(R.id.accountButton);
-        mTermsLink = (TextView) findViewById(R.id.cc_logo_label);
 
         //“I’m new to the list”
         mStartButton.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +211,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
     @Override
     public void onNextClicked() {
-        //TODO: login user as anonymous
 
         Account account = mCurrentUser.getAccount();
 
