@@ -19,28 +19,13 @@
             layout="@layout/app_bar"
             android:elevation="6dp"/>
 
-        <include layout="@layout/helper_message"
-            android:visibility="gone"
+        <fragment
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/category_helper_message"/>
+            android:name="org.creativecommons.thelist.fragments.CategoryFragment"
+            tools:context="org.creativecommons.thelist.fragments.CategoryFragment"
+            tools:layout="@layout/fragment_category"/>
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <ProgressBar android:id="@+id/category_progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_centerInParent="true"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/category_list_grid"/>
-
-        </RelativeLayout>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView

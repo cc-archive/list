@@ -126,7 +126,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         final CategoryListItem c = categoryItems.get(position);
         final String catId = String.valueOf(c.getCategoryID());
 
-        holder.categoryNameLabel.setText(c.getCategoryName().toUpperCase());
+        holder.categoryNameLabel.setText(c.getCategoryName());
 
         //Item Background Color
         if(c.getCategoryColour() != null){

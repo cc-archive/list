@@ -154,7 +154,7 @@
     <string name="add_category_toast_error">Problem adding category</string>
     <string name="remove_category_toast_error">Problem removing category</string>
     <string name="add_category_toast_success">category added</string>
-    <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
+    <string name="category_helper_message_label">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
 
     <!-- Account Activity -->
     <string name="account_text_label">Login to your CCID</string>
@@ -258,5 +258,10 @@
     <string name="remove_item_toast_error">There was a problem deleting your item. Pull to refresh.</string>
     <string name="gallery_login_button_label">LOG IN NOW</string>
     <string name="contribute_find_more_button_label">FIND MORE</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="helper_message_confirm_button_label">got it</string>
+    <string name="category_helper_title_label">Pick some categories!</string>
 
 </resources>
