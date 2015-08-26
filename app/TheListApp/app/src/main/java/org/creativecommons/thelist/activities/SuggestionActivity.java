@@ -28,8 +28,6 @@ import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -41,12 +39,12 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.layouts.AutoResizeTextView;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListApplication;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.api.NetworkUtils;
-import org.creativecommons.thelist.api.RequestMethods;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -318,25 +316,25 @@ public class SuggestionActivity extends Activity {
 //    ------------------------------------------------------------------------------------------
 //    ------------------------------------------------------------------------------------------
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_suggestion, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_done) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_suggestion, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_done) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 } //RandomActivity

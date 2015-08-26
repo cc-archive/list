@@ -38,7 +38,7 @@ public class MyCategoriesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category);
+        setContentView(R.layout.activity_my_categories);
 
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
@@ -67,7 +67,7 @@ public class MyCategoriesActivity extends BaseActivity {
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_category_list, menu);
+//        getMenuInflater().inflate(R.menu.menu_my_categories, menu);
 //        this.menu = menu;
 //        return true;
 //    }

@@ -24,28 +24,12 @@
             android:label="@string/app_name_short"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-        <!-- TODO: remove once BaseActivity has replaced everything -->
-        <!-- <activity -->
-        <!-- android:name=".activities.MainActivity" -->
-        <!-- android:label="@string/title_activity_drawer" -->
-        <!-- android:launchMode="singleTask" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@style/ListThemeNoActionBar" -->
-        <!-- android:windowSoftInputMode="adjustResize" > -->
-        <!-- <intent-filter android:label="@string/title_activity_drawer"> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
@@ -69,8 +53,8 @@
         <activity
             android:name=".activities.MyCategoriesActivity"
             android:label="@string/title_activity_category_list"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/ListThemeNoActionBar" >
         </activity>
         <activity
@@ -111,6 +95,18 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.MyPhotosActivity"
+            android:label="@string/title_activity_my_photos" >
+        </activity>
+        <activity
+            android:name=".activities.OnboardingActivity"
+            android:label="@string/title_activity_onboarding"
+            android:parentActivityName=".activities.StartActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.StartActivity" />
+        </activity>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -147,11 +143,6 @@
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
-
-        <activity
-            android:name=".activities.MyPhotosActivity"
-            android:label="@string/title_activity_my_photos" >
-        </activity>
     </application>
 
 </manifest>

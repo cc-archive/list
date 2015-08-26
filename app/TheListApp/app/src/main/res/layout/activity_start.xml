@@ -5,16 +5,15 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_margin="30dp"
+        android:layout_margin="45dp"
         android:orientation="vertical"
-        android:weightSum="5"
+        android:weightSum="10"
         tools:context="org.creativecommons.thelist.activities.StartActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
-            android:layout_marginBottom="20dp">
+            android:layout_weight="6">
 
             <TextView
                 android:layout_width="match_parent"
@@ -23,27 +22,33 @@
                 android:text="@string/app_name_short"
                 android:id="@+id/start_app_title"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:layout_marginTop="130dp"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:layout_marginTop="90dp"/>
 
             <TextView
+                android:id="@+id/start_app_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="powered by Creative Commons"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/secondary_text_default_material_light"
-                android:id="@+id/start_app_subtitle"
                 android:gravity="center"
                 android:layout_below="@id/start_app_title"
                 android:paddingBottom="50dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
 
             <Button
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/start_button_label"
                 android:id="@+id/start_new_button"
-                android:textColor="@color/app_white"
-                android:layout_below="@+id/start_app_subtitle" />
+                android:textColor="@color/app_white" />
 
             <Button
                 android:layout_height="wrap_content"
@@ -54,15 +59,15 @@
                 android:layout_below="@+id/start_new_button" />
 
             <TextView
+                android:id="@+id/app_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                style="@style/TextAppearance.AppCompat.Caption"
                 android:text="@string/app_version"
-                android:id="@+id/app_version"
-                android:layout_below="@id/start_account_button"
-                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/start_account_button"
                 android:layout_centerHorizontal="true"
                 android:paddingTop="10dp" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -70,6 +75,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/cc_logo_layout">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,15 +85,17 @@
                 android:layout_above="@+id/cc_logo_label"
                 android:layout_marginBottom="5dp"
                 android:layout_centerHorizontal="true" />
+
             <TextView
+                android:id="@+id/cc_logo_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/alpha_release_terms_label"
-                android:id="@+id/cc_logo_label"
+                android:text="@string/terms_and_conditions_label"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true" />
-
         </RelativeLayout>
+
     </LinearLayout>
 
     <FrameLayout android:id="@+id/fragment_container"

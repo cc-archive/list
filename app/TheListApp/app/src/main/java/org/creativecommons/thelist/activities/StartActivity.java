@@ -154,6 +154,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
                         }
                     } //onResult
                 }); //getAvailableFullAccounts
+
             }
         }); //accountButton
 
@@ -170,8 +171,6 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
         Boolean analyticsViewed = mSharedPref.getAnalyticsViewed();
 
         if(!analyticsViewed) {
-            //Display Google Analytics Message
-            Log.v(TAG, "VIEWED: " + String.valueOf(analyticsViewed));
             //Request Permissions
             mMessageHelper.enableFeatureDialog(mContext, getString(R.string.dialog_ga_title),
                     getString(R.string.dialog_ga_message),
@@ -226,7 +225,8 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
                     Log.v(TAG, "USER ID: " + userID);
 
-                    Intent intent = new Intent(StartActivity.this, MyCategoriesActivity.class);
+                    //TODO: launch category fragment
+                    Intent intent = new Intent(StartActivity.this, OnboardingActivity.class);
                     startActivity(intent);
                 }
 
@@ -250,7 +250,7 @@ public class StartActivity extends FragmentActivity implements ExplainerFragment
 
         } else {
             //TODO: what happens if you already have an account on the phone: account picker?
-            Intent intent = new Intent(StartActivity.this, MyCategoriesActivity.class);
+            Intent intent = new Intent(StartActivity.this, OnboardingActivity.class);
             startActivity(intent);
         }
 

@@ -23,7 +23,6 @@ package org.creativecommons.thelist.fragments;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,14 +34,16 @@ import android.widget.TextView;
 
 import org.creativecommons.thelist.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ExplainerFragment extends Fragment {
     public static final String TAG = ExplainerFragment.class.getSimpleName();
 
-    private Context mContext;
+    @Bind(R.id.explainer_next_button)Button mNextButton;
+    @Bind(R.id.explainer_text)TextView mTextView;
+    @Bind(R.id.explainer_image)ImageView mImageView;
 
-    protected Button mNextButton;
-    protected TextView mTextView;
-    protected ImageView mImageView;
     protected int count;
 
     //Text/Image Resources
@@ -56,68 +57,11 @@ public class ExplainerFragment extends Fragment {
 
     //LISTENER
     public interface OnClickListener {
-        public void onNextClicked();
+        void onNextClicked();
     }
 
     public ExplainerFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_explainer, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mContext = getActivity();
-        Activity activity = getActivity();
-
-        //UI Elements
-        mNextButton = (Button) activity.findViewById(R.id.nextButton);
-        mTextView = (TextView) activity.findViewById(R.id.explainer_text);
-        mImageView = (ImageView) activity.findViewById(R.id.explainer_image);
-
-        explainerText = activity.getResources().getStringArray
-                (R.array.onboarding_explainers);
-        explainerButtonText = activity.getResources().getStringArray
-                (R.array.onboarding_button_text);
-
-        //TODO: if clickCount < array.length(), show next item in array else, send onNextClicked()
-        count = 0;
-        //Get the first explainer (at [0])
-        setExplainerContent();
-
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(count < explainerText.length) {
-                    setExplainerContent();
-                } else {
-                    mCallback.onNextClicked();
-                }
-            }
-        });
-
-    } //onActivityCreated
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    public void setExplainerContent(){
-        //Set Image/Text Resources
-        int id = getResources().getIdentifier("explainer" + String.valueOf(count + 1), "drawable",
-                getActivity().getPackageName());
-
-        mImageView.setImageResource(id);
-        mTextView.setText(explainerText[count]);
-        mNextButton.setText(explainerButtonText[count]);
-        count ++;
     }
 
     @Override
@@ -129,6 +73,57 @@ public class ExplainerFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + activity.getString(R.string.terms_callback_exception_message));
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_explainer, container, false);
+
+        ButterKnife.bind(this, view);
+
+        return view;
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Activity activity = getActivity();
+
+        explainerText = activity.getResources().getStringArray
+                (R.array.onboarding_explainers);
+        explainerButtonText = activity.getResources().getStringArray
+                (R.array.onboarding_button_text);
+
+        count = 0;
+
+        //Get the first explainer (at [0])
+        setExplainerContent();
+
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (count < explainerText.length) {
+                    setExplainerContent();
+                } else {
+                    mCallback.onNextClicked();
+                }
+            }
+        });
+
+    } //onActivityCreated
+
+    public void setExplainerContent(){
+        //Set Image/Text Resources
+        int id = getResources().getIdentifier("explainer" + String.valueOf(count + 1), "drawable",
+                getActivity().getPackageName());
+
+        mImageView.setImageResource(id);
+        mTextView.setText(explainerText[count]);
+        mNextButton.setText(explainerButtonText[count]);
+        count ++;
     }
 
     @Override

@@ -4,25 +4,34 @@ package org.creativecommons.thelist.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
 
 import org.creativecommons.thelist.R;
+import org.creativecommons.thelist.activities.HomeActivity;
+import org.creativecommons.thelist.activities.OnboardingActivity;
 import org.creativecommons.thelist.adapters.CategoryAdapter;
 import org.creativecommons.thelist.adapters.CategoryListItem;
 import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.ApiConstants;
+import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.json.JSONArray;
@@ -40,6 +49,9 @@ public class CategoryFragment extends Fragment {
     public static final String TAG = CategoryFragment.class.getSimpleName();
 
     private Context mContext;
+    private Activity mActivity;
+
+    private ListUser mCurrentUser;
 
     //Helpers
     private MessageHelper mMessageHelper;
@@ -54,11 +66,11 @@ public class CategoryFragment extends Fragment {
     @Bind(R.id.category_progressBar)ProgressBar mProgressBar;
     @Bind(R.id.categoryRecyclerView) RecyclerView mRecyclerView;
 
-    private Menu menu;
-
     private RecyclerView.Adapter mCategoryAdapter;
     private LinearLayoutManager mLayoutManager;
     private List<CategoryListItem> mCategoryList = new ArrayList<>();
+
+    private Menu menu;
 
 
     // --------------------------------------------------------
@@ -67,6 +79,11 @@ public class CategoryFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +92,8 @@ public class CategoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
 
         mContext = getActivity();
-        Activity activity = getActivity();
+        mActivity = getActivity();
+        mCurrentUser = new ListUser(mActivity);
 
         ButterKnife.bind(this, view);
 
@@ -84,7 +102,7 @@ public class CategoryFragment extends Fragment {
         mSharedPref = new SharedPreferencesMethods(mContext);
 
         mLayoutManager = new LinearLayoutManager(mContext);
-        mCategoryAdapter = new CategoryAdapter(activity, mCategoryList);
+        mCategoryAdapter = new CategoryAdapter(getActivity(), mCategoryList);
         mRecyclerView.setAdapter(mCategoryAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
@@ -99,7 +117,7 @@ public class CategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //Set up Helper Message if new user
-        if(mSharedPref.getCategoryHelperViewed()){
+        if(!mSharedPref.getCategoryHelperViewed()){
 
             final View helperMessage = getActivity().findViewById(R.id.category_helper_message);
             Button helperCloseButton = (Button) helperMessage.findViewById(R.id.helper_close_button);
@@ -108,7 +126,7 @@ public class CategoryFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    helperMessage.setVisibility(View.GONE);
+                    fadeOutView(helperMessage);
                     mSharedPref.setCategoryHelperViewed(true);
                 }
             });
@@ -131,13 +149,12 @@ public class CategoryFragment extends Fragment {
                         Log.v(TAG, "> getUserCategories > onSuccess " + response.toString());
 
                         //Create list of category ids
-                        if(response.length() > 0) {
+                        if (response.length() > 0) {
                             //Get array of catIds
-                            for(int i = 0; i < response.length(); i++){
+                            for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject singleCat = response.getJSONObject(i);
                                     mUserCategories.add(i, singleCat.getInt("categoryid"));
-                                    //Log.v(TAG, "pre-existing catgory added: " + singleCat.getInt("categoryid"));
 
                                 } catch (JSONException e) {
                                     Log.e(TAG, e.getMessage());
@@ -149,6 +166,7 @@ public class CategoryFragment extends Fragment {
                         updateList();
 
                     } //getUserCategories > onSuccess
+
                     @Override
                     public void onFail(VolleyError error) { //could not get user’s categories
                         Log.v(TAG, "> getUserCategories > onFail " + error.toString());
@@ -157,6 +175,7 @@ public class CategoryFragment extends Fragment {
                     }
                 });
             } //getCategories > onSuccess
+
             @Override
             public void onFail(VolleyError error) {
                 Log.d(TAG, "> getCategories > onFail: " + error.getMessage());
@@ -207,7 +226,70 @@ public class CategoryFragment extends Fragment {
 
             mCategoryAdapter.notifyDataSetChanged();
 
+            if(getActivity() instanceof OnboardingActivity){
+                MenuItem doneButton = menu.findItem(R.id.action_done);
+                doneButton.setVisible(true);
+            }
+
         }
     } //updateList
+
+    private void fadeOutView(final View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(250);
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationStart(Animation animation) {
+            }
+        });
+
+        view.startAnimation(fadeOut);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_my_categories, menu);
+        this.menu = menu;
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_done) {
+
+            Intent intent;
+
+            //TODO: adjust for onboarding?
+//            if(mCurrentUser.isAnonymousUser() && mSharedPref.getOfflineUserList().size() == 0){
+//
+//                intent = new Intent(mActivity, SuggestionActivity.class);
+//                startActivity(intent);
+//
+//            } else {
+                intent = new Intent(mActivity, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+//            }
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 } //CategoryFragment

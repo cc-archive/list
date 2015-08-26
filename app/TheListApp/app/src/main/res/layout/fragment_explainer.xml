@@ -14,8 +14,9 @@
         android:layout_weight="3">
         <ImageView
             android:id="@+id/explainer_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="50dp"
             android:src="@drawable/terms_logo"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
@@ -30,11 +31,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:text="You‘ll be helping creators tell their stories – on Wikipedia, social media, in the news, or in campaigns.\n\nTogether were building a commons of creativity and knowledge for everyone"
             android:id="@+id/explainer_text"
+            android:text="You’ll be helping creators tell their stories – on Wikipedia, social media, in the news, or in campaigns.\n\nTogether we are building a commons of creativity and knowledge for everyone"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"/>
@@ -43,14 +43,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/section_text"
+        android:id="@+id/explainer_footer"
         android:layout_weight="1">
         <Button
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text=""
+            android:layout_height="64dp"
+            android:layout_width="wrap_content"
+            android:minWidth="200dp"
+            android:maxWidth="300dp"
+            android:text="Cool sounds good!"
             android:textColor="@color/app_white"
-            android:id="@+id/nextButton"
+            android:id="@+id/explainer_next_button"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 </LinearLayout>

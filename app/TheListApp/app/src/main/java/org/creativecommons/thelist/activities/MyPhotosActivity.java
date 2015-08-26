@@ -140,7 +140,7 @@ public class MyPhotosActivity extends BaseActivity implements
                         //load default view
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .replace(R.id.main_content_container, myPhotosFragment)
+                                .replace(R.id.fragment_container, myPhotosFragment)
                                 .commitAllowingStateLoss();
 
                     }

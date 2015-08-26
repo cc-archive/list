@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include android:id="@+id/app_bar"
+        layout="@layout/app_bar"
+        android:elevation="6dp"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="org.creativecommons.thelist.fragments.CategoryFragment"
+        tools:context="org.creativecommons.thelist.fragments.CategoryFragment"
+        tools:layout="@layout/fragment_category"/>
+
+</LinearLayout>

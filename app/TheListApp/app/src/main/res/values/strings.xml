@@ -187,7 +187,7 @@
     <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
     <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
     <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
-    <string name="alpha_release_terms_label"><a href="https://github.com/creativecommons/list/blob/master/docs/beta-TOS.md">Use of this beta release of The List Powered by Creative Commons is subject to these terms and conditions</a></string>
+    <string name="terms_and_conditions_label"><a href="https://github.com/creativecommons/list/blob/master/docs/beta-TOS.md">Beta Terms and Conditions</a></string>
 
     <!--Add Item Fragment-->
     <string name="category_prompt">Choose a category</string>
@@ -223,7 +223,7 @@
     <string name="token_bundle_key">sessionToken</string>
     <string name="switch_accounts_menu_label">Switch Accounts</string>
     <string name="add_account_menu_label">Add Account</string>
-    <string name="app_version">Version 4.0 (July 28 2015)</string>
+    <string name="app_version">Version 5.0 (INSERT DATE)</string>
     <string name="gallery_menu_label">My Photos</string>
     <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
 
@@ -263,5 +263,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="helper_message_confirm_button_label">got it</string>
     <string name="category_helper_title_label">Pick some categories!</string>
+    <string name="title_activity_onboarding">Pick Categories</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
