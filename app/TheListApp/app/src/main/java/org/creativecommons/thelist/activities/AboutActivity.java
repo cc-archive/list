@@ -20,6 +20,7 @@
 
 package org.creativecommons.thelist.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
@@ -48,12 +49,6 @@ public class AboutActivity extends AppCompatActivity {
 
     } //onCreate
 
-    //onBackPressed
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
     @Override
     public void onStart(){
         super.onStart();
@@ -66,8 +61,13 @@ public class AboutActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+    }
 
-//    @Override
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_about, menu);

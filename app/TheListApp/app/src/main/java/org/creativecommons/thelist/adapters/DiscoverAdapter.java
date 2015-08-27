@@ -35,20 +35,21 @@ import com.squareup.picasso.Picasso;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.models.Photo;
+import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerViewUtils;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder> {
 
     private Activity mActivity;
 
     private LayoutInflater inflater;
-    private List<Photo> photoItems;
+    private ArrayList<Photo> photoItems;
 
     private RecyclerViewUtils.cardSelectionListener cardListener;
 
-    public DiscoverAdapter(Activity activity, List<Photo> photoItems, RecyclerViewUtils.cardSelectionListener listener){
+    public DiscoverAdapter(Activity activity, ArrayList<Photo> photoItems, RecyclerViewUtils.cardSelectionListener listener){
         this.photoItems = photoItems;
         this.mActivity = activity;
         this.cardListener = listener;
@@ -56,9 +57,9 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Discov
         inflater = LayoutInflater.from(activity);
     }
 
-    public void updateList(List<Photo> data) {
+    public void updateList(ArrayList<Photo> data) {
         this.photoItems = data;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -76,7 +77,7 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Discov
 
         //Card Header
         //TODO: set profile pic
-        holder.title.setText(photoItem.title);
+        holder.title.setText(MessageHelper.capitalize(photoItem.title));
         holder.byline.setText(photoItem.username);
 
         //Card Body

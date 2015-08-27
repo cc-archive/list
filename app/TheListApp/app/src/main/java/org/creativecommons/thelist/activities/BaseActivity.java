@@ -28,7 +28,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
     public ListUser mCurrentUser;
 
     private Toolbar mToolbar;
-    //private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // Navigation drawer
     private DrawerLayout mDrawerLayout;
@@ -63,8 +62,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 
         setUpToolbar();
         setUpNavigation();
-
-        //trySetUpSwipeRefresh();
 
         //Fade in main content
         View mainContent = findViewById(R.id.main_content);
@@ -194,7 +191,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
                     new android.os.Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            //menuItem.setChecked(true);
                             startActivity(finalIntent);
                         }
                     }, NAVDRAWER_LAUNCH_DELAY);
@@ -216,15 +212,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
         });
 
     } //setUpNavigation
-
-//    private void trySetUpSwipeRefresh(){
-//        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-//
-//        if(mSwipeRefreshLayout != null){
-//
-//        }
-//
-//    }
 
     private void handleUserAccount(final ListUser.AuthCallback callback){
         //TODO: bring up account picker dialog w/ new option
@@ -254,7 +241,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
                                             "got authtoken: " + authtoken);
 
                                     updateDrawerHeader();
-
                                     callback.onAuthed(authtoken);
                                 }
                             });

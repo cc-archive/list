@@ -4,21 +4,19 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.HomePagerAdapter;
 import org.creativecommons.thelist.fragments.ContributeFragment;
 import org.creativecommons.thelist.fragments.DiscoverFragment;
-import org.creativecommons.thelist.layouts.MultiSwipeRefreshLayout;
 
-public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
+public class HomeActivity extends BaseActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
-    private MultiSwipeRefreshLayout mSwipeRefreshLayout;
+    //private MultiSwipeRefreshLayout mSwipeRefreshLayout;
     private ViewPager mViewPager;
 
     private DiscoverFragment mDiscoverFragment;
@@ -45,14 +43,13 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        mSwipeRefreshLayout = (MultiSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        //mSwipeRefreshLayout.setCanChildScrollUpCallback(this);
+        //mSwipeRefreshLayout = (MultiSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         //Listen for which fragment is visible based on tab position
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                mViewPager.setCurrentItem(tab.getPosition());
                 mCurrentTabPosition = tab.getPosition();
             }
 
@@ -68,38 +65,43 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         });
 
         //on refresh, use tab position to refresh the visible fragment
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//
+//                switch(mCurrentTabPosition) {
+//                    case 0:
+//                        mDiscoverFragment.displayFeed();
+//                        break;
+//                    case 1:
+//                        mContributeFragment.displayUserItems();
+//                        break;
+//                }
+//
+//                mSwipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
 
-                switch(mCurrentTabPosition) {
-                    case 0:
-                        mDiscoverFragment.displayFeed();
-                        break;
-                    case 1:
-                        mContributeFragment.displayUserItems();
-                        break;
-                }
 
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float v, int i1) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
-            }
-        });
+//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                if(positionOffset == 0){
+//                    mSwipeRefreshLayout.setEnabled(true);
+//                } else {
+//                    mSwipeRefreshLayout.setEnabled(false);
+//                }
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+//            }
+//        });
 
     } //onCreate
 
@@ -110,13 +112,15 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         homePagerAdapter.addFragment(mDiscoverFragment, "Discover");
         homePagerAdapter.addFragment(mContributeFragment, "Contribute");
         viewPager.setAdapter(homePagerAdapter);
+        viewPager.setOffscreenPageLimit(1);
+
     }
 
-    public void enableDisableSwipeRefresh(boolean enable) {
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setEnabled(enable);
-        }
-    }
+//    public void enableDisableSwipeRefresh(boolean enable) {
+//        if (mSwipeRefreshLayout != null) {
+//            mSwipeRefreshLayout.setEnabled(enable);
+//        }
+//    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -126,26 +130,26 @@ public class HomeActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         mNavigationView.getMenu().findItem(R.id.nav_item_home).setChecked(true);
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (i == 0) {
-            mSwipeRefreshLayout.setEnabled(true);
-        } else {
-            mSwipeRefreshLayout.setEnabled(false);
-        }
-    }
+//    @Override
+//    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+//        if (i == 0) {
+//            mSwipeRefreshLayout.setEnabled(true);
+//        } else {
+//            mSwipeRefreshLayout.setEnabled(false);
+//        }
+//    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mAppBarLayout.addOnOffsetChangedListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mAppBarLayout.removeOnOffsetChangedListener(this);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mAppBarLayout.addOnOffsetChangedListener(this);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        mAppBarLayout.removeOnOffsetChangedListener(this);
+//    }
 
     // --------------------------------------------------------
     // Fragment Callbacks

@@ -80,6 +80,9 @@
             android:label="@string/title_activity_about"
             android:parentActivityName=".activities.HomeActivity"
             android:theme="@style/ListThemeStatus" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.creativecommons.thelist.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.AddItemActivity"
@@ -89,9 +92,7 @@
             android:theme="@style/ListThemeStatus" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>

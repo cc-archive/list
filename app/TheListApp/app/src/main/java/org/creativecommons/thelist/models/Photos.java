@@ -4,10 +4,10 @@ package org.creativecommons.thelist.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Photos implements Parcelable {
-    public List<Photo> photos;
+    public ArrayList<Photo> photos;
     public int nextPage;
 
     public Photos(){

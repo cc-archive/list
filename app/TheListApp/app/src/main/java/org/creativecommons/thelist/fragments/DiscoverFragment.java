@@ -24,6 +24,7 @@ package org.creativecommons.thelist.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,39 +40,42 @@ import org.creativecommons.thelist.api.ListService;
 import org.creativecommons.thelist.models.Photo;
 import org.creativecommons.thelist.models.Photos;
 import org.creativecommons.thelist.utils.ListUser;
-import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerViewUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DiscoverFragment extends android.support.v4.app.Fragment implements RecyclerViewUtils.cardSelectionListener  {
+public class DiscoverFragment extends android.support.v4.app.Fragment {
     public static final String TAG = DiscoverFragment.class.getSimpleName();
+
+    private static final String DISCOVER_LIST_KEY = "discover_list";
 
     private Context mContext;
     private Activity mActivity;
 
     private ListUser mCurrentUser;
-    private MessageHelper mMessageHelper;
 
     //API
     private ListApi api;
     private ListService list;
 
+    //Photo feed
+    private int mCurrentPage = -1;
+    private ArrayList<Photo> mPhotoList = new ArrayList<>();
+
     //RecyclerView
-    private RecyclerView mDiscoverRecyclerView;
-    private RecyclerView.Adapter mDiscoverAdapter;
+    @Bind(R.id.discoverRecyclerView) RecyclerView mDiscoverRecyclerView;
+    @Bind(R.id.swipe_refresh_layout) android.support.v4.widget.SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private DiscoverAdapter mDiscoverAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerViewUtils.cardSelectionListener mCardSelectionListener;
-
-    //Photo feed
-    private int mCurrentPage = 0;
-    private List<Photo> mPhotoList = new ArrayList<>();
 
     // --------------------------------------------------------
 
@@ -84,14 +88,15 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_discover, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_discover, container, false);
+
+        ButterKnife.bind(this, rootView);
 
         mContext = getActivity();
         mActivity = getActivity();
@@ -101,79 +106,116 @@ public class DiscoverFragment extends android.support.v4.app.Fragment implements
         api = new ListApi();
         list = api.getService();
 
-        //RecyclerView
-        mDiscoverRecyclerView = (RecyclerView)view.findViewById(R.id.discoverRecyclerView);
-        mCardSelectionListener = this;
-        mLayoutManager = new LinearLayoutManager(mContext);
+        mLayoutManager = new LinearLayoutManager(mActivity);
         mDiscoverRecyclerView.setLayoutManager(mLayoutManager);
         mDiscoverRecyclerView.setHasFixedSize(true);
 
-        displayFeed();
+        initRecyclerView();
 
-        return view;
+        mDiscoverAdapter = new DiscoverAdapter(mActivity, mPhotoList, mCardSelectionListener);
+        mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
+
+        return rootView;
 
     } //onCreateView
 
-    public void displayFeed(){
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        //Request items for Discover feed
+        if(savedInstanceState != null && savedInstanceState.containsKey(DISCOVER_LIST_KEY)) {
+            mPhotoList = savedInstanceState.getParcelableArrayList(DISCOVER_LIST_KEY);
+        } else {
+            displayFeed();
+        }
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                displayFeed();
+            }
+        });
+
+    } //onActivityCreated
+
+    public void displayFeed() {
+
         list.getPhotoFeed(new Callback<Photos>() {
             @Override
             public void success(Photos photos, Response response) {
                 Log.d(TAG, "getPhotoFeed > success: " + response.getStatus());
 
-                mPhotoList = photos.photos;
                 mCurrentPage = photos.nextPage;
 
-                mDiscoverAdapter = new DiscoverAdapter(mActivity, mPhotoList, mCardSelectionListener);
-                mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
+                if(mCurrentPage > 0){
+                    ArrayList<Photo> feedList = photos.photos;
+
+                    for(Photo photo : feedList){
+                        mPhotoList.add(photo);
+                    }
+
+                } else {
+                    mPhotoList = photos.photos;
+                }
+
+                mDiscoverAdapter.updateList(mPhotoList);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "getPhotoFeed > failure: " + error.getMessage());
 
-                //TODO: show error message
+                Toast.makeText(mContext, "There was problem refreshing your feed",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
     } //displayFeed
 
-    @Override
-    public void onFlag(String photoID) {
-        //TODO: item flagged
-    }
+    public void initRecyclerView() {
 
-    @Override
-    public void onLike(String photoID) {
-        //TODO: on item liked
-
-
-    }
-
-    @Override
-    public void onBookmark(String photoID) {
-        //TODO: on item bookmarked
-
-    }
-
-    @Override
-    public void onContribute(String itemID) {
-        //TODO: on item add to contribute
-        Toast.makeText(mContext, "Added to Contribute tab", Toast.LENGTH_SHORT).show();
-
-        list.addItem(mCurrentUser.getUserID(), itemID, new Callback<Response>() {
+        //RecyclerView
+        mCardSelectionListener = new RecyclerViewUtils.cardSelectionListener() {
             @Override
-            public void success(Response response, Response response2) {
-                Log.v(TAG, "onContribute > addItem, success: " + response.getStatus());
+            public void onFlag(String photoID) {
 
-                Toast.makeText(mContext, "success added", Toast.LENGTH_SHORT).show();
             }
+
             @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
+            public void onLike(String photoID) {
+
             }
-        });
+
+            @Override
+            public void onBookmark(String photoID) {
+
+            }
+
+            @Override
+            public void onContribute(String itemID) {
+                //TODO: on item add to contribute
+                Toast.makeText(mContext, "Added to Contribute tab", Toast.LENGTH_SHORT).show();
+
+                list.addItem(mCurrentUser.getUserID(), itemID, new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Log.v(TAG, "onContribute > addItem, success: " + response.getStatus());
+
+                        Toast.makeText(mContext, "success added", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "addItem > failure: " + error.getMessage());
+                    }
+                });
+            }
+        };
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelableArrayList(DISCOVER_LIST_KEY, mPhotoList);
+    }
 
 } //DiscoverFragment

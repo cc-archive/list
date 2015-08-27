@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,15 +54,15 @@ import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.activities.SuggestionActivity;
 import org.creativecommons.thelist.adapters.UserListAdapter;
 import org.creativecommons.thelist.adapters.UserListItem;
+import org.creativecommons.thelist.api.NetworkUtils;
+import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.authentication.AccountGeneral;
 import org.creativecommons.thelist.layouts.DividerItemDecoration;
 import org.creativecommons.thelist.utils.ApiConstants;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.MessageHelper;
-import org.creativecommons.thelist.api.NetworkUtils;
 import org.creativecommons.thelist.utils.PhotoConstants;
 import org.creativecommons.thelist.utils.RecyclerItemClickListener;
-import org.creativecommons.thelist.api.RequestMethods;
 import org.creativecommons.thelist.utils.SharedPreferencesMethods;
 import org.creativecommons.thelist.utils.Uploader;
 import org.json.JSONArray;
@@ -99,8 +100,9 @@ public class ContributeFragment extends Fragment {
 
     //RecyclerView
     @Bind(R.id.contribute_recyclerview) RecyclerView mRecyclerView;
+    @Bind(R.id.swipe_refresh_layout) android.support.v4.widget.SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private RecyclerView.Adapter mListAdapter;
+    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     //Item Management
@@ -118,7 +120,7 @@ public class ContributeFragment extends Fragment {
 
     //LISTENERS
     public interface LoginListener {
-        public void isLoggedIn();
+        void isLoggedIn();
     }
 
     public ContributeFragment() {
@@ -145,6 +147,8 @@ public class ContributeFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        snackbarContainer = (ViewGroup) getActivity().findViewById(R.id.main_content);
+
         return view;
     }
 
@@ -155,21 +159,19 @@ public class ContributeFragment extends Fragment {
         mContext = getActivity();
         Activity activity = getActivity();
 
-        snackbarContainer = (ViewGroup) activity.findViewById(R.id.main_content);
-
         //Helpers
         mMessageHelper = new MessageHelper(mContext);
         mRequestMethods = new RequestMethods(mContext);
         mSharedPref = new SharedPreferencesMethods(mContext);
-        mCurrentUser = new ListUser(getActivity());
+        mCurrentUser = new ListUser(activity);
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
         mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(mContext);
-        mListAdapter = new UserListAdapter(mContext, mItemList);
-        mRecyclerView.setAdapter(mListAdapter);
+        mAdapter = new UserListAdapter(mContext, mItemList);
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         initRecyclerView();
@@ -179,6 +181,13 @@ public class ContributeFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SuggestionActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                displayUserItems();
             }
         });
 
@@ -315,8 +324,8 @@ public class ContributeFragment extends Fragment {
                     mEmptyView.setVisibility(View.GONE);
                     Collections.reverse(mItemList);
 
-                    mListAdapter.notifyDataSetChanged();
-                    //mSwipeRefreshLayout.setRefreshing(false);
+                    mAdapter.notifyDataSetChanged();
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             } //onSuccess
 
@@ -350,7 +359,7 @@ public class ContributeFragment extends Fragment {
                     mEmptyView.setVisibility(View.VISIBLE);
                 }
 
-                mListAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
                 //mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -422,7 +431,7 @@ public class ContributeFragment extends Fragment {
                             mRequestMethods.removeItemFromUserList(mLastDismissedItem.getItemID()); //TODO: onFail + on Succeed
 
                             // do not call notifyItemRemoved for every item, it will cause gaps on deleting items
-                            mListAdapter.notifyDataSetChanged();
+                            mAdapter.notifyDataSetChanged();
 
                             //Snackbar message
                             Snackbar.make(snackbarContainer, "Item Deleted", Snackbar.LENGTH_LONG)
@@ -432,7 +441,7 @@ public class ContributeFragment extends Fragment {
                                             mItemList.add(0, mLastDismissedItem);
                                             //re-add item to user’s list in DB
                                             mRequestMethods.addItemToUserList(mLastDismissedItem.getItemID());
-                                            mListAdapter.notifyDataSetChanged();
+                                            mAdapter.notifyDataSetChanged();
                                             mLayoutManager.scrollToPosition(0);
 
                                             if(mEmptyView.getVisibility() == View.VISIBLE){
@@ -584,7 +593,7 @@ public class ContributeFragment extends Fragment {
                     Log.v(TAG, "> startPhotoUpload > getToken, token received: " + authtoken);
 
                     mItemList.remove(mItemToBeUploaded);
-                    mListAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                     performPhotoUpload();
                 }
             });
@@ -597,7 +606,7 @@ public class ContributeFragment extends Fragment {
 
                             try {
                                 mItemList.remove(mItemToBeUploaded);
-                                mListAdapter.notifyDataSetChanged();
+                                mAdapter.notifyDataSetChanged();
                                 performPhotoUpload();
                                 mCallback.isLoggedIn();
                             } catch (Exception e) {
@@ -684,7 +693,6 @@ public class ContributeFragment extends Fragment {
             }
         });
     } //performPhotoUpload
-
 
     @Override
     public void onPause() {
