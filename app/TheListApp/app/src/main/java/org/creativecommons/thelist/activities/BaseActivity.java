@@ -323,4 +323,5 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
         return super.onOptionsItemSelected(item);
     }
 
+
 } //BaseActivity

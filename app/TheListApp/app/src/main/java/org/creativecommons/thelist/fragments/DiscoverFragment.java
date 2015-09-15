@@ -23,11 +23,8 @@ package org.creativecommons.thelist.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -113,7 +110,6 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
         mLayoutManager = new LinearLayoutManager(mActivity);
         mDiscoverRecyclerView.setLayoutManager(mLayoutManager);
         mDiscoverRecyclerView.setHasFixedSize(true);
-        mDiscoverRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         initRecyclerView();
 
@@ -150,16 +146,8 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
             public void success(Photos photos, Response response) {
                 Log.d(TAG, "getPhotoFeed > success: " + response.getStatus());
 
-                if(photos.photos == null || photos.nextPage == -1){
+                if(photos.photos == null){
                     Log.d(TAG, "No photos returned");
-
-                    if(mSwipeRefreshLayout.isRefreshing()){
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        mCurrentPage = 0;
-                        Toast.makeText(mContext, "Oops! There was a problem refreshing",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
                     return;
                 }
 
@@ -205,31 +193,8 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
         //RecyclerView
         mCardSelectionListener = new RecyclerViewUtils.cardSelectionListener() {
             @Override
-            public void onFlag(String photoID, final int position) {
-                //Toast.makeText(mActivity, "Menu item clicked", Toast.LENGTH_SHORT).show();
+            public void onFlag(String photoID) {
 
-                AlertDialog alertDialog = new AlertDialog.Builder(
-                        getActivity())
-                        .setPositiveButton(mContext.getString(R.string.flag_dialog_positive), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Delete Action
-                                mDiscoverAdapter.deleteItem(position);
-
-                            }
-                        })
-                        .setNegativeButton(mContext.getString(R.string.flag_dialog_negative), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Cancel Action
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .setTitle(mContext.getString(R.string.flag_dialog_title))
-                        .setMessage(mContext.getString(R.string.flag_dialog_message))
-                        .create();
-
-                alertDialog.show();
             }
 
             @Override

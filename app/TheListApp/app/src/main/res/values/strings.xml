@@ -264,10 +264,6 @@
     <string name="category_helper_title_label">Pick some categories!</string>
     <string name="title_activity_onboarding">Pick Categories</string>
 
-    <string name="action_flag">I don’t want to see this</string>
-    <string name="flag_dialog_message">Deleting this image will hide it from your feed and alert The List admin that this item may need to be reviewed.</string>
-    <string name="flag_dialog_title">Are you sure you want to hide this image?</string>
-    <string name="flag_dialog_positive">Remove</string>
-    <string name="flag_dialog_negative">Cancel</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
