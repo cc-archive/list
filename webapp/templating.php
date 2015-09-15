@@ -27,10 +27,8 @@
    If not, see <http://www.gnu.org/licenses/>.
 */
 
-define('SMARTY_DIR', '/usr/share/php/smarty3/');
 require_once('config.php');
 require_once('auth.php');
-require_once(SMARTY_DIR . 'Smarty.class.php');
 require_once "data/User.php";
 
 function displayError($error_title, $error_message) {
