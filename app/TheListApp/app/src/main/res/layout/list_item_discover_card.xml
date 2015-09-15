@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/tools">
 
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,14 +21,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/toolbar_card_top"
-                android:id="@+id/discover_card_header"/>
+            <android.support.v7.widget.Toolbar
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/discover_toolbar"
+                android:padding="8dp">
+
+                <include layout="@layout/toolbar_card_top"
+                    android:id="@+id/discover_card_header"/>
+            </android.support.v7.widget.Toolbar>
 
             <ImageView
                 android:id="@+id/discover_card_photo"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_below="@+id/discover_card_header"/>
+                android:layout_below="@+id/discover_toolbar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
             <RelativeLayout
                 android:id="@+id/discover_card_body_text"
