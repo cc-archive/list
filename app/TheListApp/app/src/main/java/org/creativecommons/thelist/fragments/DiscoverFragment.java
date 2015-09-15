@@ -39,6 +39,7 @@ import org.creativecommons.thelist.api.ListApi;
 import org.creativecommons.thelist.api.ListService;
 import org.creativecommons.thelist.models.Photo;
 import org.creativecommons.thelist.models.Photos;
+import org.creativecommons.thelist.utils.InfiniteScrollListener;
 import org.creativecommons.thelist.utils.ListUser;
 import org.creativecommons.thelist.utils.RecyclerViewUtils;
 
@@ -66,7 +67,7 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
     private ListService list;
 
     //Photo feed
-    private int mCurrentPage = -1;
+    private int mCurrentPage = 1;
     private ArrayList<Photo> mPhotoList = new ArrayList<>();
 
     //RecyclerView
@@ -74,7 +75,7 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.swipe_refresh_layout) android.support.v4.widget.SwipeRefreshLayout mSwipeRefreshLayout;
 
     private DiscoverAdapter mDiscoverAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private RecyclerViewUtils.cardSelectionListener mCardSelectionListener;
 
     // --------------------------------------------------------
@@ -140,14 +141,19 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
 
     public void displayFeed() {
 
-        list.getPhotoFeed(new Callback<Photos>() {
+        list.getPhotoFeed(String.valueOf(mCurrentPage), new Callback<Photos>() {
             @Override
             public void success(Photos photos, Response response) {
                 Log.d(TAG, "getPhotoFeed > success: " + response.getStatus());
 
+                if(photos.photos == null){
+                    Log.d(TAG, "No photos returned");
+                    return;
+                }
+
                 mCurrentPage = photos.nextPage;
 
-                if(mCurrentPage > 0){
+                if(mCurrentPage > 1){
                     ArrayList<Photo> feedList = photos.photos;
 
                     for(Photo photo : feedList){
@@ -167,12 +173,22 @@ public class DiscoverFragment extends android.support.v4.app.Fragment {
 
                 Toast.makeText(mContext, "There was problem refreshing your feed",
                         Toast.LENGTH_SHORT).show();
+
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
     } //displayFeed
 
     public void initRecyclerView() {
+
+        mDiscoverRecyclerView.addOnScrollListener(new InfiniteScrollListener(mLayoutManager) {
+            @Override
+            public void loadMore(int currentPage) {
+                mCurrentPage = currentPage;
+                displayFeed();
+            }
+        });
 
         //RecyclerView
         mCardSelectionListener = new RecyclerViewUtils.cardSelectionListener() {

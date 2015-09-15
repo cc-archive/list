@@ -28,6 +28,7 @@ import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface ListService {
 
@@ -39,9 +40,8 @@ public interface ListService {
     @GET("/feed/")
     void getPhotoFeed(Callback<Photos> callback);
 
-    @GET("/feed/{page}")
-    void getPhotoFeed(@Path("page") String page, Callback<Photos> callback);
-
+    @GET("/feed/")
+    void getPhotoFeed(@Query("page") String page, Callback<Photos> callback);
 
     //Add to Contribute List
     @POST("/userlist/{userid}/{itemid}")

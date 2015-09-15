@@ -35,6 +35,8 @@ import org.creativecommons.thelist.R;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.FeedViewholder> {
     private LayoutInflater inflater;
     private List<UserListItem> listItems; //Collections.emptyList()
@@ -102,6 +104,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.FeedVi
 
         public FeedViewholder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this, itemView);
+
             iconImageView = (ImageView)itemView.findViewById(R.id.camera_icon);
             nameLabel = (TextView)itemView.findViewById(R.id.list_item_name);
             makerLabel = (TextView)itemView.findViewById(R.id.list_item_maker);

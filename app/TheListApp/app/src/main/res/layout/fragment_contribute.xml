@@ -42,15 +42,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?android:attr/progressBarStyleLarge"
-        android:gravity="center"
-        android:layout_gravity="center" />
+        android:layout_centerInParent="true" />
 
     <TextView android:id="@+id/contribute_empty_list_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:gravity="center"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/secondary_text_default_material_light"
         android:text="@string/my_list_empty_label" />

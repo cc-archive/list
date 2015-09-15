@@ -323,19 +323,22 @@ public class ContributeFragment extends Fragment {
                 } else {
                     mEmptyView.setVisibility(View.GONE);
                     Collections.reverse(mItemList);
-
-                    mAdapter.notifyDataSetChanged();
-                    mSwipeRefreshLayout.setRefreshing(false);
                 }
+
+                mAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
+
             } //onSuccess
 
             @Override
             public void onFail(VolleyError error) {
                 Log.d(TAG, "> getUserItems > onFail: " + error.toString());
-                //mMessageHelper.loadUserItemsFailMessage();
+                
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mEmptyView.setText(mContext.getString(R.string.mylist_empty_loading_error_label));
                 mEmptyView.setVisibility(View.VISIBLE);
+
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -360,7 +363,7 @@ public class ContributeFragment extends Fragment {
                 }
 
                 mAdapter.notifyDataSetChanged();
-                //mSwipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 

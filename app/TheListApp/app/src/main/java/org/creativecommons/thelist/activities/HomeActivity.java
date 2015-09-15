@@ -16,7 +16,6 @@ public class HomeActivity extends BaseActivity {
 
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
-    //private MultiSwipeRefreshLayout mSwipeRefreshLayout;
     private ViewPager mViewPager;
 
     private DiscoverFragment mDiscoverFragment;
@@ -64,45 +63,6 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        //on refresh, use tab position to refresh the visible fragment
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//
-//                switch(mCurrentTabPosition) {
-//                    case 0:
-//                        mDiscoverFragment.displayFeed();
-//                        break;
-//                    case 1:
-//                        mContributeFragment.displayUserItems();
-//                        break;
-//                }
-//
-//                mSwipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
-
-
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                if(positionOffset == 0){
-//                    mSwipeRefreshLayout.setEnabled(true);
-//                } else {
-//                    mSwipeRefreshLayout.setEnabled(false);
-//                }
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
-//            }
-//        });
-
     } //onCreate
 
     public void setupViewPager(ViewPager viewPager){
@@ -116,12 +76,6 @@ public class HomeActivity extends BaseActivity {
 
     }
 
-//    public void enableDisableSwipeRefresh(boolean enable) {
-//        if (mSwipeRefreshLayout != null) {
-//            mSwipeRefreshLayout.setEnabled(enable);
-//        }
-//    }
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -129,27 +83,6 @@ public class HomeActivity extends BaseActivity {
         //TODO: possibly delay this?
         mNavigationView.getMenu().findItem(R.id.nav_item_home).setChecked(true);
     }
-
-//    @Override
-//    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-//        if (i == 0) {
-//            mSwipeRefreshLayout.setEnabled(true);
-//        } else {
-//            mSwipeRefreshLayout.setEnabled(false);
-//        }
-//    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mAppBarLayout.addOnOffsetChangedListener(this);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        mAppBarLayout.removeOnOffsetChangedListener(this);
-//    }
 
     // --------------------------------------------------------
     // Fragment Callbacks

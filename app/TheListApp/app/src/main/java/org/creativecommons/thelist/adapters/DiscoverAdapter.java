@@ -39,17 +39,18 @@ import org.creativecommons.thelist.utils.MessageHelper;
 import org.creativecommons.thelist.utils.RecyclerViewUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder> {
 
     private Activity mActivity;
 
     private LayoutInflater inflater;
-    private ArrayList<Photo> photoItems;
+    private List<Photo> photoItems = new ArrayList<>();
 
     private RecyclerViewUtils.cardSelectionListener cardListener;
 
-    public DiscoverAdapter(Activity activity, ArrayList<Photo> photoItems, RecyclerViewUtils.cardSelectionListener listener){
+    public DiscoverAdapter(Activity activity, List<Photo> photoItems, RecyclerViewUtils.cardSelectionListener listener){
         this.photoItems = photoItems;
         this.mActivity = activity;
         this.cardListener = listener;
@@ -57,8 +58,8 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Discov
         inflater = LayoutInflater.from(activity);
     }
 
-    public void updateList(ArrayList<Photo> data) {
-        this.photoItems = data;
+    public void updateList(List<Photo> data) {
+        photoItems.addAll(data);
         this.notifyDataSetChanged();
     }
 

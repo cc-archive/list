@@ -15,12 +15,12 @@ public class ListApi {
 
     public ListApi(){
         mListService = init();
-
     }
 
     private ListService init(){
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(URL)
+                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
 
         return restAdapter.create(ListService.class);

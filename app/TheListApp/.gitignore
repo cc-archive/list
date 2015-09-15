@@ -5,8 +5,7 @@
 .DS_Store
 /build
 
-.idea
-.idea/libraries
+.idea/
 app/build
 
 # TraceView captures

@@ -14,7 +14,7 @@
     <!-- TODO: figure out image activity not having title-->
     <string name="title_activity_image"></string>
     <string name="title_activity_about">About The App</string>
-    <string name="title_activity_add_item">Create an Item</string>
+    <string name="title_activity_add_item">Request an Item</string>
     <string name="title_activity_home">The List</string>
     <string name="title_activity_my_photos">My Photos</string>
 
@@ -260,7 +260,6 @@
     <string name="contribute_find_more_button_label">FIND MORE</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="helper_message_confirm_button_label">got it</string>
     <string name="category_helper_title_label">Pick some categories!</string>
     <string name="title_activity_onboarding">Pick Categories</string>

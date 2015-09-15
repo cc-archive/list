@@ -47,15 +47,13 @@
             android:name=".activities.AccountActivity"
             android:label="@string/title_activity_account"
             android:screenOrientation="portrait"
-            android:theme="@style/ListThemeNoActionBar"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name=".activities.MyCategoriesActivity"
             android:label="@string/title_activity_category_list"
             android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ListThemeNoActionBar" >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activities.ImageActivity"
@@ -88,8 +86,7 @@
             android:name=".activities.AddItemActivity"
             android:label="@string/title_activity_add_item"
             android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ListThemeStatus" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

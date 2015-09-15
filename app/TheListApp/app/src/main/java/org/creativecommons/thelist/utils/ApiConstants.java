@@ -87,8 +87,8 @@ public final class ApiConstants {
 
 
     //Creative Commons API
-    public static final String URL = "https://thelist.creativecommons.org/api";
-    //public static final String URL = "http://54.166.151.139/api";
+    //public static final String URL = "https://thelist.creativecommons.org/api";
+    public static final String URL = "http://54.166.151.139/api";
     //public static final String URL = "https://staging-thelist.creativecommons.org/api";
 
     //Real API

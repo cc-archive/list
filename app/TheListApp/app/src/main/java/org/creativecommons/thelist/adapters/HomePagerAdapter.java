@@ -17,7 +17,12 @@ public class HomePagerAdapter extends android.support.v4.app.FragmentStatePagerA
 
     @Override
     public Fragment getItem(int position) {
-        return mFragmentList.get(position);
+
+        Fragment frag = mFragmentList.get(position);
+        frag.setRetainInstance(true);
+
+        return frag;
+
     }
 
     @Override
