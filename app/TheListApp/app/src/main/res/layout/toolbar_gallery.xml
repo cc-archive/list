@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    android:padding="@dimen/activity_horizontal_margin"
     android:background="@color/translucent_background"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
