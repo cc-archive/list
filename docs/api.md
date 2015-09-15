@@ -14,43 +14,70 @@ The List API is implemented by The List App, and is subject to change based on f
 * All of the API calls are made using HTTP GET and POST, and our
   examples are all based on curl.
 
-* The login mechanism for the app is CCID. We pass things directly to
-  the CCID server. If you need a CCID, grab one at
+* The login mechanism for the app is CCID (our CAS system). We pass things
+  directly to the CCID server. If you need a CCID, grab one at
   http://login.creativecommons.org
 
 ### API calls
 
-POST /api/users/login
+#### POST /api/users/login
 
-* Takes two parameters, `username` and `password`
+* Takes two parameters, `username` and `password` 
 
 * Returns JSON, a user object including a unique user ID which is used
   by many of the other functions, and a session key which is used for
   deleting things.
 
-GET /api/category
+* Example:
+  
+  `curl --include --data username=cciduser@example.com&password=ccidpassword" https://thelist.creativecommons.org/api/users/login`
+
+#### GET /api/category
 
 * Returns a list of categories.
 
 * Optional ID returns items from a particular category.
 
-GET /api/items
+* Example:  
+  
+  `curl https://thelist.creativecommons.org/api/category`
+
+#### GET /api/items
 
 * Returns 20 items from the master list
 
-* Optional ID returns detailed information on an item
+* Examples:  
+  
+  `curl https://thelist.creativecommons.org/api/items`
 
-POST /api/photos/:userid/:id
+#### GET /api/items/:itemid
 
-* Submit a photo to The List in response to a List Item (:id)
+* Returns detailed information on an item
 
-POST /api/suggestions/:userid
+* Examples:  
+  
+  `curl https://thelist.creativecommons.org/api/items/135`
+
+#### POST /api/photos/:userid/:itemid
+
+* Submit a photo to The List in response to a List Item (:itemid)
+
+* Example:  
+  
+  `curl --include --data "filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/photos/1/135`
+
+#### POST /api/suggestions/:userid
 
 * Submit a photo 'suggestion' to The List (never shown to public)
 
-GET /api/makers/:id
+* Example:  
+  
+  `curl --include --data "categoryid=&175&description=A%20new%20trinket%20image.&title=New%20Trinket&filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/suggestions/1
+
+#### GET /api/makers/:makerid
 
 * Returns the profile of a particular maker. Depreciated.
 
-
-
+* Example:  
+  
+  `curl https://thelist.creativecommons.org/api/makers/1`
