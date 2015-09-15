@@ -23,8 +23,9 @@ package org.creativecommons.thelist.adapters;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,6 +41,9 @@ import org.creativecommons.thelist.utils.RecyclerViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.DiscoverViewHolder> {
 
@@ -100,52 +104,59 @@ public class DiscoverAdapter extends RecyclerView.Adapter<DiscoverAdapter.Discov
         return photoItems.size();
     }
 
+    public void deleteItem(int position){
+        photoItems.remove(position);
+        notifyDataSetChanged();
+    }
+
     public class DiscoverViewHolder extends RecyclerView.ViewHolder {
 
         //card header
-        de.hdodenhof.circleimageview.CircleImageView profilePic;
-        TextView title;
-        TextView byline;
+        @Bind(R.id.discover_toolbar)android.support.v7.widget.Toolbar toolbar;
+        @Bind(R.id.discover_card_profile_pic)de.hdodenhof.circleimageview.CircleImageView profilePic;
+        @Bind(R.id.discover_card_title)TextView title;
+        @Bind(R.id.discover_card_byline)TextView byline;
 
         //card body
-        ImageView photoPreview;
-        TextView description;
-        TextView requestedBy;
+        @Bind(R.id.discover_card_photo)ImageView photoPreview;
+        @Bind(R.id.discover_card_description)TextView description;
+        @Bind(R.id.discover_card_requestedby)TextView requestedBy;
 
         //card footer
-        ImageView likeButton;
-        ImageView bookmarkButton;
-        Button contributeButton;
+        @Bind(R.id.likeButton)ImageView likeButton;
+        @Bind(R.id.bookmarkButton) ImageView bookmarkButton;
+        @Bind(R.id.contributeButton)Button contributeButton;
 
+        public String getSelectedItemId(){
+            return photoItems.get(getAdapterPosition()).id;
+        }
 
         public DiscoverViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
 
-            //card header
-            profilePic = (de.hdodenhof.circleimageview.CircleImageView)
-                    itemView.findViewById(R.id.discover_card_profile_pic);
-            title = (TextView)itemView.findViewById(R.id.discover_card_title);
-            byline = (TextView)itemView.findViewById(R.id.discover_card_byline);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
 
-            //card body
-            photoPreview = (ImageView)itemView.findViewById(R.id.discover_card_photo);
-            description = (TextView)itemView.findViewById(R.id.discover_card_description);
-            requestedBy = (TextView)itemView.findViewById(R.id.discover_card_requestedby);
+                    switch (menuItem.getItemId()) {
+                        case R.id.action_flag:
+                            cardListener.onFlag(getSelectedItemId(), getAdapterPosition());
+                            return true;
+                    }
 
-            //card footer
-            likeButton = (ImageView)itemView.findViewById(R.id.likeButton);
-            bookmarkButton = (ImageView)itemView.findViewById(R.id.bookmarkButton);
-            contributeButton = (Button)itemView.findViewById(R.id.contributeButton);
+                    return true;
+                }
+            });
+
+            toolbar.inflateMenu(R.menu.menu_discover_card);
 
             //TODO: set on click listeners for each clickable item on the card
             contributeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    Photo selectedItem = photoItems.get(getAdapterPosition());
-                    Log.v("HELLO", selectedItem.title);
-
-                    cardListener.onContribute(selectedItem.id);
+                    cardListener.onContribute(getSelectedItemId());
                 }
             });
         }
