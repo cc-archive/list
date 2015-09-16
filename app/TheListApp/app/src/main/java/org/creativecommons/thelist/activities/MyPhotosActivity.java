@@ -64,17 +64,25 @@ public class MyPhotosActivity extends BaseActivity implements
             @Override
             public void onRefresh() {
 
-                mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
-                        AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewFullAccount
-                            @Override
-                            public void onAuthed(String authtoken) {
-                                Log.v(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
-                            }
+                if(mCurrentUser.isAnonymousUser()){
 
-                        });
+                    mCurrentUser.addNewFullAccount(AccountGeneral.ACCOUNT_TYPE,
+                            AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, new ListUser.AuthCallback() { //addNewFullAccount
+                                @Override
+                                public void onAuthed(String authtoken) {
+                                    Log.v(TAG, "> addNewFullAccount > onAuthed, authtoken: " + authtoken);
 
-                mMyPhotosFragment.refreshItems();
-                mSwipeRefreshLayout.setRefreshing(false);
+                                    mMyPhotosFragment.refreshItems();
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                }
+
+                            });
+                } else {
+                    mMyPhotosFragment.refreshItems();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+
+
             }
         });
 

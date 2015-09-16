@@ -1,7 +1,6 @@
 package org.creativecommons.thelist.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +15,6 @@ public class HomeActivity extends BaseActivity {
 
     public static final String TAB_POSITION = "TAB_POS";
 
-    private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -36,8 +34,6 @@ public class HomeActivity extends BaseActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(mViewPager);
-
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.setupWithViewPager(mViewPager);

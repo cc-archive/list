@@ -166,11 +166,6 @@ public class MyPhotosFragment extends Fragment {
 
     } //onActivityCreated
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    } //onResume
-
     public void refreshItems(){
 
         if(mCurrentUser.isAnonymousUser()){

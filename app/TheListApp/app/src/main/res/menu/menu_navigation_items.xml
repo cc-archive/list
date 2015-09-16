@@ -29,7 +29,7 @@
         <item
             android:id="@+id/nav_item_account"
             android:icon="@drawable/ic_logout_grey600_24dp"
-            android:title="@string/log_out_nav_label"/>
+            android:title="@string/log_in_nav_label"/>
     </group>
 
     <!-- TODO: uncomment when support lib bug has been fixed -->

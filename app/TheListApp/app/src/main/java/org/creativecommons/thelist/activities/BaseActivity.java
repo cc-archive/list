@@ -62,6 +62,7 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 
         setUpToolbar();
         setUpNavigation();
+        updateDrawerHeader();
 
         //Fade in main content
         View mainContent = findViewById(R.id.main_content);
@@ -154,8 +155,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 //
 //                        break;
                     case R.id.nav_item_account:
-
-                        intent = new Intent(mContext, HomeActivity.class);
 
                         if (mCurrentUser.isAnonymousUser()) {
 
@@ -288,6 +287,8 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 
     @Override
     public void onBackPressed() {
+
+        //TODO: shouldn’t have to create new instance
         if (isNavDrawerOpen()) {
             closeNavDrawer();
         } else if(!(this instanceof HomeActivity)) {
