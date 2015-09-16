@@ -1,0 +1,26 @@
+Apache Configuration
+====================
+
+For the API and image serving to function, add the following to the Apache
+config file for the site. Substitute the path to your install for /var/www/html.
+
+    Alias /app /var/www/html/webapp/
+    Alias /api /var/www/html/webapp/api/
+    Alias /live /var/www/html/webapp/live/
+
+    <Directory /var/www/html/webapp/live>
+        RewriteEngine on
+        RewriteBase /app/live/
+        RewriteRule ^([A-Za-z0-9/_-]+).(jpg|gif|png)/(.*)$ /app/live/image.php?img=$1.$2&foo=$3 [L]
+    </Directory>
+
+    <Directory /var/www/html/webapp/api>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        RewriteEngine On
+        RewriteBase /api/
+        RewriteRule ^index\.php$ - [L]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule . /api/index.php [QSA,NC,L]
+    </Directory>

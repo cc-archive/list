@@ -6,11 +6,9 @@
  $default_theme="thelist";
 
  $config_version = 0.1;
- $site_name = 'Libre.fm';
+ $site_name = 'The List';
  $base_url = 'https://libre.fm';
- $submissions_server = 'http://turtle.libre.fm/';
  $install_path = '/var/www/html';
- $gnufm_key = 'werereallylibrefmhonestwouldilie';
  $friendly_urls=true;
 
  $cas_host="login.example.com";

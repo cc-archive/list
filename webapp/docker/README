@@ -1,0 +1,35 @@
+Building
+--------
+
+In this directory run:
+
+    sudo docker-compose build
+
+Running
+-------
+
+In this directory run:
+
+    sudo docker-compose up
+
+The first time you run this command the database will be initialized, allow
+several seconds for this to happen before trying to connect.
+
+The web server IP will be output to the logs in a line containing the string:
+
+    AH00558
+
+Copy this IP and connect to it in a web browser.
+
+About The Setup
+---------------
+
+We use a data container, a database server container and a web server container.
+
+The database server container uses a customised version of the MariaDB Docker
+image startup script that runs an sql command file during image creation.
+
+The web server container uses a Debian image with Apache and php5 installed.
+The Dockerfile creates a config.php file set up to match the database server
+and web server image details, and modifies the Apache config file to rewrite
+urls as specified in webapp/README.

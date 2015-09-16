@@ -1,0 +1,14 @@
+thelistdbcontainer:
+  image: mariadb:10
+  volumes:
+    - /var/lib/mysql
+
+thelistdb:
+  build: ..
+  dockerfile: docker/Dockerfile.db
+
+thelist:
+  build: ..
+  dockerfile: docker/Dockerfile.web
+  links:
+    - thelistdb
