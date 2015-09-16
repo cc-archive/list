@@ -14,14 +14,14 @@ import org.creativecommons.thelist.fragments.DiscoverFragment;
 public class HomeActivity extends BaseActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
 
+    public static final String TAB_POSITION = "TAB_POS";
+
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
     private DiscoverFragment mDiscoverFragment;
     private ContributeFragment mContributeFragment;
-
-    private int mCurrentTabPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +42,11 @@ public class HomeActivity extends BaseActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        //mSwipeRefreshLayout = (MultiSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-
         //Listen for which fragment is visible based on tab position
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
-                mCurrentTabPosition = tab.getPosition();
             }
 
             @Override
@@ -72,7 +69,7 @@ public class HomeActivity extends BaseActivity {
         homePagerAdapter.addFragment(mDiscoverFragment, "Discover");
         homePagerAdapter.addFragment(mContributeFragment, "Contribute");
         viewPager.setAdapter(homePagerAdapter);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(1); //TODO: does this work? I think not
 
     }
 
@@ -82,6 +79,20 @@ public class HomeActivity extends BaseActivity {
 
         //TODO: possibly delay this?
         mNavigationView.getMenu().findItem(R.id.nav_item_home).setChecked(true);
+    }
+
+    //Save and restore instance state: remember which tab was selected
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(TAB_POSITION, mTabLayout.getSelectedTabPosition());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mViewPager.setCurrentItem(savedInstanceState.getInt(TAB_POSITION));
     }
 
     // --------------------------------------------------------
