@@ -45,8 +45,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:maxHeight="200dp"
-                            android:src="@drawable/add_item_placeholder"
-                            android:background="@null"
+                            android:background="@color/app_grey"
                             android:scaleType="centerCrop"
                             android:adjustViewBounds="true"
                             android:contentDescription="Add an example image (optional)"/>

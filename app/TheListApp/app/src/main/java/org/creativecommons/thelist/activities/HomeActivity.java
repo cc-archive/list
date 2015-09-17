@@ -4,19 +4,24 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import org.creativecommons.thelist.R;
 import org.creativecommons.thelist.adapters.HomePagerAdapter;
 import org.creativecommons.thelist.fragments.ContributeFragment;
 import org.creativecommons.thelist.fragments.DiscoverFragment;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class HomeActivity extends BaseActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
 
     public static final String TAB_POSITION = "TAB_POS";
 
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    @Bind(R.id.main_content) View mainContent;
+    @Bind(R.id.tab_layout) TabLayout mTabLayout;
+    @Bind(R.id.viewPager) ViewPager mViewPager;
 
     private DiscoverFragment mDiscoverFragment;
     private ContributeFragment mContributeFragment;
@@ -26,16 +31,16 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        ButterKnife.bind(this);
+
         mDiscoverFragment = new DiscoverFragment();
         mContributeFragment = new ContributeFragment();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         toolbar.setTitle(R.string.app_name_short);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
         setupViewPager(mViewPager);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.setupWithViewPager(mViewPager);
 
         //Listen for which fragment is visible based on tab position
@@ -57,6 +62,15 @@ public class HomeActivity extends BaseActivity {
         });
 
     } //onCreate
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mainContent.getAlpha() == 0){
+            mainContent.animate().alpha(1).setDuration(BaseActivity.MAIN_CONTENT_FADEIN_DURATION);
+        }
+    }
 
     public void setupViewPager(ViewPager viewPager){
         HomePagerAdapter homePagerAdapter =

@@ -29,10 +29,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -93,7 +90,6 @@ public class AddItemActivity extends BaseActivity {
     private EditText mDescriptionField;
     private String mDescription;
     private Spinner mCategorySpinner;
-    private RelativeLayout mStickyFooterContainer;
     private Button mDoneButton;
     private FrameLayout mOverlay;
 
@@ -115,7 +111,6 @@ public class AddItemActivity extends BaseActivity {
         //Google Analytics Tracker
         ((ListApplication) getApplication()).getTracker(ListApplication.TrackerName.GLOBAL_TRACKER);
 
-
         //UI Elements
         mMakerItemProgressBar = (RelativeLayout) findViewById(R.id.makerItemProgressBar);
         mItemNameField = (EditText) findViewById(R.id.add_item_title);
@@ -123,7 +118,6 @@ public class AddItemActivity extends BaseActivity {
         mDescription = null;
         mCategorySpinner = (Spinner) findViewById(R.id.category_spinner);
         mAddImage = (ImageButton) findViewById(R.id.add_item_example_image);
-        mStickyFooterContainer = (RelativeLayout) findViewById(R.id.sticky_footer_container);
         mDoneButton = (Button) findViewById(R.id.add_item_button);
 
         mPhotoAdded = false;
@@ -247,12 +241,6 @@ public class AddItemActivity extends BaseActivity {
 
     } //onCreate
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     //Show dialog when List Item is tapped
     public DialogInterface.OnClickListener mDialogListener =
             new DialogInterface.OnClickListener() {
@@ -292,7 +280,7 @@ public class AddItemActivity extends BaseActivity {
 //                                }
 //                            });
                         case 2: //TODO: make case 3
-                            Picasso.with(mContext).load(R.drawable.add_item_placeholder).into(mAddImage); //TODO: update with new image
+                            //Picasso.with(mContext).load(R.drawable.add_item_placeholder).into(mAddImage); //TODO: update with new image
                             mPhotoAdded = false;
                             mMediaUri = null;
                     }
@@ -468,6 +456,13 @@ public class AddItemActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        mNavigationView.getMenu().findItem(R.id.nav_item_requests).setChecked(true);
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
@@ -480,26 +475,26 @@ public class AddItemActivity extends BaseActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_item, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_add_item, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == android.R.id.home) {
+//            NavUtils.navigateUpFromSameTask(this);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }

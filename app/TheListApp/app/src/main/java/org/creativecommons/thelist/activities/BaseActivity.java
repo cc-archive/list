@@ -41,11 +41,11 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
     private Boolean mLoggingIn = false;
 
     // Delay to launch nav drawer item, to allow close animation to play
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
+    public static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
     // Fade in and fade out durations for the main content when switch between nav items
-    private static final int MAIN_CONTENT_FADEOUT_DURATION = 150;
-    private static final int MAIN_CONTENT_FADEIN_DURATION = 250;
+    public static final int MAIN_CONTENT_FADEOUT_DURATION = 150;
+    public static final int MAIN_CONTENT_FADEIN_DURATION = 250;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +191,7 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
                         @Override
                         public void run() {
                             startActivity(finalIntent);
+                            overridePendingTransition(0, 0);
                         }
                     }, NAVDRAWER_LAUNCH_DELAY);
 
@@ -268,7 +269,6 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
 
             mAccountItem.setTitle(R.string.log_in_nav_label);
             mAccountItem.setIcon(R.drawable.ic_login_grey600_24dp);
-
         }
 
     } //updateDrawerHeader
@@ -291,12 +291,15 @@ public class BaseActivity extends AppCompatActivity implements ContributeFragmen
         //TODO: shouldn’t have to create new instance
         if (isNavDrawerOpen()) {
             closeNavDrawer();
-        } else if(!(this instanceof HomeActivity)) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        overridePendingTransition(0, 0);
     }
 
     // --------------------------------------------------------
