@@ -32,6 +32,7 @@
 require_once('../database.php');
 require '../data/User.php';
 require '../data/List.php';
+require '../version.php';
 require 'klein.php';
 require 'functions.php';
 
@@ -40,13 +41,25 @@ header('Access-Control-Allow-Origin: https://thelist.creativecommons.org/');
 header('Access-Control-Max-Age: 3628800');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
+with('/api/version', function () {
+
+    respond('GET', '/?', function ($request, $response) {
+        global $api_version, $app_version, $webapp_version;
+        $version = ['api_version'=>$api_version,
+                    'app_version'=>$app_version,
+                    'webapp_version'=>$webapp_version];
+        $output = json_encode($version, JSON_PRETTY_PRINT);
+        echo $output;
+    });
+});
+
 with('/api/category', function () {
 
     respond('GET', '/?', function ($request, $response) {
 
         $list = new UserList();
 
-    $selection = $list->getCategories(20);
+        $selection = $list->getCategories(20);
         
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
