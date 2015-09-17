@@ -15,6 +15,7 @@
  $cas_port=443;
  $cas_context="";
 
+ $photo_dir = "live";
  
 $phpcas_path = 'vendor/jasig/phpcas/';
 

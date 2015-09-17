@@ -33,8 +33,6 @@ error_reporting(0);
 
 require_once('database.php');
 
-
-
 global $adodb;
 
 $query = "SELECT * FROM Photos WHERE url IS NULL LIMIT 1";
@@ -45,7 +43,7 @@ if ($res) {
     $foo = exec("file " . $res[filename]);   
     if (strpos($foo, "JPEG")) {
         $filename = $res['filename'];
-        $url = "live/" . basename($filename) . ".jpg";
+        $url = $photo_dir . '/' . basename($filename) . ".jpg";
      
         rename($filename, $url);
 
@@ -54,11 +52,7 @@ if ($res) {
 
         echo "This file is a JPEG! " . $url . "\n";
 
-        // Need to fix the URLs better
-
-        //$url = basename($url);
-
-        $url = "https://thelist.creativecommons.org//" . $url;
+        $url = $base_url . '/' $url;
         $query = "UPDATE Photos SET url = %s WHERE id=(%s)";
 
         try {
