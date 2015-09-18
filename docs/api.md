@@ -81,3 +81,12 @@ The List API is implemented by The List App, and is subject to change based on f
 * Example:  
   
   `curl https://thelist.creativecommons.org/api/makers/1`
+
+
+#### GET /api/version
+
+* Returns version information for the system.
+
+* Example:  
+  
+  `curl https://thelist.creativecommons.org/api/version`
