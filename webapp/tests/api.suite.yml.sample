@@ -1,0 +1,14 @@
+class_name: ApiTester
+modules:
+    enabled:
+        - \Helper\Api
+        - REST:
+            url: http://list.local/api/
+            depends: PhpBrowser
+            part: Json
+    config:
+        Db:
+            dsn: 'mysql:host=localhost;dbname=listtest'
+            user: ''
+            password: ''
+            dump: migrations/00000000000000-create-initial-tables.sql # tests/_data/your-dump-name.sql

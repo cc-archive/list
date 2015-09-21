@@ -31,3 +31,7 @@ config.php
 themes/*/templates_c/
 composer.phar
 vendor/
+tests/_output/*
+
+codedecption.yml
+*.suite.yml
