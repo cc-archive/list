@@ -9,7 +9,7 @@ $I->seeResponseContainsJson(
   "id"=>"1",
   "makerid"=>"1",
   "title"=>"Matt Lee",
-  "description"=>null,
+  "description"=>"Matt Lee",
   "uri"=>"http://creativecommons.org",
   "approved"=>"1",
   "category"=>"1",

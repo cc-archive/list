@@ -4,9 +4,9 @@ $I->wantTo('get the list of latest items from the master list');
 $I->sendGET('items');
 $I->seeResponseCodeIs(200);
 $I->seeResponseIsJson();
-//FIXME: ensure count is 20
+//TODO: ensure count is 20
 // The responses are random, so we cannot check specific id/title/etc. values
-//FIXME: check for Creative Commons values
+//TODO: check for Creative Commons values
 $I->seeResponseJsonMatchesJsonPath('$[*].id');
 $I->seeResponseJsonMatchesJsonPath('$[*].makerid');
 $I->seeResponseJsonMatchesJsonPath('$[*].title');

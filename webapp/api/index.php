@@ -154,6 +154,34 @@ with('/api/photos', function () {
         
     });
 
+    respond('GET', '/?', function ($request, $response) {
+        $count = abs(intval($request->param('count', 0)));
+        $offset = abs(intval($request->param('from', 0)));
+        $userid = $request->param('userid', false);
+        if ($userid != false) {
+          $userid = intval($userid);
+        }
+        $list = new UserList;
+        $photos = $list->getPhotosList($count, $userid, $offset);
+        $result = ['photos'=>$photos,
+                   //FIXME: If we return the last item, this will be wrong
+                   'next_id'=>1 + array_reduce($photos,
+                                               function($carry, $item) {
+                                                 return
+                                                   $item['itemid'] > $carry ?
+                                                   $item['itemid'] : $carry;
+                                                 }, $photos[0]['itemid']),
+                   'from_id'=>array_reduce($photos,
+                                               function($carry, $item) {
+                                                 return
+                                                   $item['itemid'] < $carry ?
+                                                   $item['itemid'] : $carry;
+                                                 }, $photos[0]['itemid']),
+                   'count'=>count($photos)];
+        $output = json_encode($result, JSON_PRETTY_PRINT);
+        echo urldecode($output);
+      });
+
 });
 
 with('/api/users', function () {

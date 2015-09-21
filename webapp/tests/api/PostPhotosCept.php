@@ -4,8 +4,8 @@ $img_base64 = base64_encode($img);
 
 $I = new ApiTester($scenario);
 $I->wantTo('upload a photo');
-//FIXME: test with log in
+//TODO: test with log in
 //$I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
 $I->sendPOST('photos/1/135', ['filedata' => $img_base64]);
 $I->seeResponseCodeIs(200);
-//FIXME: check database
+//TODO: check database

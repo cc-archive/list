@@ -58,13 +58,28 @@ The List API is implemented by The List App, and is subject to change based on f
   
   `curl https://thelist.creativecommons.org/api/items/135`
 
+
+#### GET /api/photos
+
+* Returns the most recent photos.
+
+* Has optional parameters:
+  * count - The number of items to return. 20 if absent, max 200 each time.
+  * from - The first item to return. Most recent if absent.
+  * userid - The userid whose photos the api should return. Everyone if absent.
+
+* Example:  
+  
+  `curl https://thelist.creativecommons.org/api/photos`
+
+
 #### POST /api/photos/:userid/:itemid
 
 * Submit a photo to The List in response to a List Item (:itemid)
 
 * Example:  
   
-  `curl --include --data "filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/photos/1/135`
+  ``curl --include --data "filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/photos/1/135``
 
 #### POST /api/suggestions/:userid
 
@@ -72,7 +87,7 @@ The List API is implemented by The List App, and is subject to change based on f
 
 * Example:  
   
-  `curl --include --data "categoryid=&175&description=A%20new%20trinket%20image.&title=New%20Trinket&filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/suggestions/1`
+  ``curl --include --data "categoryid=&175&description=A%20new%20trinket%20image.&title=New%20Trinket&filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/suggestions/1``
 
 #### GET /api/makers/:makerid
 

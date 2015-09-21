@@ -284,7 +284,7 @@ class UserList {
 
         }
 
-        if ($query == "") {
+        if (! isset($query)) {
             $params = array();
             $query = "SELECT DISTINCT l.*, m.name, m.uri from List l LEFT JOIN Makers m ON (l.makerid = m.id)  WHERE APPROVED=1 ORDER BY RAND()";
         }
@@ -334,17 +334,32 @@ class UserList {
 
     }
 
-    static function getPhotosList($number = 10, $userid = false, $offset = 0) {
+    static function getPhotosList($number = 20, $userid = false, $from = 0) {
         global $adodb;
+        
+        $number = max(min($number, 20), 200);
+        $from = max($from, 1);
 
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-
-            $query = 'SELECT p.*, l.* FROM Photos p LEFT JOIN List l ON (p.listitem=l.id) WHERE p.url IS NOT NULL AND p.userid=?';
-            $params[] = $userid;
+        $params = [$from];
+        $query = "
+SELECT p.id AS itemid, p.url AS url,
+  l.title AS title, l.id AS id, l.description AS description,
+  l.category AS category, l.approved AS approved,
+  u.email AS username, u.id AS userid,
+  m.id AS makerid, m.name AS makername
+FROM Photos p LEFT JOIN List l ON (p.listitem=l.id)
+  LEFT JOIN Users u on (p.userid=u.id) LEFT JOIN Makers m on (l.makerid=m.id)
+WHERE p.url IS NOT NULL AND p.id >= ? ";
+        if ($userid) {
+          $query .= "AND p.userid=? ";
+          $params[] = $userid;
+        }
+        $query .= "ORDER BY p.id DESC LIMIT ?";
+        $params[] = $number;
 
         try {
             $res = $adodb->CacheGetAll(15, $query, $params);
-
         } catch (Exception $e) {
 
             echo "<h2>" . $query . "</h2>";

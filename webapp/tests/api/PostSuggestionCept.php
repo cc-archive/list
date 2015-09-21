@@ -4,7 +4,7 @@ $img_base64 = base64_encode($img);
 
 $I = new ApiTester($scenario);
 $I->wantTo('upload a suggestion');
-//FIXME: test with log in
+//TODO: test with log in
 $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
 //FIXME: trailing slash kills this!
 $I->sendPOST('suggestions/1',
@@ -15,4 +15,4 @@ $I->sendPOST('suggestions/1',
               'filedata' => $img_base64
               ]);
 $I->seeResponseCodeIs(200);
-//FIXME: check database
+//TODO: check database
