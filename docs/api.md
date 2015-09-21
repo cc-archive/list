@@ -72,7 +72,7 @@ The List API is implemented by The List App, and is subject to change based on f
 
 * Example:  
   
-  `curl --include --data "categoryid=&175&description=A%20new%20trinket%20image.&title=New%20Trinket&filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/suggestions/1
+  `curl --include --data "categoryid=&175&description=A%20new%20trinket%20image.&title=New%20Trinket&filedata=`base64 --wrap=0 ~/small.jpg`" https://thelist.creativecommons.org/api/suggestions/1`
 
 #### GET /api/makers/:makerid
 
