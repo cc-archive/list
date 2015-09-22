@@ -29,18 +29,20 @@
 
 */
 
-require_once('../database.php');
-require '../data/User.php';
-require '../data/List.php';
-require '../version.php';
-require 'klein.php';
-require 'functions.php';
+require_once(dirname(__DIR__).'/database.php');
+require(dirname(__DIR__).'/data/User.php');
+require(dirname(__DIR__).'/data/List.php');
+require(dirname(__DIR__).'/version.php');
+require(__DIR__.'/klein.php');
+require(__DIR__.'/functions.php');
+require(__DIR__.'/UserLogin.php');
 
 header('Content-Type: text/javascript; charset=utf8');
-header('Access-Control-Allow-Origin: https://thelist.creativecommons.org/');
+header('Access-Control-Allow-Origin: '.$base_url.'/');
 header('Access-Control-Max-Age: 3628800');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
+                        
 with('/api/version', function () {
 
     respond('GET', '/?', function ($request, $response) {
@@ -90,7 +92,7 @@ with('/api/items', function () {
 
         $list = new UserList();
 
-    $selection = $list->getNewList(20);
+        $selection = $list->getNewList(20);
         
         $output = json_encode($selection, JSON_PRETTY_PRINT);
         echo $output;
@@ -140,7 +142,7 @@ with('/api/photos', function () {
         fclose($image);
 
         
-        $list = new UserList;       
+        $list = new UserList();       
         $filename = $tmp;
                     
         $result = $list->addPhoto($userid, $filename, $listitem);
@@ -161,7 +163,7 @@ with('/api/photos', function () {
         if ($userid != false) {
           $userid = intval($userid);
         }
-        $list = new UserList;
+        $list = new UserList();
         $photos = $list->getPhotosList($count, $userid, $offset);
         $result = ['photos'=>$photos,
                    //FIXME: If we return the last item, this will be wrong
@@ -186,84 +188,16 @@ with('/api/photos', function () {
 
 with('/api/users', function () {
     respond('POST', '/login', function ($request, $response) {
-        $url = 'https://login.creativecommons.org/x.php';
-        $fields = array(
-            'username' => urlencode($request->param('username')),
-            'password' => urlencode($request->param('password'))
-        );
-        $user = new UserList();
-
-        if(strpos($fields['username'], "%40") === false) {
-            // if there's no @ sign, we're looking at either a failed login or a temp user
-            if ($fields['username'] == "" && $fields['password'] == "") {
-                // No user name or password? Temp user registration
-                // Let's make a user with a GUID instead of an email address?
-                $guid = generateGUID();
-                $result = $user->getUserInfo($guid);
-                
-                while(!empty($result)) {
-                    $guid = generateGUID();
-                    $result = $user->getUserInfo($guid);
-                }
-                
-                $result = $guid;
-            } else {
-                $result = $user->getUserInfo($fields['username']);
-                if(empty($result)) {
-                    http_response_code(401);
-                } else {
-                        $result = $fields['username']; // this assumes a previous GUID
-                }
-            }
-
-        } else {    
-            $posty = '';
-            foreach($fields as $key=>$value) { 
-                $posty .= $key.'='.$value.'&'; 
-            }
-            rtrim($posty, '&');
-
-            $curl = curl_init();
-
-            curl_setopt($curl,CURLOPT_URL, $url);
-            curl_setopt($curl,CURLOPT_POST, count($fields));
-            curl_setopt($curl,CURLOPT_POSTFIELDS, $posty);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-            $result = curl_exec($curl);
-            if($request->param('guid')) {
-        
-                $anonymous = $user->getUserInfo($request->param('guid'));
-                $previous_user = $user->getUserInfo($result);
-                if(!empty($previous_user)) {
-                    $user->mergeUserInfo($previous_user['id'], $anonymous['id']);
-                } else {
-                    if(!empty($anonymous)) {
-                        $user->convertAnonymousUser($anonymous['email'], $result);
-                    }
-                }
-            }       
-
-                curl_close($curl);
-        } 
-        if ($result) {
-            $foo = $user->getUserInfo($result); // get the userID, etc          
-            // @TODO: This may never hit
-            if (empty($foo)) {  // first time on The List
-                $user->makeUser($result); // make a User
-                $foo = $user->getUserInfo($result); // now get the userID
-        
-            }
-            // Now let's make a session for the user
-            $userid = $foo['id'];
-
-            $session = $user->getUserSession($userid);
-            $session['email'] = $result;
-
-            $output = json_encode($session, JSON_PRETTY_PRINT);
-            echo urldecode($output);
-        } else { // invalid user
-            http_response_code(401);                
+        $login = new UserLogin();
+        $login->username = urlencode($request->param('username'));
+        $login->password = urlencode($request->param('password'));
+        $login->GUIDToMerge = $request->param('guid', false);
+        $session = $login->login();
+        if($session) {
+          $output = json_encode($session, JSON_PRETTY_PRINT);
+          echo urldecode($output);
+        } else {
+          http_response_code(401);
         }
     });
 
@@ -433,7 +367,7 @@ with('/api/photos', function() {
 
         $userid = $request->user;
 
-        $list = new UserList();
+        $list = new User();
 
         $gallery = $list->getUserGallery($userid);
 

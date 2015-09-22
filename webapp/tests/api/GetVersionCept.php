@@ -1,6 +1,6 @@
 <?php
 
-include_once('vendor.php');
+include('version.php');
 
 $I = new ApiTester($scenario);
 $I->wantTo('fetch the version information for the web app');

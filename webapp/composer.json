@@ -6,6 +6,8 @@
     },
     "require-dev": {
         "codeception/codeception": "*",
-        "flow/jsonpath": "*"
+        "flow/jsonpath": "*",
+        "codeception/specify": "*",
+        "codeception/verify": "*"
     }
 }
