@@ -33,7 +33,9 @@ if (!file_exists(dirname(__FILE__) . '/config.php')) {
 	die('Please run the <a href="install.php">Install</a> script to configure your installation');
 }
 
-require_once('config.php');
+require_once(dirname(__FILE__) . '/config.php');
+
+global $adodb;
 
 try {
 	$adodb =& NewADOConnection($connect_string);

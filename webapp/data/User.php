@@ -28,7 +28,7 @@
    If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once($install_path . '/database.php');
+require_once(dirname(__DIR__) . '/database.php');
 
 /**
  * Represents User data
@@ -140,28 +140,31 @@ class User {
 
   }
 
-  static function getUserSession ($userid) {
+  static function getUserSession ($userid, $create=true) {
     global $adodb;
 
     $query = "SELECT skey, userid FROM UserSessions WHERE userid = " . $adodb->qstr($userid);
     $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
     $row = $adodb->CacheGetRow(1, $query);
-
+    
     if (count($row) == 0) {
+      if ($create) {
+        $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
 
-      $query = "INSERT INTO UserSessions (userid, skey, session_start) VALUES (%s,%s, %s)";
+        $key = md5(uniqid(rand(), true));
 
-      $key = md5(uniqid(rand(), true));
+        $res = $adodb->Execute(sprintf($query,
+                                       $adodb->qstr($userid),
+                                       $adodb->qstr($key),
+                                       $adodb->qstr(date("Y-m-d H:i:s"))
+                                       ));          
 
-      $res = $adodb->Execute(sprintf($query,
-                                     $adodb->qstr($userid),
-                                     $adodb->qstr($key),
-                                     $adodb->qstr(date("Y-m-d H:i:s"))
-                                     ));          
-
-      $foo = array("skey" => $key, "userid" => $userid);
+        $foo = array("skey" => $key, "userid" => $userid);
+      } else {
+        $foo = [];
+      }
     } else {
-
+        
       $foo = array("skey" => $row['skey'], "userid" => $row['userid']);
 
     }
@@ -170,10 +173,7 @@ class User {
 
   }
 
-
-  
-
-    function getUserGallery($userid) {
+  /*function getUserGallery($userid) {
 
         global $adodb;
 
@@ -185,6 +185,55 @@ class User {
 
         return $res;
 
+        }*/
+
+    static function sessionIsValid ($userid, $sessionid) {
+      try {
+        $session = self::getUserSession($userid, false);
+        $valid = array_key_exists('skey', $session)
+          && $session['skey'] == $sessionid;
+      } catch (Exception $e) {
+        $valid = false;
+      }
+      return $valid;
+    }
+    
+    static function blockPhoto($userid, $sessionid, $photoid) {
+      global $adodb;
+      $result_code = 401;
+      if(self::sessionIsValid ($userid, $sessionid)) {
+        $photo_exists_and_user_doesnt_own_it = false;
+        $query = 'SELECT * From Photos WHERE id = ?';
+        $params = [$photoid];
+        try {
+          $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+          $res = $adodb->GetRow($query, $params);
+          if (!$res) {
+            $result_code = 404;
+          } elseif ($res['userid'] != $userid) {
+            $photo_exists_and_user_doesnt_own_it = true;
+          }
+        } catch (Exception $e) {
+          //TODO: This does swallow worse errors. We should check for them
+          
+          $result_code = 401;
+        }
+        
+        // If the photo exists and isn't owned by the user trying to block it
+        if($photo_exists_and_user_doesnt_own_it) {
+          try {
+            $query =
+              "INSERT INTO UserPhotoBlocks (userid, photoid) VALUES (?, ?)";
+            $params = [$userid, $photoid];
+            $adodb->Execute($query, $params);
+            //$adodb->CacheFlush();
+            $result_code = 200;
+          } catch (Exception $e) {
+            $result_code = 500;
+          }
+        }
+      }
+      return $result_code;
     }
 
 }

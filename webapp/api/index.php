@@ -122,8 +122,75 @@ with('/api/items', function () {
 
 });
 
+function formatPhotoListResults ($photos) {
+  $result = ['photos'=>$photos,
+             'count'=>count($photos)];
+  if ($result['count'] > 0) {
+    //FIXME: If we return the last item, this will be wrong
+    $result['next_id'] = 1 + array_reduce($photos,
+                                          function($carry, $item) {
+                                            return
+                                              $item['itemid'] > $carry ?
+                                              $item['itemid'] : $carry;
+                                          }, $photos[0]['itemid']);
+      $result['from_id'] = array_reduce($photos,
+                                        function($carry, $item) {
+                                          return
+                                            $item['itemid'] < $carry ?
+                                            $item['itemid'] : $carry;
+                                        }, $photos[0]['itemid']);
+  }
+  return $result;
+}
+
 with('/api/photos', function () {
 
+    // Get the global photo list
+    respond('GET', '/?', function ($request, $response) {
+        $count = abs(intval($request->param('count', 20)));
+        $offset = abs(intval($request->param('from', 1)));
+        $sessionuserid = $request->param('userid', false);
+        $skey = $request->param('skey', false);
+        if ($sessionuserid != false) {
+          if(User::sessionIsValid ($sessionuserid, $sessionid)) {
+            $sessionuserid = intval($sessionuserid);
+          } else {
+            $sessionuserid = false;
+          }
+        }
+        
+        $list = new UserList();
+        $photos = $list->getPhotosList($sessionuserid, $count, $offset);
+        $result = formatPhotoListResults ($photos);
+        $output = json_encode($result, JSON_PRETTY_PRINT);
+        echo urldecode($output);
+      });
+    
+    respond('GET', '/[:user]', function ($request, $response) {
+        
+        $listuserid = $request->user;
+        $count = abs(intval($request->param('count', 20)));
+        $offset = abs(intval($request->param('from', 1)));
+        $sessionuserid = $request->param('userid', false);
+        $skey = $request->param('skey', false);
+        if ($sessionuserid != false) {
+          if(User::sessionIsValid ($sessionuserid, $sessionid)) {
+            $sessionuserid = intval($sessionuserid);
+          } else {
+            $sessionuserid = false;
+          }
+        }
+        
+        $photos = UserList::getPhotosList($sessionuserid, $count, $offset,
+                                          $listuserid);
+        
+        $result = formatPhotoListResults ($photos);
+        $output = json_encode($result, JSON_PRETTY_PRINT);
+
+        echo $output;
+
+    });
+    
     respond('POST', '/[:userid]/[:id]', function ($request, $response) {
 
         $userid = $request->userid;
@@ -147,45 +214,39 @@ with('/api/photos', function () {
                     
         $result = $list->addPhoto($userid, $filename, $listitem);
 
-        }
-
-        else {
+        } else {
 
             http_response_code(400);
         }
         
     });
 
-    respond('GET', '/?', function ($request, $response) {
-        $count = abs(intval($request->param('count', 0)));
-        $offset = abs(intval($request->param('from', 0)));
-        $userid = $request->param('userid', false);
-        if ($userid != false) {
-          $userid = intval($userid);
-        }
-        $list = new UserList();
-        $photos = $list->getPhotosList($count, $userid, $offset);
-        $result = ['photos'=>$photos,
-                   //FIXME: If we return the last item, this will be wrong
-                   'next_id'=>1 + array_reduce($photos,
-                                               function($carry, $item) {
-                                                 return
-                                                   $item['itemid'] > $carry ?
-                                                   $item['itemid'] : $carry;
-                                                 }, $photos[0]['itemid']),
-                   'from_id'=>array_reduce($photos,
-                                               function($carry, $item) {
-                                                 return
-                                                   $item['itemid'] < $carry ?
-                                                   $item['itemid'] : $carry;
-                                                 }, $photos[0]['itemid']),
-                   'count'=>count($photos)];
-        $output = json_encode($result, JSON_PRETTY_PRINT);
-        echo urldecode($output);
-      });
-
 });
 
+with('/api/block', function () {
+
+    respond('POST', '/photo/[:photoid]', function ($request, $response) {
+        $result_code = 200;
+        
+        try {
+          $skey = $request->param('skey');
+          $userid = $request->param('userid');
+          $photoid = $request->photoid;
+        } catch (Exception $e) {
+          $result_code = 400;
+        }
+        
+        if ($result_code == 200) {
+          // This will check that the session is valid
+          $result_code = User::blockPhoto($userid, $skey, $photoid);
+        }
+        
+        http_response_code($result_code);
+     
+    });
+  
+});
+    
 with('/api/users', function () {
     respond('POST', '/login', function ($request, $response) {
         $login = new UserLogin();
@@ -358,25 +419,6 @@ with('/api/usercategories/list', function() {
 
     });
     
-
-});
-
-with('/api/photos', function() {
-
-    respond('GET', '/[:user]', function ($request, $response) {
-
-        $userid = $request->user;
-
-        $list = new User();
-
-        $gallery = $list->getUserGallery($userid);
-
-        $output = json_encode($gallery, JSON_PRETTY_PRINT);
-
-        echo $output;
-
-    });
-
 
 });
 

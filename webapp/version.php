@@ -30,15 +30,15 @@
 
 // http://semver.org/
 
-$api_major_version = 1;
+$api_major_version = 2;
 $api_minor_version = 0;
 $api_patch_version = 0;
 
-$app_major_version = 1;
+$app_major_version = 4;
 $app_minor_version = 0;
 $app_patch_version = 0;
 
-$webapp_major_version = 1;
+$webapp_major_version = 2;
 $webapp_minor_version = 0;
 $webapp_patch_version = 0;
 

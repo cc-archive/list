@@ -28,7 +28,7 @@
 
 */
 
-require_once($install_path . '/database.php');
+require_once(dirname(__DIR__) . '/database.php');
 
 /**
  * Represents List data
@@ -320,14 +320,57 @@ class UserList {
 
     }
 
-    static function getPhotosList($number = 20, $userid = false, $from = 0) {
+    static function filterBlockedPhotos ($rows, $sessionuserid, $maxblocks) {
+      global $adodb;
+      
+      $res = array();
+            
+      $que = "SELECT userid FROM UserPhotoBlocks WHERE photoid=?";
+      // Change back to array_filter when I remember how closures work
+      foreach ($rows as $row) {
+        $ps = array($row['itemid']);
+        $adodb->Execute("SELECT * from UserPhotoBlocks");
+        $blocks = $adodb->CacheGetAll(15, $que, $ps);
+        $blocked = false;
+        // If the user is logged in we need to check against their blocks
+        // And not block anything they've uploaded (as they see it)
+        if($sessionuserid) {
+          // If the user is logged in and owns the photo, it's not blocked
+          if (($row['userid'] == $sessionuserid)) {
+            $blocked = false;
+          } else {
+            // If the user is logged in and has blocked the photo, it's 
+            foreach ($blocks as $block) {
+              if ($block['userid'] == $sessionuserid) {
+                $blocked = true;
+                break;
+              }
+            }
+            // If the user hasn't blocked it, a global block may apply
+            if (! $blocked) {
+              $blocked = count($blocks) >= $maxblocks;
+            }
+          }
+        } else {
+          // If the user is not logged in, only global blocks apply
+          $blocked = count($blocks) >= $maxblocks;
+        }
+        if (! $blocked) {
+          array_push($res, $row); 
+        }
+      }
+      return $res;
+    }
+
+    static function getPhotosList($sessionuserid, $number = 20, $from = 1,
+                                  $listuserid = false, $maxblocks = 3) {
         global $adodb;
         
-        $number = max(min($number, 20), 200);
+        $number = min(max($number, 1), 200);
         $from = max($from, 1);
 
         $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-        $params = [$from];
+        // Do lots of joins, filtering out images with too many blocks
         $query = "
 SELECT p.id AS itemid, p.url AS url,
   l.title AS title, l.id AS id, l.description AS description,
@@ -336,16 +379,21 @@ SELECT p.id AS itemid, p.url AS url,
   m.id AS makerid, m.name AS makername
 FROM Photos p LEFT JOIN List l ON (p.listitem=l.id)
   LEFT JOIN Users u on (p.userid=u.id) LEFT JOIN Makers m on (l.makerid=m.id)
-WHERE p.url IS NOT NULL AND p.id >= ? ";
-        if ($userid) {
-          $query .= "AND p.userid=? ";
-          $params[] = $userid;
+ WHERE p.url IS NOT NULL AND p.id >= ?";
+        $params = [$from];
+        // Constrain the list to the provided user id, if any
+        if ($listuserid) {
+          $query .= " AND p.userid=?";
+          $params[] .= $listuserid;
         }
-        $query .= "ORDER BY p.id DESC LIMIT ?";
+        $query .= " ORDER BY p.id DESC LIMIT ?";
         $params[] = $number;
-
         try {
-            $res = $adodb->CacheGetAll(15, $query, $params);
+          
+            $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+            $rows = $adodb->CacheGetAll(15, $query, $params);
+            $res = self::filterBlockedPhotos($rows, $sessionuserid, $maxblocks);
+
         } catch (Exception $e) {
 
             echo "<h2>" . $query . "</h2>";
@@ -354,7 +402,6 @@ WHERE p.url IS NOT NULL AND p.id >= ? ";
            
             return null;
         }
-
         return $res;
         
     }
@@ -369,13 +416,11 @@ WHERE p.url IS NOT NULL AND p.id >= ? ";
 
         try {
             $res = $adodb->CacheGetAll(15, $query, $params);
-
         } catch (Exception $e) {
 
             echo "<h2>" . $query . "</h2>";
             
             echo $e;
-           
             return null;
         }
 
@@ -586,5 +631,5 @@ WHERE p.url IS NOT NULL AND p.id >= ? ";
         }
 
     }
-               
+
 }

@@ -6,4 +6,10 @@ class_name: UnitTester
 modules:
     enabled:
         - Asserts
+        - Db:
+            dsn: 'mysql:host=localhost;dbname=listtest'
+            user: 'root'
+            password: 'root'
+            cleanup: true
+        - \Helper\DbHelper
         - \Helper\Unit

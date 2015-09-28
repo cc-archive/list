@@ -66,11 +66,32 @@ The List API is implemented by The List App, and is subject to change based on f
 * Has optional parameters:
   * count - The number of items to return. 20 if absent, max 200 each time.
   * from - The first item to return. Most recent if absent.
-  * userid - The userid whose photos the api should return. Everyone if absent.
+  * skey - The user's session key.
+  * userid - The logged-in user.
+
+If skey and userid are present and valid, the list of photos will not include
+photos that the user has blocked.
 
 * Example:  
   
   `curl https://thelist.creativecommons.org/api/photos`
+
+#### GET /api/photos/:listuserid
+
+* Returns the most recent photos uploaded by the user with id listuserid.
+
+* Has optional parameters:
+  * count - The number of items to return. 20 if absent, max 200 each time.
+  * from - The first item to return, index base 1. Most recent if absent.
+  * skey - The user's session key.
+  * userid - The logged-in user.
+
+If skey and userid are present and valid, the list of photos will not include
+listuserid's photos that the logged-in user has blocked.
+
+* Example:  
+  
+  `curl https://thelist.creativecommons.org/api/photos/48`
 
 
 #### POST /api/photos/:userid/:itemid
@@ -105,3 +126,22 @@ The List API is implemented by The List App, and is subject to change based on f
 * Example:  
   
   `curl https://thelist.creativecommons.org/api/version`
+
+
+#### GET /block/photo/:photoid
+
+* Block the photo identified by photoid. The user will not see that photo when
+they are logged in. If several people block the photo, it will be hidden for
+all users.
+
+* Has required parameters:
+  * skey - The user's session key.
+  * userid - The logged-in user.
+
+Unless skey and userid are present and valid, the photo will not be blocked.
+
+If the user uploaded photoid, it will not be blocked.
+
+* Example:  
+  
+  `curl --include --data "skey=3982c4f23bc61f45659d640fa7258622&userid=48" https://thelist.creativecommons.org/api/block/photo/2704`
