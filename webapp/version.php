@@ -31,22 +31,16 @@
 // http://semver.org/
 
 $api_major_version = 2;
-$api_minor_version = 0;
 $api_patch_version = 0;
 
 $app_major_version = 4;
-$app_minor_version = 0;
 $app_patch_version = 0;
 
 $webapp_major_version = 2;
-$webapp_minor_version = 0;
 $webapp_patch_version = 0;
 
-$api_version = join('.', [$api_major_version, $api_minor_version,
-                          $api_patch_version]);
+$api_version = join('.', [$api_major_version, $api_patch_version]);
 
-$app_version = join('.', [$app_major_version, $app_minor_version,
-                          $app_patch_version]);
+$app_version = join('.', [$app_major_version, $app_patch_version]);
 
-$webapp_version = join('.', [$webapp_major_version, $webapp_minor_version,
-                             $webapp_patch_version]);
+$webapp_version = join('.', [$webapp_major_version, $webapp_patch_version]);
