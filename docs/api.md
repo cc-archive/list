@@ -128,7 +128,7 @@ listuserid's photos that the logged-in user has blocked.
   `curl https://thelist.creativecommons.org/api/version`
 
 
-#### GET /block/photo/:photoid
+#### POST api/block/photo/:photoid
 
 * Block the photo identified by photoid. The user will not see that photo when
 they are logged in. If several people block the photo, it will be hidden for
@@ -145,3 +145,26 @@ If the user uploaded photoid, it will not be blocked.
 * Example:  
   
   `curl --include --data "skey=3982c4f23bc61f45659d640fa7258622&userid=48" https://thelist.creativecommons.org/api/block/photo/2704`
+
+#### POST /api/photo/:photoid/like
+
+* Like or unlike the photo identified by photoid. This toggles the logged-in
+user's like of the photo.
+
+* Has required parameters:
+  * skey - The user's session key.
+  * userid - The logged-in user.
+
+* Unless skey and userid are present and valid, the photo will not be liked.  
+  If the photo does not exist, status 404 will be returned.  
+  If the user is not logged in, status 401 will be returned.  
+  If the user owns the photo, status 403 will be returned.  
+
+* A JSON object is returned by each request, containing a boolean success flag
+as 'success'.  
+  When the request succeeds, the new stake of the user's liking for the photo is
+returned as a boolean in the returned JSON as 'likes',
+
+* Example:  
+  
+  `curl --include --data "skey=3982c4f23bc61f45659d640fa7258622&userid=48" https://thelist.creativecommons.org/api/photo/2704/like`

@@ -322,9 +322,9 @@ class UserList {
 
     static function filterBlockedPhotos ($rows, $sessionuserid, $maxblocks) {
       global $adodb;
-      
+
       $res = array();
-            
+
       $que = "SELECT userid FROM UserPhotoBlocks WHERE photoid=?";
       // Change back to array_filter when I remember how closures work
       foreach ($rows as $row) {
@@ -339,7 +339,7 @@ class UserList {
           if (($row['userid'] == $sessionuserid)) {
             $blocked = false;
           } else {
-            // If the user is logged in and has blocked the photo, it's 
+            // If the user is logged in and has blocked the photo, it's blocked
             foreach ($blocks as $block) {
               if ($block['userid'] == $sessionuserid) {
                 $blocked = true;
@@ -356,16 +356,33 @@ class UserList {
           $blocked = count($blocks) >= $maxblocks;
         }
         if (! $blocked) {
-          array_push($res, $row); 
+          array_push($res, $row);
         }
       }
       return $res;
     }
 
+    static function addPhotosLikes($rows) {
+        global $adodb;
+        $res = [];
+        $query = "SELECT COUNT(*) FROM UserPhotoLikes WHERE photoid = ?";
+        foreach ($rows as $row) {
+            $params = [$row['id']];
+            try {
+                $likes = $adodb->GetOne($query, $params);
+            } catch (Exception $e) {
+                $likes = 0;
+            }
+            $row['likes'] = $likes;
+            array_push($res, $row);
+        }
+        return $res;
+    }
+
     static function getPhotosList($sessionuserid, $number = 20, $from = 1,
                                   $listuserid = false, $maxblocks = 3) {
         global $adodb;
-        
+
         $number = min(max($number, 1), 200);
         $from = max($from, 1);
 
@@ -389,21 +406,16 @@ FROM Photos p LEFT JOIN List l ON (p.listitem=l.id)
         $query .= " ORDER BY p.id DESC LIMIT ?";
         $params[] = $number;
         try {
-          
             $adodb->SetFetchMode(ADODB_FETCH_ASSOC);
             $rows = $adodb->CacheGetAll(15, $query, $params);
             $res = self::filterBlockedPhotos($rows, $sessionuserid, $maxblocks);
-
+            $res = self::addPhotosLikes($res);
         } catch (Exception $e) {
-
             echo "<h2>" . $query . "</h2>";
-            
             echo $e;
-           
             return null;
         }
         return $res;
-        
     }
 
     static function getCategories($number = 10) {

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /* The List powered by Creative Commons
 
@@ -23,7 +23,7 @@
    GNU Affero General Public License for more details.
 
    You should have received a copy of the GNU General Public License and
-   the GNU Affero General Public License along with this program.  
+   the GNU Affero General Public License along with this program.
 
    If not, see <http://www.gnu.org/licenses/>.
 
@@ -122,6 +122,20 @@ with('/api/items', function () {
 
 });
 
+function validateUserSession ($request) {
+    $sessionuserid = $request->param('userid', false);
+    $skey = $request->param('skey', false);
+    if ($sessionuserid != false) {
+        if(User::sessionIsValid ($sessionuserid, $skey)) {
+            $sessionuserid = intval($sessionuserid);
+        } else {
+            $sessionuserid = false;
+            $skey = false;
+        }
+    }
+    return [$sessionuserid, $skey];
+}
+
 function formatPhotoListResults ($photos) {
   $result = ['photos'=>$photos,
              'count'=>count($photos)];
@@ -143,59 +157,41 @@ function formatPhotoListResults ($photos) {
   return $result;
 }
 
+// Note photos, not photo
+
 with('/api/photos', function () {
 
     // Get the global photo list
     respond('GET', '/?', function ($request, $response) {
+        list($sessionuserid, $skey) = validateUserSession($request);
         $count = abs(intval($request->param('count', 20)));
         $offset = abs(intval($request->param('from', 1)));
-        $sessionuserid = $request->param('userid', false);
-        $skey = $request->param('skey', false);
-        if ($sessionuserid != false) {
-          if(User::sessionIsValid ($sessionuserid, $sessionid)) {
-            $sessionuserid = intval($sessionuserid);
-          } else {
-            $sessionuserid = false;
-          }
-        }
-        
         $list = new UserList();
         $photos = $list->getPhotosList($sessionuserid, $count, $offset);
         $result = formatPhotoListResults ($photos);
         $output = json_encode($result, JSON_PRETTY_PRINT);
         echo urldecode($output);
       });
-    
+
     respond('GET', '/[:user]', function ($request, $response) {
-        
         $listuserid = $request->user;
         $count = abs(intval($request->param('count', 20)));
         $offset = abs(intval($request->param('from', 1)));
-        $sessionuserid = $request->param('userid', false);
-        $skey = $request->param('skey', false);
-        if ($sessionuserid != false) {
-          if(User::sessionIsValid ($sessionuserid, $sessionid)) {
-            $sessionuserid = intval($sessionuserid);
-          } else {
-            $sessionuserid = false;
-          }
-        }
-        
+        list($sessionuserid, $skey) = validateUserSession($request);
         $photos = UserList::getPhotosList($sessionuserid, $count, $offset,
                                           $listuserid);
-        
         $result = formatPhotoListResults ($photos);
         $output = json_encode($result, JSON_PRETTY_PRINT);
 
         echo $output;
 
     });
-    
+
     respond('POST', '/[:userid]/[:id]', function ($request, $response) {
 
         $userid = $request->userid;
         $listitem = $request->id;
-        
+
         $filedata = $request->param('filedata');
 
         $filedata = base64_decode($filedata);
@@ -218,7 +214,29 @@ with('/api/photos', function () {
 
             http_response_code(400);
         }
-        
+
+    });
+
+});
+
+
+// Note photo, not photos
+
+with('/api/photo', function () {
+
+    // Get the global photo list
+    respond('POST', '/[:photoid]/like', function ($request, $response) {
+        list($sessionuserid, $skey) = validateUserSession($request);
+        if ($sessionuserid) {
+            $photoid = $request->photoid;
+            list($result_code, $result) = User::likePhoto($sessionuserid,
+                                                          $photoid);
+            http_response_code($result_code);
+        } else {
+            $result = ['success' => false];
+            http_response_code(401);
+        }
+        echo json_encode($result, JSON_PRETTY_PRINT);
     });
 
 });
@@ -227,7 +245,7 @@ with('/api/block', function () {
 
     respond('POST', '/photo/[:photoid]', function ($request, $response) {
         $result_code = 200;
-        
+
         try {
           $skey = $request->param('skey');
           $userid = $request->param('userid');
@@ -235,18 +253,18 @@ with('/api/block', function () {
         } catch (Exception $e) {
           $result_code = 400;
         }
-        
+
         if ($result_code == 200) {
           // This will check that the session is valid
           $result_code = User::blockPhoto($userid, $skey, $photoid);
         }
-        
+
         http_response_code($result_code);
-     
+
     });
-  
+
 });
-    
+
 with('/api/users', function () {
     respond('POST', '/login', function ($request, $response) {
         $login = new UserLogin();
@@ -418,7 +436,6 @@ with('/api/usercategories/list', function() {
         echo $output;
 
     });
-    
 
 });
 
