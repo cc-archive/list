@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Activity Titles -->
+    <string name="app_name">The List powered by Creative Commons</string>
+    <string name="app_name_short">The List</string>
+    <string name="title_activity_main">My List</string>
+    <string name="title_activity_category_list">My Categories</string>
+    <string name="title_activity_random">Hit Me</string>
+    <string name="title_activity_login">Log In</string>
+    <string name="title_activity_explainer">What’s up with the List?</string>
+    <string name="title_activity_account">Add Account</string>
+    <string name="title_activity_start">Start The List</string>
+    <!-- TODO: figure out image activity not having title-->
+    <string name="title_activity_image"></string>
+    <string name="title_activity_about">About The App</string>
+    <string name="title_activity_add_item">Create an Item</string>
+    <string name="title_activity_home">The List</string>
+    <string name="title_activity_my_photos">My Photos</string>
+
+    <!-- Drawer Navigation Labels -->
+    <string name="nav_item_home_label">Home</string>
+    <string name="nav_item_photos_label">My Photos</string>
+    <string name="nav_item_categories_label">My Categories</string>
+    <string name="nav_item_requests_label">Request An Item</string>
+    <string name="nav_item_about_label">About The App</string>
+    <string name="nav_item_feedback_label">Give Feedback</string>
+    <string name="drawer_subhead_label">More</string>
+
+    <string-array name="drawer_navigation_labels">
+        <item>Home</item>
+        <item>My Photos</item>
+        <item>My Categories</item>
+        <item>Request an Item</item>
+        <item>About The App</item>
+        <item>Give Feedback</item>
+    </string-array>
+
+    <!-- Menu Button Labels -->
+    <string name="log_out_nav_label">Log Out</string>
+    <string name="log_in_nav_label">Log In</string>
+
+
+    <!-- Account Activity/Fragment -->
+    <string name="password_hint">Password</string>
+    <string name="login_button_label">LOGIN</string>
+    <string name="login_error_title">Oops!</string>
+    <string name="login_error_message">Please make sure you enter a valid name and password</string>
+    <string name="email_hint">Email</string>
+
+
+    <!-- Error Messages -->
+    <string name="general_error">Sorry there was an error!</string>
+    <string name="error_external_storage">There was a problem accessing your device\’s external storage</string>
+    <string name="error_title">Error</string>
+    <string name="error_message">There was an error getting data</string>
+    <string name="error_network_title">Oops!</string>
+    <string name="error_network_message">Seems like you might not be connected to the internet.
+        Check your connection and try again.</string>
+    <string name="error_load_message">There was a problem loading your items. Please try to reload.</string>
+
+    <!-- Empty Labels -->
+    <string name="empty_gallery_label_logged_in">Hey, looks like your gallery is empty.\n Upload some photos!</string>
+    <string name="empty_gallery_label_temp">Log in to your CCID to see your photos!</string>
+    <string name="my_list_empty_label">Hey, looks like your list is empty.\nAdd some items!</string>
+
+    <!-- Offline Labels -->
+    <string name="mylist_offline_empty_label">Sorry we couldn’t find your most recent list.\nWe’ll try again when you’re online.</string>
+    <string name="mylist_empty_loading_error_label">Problem loading your list items.\nPlease try again.</string>
+
+    <!-- Grafitication -->
+    <string name="gratitude_title">You’ve uploaded %1$s photos!</string>
+
+    <string-array name="gratitude_messages">
+        <item>We’re making The Commons that much more complete.</item>
+        <item>The Commons applauds your valiant efforts.</item>
+        <item>Cool. Coolcoolcool.</item>
+        <item>Too cool for school. Or proprietary content.</item>
+        <item>Yeeaaaah you’re on a roll.</item>
+        <item>All in a day’s work, eh?</item>
+        <item>No big. Just contributing to the world’s repository of human knowledge.</item>
+    </string-array>
+
+    <!-- List Item Dialog -->
+    <string-array name="listItem_choices">
+        <item>Take Picture</item>
+        <item>Choose Picture</item>
+        <item>Delete Item</item>
+    </string-array>
+
+    <string-array name="photo_choices">
+        <item>Take Picture</item>
+        <item>Choose Picture</item>
+        <!--<item>Add a Link</item>-->
+    </string-array>
+
+    <string-array name="photo_choices_remove">
+        <item>Take Picture</item>
+        <item>Choose Picture</item>
+        <!--<item>Add a Link</item>-->
+        <item>Remove</item>
+    </string-array>
+
+    <!--Dialog Labels-->
+    <string name="ok_label">OK</string>
+    <string name="oops_label">Oops!</string>
+    <string name="general_negative_text">Disable</string>
+    <string name="general_positive_text">Enable</string>
+
+    <!--Dialog Text-->
+    <string name="dialog_ga_title">Use Google Analytics?</string>
+    <string name="dialog_ga_message">Enable Google Analytics so we can improve the app faster. We don’t collect or store personal info!</string>
+    <string name="dialog_survey_title">What do you think of the app?</string>
+    <string name="dialog_survey_message">Help us make a better app by checking out our super short survey! We really want to hear your feedback.</string>
+    <string name="dialog_survey_link">https://docs.google.com/forms/d/1efaniKex5kte-7_02L8FW8WxxybU9XfYRuWnCpu84eE/viewform</string>
+
+    <string name="upload_failed_title_network">There may be a problem with your connection!</string>
+    <string name="upload_failed_title_filesize">Oops! This file is too big.</string>
+
+    <!-- Onboarding Explainers -->
+    <string-array name="onboarding_explainers">
+        <item>The List Powered by Creative Commons is a collaborative project to build a global collection of images that anyone can use</item>
+        <item>Photos you share with the app will be available for any person or organization to
+            use, as long as they give you credit</item>
+        <item>You’ll be helping creators tell their stories – on Wikipedia, social media, in the
+            news, or in campaigns.\n\nTogether we are building a commons of creativity and knowledge
+            for everyone</item>
+    </string-array>
+
+    <!-- Onboarding Button Text -->
+    <string-array name="onboarding_button_text">
+        <item>SOUNDS GOOD</item>
+        <item>I LIKE GETTING CREDIT</item>
+        <item>COOL, LET’S GO</item>
+    </string-array>
+
+    <!-- Category Background Colours -->
+    <string-array name="category_background_colours">
+        <item>#F44336</item>
+        <item>#3F51B5</item>
+        <item>#2196F3</item>
+        <item>#673AB7</item>
+        <item>#4CAF50</item>
+        <item>#FFC107</item>
+    </string-array>
+
+
+    <!-- StartActivity -->
+    <string name="start_button_label">I’M NEW TO THE LIST</string>
+
+
+    <!-- CategoryList Activity -->
+    <string name="category_list_text">What do you like taking pictures of?</string>
+    <string name="add_category_toast_error">Problem adding category</string>
+    <string name="remove_category_toast_error">Problem removing category</string>
+    <string name="add_category_toast_success">category added</string>
+    <string name="category_picker_helper_text">What do you like to take pictures of? Choose some categories of things you’re interested in.</string>
+
+    <!-- Account Activity -->
+    <string name="account_text_label">Login to your CCID</string>
+
+    <!-- Shared Components -->
+    <string name="cancel_button_label">CANCEL</string>
+    <string name="cc_logo_label">powered by Creative Commons</string>
+    <string name="cc_logo_contentDescription">Creative Commons Logo</string>
+
+    <!-- Login Fragment -->
+    <string name="account_fragment_title">Who do we attribute photos to?</string>
+    <string name="account_fragment_text">Login to your Creative Commons account</string>
+    <string name="signUpButton_label">CREATE MY ACCOUNT</string>
+    <string name="existing_account_text">I ALREADY HAVE AN ACCOUNT</string>
+    <string name="new_account_text"><a href="https://login.creativecommons.org/register.php">I need an account</a> | <a href="https://login.creativecommons.org/pass.php?worlds-a-dress">Forgot Password</a></string>
+
+    <!-- Terms Fragment -->
+    <string name="terms_fragment_title">The List uses Creative Commons licensing.</string>
+    <string name="terms_fragment_text">Anyone who uses your images must give you credit and indicate if any changes have been made.</string>
+    <string name="terms_learn_more_label"><a href="https://thelist.creativecommons.org/app/">LEARN MORE</a></string>
+    <string name="terms_checkbox_label">I agree to the terms and conditions</string>
+    <string name="terms_continue_button_label">CONTINUE</string>
+
+    <!--TODO: remove strings exclusive to UploadFragment-->
+    <!-- Upload Fragment -->
+    <string name="upload_cancelled_title">Upload Cancelled</string>
+    <string name="upload_cancelled_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
+    <string name="upload_success_text">(We‘ll email you confirmation for your account!)</string>
+    <string name="upload_success_title">Upload Success!</string>
+    <string name="upload_failed_text">Don’t worry! Your photo is saved in your gallery. Upload when you login!</string>
+    <string name="upload_failed_text_network">Don’t worry! Your photo is saved in your gallery.</string>
+    <string name="upload_failed_text_filesize">Mobile uploads for The List must be smaller than 8MB.</string>
+    <string name="alpha_release_terms_label"><a href="https://github.com/creativecommons/list/blob/master/docs/beta-TOS.md">Use of this beta release of The List Powered by Creative Commons is subject to these terms and conditions</a></string>
+
+    <!--Add Item Fragment-->
+    <string name="category_prompt">Choose a category</string>
+
+    <string-array name="category_array">
+        <item>Clothing/Fashion</item>
+        <item>Places/Cities</item>
+        <item>Nature/Animals</item>
+        <item>People</item>
+        <item>Food</item>
+        <item>Objects</item>
+    </string-array>
+
+    <!-- Fragment Callback Exception Messages -->
+    <string name="terms_callback_exception_message">" must implement TermsFragment.TermsClickListener"</string>
+    <string name="login_callback_exception_message">" must implement LoginFragment.LoginClickListener"</string>
+    <string name="confirm_callback_exception_message">" must implement ConfirmFragment.ConfirmListener"</string>
+    <string name="cancel_callback_exception_message">" must implement CancelFragment.CancelListener"</string>
+    <string name="gallery_callback_exception_message">" must implement GalleryFragment.GalleryListener"</string>
+    <string name="listlogin_callback_exception_message">" must implement MyListFragment.LoginListener"</string>
+
+    <!-- Fragment/Activity Bundle Keys -->
+    <string name="item_id_bundle_key">item</string>
+    <string name="uri_bundle_key">uri</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_done">DONE</string>
+    <string name="menu_login_bundle_key">isMenuLogin</string>
+    <string name="account_menu_login_label">Login to your CCID</string>
+    <string name="login_error_exception_title">Our bad!</string>
+    <string name="login_error_exception_message">Looks like there was a problem logging you in. Can you try again?</string>
+    <string name="about_theapp_menu_label">About the app</string>
+    <string name="ccid_account_label">Creative Commons</string>
+    <string name="token_bundle_key">sessionToken</string>
+    <string name="switch_accounts_menu_label">Switch Accounts</string>
+    <string name="add_account_menu_label">Add Account</string>
+    <string name="app_version">Version 4.0 (July 28 2015)</string>
+    <string name="gallery_menu_label">My Photos</string>
+    <string name="crash_toast_text">Oops! The List app crashed, but a report has been sent to Creative Commons to help fix the issue!</string>
+
+    <!-- Single Choice dialog -->
+    <string name="single_choice_text">Choose</string>
+
+    <string name="single_choice_take_photo_title">Only upload original content!</string>
+    <string name="single_choice_choose_photo_title">Only choose photos created by you!</string>
+    <string name="single_choice_terms_content">All photos contributed to The List Powered by Creative Commons will be made available to the world for reuse for any purpose so long as reusers give you credit. You must be able to grant these rights in order to upload your photo.</string>
+
+    <string-array name="single_choice_terms_array">
+        <item>I solemnly swear my image is my own!</item>
+        <item>Umm, I may need to rethink this upload…</item>
+    </string-array>
+
+    <string name="dialog_missing_item_name">Looks like you’re missing a name for your item.</string>
+    <string name="dialog_missing_item_cat">Don’t forget to select a category that best suits your item.</string>
+    <string name="dialog_item_upload_fail">Looks like was a problem adding your item. Can you try again?</string>
+
+    <!--Navigation Drawer-->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="drawer_account_name_not_found">Account name not found</string>
+    <string name="R.string.drawer_callback_exception_message">must implement NavigationDrawerFragment.NavigationDrawerListener</string>
+
+
+    <string name="ellipsis">…</string>
+    <string name="action_share">Share this photo</string>
+    <string name="drawer_header_title">powered by Creative Commons</string>
+    <string name="image_adapter_caption_text">"requested by "</string>
+    <string name="add_item_toast_error">There was a problem adding your item</string>
+    <string name="remove_item_toast_error">There was a problem deleting your item. Pull to refresh.</string>
+    <string name="gallery_login_button_label">LOG IN NOW</string>
+    <string name="contribute_find_more_button_label">FIND MORE</string>
+
+</resources>

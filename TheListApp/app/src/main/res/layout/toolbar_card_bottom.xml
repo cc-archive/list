@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/likeButton"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_favorite_grey600_24dp"/>
+
+    <ImageView
+        android:id="@+id/bookmarkButton"
+        android:layout_toRightOf="@+id/likeButton"
+        android:paddingRight="24dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_bookmark_grey600_24dp"/>
+
+    <Button
+        android:id="@+id/contributeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_centerVertical="true"
+        android:text="Contribute"
+        android:textColor="@color/colorPrimary"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>

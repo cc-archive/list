@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/splash_cc_logo"
+        android:layout_gravity="center"
+        android:id="@+id/discover_card_profile_pic" />
+
+    <RelativeLayout
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/discover_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Squirrel"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+        <TextView
+            android:id="@+id/discover_card_byline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photographed by Ryan Merkley"
+            android:layout_below="@+id/discover_card_title"
+            android:textColor="@color/secondary_text_material_light"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

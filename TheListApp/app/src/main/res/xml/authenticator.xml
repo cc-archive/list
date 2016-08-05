@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="org.creativecommons.thelist"
+    android:icon="@drawable/terms_logo"
+    android:smallIcon="@drawable/terms_logo"
+    android:label="@string/ccid_account_label" />
+    <!--android:accountPreferences="@xml/prefs"/>-->
